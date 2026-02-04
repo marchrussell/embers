@@ -1,0 +1,194 @@
+---
+description: Regras de validação para agentes, comandos e estruturas do Sistema Onion
+globs: .cursor/**
+alwaysApply: false
+---
+# ✅ Regras de Validação
+
+## 🎯 Objetivo
+
+Definir regras de validação para garantir qualidade e consistência dos componentes do Sistema Onion.
+
+## 📋 Validação de Comandos
+
+### Campos YAML Obrigatórios
+```yaml
+---
+name: string          # ✅ Obrigatório - kebab-case
+description: string   # ✅ Obrigatório - 1-2 linhas
+model: string         # ✅ Obrigatório - sonnet|opus|gpt-4
+category: string      # ✅ Obrigatório - categoria válida
+tags: array           # ✅ Obrigatório - 3-7 tags
+version: string       # ✅ Obrigatório - "3.0.0"
+updated: string       # ✅ Obrigatório - "YYYY-MM-DD"
+---
+```
+
+### Categorias Válidas de Comandos
+```
+engineer    # Fluxos de desenvolvimento
+product     # Gestão de produto
+git         # Operações Git
+docs        # Documentação
+meta        # Meta-comandos
+validate    # Validações
+quick       # Ações rápidas
+general     # Uso geral (raiz)
+```
+
+### Checklist de Qualidade (Comandos)
+- [ ] Nome em kebab-case único
+- [ ] Descrição clara e concisa
+- [ ] Categoria válida
+- [ ] Tags relevantes (3-7)
+- [ ] Versão 3.0.0
+- [ ] Data de atualização
+- [ ] Seção "Objetivo" presente
+- [ ] Seção "Processo/Fluxo" presente
+- [ ] < 400 linhas total
+- [ ] Sem duplicação de nome
+
+## 📋 Validação de Agentes
+
+### Campos YAML Obrigatórios
+```yaml
+---
+name: string          # ✅ Obrigatório - kebab-case
+description: string   # ✅ Obrigatório - especialização
+model: string         # ✅ Obrigatório - sonnet|opus
+category: string      # ✅ Obrigatório - categoria válida
+tags: array           # ✅ Obrigatório - 3-7 tags
+expertise: array      # ✅ Obrigatório - 3-5 áreas
+version: string       # ✅ Obrigatório - "3.0.0"
+updated: string       # ✅ Obrigatório - "YYYY-MM-DD"
+---
+```
+
+### Categorias Válidas de Agentes
+```
+development   # Desenvolvimento (python, react, postgres)
+product       # Produto (product-agent, task-specialist)
+compliance    # Compliance (regulatory, security)
+meta          # Meta (onion, metaspec, creators)
+review        # Review (code-reviewer)
+testing       # Testes (test-engineer, test-planner)
+research      # Pesquisa (research-agent)
+git           # Git (branch-*, integration)
+```
+
+### Checklist de Qualidade (Agentes)
+- [ ] Nome em kebab-case único
+- [ ] Descrição da especialização
+- [ ] Categoria válida
+- [ ] Expertise definida (3-5 áreas)
+- [ ] Versão 3.0.0
+- [ ] Data de atualização
+- [ ] Seção "Identidade" presente
+- [ ] Seção "Expertise" presente
+- [ ] < 300 linhas total
+- [ ] Sem duplicação de nome
+
+## 🔍 Validações Automatizadas
+
+### Verificar Duplicação de Nome
+```bash
+# Comando para verificar duplicação
+find .cursor/commands -name "*.md" | xargs grep "^name:" | sort | uniq -d
+find .cursor/agents -name "*.md" | xargs grep "^name:" | sort | uniq -d
+```
+
+### Verificar Campos Obrigatórios
+```bash
+# Campos que devem existir
+required_fields=("name:" "description:" "model:" "category:" "version:")
+
+for field in "${required_fields[@]}"; do
+  grep -L "^$field" file.md && echo "FALTA: $field"
+done
+```
+
+### Verificar Limite de Linhas
+```bash
+# Comandos > 400 linhas
+find .cursor/commands -name "*.md" -exec wc -l {} \; | awk '$1 > 400'
+
+# Agentes > 300 linhas
+find .cursor/agents -name "*.md" -exec wc -l {} \; | awk '$1 > 300'
+```
+
+## ⚠️ Regras de Negócio
+
+### Geradores Devem Validar
+
+**Antes de criar comando:**
+1. Verificar se nome já existe em `.cursor/commands/`
+2. Validar categoria está na lista permitida
+3. Confirmar campos obrigatórios presentes
+4. Verificar limite de 400 linhas
+
+**Antes de criar agente:**
+1. Verificar se nome já existe em `.cursor/agents/`
+2. Validar categoria está na lista permitida
+3. Confirmar expertise tem 3-5 itens
+4. Verificar limite de 300 linhas
+
+### Fallback para Validações
+```
+Se validação falhar:
+1. Informar usuário sobre o problema
+2. Sugerir correção específica
+3. Perguntar se deseja corrigir automaticamente
+4. Se não, abortar com mensagem clara
+```
+
+## 📊 Métricas de Qualidade
+
+### Score de Qualidade (0-100)
+```
+Comando:
++20 - YAML header completo
++20 - Categoria válida
++15 - Tags apropriadas
++15 - < 400 linhas
++15 - Seções obrigatórias
++15 - Documentação clara
+
+Agente:
++20 - YAML header completo
++20 - Categoria válida
++15 - Expertise definida
++15 - < 300 linhas
++15 - Seções obrigatórias
++15 - Especialização clara
+```
+
+### Thresholds
+- **80-100**: ✅ Aprovado
+- **60-79**: ⚠️ Precisa melhorias
+- **< 60**: ❌ Rejeitado
+
+## 🔗 Integrações
+
+### Validação de .env
+```bash
+# Variáveis obrigatórias para ClickUp
+CLICKUP_API_TOKEN    # Token de API
+
+# Variáveis opcionais
+GITHUB_TOKEN         # Para PRs
+GAMMA_TOKEN          # Para apresentações
+```
+
+### Verificar Configuração
+```bash
+# Script de verificação
+if [ -z "$CLICKUP_API_TOKEN" ]; then
+  echo "⚠️ CLICKUP_API_TOKEN não configurado"
+  echo "Configure em .env ou execute /meta/setup-integration"
+fi
+```
+
+---
+
+**Última atualização:** 2025-11-24
+**Versão:** 3.0.0

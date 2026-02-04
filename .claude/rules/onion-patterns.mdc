@@ -1,0 +1,197 @@
+---
+description: Padrões de nomenclatura, estrutura e convenções do Sistema Onion
+globs: .cursor/**
+alwaysApply: false
+---
+# 🧅 Padrões do Sistema Onion
+
+## 🎯 Objetivo
+
+Definir padrões consistentes para nomenclatura, estrutura e convenções do Sistema Onion v3.0.
+
+## 📁 Estrutura de Diretórios
+
+### Comandos (.cursor/commands/)
+```
+.cursor/commands/
+├── engineer/         # Fluxos de desenvolvimento
+├── product/          # Gestão de produto
+├── git/              # Operações Git
+│   ├── feature/      # Git flow - features
+│   ├── hotfix/       # Git flow - hotfixes
+│   └── release/      # Git flow - releases
+├── docs/             # Documentação
+├── meta/             # Meta-comandos (criadores)
+├── validate/         # Validações
+├── quick/            # Ações rápidas
+└── common/           # Recursos compartilhados
+    ├── templates/    # Templates base
+    └── prompts/      # Prompts modulares
+```
+
+### Agentes (.cursor/agents/)
+```
+.cursor/agents/
+├── development/      # Dev: python, react, postgres
+├── product/          # Produto: product-agent, task-specialist
+├── compliance/       # Compliance: regulatory, security
+├── meta/             # Meta: onion, metaspec-gate-keeper
+├── review/           # Review: code-reviewer
+├── testing/          # Testes: test-engineer, test-planner
+├── research/         # Pesquisa: research-agent
+├── git/              # Git: branch-*, code-review
+└── common/           # Templates compartilhados
+```
+
+### Sessions (.cursor/sessions/)
+```
+.cursor/sessions/<feature-slug>/
+├── context.md        # Contexto e IDs ClickUp
+├── architecture.md   # Decisões arquiteturais
+├── plan.md           # Plano de fases
+└── notes.md          # Notas de desenvolvimento
+```
+
+## 📝 Nomenclatura
+
+### Feature Slugs
+```bash
+# Padrão: kebab-case descritivo
+✅ user-authentication
+✅ payment-integration
+✅ onion-v3-refactoring
+
+❌ UserAuth
+❌ payment_integration
+❌ feature123
+```
+
+### Task IDs (ClickUp)
+```bash
+# Formato: alfanumérico ClickUp
+✅ 86adf8jj6
+✅ 86adf8kr3
+
+# Referência em documentos:
+**Task ID**: 86adf8jj6
+**Subtask ID**: `86adf8kr3`
+```
+
+### Comandos
+```bash
+# Nome: kebab-case
+✅ create-agent
+✅ code-review
+✅ warm-up
+
+# Caminho: /categoria/nome
+✅ /engineer/start
+✅ /product/task
+✅ /git/feature/start
+```
+
+### Agentes
+```bash
+# Nome: kebab-case + sufixo descritivo
+✅ python-developer.md
+✅ task-specialist.md
+✅ code-reviewer.md
+
+# Referência: @nome (sem extensão)
+✅ @python-developer
+✅ @onion
+```
+
+## 📋 Estrutura de Arquivos
+
+### Comando (YAML Header Obrigatório)
+```yaml
+---
+name: nome-comando
+description: Descrição curta (1-2 linhas)
+model: sonnet
+category: engineer|product|git|docs|meta|validate|quick
+tags: [tag1, tag2]
+version: "3.0.0"
+updated: "YYYY-MM-DD"
+---
+```
+
+### Agente (YAML Header Obrigatório)
+```yaml
+---
+name: nome-agente
+description: Descrição da especialização
+model: sonnet
+category: development|product|meta|compliance|review|testing|research|git
+tags: [tag1, tag2]
+expertise: [area1, area2, area3]
+version: "3.0.0"
+updated: "YYYY-MM-DD"
+---
+```
+
+## 🔗 Integração ClickUp MCP
+
+### Identificação de Workspace
+```typescript
+// Sempre usar workspace_id explícito
+workspace_id: "90131664218"  // Workspace padrão
+```
+
+### Padrões de Comentários
+- **Subtask**: Comentário DETALHADO (métricas, arquivos, decisões)
+- **Task Principal**: Comentário RESUMIDO (fase, status, próximo)
+
+### Formatação de Comentários
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ FASE N CONCLUÍDA - Nome da Fase
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📅 YYYY-MM-DD | Status: DONE
+
+📊 **Resultados:**
+∟ Item 1: valor
+∟ Item 2: valor
+
+🚀 Próxima: Fase N+1 - Nome
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+## ⚡ Limites e Métricas
+
+| Métrica | Limite | Razão |
+|---------|--------|-------|
+| Linhas por comando | < 400 | Otimização de tokens |
+| Linhas por agente | < 300 | Foco e clareza |
+| Expertise por agente | 3-5 | Especialização |
+| Tags por arquivo | 3-7 | Organização |
+
+## 🔄 Fluxos Principais
+
+### Feature Development
+```bash
+/product/task "descrição"     # Criar task ClickUp
+/engineer/start <slug>        # Iniciar sessão
+/engineer/work               # Continuar trabalho
+/engineer/pre-pr             # Preparar PR
+/engineer/pr                 # Criar PR
+```
+
+### Criação de Componentes
+```bash
+/meta/create-agent <nome>    # Criar agente
+/meta/create-command <nome>  # Criar comando
+/docs/build-tech-docs        # Documentar
+```
+
+## 📚 Referências
+
+- Knowledge Bases: `docs/knowbase/`
+- Templates: `.cursor/commands/common/templates/`
+- Prompts: `.cursor/commands/common/prompts/`
+
+---
+
+**Última atualização:** 2025-11-24
+**Versão:** 3.0.0
