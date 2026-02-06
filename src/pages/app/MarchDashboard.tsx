@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -15,7 +15,7 @@ import { ChatInput } from "@/components/march/ChatInput";
 import { ChatMessage } from "@/components/march/ChatMessage";
 import { TypingIndicator } from "@/components/march/TypingIndicator";
 import SessionDetailModal from "@/pages/app/SessionDetail";
-import { SubscriptionModal } from "@/components/SubscriptionModal";
+import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { WeeklyInsights } from "@/components/WeeklyInsights";
 import { DashboardSkeleton } from "@/components/skeletons/DashboardSkeleton";
 import dashboardBackground from "@/assets/explore-background.png";
@@ -900,10 +900,12 @@ export default function MarchDashboard() {
       />
 
       {/* Subscription Modal */}
-      <SubscriptionModal
-        open={showSubscriptionModal}
-        onClose={() => setShowSubscriptionModal(false)}
-      />
+      <Suspense fallback={null}>
+        <SubscriptionModal
+          open={showSubscriptionModal}
+          onClose={() => setShowSubscriptionModal(false)}
+        />
+      </Suspense>
     </div>
   );
 }

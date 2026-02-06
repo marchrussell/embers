@@ -3,13 +3,13 @@ import { ClassPlayerModal } from "@/components/ClassPlayerModal";
 import { NavBar } from "@/components/NavBar";
 import { SessionCardSkeleton } from "@/components/skeletons/SessionCardSkeleton";
 import StudioHeader from "@/components/StudioHeader";
-import { SubscriptionModal } from "@/components/SubscriptionModal";
+import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavourites } from "@/hooks/useFavourites";
 import { supabase } from "@/integrations/supabase/client";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 import { Heart, Play, Share2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const Favourites = () => {
@@ -93,10 +93,12 @@ const Favourites = () => {
     <>
       <NavBar />
       <StudioHeader />
-      <SubscriptionModal
-        open={showSubscriptionModal}
-        onClose={() => setShowSubscriptionModal(false)}
-      />
+      <Suspense fallback={null}>
+        <SubscriptionModal
+          open={showSubscriptionModal}
+          onClose={() => setShowSubscriptionModal(false)}
+        />
+      </Suspense>
       <ClassPlayerModal
         classId={selectedClassId}
         open={showClassPlayer}

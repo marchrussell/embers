@@ -1,5 +1,5 @@
 import marchLogoModal from "@/assets/march-logo-modal.png";
-import { SubscriptionModal } from "@/components/SubscriptionModal";
+import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { Dialog, DialogPortal } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,7 +7,7 @@ import { ModalCloseButton } from "@/components/ui/modal-close-button";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -76,10 +76,12 @@ const Auth = () => {
 
   return (
     <>
-      <SubscriptionModal 
-        open={showSubscriptionModal} 
-        onClose={() => setShowSubscriptionModal(false)} 
-      />
+      <Suspense fallback={null}>
+        <SubscriptionModal
+          open={showSubscriptionModal}
+          onClose={() => setShowSubscriptionModal(false)}
+        />
+      </Suspense>
       <Dialog open={true} onOpenChange={handleClose}>
         <DialogPortal>
           <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 transition-opacity duration-300" />

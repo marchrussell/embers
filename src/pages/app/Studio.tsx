@@ -7,7 +7,7 @@ import { NavBar } from "@/components/NavBar";
 import { OptimizedImage } from "@/components/OptimizedImage";
 import StudioFooter from "@/components/StudioFooter";
 import StudioHeader from "@/components/StudioHeader";
-import { SubscriptionModal } from "@/components/SubscriptionModal";
+import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { Button } from "@/components/ui/button";
 import { GlowButton } from "@/components/ui/glow-button";
 import { IconButton } from "@/components/ui/icon-button";
@@ -28,7 +28,7 @@ import {
 } from "@/lib/calendarUtils";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 import { ArrowRight, Calendar, ChevronLeft, ChevronRight, Lock, Play, Share, Video } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import SessionDetailModal from "./SessionDetail";
@@ -1108,7 +1108,9 @@ const Studio = () => {
       </div>
 
       {/* Modals */}
-      <SubscriptionModal open={showSubscriptionModal} onClose={() => setShowSubscriptionModal(false)} />
+      <Suspense fallback={null}>
+        <SubscriptionModal open={showSubscriptionModal} onClose={() => setShowSubscriptionModal(false)} />
+      </Suspense>
 
       <SessionDetailModal sessionId={selectedSessionId} open={!!selectedSessionId} onClose={() => setSelectedSessionId(null)} />
     </div>;

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { NavBar } from "@/components/NavBar";
 import { supabase } from "@/integrations/supabase/client";
@@ -6,7 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Play, Lock, ArrowLeft, User } from "lucide-react";
 import { toast } from "sonner";
 import SessionDetailModal from "./SessionDetail";
-import { SubscriptionModal } from "@/components/SubscriptionModal";
+import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { OptimizedImage } from "@/components/OptimizedImage";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 import StudioFooter from "@/components/StudioFooter";
@@ -270,10 +270,12 @@ const StudioProgram = () => {
       <Footer />
 
       {/* Modals */}
-      <SubscriptionModal 
-        open={showSubscriptionModal} 
-        onClose={() => setShowSubscriptionModal(false)}
-      />
+      <Suspense fallback={null}>
+        <SubscriptionModal
+          open={showSubscriptionModal}
+          onClose={() => setShowSubscriptionModal(false)}
+        />
+      </Suspense>
       
       <SessionDetailModal 
         sessionId={selectedSessionId}

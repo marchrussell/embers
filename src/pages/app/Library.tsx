@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useFavourites } from "@/hooks/useFavourites";
 import { supabase } from "@/integrations/supabase/client";
 import { ChevronLeft, ChevronRight, Heart, Lock } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import SessionDetailModal from "./SessionDetail";
 // Import only critical images needed for UI elements and fallbacks
@@ -14,7 +14,7 @@ import { FeedbackSection } from "@/components/FeedbackSection";
 import { OptimizedImage } from "@/components/OptimizedImage";
 import { CategoryCardSkeleton } from "@/components/skeletons/CategoryCardSkeleton";
 import { FeaturedHeroSkeleton } from "@/components/skeletons/FeaturedHeroSkeleton";
-import { SubscriptionModal } from "@/components/SubscriptionModal";
+import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { IconButton } from "@/components/ui/icon-button";
 import { programImages } from "@/lib/sharedAssets";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
@@ -966,11 +966,13 @@ const Library = ({ isEmbedded = false, onClearCategory, shouldClearCategory = fa
           isFeaturedClass={featuredSession?.class_id === selectedSessionId}
         />
         
-        <SubscriptionModal
-          open={showSubscriptionModal} 
-          onClose={() => setShowSubscriptionModal(false)} 
-        />
-        
+        <Suspense fallback={null}>
+          <SubscriptionModal
+            open={showSubscriptionModal}
+            onClose={() => setShowSubscriptionModal(false)}
+          />
+        </Suspense>
+
         <ArcCardsModal 
           open={showArcCardsModal} 
           onOpenChange={setShowArcCardsModal} 
@@ -982,11 +984,13 @@ const Library = ({ isEmbedded = false, onClearCategory, shouldClearCategory = fa
   return (
     <>
       <NavBar />
-      <SubscriptionModal
-        open={showSubscriptionModal} 
-        onClose={() => setShowSubscriptionModal(false)} 
-      />
-      
+      <Suspense fallback={null}>
+        <SubscriptionModal
+          open={showSubscriptionModal}
+          onClose={() => setShowSubscriptionModal(false)}
+        />
+      </Suspense>
+
       {viewContent}
       
       <SessionDetailModal

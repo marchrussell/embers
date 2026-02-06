@@ -8,7 +8,7 @@ import {
 } from "@/components/profile";
 import { SafetyModal } from "@/components/SafetyModal";
 import { ProfileSkeleton } from "@/components/skeletons/ProfileSkeleton";
-import { SubscriptionModal } from "@/components/SubscriptionModal";
+import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { TermsMicrocopy } from "@/components/TermsMicrocopy";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,7 +24,7 @@ import { useDataDeletion } from "@/hooks/useDataDeletion";
 import { useDataExport } from "@/hooks/useDataExport";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft, LogOut } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -285,13 +285,15 @@ const Profile = () => {
 
   return (
     <>
-      <SubscriptionModal 
-        open={showSubscriptionModal && !user} 
-        onClose={() => {
-          setShowSubscriptionModal(false);
-          navigate('/studio');
-        }}
-      />
+      <Suspense fallback={null}>
+        <SubscriptionModal
+          open={showSubscriptionModal && !user}
+          onClose={() => {
+            setShowSubscriptionModal(false);
+            navigate('/studio');
+          }}
+        />
+      </Suspense>
       <SafetyModal open={showSafetyModal} onOpenChange={setShowSafetyModal} />
       <TermsModal open={showTermsModal} onOpenChange={setShowTermsModal} />
       <PrivacyModal open={showPrivacyModal} onOpenChange={setShowPrivacyModal} />

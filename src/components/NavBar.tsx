@@ -1,12 +1,12 @@
 import mLogo from "@/assets/m-logo.png";
 import marchLogo from "@/assets/march-logo.png";
 import { AuthSignInModal } from "@/components/AuthSignInModal";
-import { SubscriptionModal } from "@/components/SubscriptionModal";
+import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Menu, X } from "lucide-react";
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, Suspense, useCallback, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 // Sheet import removed - using custom overlay menu instead
@@ -69,10 +69,12 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
         onOpenSubscription={handleOpenSubscription}
         footerVariant="signup"
       />
-      <SubscriptionModal 
-        open={showSubscriptionModal} 
-        onClose={() => setShowSubscriptionModal(false)} 
-      />
+      <Suspense fallback={null}>
+        <SubscriptionModal
+          open={showSubscriptionModal}
+          onClose={() => setShowSubscriptionModal(false)}
+        />
+      </Suspense>
       
       {/* Logo - fixed at top left */}
       <div className="fixed top-0 left-0 z-[60] pt-14 md:pt-20 lg:pt-24 pb-8 md:pb-10 pl-6 md:pl-12 lg:hidden">

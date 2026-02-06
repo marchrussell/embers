@@ -1,9 +1,9 @@
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowRight } from "lucide-react";
-import { memo, useCallback, useState } from "react";
+import { memo, Suspense, useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
-import { ContactFormModal } from "./ContactFormModal";
+import { ContactFormModal } from "./modals/LazyModals";
 import { PrivacyModal, RefundModal, TermsModal } from "./LegalModals";
 
 export const Footer = memo(() => {
@@ -59,7 +59,9 @@ export const Footer = memo(() => {
 
     return (
     <>
-      <ContactFormModal open={showContactModal} onOpenChange={handleContactModalChange} />
+      <Suspense fallback={null}>
+        <ContactFormModal open={showContactModal} onOpenChange={handleContactModalChange} />
+      </Suspense>
       <TermsModal open={showTermsModal} onOpenChange={handleTermsModalChange} />
       <PrivacyModal open={showPrivacyModal} onOpenChange={handlePrivacyModalChange} />
       <RefundModal open={showRefundModal} onOpenChange={handleRefundModalChange} />

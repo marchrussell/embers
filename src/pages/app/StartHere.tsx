@@ -3,13 +3,13 @@ import { Footer } from "@/components/Footer";
 import { NavBar } from "@/components/NavBar";
 import StudioFooter from "@/components/StudioFooter";
 import StudioHeader from "@/components/StudioHeader";
-import { SubscriptionModal } from "@/components/SubscriptionModal";
+import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { WeeklyResetCard } from "@/components/WeeklyResetCard";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 import SessionDetailModal from "@/pages/app/SessionDetail";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const StartHere = () => {
@@ -265,10 +265,12 @@ const StartHere = () => {
       />
 
       {/* Subscription Modal */}
-      <SubscriptionModal 
-        open={showSubscriptionModal} 
-        onClose={() => setShowSubscriptionModal(false)} 
-      />
+      <Suspense fallback={null}>
+        <SubscriptionModal
+          open={showSubscriptionModal}
+          onClose={() => setShowSubscriptionModal(false)}
+        />
+      </Suspense>
     </div>
   );
 };
