@@ -1,0 +1,43 @@
+project_id = "zduvevumquhmgagcumwa"
+
+[functions.create-checkout]
+verify_jwt = false
+
+[functions.verify-payment-session]
+verify_jwt = false
+
+[functions.create-test-subscription]
+verify_jwt = false
+
+[functions.cleanup-auth-user]
+verify_jwt = false
+
+[functions.stripe-webhook]
+verify_jwt = false
+
+[functions.send-contact-email]
+verify_jwt = false
+
+[functions.create-course-checkout]
+verify_jwt = false
+
+[functions.send-event-reminders]
+verify_jwt = false
+
+[functions.create-event-payment]
+verify_jwt = false
+
+[functions.verify-event-payment]
+verify_jwt = false
+
+[functions.daily-create-room]
+verify_jwt = false
+
+[functions.daily-get-token]
+verify_jwt = false
+
+[functions.daily-generate-guest-link]
+verify_jwt = false
+
+[functions.get-prices]
+verify_jwt = false
