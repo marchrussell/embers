@@ -1,10 +1,9 @@
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowRight } from "lucide-react";
 import { memo, Suspense, useCallback, useState } from "react";
-import { Link } from "react-router-dom";
 import { toast } from "sonner";
-import { ContactFormModal } from "./modals/LazyModals";
 import { PrivacyModal, RefundModal, TermsModal } from "./LegalModals";
+import { ContactFormModal } from "./modals/LazyModals";
 
 export const Footer = memo(() => {
   const [showContactModal, setShowContactModal] = useState(false);
@@ -100,22 +99,6 @@ export const Footer = memo(() => {
                   >
                     Instagram <ArrowRight className="w-5 h-5" />
                   </a>
-                  <a
-                    href="https://youtube.com/@marchrussell"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[#1A1A1A] text-[13px] tracking-[0.02em] hover:opacity-60 transition-opacity duration-200 flex items-center gap-2 min-h-[44px]"
-                  >
-                    Youtube <ArrowRight className="w-5 h-5" />
-                  </a>
-                  <a
-                    href="https://linkedin.com/in/marchrussell"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[#1A1A1A] text-[13px] tracking-[0.02em] hover:opacity-60 transition-opacity duration-200 flex items-center gap-2 min-h-[44px]"
-                  >
-                    LinkedIn <ArrowRight className="w-5 h-5" />
-                  </a>
                 </div>
               </div>
 
@@ -173,30 +156,30 @@ export const Footer = memo(() => {
 
           {/* Tablet+: Original horizontal layout */}
           <div className="hidden md:flex md:flex-wrap md:items-center md:gap-x-10 lg:gap-x-12 md:justify-start">
-            <Link
-              to="/studio"
-              className="text-[#1A1A1A] text-[11px] uppercase tracking-[0.06em] font-medium hover:opacity-60 transition-opacity duration-200 flex items-center gap-2"
-            >
-              Studio <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link
-              to="/explore"
+            <a
+              href="https://www.marchrussell.com/explore"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-[#1A1A1A] text-[11px] uppercase tracking-[0.06em] font-medium hover:opacity-60 transition-opacity duration-200 flex items-center gap-2"
             >
               Explore <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link
-              to="/courses"
+            </a>
+            <a
+              href="https://www.marchrussell.com/courses"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-[#1A1A1A] text-[11px] uppercase tracking-[0.06em] font-medium hover:opacity-60 transition-opacity duration-200 flex items-center gap-2"
             >
               Courses <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link
-              to="/events"
+            </a>
+            <a
+              href="https://www.marchrussell.com/events"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-[#1A1A1A] text-[11px] uppercase tracking-[0.06em] font-medium hover:opacity-60 transition-opacity duration-200 flex items-center gap-2"
             >
               Events <ArrowRight className="w-5 h-5" />
-            </Link>
+            </a>
             <button
               onClick={() => setShowContactModal(true)}
               className="text-[#1A1A1A] text-[11px] uppercase tracking-[0.06em] font-medium hover:opacity-60 transition-opacity duration-200 flex items-center gap-2"
@@ -210,22 +193,6 @@ export const Footer = memo(() => {
               className="text-[#1A1A1A] text-[11px] uppercase tracking-[0.06em] font-medium hover:opacity-60 transition-opacity duration-200 flex items-center gap-2"
             >
               Instagram <ArrowRight className="w-5 h-5" />
-            </a>
-            <a
-              href="https://youtube.com/@marchrussell"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#1A1A1A] text-[11px] uppercase tracking-[0.06em] font-medium hover:opacity-60 transition-opacity duration-200 flex items-center gap-2"
-            >
-              Youtube <ArrowRight className="w-5 h-5" />
-            </a>
-            <a
-              href="https://linkedin.com/in/marchrussell"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#1A1A1A] text-[11px] uppercase tracking-[0.06em] font-medium hover:opacity-60 transition-opacity duration-200 flex items-center gap-2"
-            >
-              LinkedIn <ArrowRight className="w-5 h-5" />
             </a>
           </div>
 

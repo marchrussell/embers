@@ -36,11 +36,11 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
             }}
           >
             <p>
-              Thank you for choosing March, operated by March Collective Ltd ("March", "we", "us", or "our"), registered in England and Wales.
+              Thank you for choosing Embers, operated by Embers Ltd ("Embers", "we", "us", or "our"), registered in England and Wales.
             </p>
             
             <p>
-              These Terms of Use ("Terms") govern your access to and use of our digital products and services, including our website www.marchrussell.com, our mobile and web applications (the "App"), The Studio membership, digital courses, live events, and all related content, materials, and features (collectively, the "Services").
+              These Terms of Use ("Terms") govern your access to and use of our digital products and services, including our website www.embers-space.com, our mobile and web applications (the "App"), The Studio membership, digital courses, live events, and all related content, materials, and features (collectively, the "Services").
             </p>
 
             <p>
@@ -49,9 +49,9 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
 
             {/* Section 1 */}
             <section className="space-y-4">
-              <h2 className="font-editorial text-[#E6DBC7] text-xl font-medium">1. About March</h2>
+              <h2 className="font-editorial text-[#E6DBC7] text-xl font-medium">1. About Embers</h2>
               <p>
-                March provides breathwork education, nervous system training, and wellbeing content designed for informational and educational purposes only. Our Services, including March Chat AI, do not provide medical, psychological, or therapeutic advice.
+                Embers provides breathwork education, nervous system training, and wellbeing content designed for informational and educational purposes only. Our Services, including Embers Chat AI, do not provide medical, psychological, or therapeutic advice.
               </p>
               <p>
                 Always consult a qualified healthcare professional before beginning any new wellness, breathwork, or somatic practice. Your use of our Services is entirely at your own risk.
@@ -79,7 +79,7 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
             <section className="space-y-4">
               <h2 className="font-editorial text-[#E6DBC7] text-xl font-medium">2. Paid Services</h2>
               <p>
-                The Studio membership, digital courses, and ticketed events are purchased through Stripe at www.marchrussell.com.
+                The Studio membership, digital courses, and ticketed events are purchased through Stripe at www.embers-space.com.
               </p>
             </section>
 
@@ -92,7 +92,7 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
               <ul className="list-disc pl-6 space-y-2 text-[#E6DBC7]/80">
                 <li>Subscriptions renew automatically unless cancelled.</li>
                 <li>Renewal charges are processed through your original payment method.</li>
-                <li>You may cancel anytime through your account settings or by emailing march@marchrussell.com.</li>
+                <li>You may cancel anytime through your account settings or by emailing support@embers-space.com.</li>
                 <li>You will retain access until the end of your current billing period.</li>
               </ul>
 
@@ -105,7 +105,7 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
               <h4 className="text-[#E6DBC7]/90 font-medium mt-4">Refunds</h4>
               <p>
                 Refunds are only provided if the service is faulty, unavailable, or not as described.
-                Refund requests may be made at march@marchrussell.com.
+                Refund requests may be made at support@embers-space.com.
               </p>
 
               <h4 className="text-[#E6DBC7]/90 font-medium mt-4">Price Changes</h4>
@@ -172,9 +172,9 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
 
             {/* Section 6 */}
             <section className="space-y-4">
-              <h2 className="font-editorial text-[#E6DBC7] text-xl font-medium">6. March Chat AI – Disclaimers and Use</h2>
-              <p>March Chat AI is a supportive companion, not a therapist, clinician, or medical provider.</p>
-              <p>March Chat must not be used for emergencies or crisis situations, diagnosis or medical decision-making, mental health treatment, or self-harm concerns.</p>
+              <h2 className="font-editorial text-[#E6DBC7] text-xl font-medium">6. Embers Chat AI – Disclaimers and Use</h2>
+              <p>Embers Chat AI is a supportive companion, not a therapist, clinician, or medical provider.</p>
+              <p>Embers Chat must not be used for emergencies or crisis situations, diagnosis or medical decision-making, mental health treatment, or self-harm concerns.</p>
               <p className="text-[#E6DBC7]">If you are in crisis, contact local emergency services or crisis hotlines.</p>
               <p>AI-generated responses may be inaccurate or incomplete. Use personal judgment and seek professional guidance when needed.</p>
             </section>
@@ -188,7 +188,7 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
             {/* Section 8 */}
             <section className="space-y-4">
               <h2 className="font-editorial text-[#E6DBC7] text-xl font-medium">8. Intellectual Property</h2>
-              <p>All content, materials, video/audio sessions, trademarks, and software are owned by March Collective Ltd. You receive a personal, non-transferable, non-commercial licence to use the Services.</p>
+              <p>All content, materials, video/audio sessions, trademarks, and software are owned by Embers Ltd. You receive a personal, non-transferable, non-commercial licence to use the Services.</p>
               <p>You may not copy, modify, resell, distribute, or create derivative works without our written consent.</p>
             </section>
 
@@ -200,13 +200,13 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
 
             <section className="space-y-4">
               <h2 className="font-editorial text-[#E6DBC7] text-xl font-medium">10. Limitation of Liability</h2>
-              <p>To the fullest extent permitted by law: March Collective Ltd is not liable for indirect, incidental, or consequential damages. We make no guarantees of specific outcomes or results from any practice or course. Total liability shall not exceed the amount paid by you in the preceding 12 months.</p>
+              <p>To the fullest extent permitted by law: Embers Ltd is not liable for indirect, incidental, or consequential damages. We make no guarantees of specific outcomes or results from any practice or course. Total liability shall not exceed the amount paid by you in the preceding 12 months.</p>
               <p>Nothing in these Terms excludes liability where unlawful to do so (e.g., negligence resulting in death or injury).</p>
             </section>
 
             <section className="space-y-4">
               <h2 className="font-editorial text-[#E6DBC7] text-xl font-medium">11. Indemnity</h2>
-              <p>You agree to indemnify and hold harmless March Collective Ltd from claims arising from your misuse of the Services, violation of these Terms, or unlawful or harmful conduct.</p>
+              <p>You agree to indemnify and hold harmless Embers Ltd from claims arising from your misuse of the Services, violation of these Terms, or unlawful or harmful conduct.</p>
             </section>
 
             <section className="space-y-4">
@@ -224,14 +224,14 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
               <p>For questions, concerns, or support:</p>
               <p className="text-[#E6DBC7]">
                 📧{" "}
-                <a href="mailto:march@marchrussell.com" className="underline hover:text-[#E6DBC7]/80 transition-colors">
-                  march@marchrussell.com
+                <a href="mailto:support@embers-space.com" className="underline hover:text-[#E6DBC7]/80 transition-colors">
+                  support@embers-space.com
                 </a>
               </p>
               <p className="text-[#E6DBC7]">
                 🌐{" "}
-                <a href="https://www.marchrussell.com" className="underline hover:text-[#E6DBC7]/80 transition-colors">
-                  www.marchrussell.com
+                <a href="https://www.embers-space.com" className="underline hover:text-[#E6DBC7]/80 transition-colors">
+                  www.embers-space.com
                 </a>
               </p>
             </section>
@@ -272,14 +272,14 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => {
             }}
           >
             <p>
-              March Collective Ltd ("March", "we", "us", or "our") is committed to protecting your personal information and respecting your privacy rights. This Privacy Policy explains how we collect, use, store, and safeguard your personal data when you:
+              Embers Ltd ("Embers", "we", "us", or "our") is committed to protecting your personal information and respecting your privacy rights. This Privacy Policy explains how we collect, use, store, and safeguard your personal data when you:
             </p>
             
             <ul className="list-disc pl-6 space-y-2 text-[#E6DBC7]/80">
-              <li>Visit or use our website (www.marchrussell.com)</li>
+              <li>Visit or use our website (www.embers-space.com)</li>
               <li>Use our mobile or web applications (the "App"), including The Studio</li>
               <li>Purchase or access digital courses, toolkits, or pre-sale products</li>
-              <li>Interact with March Chat AI</li>
+              <li>Interact with Embers Chat AI</li>
               <li>Attend our events or workshops</li>
               <li>Make payments through Stripe</li>
             </ul>
@@ -289,7 +289,7 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => {
             </p>
 
             <p>
-              For any questions, contact: support@marchrussell.com
+              For any questions, contact: support@embers-space.com
             </p>
 
             {/* Section 1 */}
@@ -300,7 +300,7 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => {
                 <li>The website</li>
                 <li>The Studio membership</li>
                 <li>Digital products (e.g., Anxiety Reset, Emotional Regulation Toolkit, Sleep & NSDR Pack)</li>
-                <li>March Chat AI</li>
+                <li>Embers Chat AI</li>
                 <li>Events, workshops, and ticketed sessions</li>
                 <li>Third-party services that support our platform (Lovable, Stripe, AI providers)</li>
               </ul>
@@ -332,16 +332,16 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => {
 
             {/* Section 3 */}
             <section className="space-y-4">
-              <h2 className="font-editorial text-[#E6DBC7] text-xl font-medium">3. March Chat AI Data Collection</h2>
-              <p>When you use March Chat AI, we collect: your conversation messages, AI-generated response history, message timestamps, session engagement (e.g., practices completed, saved, skipped), and personalisation preferences.</p>
+              <h2 className="font-editorial text-[#E6DBC7] text-xl font-medium">3. Embers Chat AI Data Collection</h2>
+              <p>When you use Embers Chat AI, we collect: your conversation messages, AI-generated response history, message timestamps, session engagement (e.g., practices completed, saved, skipped), and personalisation preferences.</p>
               <p>Chat data is only used to provide personalised guidance, improve response relevance, and support your experience in The Studio or digital courses.</p>
-              <p>We do not use March Chat data for marketing or resale. You may delete your March Chat history at any time from your account settings.</p>
+              <p>We do not use Embers Chat data for marketing or resale. You may delete your Embers Chat history at any time from your account settings.</p>
             </section>
 
             {/* Section 4 */}
             <section className="space-y-4">
               <h2 className="font-editorial text-[#E6DBC7] text-xl font-medium">4. AI Processing & Third-Party Providers</h2>
-              <p>March Chat uses AI models hosted through trusted third-party providers (e.g., OpenAI, Google, or equivalents). Data may be securely transmitted to these processors solely for generating responses.</p>
+              <p>Embers Chat uses AI models hosted through trusted third-party providers (e.g., OpenAI, Google, or equivalents). Data may be securely transmitted to these processors solely for generating responses.</p>
               <p>These providers operate under data processing agreements, do not retain your data for independent purposes, and do not use your data to train public models.</p>
               <p>Lovable Labs, Inc. provides the platform that hosts our App. Stripe processes all payments as an independent data controller.</p>
             </section>
@@ -359,7 +359,7 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => {
 
             <section className="space-y-4">
               <h2 className="font-editorial text-[#E6DBC7] text-xl font-medium">7. Data Retention</h2>
-              <p>Account data is retained while your account is active. March Chat conversations are stored up to 24 months unless deleted by you. You may delete your entire account, which permanently erases chat history and personal data except legally required records.</p>
+              <p>Account data is retained while your account is active. Embers Chat conversations are stored up to 24 months unless deleted by you. You may delete your entire account, which permanently erases chat history and personal data except legally required records.</p>
             </section>
 
             <section className="space-y-4">
@@ -374,12 +374,12 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => {
 
             <section className="space-y-4">
               <h2 className="font-editorial text-[#E6DBC7] text-xl font-medium">10. Your Rights (UK & EU GDPR)</h2>
-              <p>You have the right to access, correct, delete, restrict, object to processing, withdraw consent, and request data portability. To exercise your rights, email support@marchrussell.com. We will respond within 30 days.</p>
+              <p>You have the right to access, correct, delete, restrict, object to processing, withdraw consent, and request data portability. To exercise your rights, email support@embers-space.com. We will respond within 30 days.</p>
             </section>
 
             <section className="space-y-4">
               <h2 className="font-editorial text-[#E6DBC7] text-xl font-medium">11. California Residents (CCPA)</h2>
-              <p>You have the right to know what data is collected, request deletion, opt out of the sale of personal data (we do not sell data), and access your personal information. Requests can be emailed to support@marchrussell.com.</p>
+              <p>You have the right to know what data is collected, request deletion, opt out of the sale of personal data (we do not sell data), and access your personal information. Requests can be emailed to support@embers-space.com.</p>
             </section>
 
             <section className="space-y-4">
@@ -402,14 +402,14 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => {
               <p>For questions, concerns, or requests regarding this Policy or your personal data, contact:</p>
               <p className="text-[#E6DBC7]">
                 📧{" "}
-                <a href="mailto:support@marchrussell.com" className="underline hover:text-[#E6DBC7]/80 transition-colors">
-                  support@marchrussell.com
+                <a href="mailto:support@embers-space.com" className="underline hover:text-[#E6DBC7]/80 transition-colors">
+                  support@embers-space.com
                 </a>
               </p>
               <p className="text-[#E6DBC7]">
                 🌐{" "}
-                <a href="https://www.marchrussell.com" className="underline hover:text-[#E6DBC7]/80 transition-colors">
-                  www.marchrussell.com
+                <a href="https://www.embers-space.com" className="underline hover:text-[#E6DBC7]/80 transition-colors">
+                  www.embers-space.com
                 </a>
               </p>
               <p>If you are in the UK/EU, you may also complain to your local data protection authority (e.g., the UK ICO: https://ico.org.uk/).</p>
@@ -451,7 +451,7 @@ export const RefundModal = ({ open, onOpenChange }: LegalModalProps) => {
             }}
           >
             <p>
-              Thank you for choosing to learn and practise with March Collective Ltd ("March", "we", "us" or "our").
+              Thank you for choosing to learn and practise with Embers Ltd ("Embers", "we", "us" or "our").
               This Refund Policy outlines your rights and our responsibilities regarding purchases of digital courses, memberships, workshops, and live events.
             </p>
             
@@ -518,7 +518,7 @@ export const RefundModal = ({ open, onOpenChange }: LegalModalProps) => {
                 <li>If no alternative dates exist, the ticket remains non-refundable.</li>
               </ul>
 
-              <h3 className="text-[#E6DBC7] font-medium mt-6">2.2 Cancellations by March</h3>
+              <h3 className="text-[#E6DBC7] font-medium mt-6">2.2 Cancellations by Embers</h3>
               <p>If we cancel or reschedule an event, you may choose between:</p>
               <ul className="list-disc pl-6 space-y-1 text-[#E6DBC7]/80">
                 <li>A full refund, or</li>
@@ -567,10 +567,10 @@ export const RefundModal = ({ open, onOpenChange }: LegalModalProps) => {
               <p className="text-[#E6DBC7]">
                 📧{" "}
                 <a 
-                  href="mailto:march@marchrussell.com" 
+                  href="mailto:support@embers-space.com" 
                   className="underline hover:text-[#E6DBC7]/80 transition-colors"
                 >
-                  march@marchrussell.com
+                  support@embers-space.com
                 </a>
               </p>
               <p className="mt-4">Include:</p>
