@@ -39,6 +39,10 @@ import emotionalFirstAid from "@/assets/emotional-first-aid.jpg";
 import sleepNsdrMoon from "@/assets/sleep-nsdr-moon.jpg";
 import trialProgramImage from "@/assets/trial-program.webp";
 
+// Foundations tab images
+import breathingBasicsImage from "@/assets/breathing-basics.jpg";
+import theLandingCalm from "@/assets/the-landing-calm.jpg";
+
 // Import the Library component for the Library tab
 import Library from "./Library";
 interface Course {
@@ -79,6 +83,7 @@ const Studio = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [openCalendarId, setOpenCalendarId] = useState<string | null>(null);
   const [shouldClearLibraryCategory, setShouldClearLibraryCategory] = useState(false);
+  const [foundationsFilter, setFoundationsFilter] = useState<'nervous-system' | 'functional-breathing' | null>(null);
   
   // Fetch next guest teacher from database
   const { teacher: nextGuestTeacher } = useNextGuestTeacher();
@@ -562,6 +567,175 @@ const Studio = () => {
                 shouldClearCategory={shouldClearLibraryCategory}
                 onClearCategory={() => setShouldClearLibraryCategory(false)}
               />
+            </TabsContent>
+
+            {/* FOUNDATIONS TAB */}
+            <TabsContent value="foundations" className="mt-0 pb-24 pt-8 md:pt-[150px]">
+              <div className="space-y-16">
+                {/* Header */}
+                <div>
+                  <h2 className="text-2xl md:text-3xl font-medium text-[#E6DBC7] tracking-wide mb-4">
+                    Foundations
+                  </h2>
+                  <p className="text-base md:text-lg font-light text-[#E6DBC7]/60 leading-relaxed max-w-3xl">
+                    A structured space for learning the core skills that support long-term nervous system health, resilience, and functional breathing patterns — at your own pace.
+                  </p>
+                  <p className="text-base md:text-lg font-light text-[#E6DBC7]/60 leading-relaxed max-w-3xl mt-4">
+                    This space exists to help you build steadiness, capacity, and trust, so the rest of Embers can meet you more fully. Foundations can be used on its own, or alongside the rest of Embers. Many people find that the skills built here quietly support everything else.
+                  </p>
+                </div>
+
+                {/* Sub-filter tabs */}
+                {foundationsFilter === null && (
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <button
+                      onClick={() => setFoundationsFilter('nervous-system')}
+                      className="px-6 py-2.5 text-base font-light tracking-wide rounded-full transition-colors duration-200 text-[#E6DBC7]/70 hover:text-[#E6DBC7] bg-transparent border border-[#E6DBC7]/20 hover:border-[#E6DBC7]/40"
+                    >
+                      Support Your Nervous System
+                    </button>
+                    <button
+                      onClick={() => setFoundationsFilter('functional-breathing')}
+                      className="px-6 py-2.5 text-base font-light tracking-wide rounded-full transition-colors duration-200 text-[#E6DBC7]/70 hover:text-[#E6DBC7] bg-transparent border border-[#E6DBC7]/20 hover:border-[#E6DBC7]/40"
+                    >
+                      Functional Breathing
+                    </button>
+                  </div>
+                )}
+
+                {/* Back button when filter is active */}
+                {foundationsFilter !== null && (
+                  <button
+                    onClick={() => setFoundationsFilter(null)}
+                    className="flex items-center gap-2 text-[#E6DBC7]/70 hover:text-[#E6DBC7] transition-colors"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                    <span className="text-base font-light">Back to Foundations</span>
+                  </button>
+                )}
+
+                {/* Foundation Cards - shown when no filter is active */}
+                {foundationsFilter === null && (
+                  <div className="space-y-9 md:space-y-10 lg:space-y-12">
+                    {/* Card 1: Support Your Nervous System */}
+                    <div
+                      onClick={() => setFoundationsFilter('nervous-system')}
+                      className="group relative flex flex-col lg:flex-row overflow-hidden rounded-2xl border border-white/[0.12] hover:border-white/25 transition-colors duration-500 cursor-pointer shadow-[0_0_60px_rgba(230,219,199,0.4)]"
+                      style={{
+                        minHeight: '400px',
+                        background: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.98) 55%)'
+                      }}
+                    >
+                      <div className="relative lg:w-[52%] h-[240px] lg:h-auto lg:min-h-full shrink-0 overflow-hidden">
+                        <img src={theLandingCalm} alt="Support Your Nervous System" className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+                        <div className="absolute inset-0 hidden lg:block" style={{
+                          background: 'linear-gradient(to right, transparent 20%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.98) 100%)'
+                        }} />
+                        <div className="absolute inset-0 lg:hidden" style={{
+                          background: 'linear-gradient(to bottom, transparent 30%, rgba(0,0,0,0.98) 100%)'
+                        }} />
+                      </div>
+                      <div className="relative flex-1 flex flex-col justify-center p-6 md:p-8 lg:py-10 lg:px-10 lg:pl-6 bg-black/95 lg:bg-transparent">
+                        <div>
+                          <div className="mb-5">
+                            <span className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.14em] font-medium text-[#E6DBC7]">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#E6DBC7]" />
+                              Foundation Course
+                            </span>
+                          </div>
+                          <h2 className="font-editorial text-[clamp(1.5rem,2.4vw,2.1rem)] text-[#E6DBC7] font-light leading-[1.2] mb-3 tracking-[-0.01em]">
+                            Support Your Nervous System
+                          </h2>
+                          <p className="font-editorial italic text-[14px] lg:text-[15px] text-[#E6DBC7]/65 mb-4 max-w-[340px] leading-[1.5]">
+                            Calm, restore, and build resilience in your nervous system.
+                          </p>
+                        </div>
+                        <div className="flex justify-start mt-8 lg:mt-10 lg:ml-auto lg:mr-8">
+                          <GlowButton size="sm">
+                            Explore
+                          </GlowButton>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Card 2: Functional Breathing */}
+                    <div
+                      onClick={() => setFoundationsFilter('functional-breathing')}
+                      className="group relative flex flex-col lg:flex-row overflow-hidden rounded-2xl border border-white/[0.12] hover:border-white/25 transition-colors duration-500 cursor-pointer shadow-[0_0_60px_rgba(230,219,199,0.4)]"
+                      style={{
+                        minHeight: '400px',
+                        background: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.98) 55%)'
+                      }}
+                    >
+                      <div className="relative lg:w-[52%] h-[240px] lg:h-auto lg:min-h-full shrink-0 overflow-hidden">
+                        <img src={breathingBasicsImage} alt="Functional Breathing" className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+                        <div className="absolute inset-0 hidden lg:block" style={{
+                          background: 'linear-gradient(to right, transparent 20%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.98) 100%)'
+                        }} />
+                        <div className="absolute inset-0 lg:hidden" style={{
+                          background: 'linear-gradient(to bottom, transparent 30%, rgba(0,0,0,0.98) 100%)'
+                        }} />
+                      </div>
+                      <div className="relative flex-1 flex flex-col justify-center p-6 md:p-8 lg:py-10 lg:px-10 lg:pl-6 bg-black/95 lg:bg-transparent">
+                        <div>
+                          <div className="mb-5">
+                            <span className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.14em] font-medium text-[#E6DBC7]">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#E6DBC7]" />
+                              Foundation Course
+                            </span>
+                          </div>
+                          <h2 className="font-editorial text-[clamp(1.5rem,2.4vw,2.1rem)] text-[#E6DBC7] font-light leading-[1.2] mb-3 tracking-[-0.01em]">
+                            Functional Breathing
+                          </h2>
+                          <p className="font-editorial italic text-[14px] lg:text-[15px] text-[#E6DBC7]/65 mb-4 max-w-[340px] leading-[1.5]">
+                            Build functional breathing foundations that support steadiness and resilience.
+                          </p>
+                        </div>
+                        <div className="flex justify-start mt-8 lg:mt-10 lg:ml-auto lg:mr-8">
+                          <GlowButton size="sm">
+                            Explore
+                          </GlowButton>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Filtered Content Views */}
+                {foundationsFilter === 'nervous-system' && (
+                  <div className="space-y-8">
+                    <div>
+                      <h3 className="text-2xl md:text-3xl font-editorial text-[#E6DBC7] mb-4">
+                        Support Your Nervous System
+                      </h3>
+                      <p className="text-base md:text-lg font-light text-[#E6DBC7]/60 leading-relaxed max-w-2xl">
+                        Calm, restore, and build resilience in your nervous system.
+                      </p>
+                    </div>
+                    {/* Placeholder for future content */}
+                    <div className="py-16 text-center border border-dashed border-[#E6DBC7]/20 rounded-2xl">
+                      <p className="text-[#E6DBC7]/50 text-lg font-light">Content coming soon</p>
+                    </div>
+                  </div>
+                )}
+
+                {foundationsFilter === 'functional-breathing' && (
+                  <div className="space-y-8">
+                    <div>
+                      <h3 className="text-2xl md:text-3xl font-editorial text-[#E6DBC7] mb-4">
+                        Functional Breathing
+                      </h3>
+                      <p className="text-base md:text-lg font-light text-[#E6DBC7]/60 leading-relaxed max-w-2xl">
+                        Build functional breathing foundations that support steadiness and resilience.
+                      </p>
+                    </div>
+                    {/* Placeholder for future content */}
+                    <div className="py-16 text-center border border-dashed border-[#E6DBC7]/20 rounded-2xl">
+                      <p className="text-[#E6DBC7]/50 text-lg font-light">Content coming soon</p>
+                    </div>
+                  </div>
+                )}
+              </div>
             </TabsContent>
 
             {/* PROGRAMS TAB */}

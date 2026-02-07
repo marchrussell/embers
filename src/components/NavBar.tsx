@@ -1,5 +1,4 @@
 import mLogo from "@/assets/m-logo.png";
-import marchLogo from "@/assets/march-logo.png";
 import { AuthSignInModal } from "@/components/AuthSignInModal";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { Button } from "@/components/ui/button";
@@ -137,7 +136,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
           <div className="absolute inset-0 bg-gradient-to-b from-black/5 to-transparent" style={{ height: '140px' }} />
           <div className="relative z-10 flex items-center justify-between w-full">
             {/* M Logo - far left */}
-            <Link to="/" className="flex items-center shrink-0">
+            {/* <Link to="/" className="flex items-center shrink-0">
               <img 
                 src={mLogo} 
                 alt="M" 
@@ -146,44 +145,13 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                   filter: 'brightness(0) saturate(100%) invert(93%) sepia(8%) saturate(558%) hue-rotate(350deg) brightness(94%) contrast(91%) drop-shadow(0 0 12px rgba(230, 219, 199, 0.7))'
                 }}
               />
-            </Link>
+            </Link> */}
 
             {/* Navigation items spread evenly across full width */}
             <div className="flex-1 flex items-center justify-evenly px-12">
-              <Link 
-                to="/explore" 
-                onClick={() => window.scrollTo(0, 0)}
-                className="relative hover:opacity-80 transition-colors uppercase whitespace-nowrap pb-1"
-                style={{ 
-                  color: location.pathname === '/explore' ? '#D4915A' : '#E6DBC7', 
-                  fontSize: '0.85rem', 
-                  letterSpacing: '0.12em', 
-                  fontWeight: 500 
-                }}
-              >
-                Explore
-                {location.pathname === '/explore' && (
-                  <span className="absolute bottom-0 left-0 right-0 h-[2px]" style={{ backgroundColor: '#D4915A' }} />
-                )}
-              </Link>
-              <Link 
-                to="/events" 
-                className="relative hover:opacity-80 transition-colors uppercase whitespace-nowrap pb-1"
-                style={{ 
-                  color: location.pathname === '/events' ? '#D4915A' : '#E6DBC7', 
-                  fontSize: '0.85rem', 
-                  letterSpacing: '0.12em', 
-                  fontWeight: 500 
-                }}
-              >
-                Events
-                {location.pathname === '/events' && (
-                  <span className="absolute bottom-0 left-0 right-0 h-[2px]" style={{ backgroundColor: '#D4915A' }} />
-                )}
-              </Link>
 
               {/* MARCH logo - center */}
-              <Link to="/">
+              {/* <Link to="/">
                 <img 
                   src={marchLogo} 
                   alt="March" 
@@ -192,23 +160,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                     filter: 'brightness(0) saturate(100%) invert(93%) sepia(8%) saturate(558%) hue-rotate(350deg) brightness(94%) contrast(91%) drop-shadow(0 0 12px rgba(230, 219, 199, 0.7))'
                   }}
                 />
-              </Link>
-
-              <Link
-                to="/courses"
-                className="relative hover:opacity-80 transition-colors uppercase whitespace-nowrap pb-1"
-                style={{ 
-                  color: location.pathname.startsWith('/courses') ? '#D4915A' : '#E6DBC7', 
-                  fontSize: '0.85rem', 
-                  letterSpacing: '0.12em', 
-                  fontWeight: 500 
-                }}
-              >
-                Courses
-                {location.pathname.startsWith('/courses') && (
-                  <span className="absolute bottom-0 left-0 right-0 h-[2px]" style={{ backgroundColor: '#D4915A' }} />
-                )}
-              </Link>
+              </Link> */}
               <Link
                 to="/studio" 
                 className="relative hover:opacity-80 transition-colors uppercase whitespace-nowrap pb-1"
