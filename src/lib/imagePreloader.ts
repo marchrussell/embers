@@ -33,8 +33,8 @@ export const preloadRouteImages = (route: string) => {
     '/explore': [
       // Add critical explore page images here
     ],
-    '/events': [
-      // Add critical events page images here
+    '/experiences': [
+      // Add critical experiences page images here
     ],
     // Add more routes as needed
   };

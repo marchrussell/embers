@@ -9,9 +9,9 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Minus, Plus } from "lucide-react";
 import { ButtonLoadingSpinner } from "@/components/skeletons";
-import { EventDateSelector } from "@/components/EventDateSelector";
-import { ScheduledEventDate, EVENT_CAPACITY_CONFIG } from "@/lib/eventSchedule2026";
-import { RecurrenceRule } from "@/lib/eventDateUtils";
+import { EventDateSelector } from "@/components/ExperienceDateSelector";
+import { ScheduledEventDate, EVENT_CAPACITY_CONFIG } from "@/lib/experienceSchedule2026";
+import { RecurrenceRule } from "@/lib/experienceDateUtils";
 
 interface EventData {
   id: string;
@@ -59,7 +59,7 @@ const EVENT_PRICES: Record<string, number> = {
   'unwind-rest': 0, // Free (IG Live)
 };
 
-export function EventBookingModal({ event, open, onClose }: Props) {
+export function ExperienceBookingModal({ event, open, onClose }: Props) {
   const [step, setStep] = useState(1);
   const [quantity, setQuantity] = useState(1);
   const [attendeeName, setAttendeeName] = useState("");

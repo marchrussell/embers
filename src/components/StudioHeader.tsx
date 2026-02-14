@@ -1,7 +1,4 @@
-import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
-import { ArrowLeft, Info, User } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ArrowLeft, Info } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 interface StudioHeaderProps {
@@ -19,10 +16,8 @@ const StudioHeader = ({
   backButtonLabel = "Back to Studio",
   backButtonPath = "/studio",
 }: StudioHeaderProps) => {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [userProfile, setUserProfile] = useState<any>(null);
 
   // Determine active tab from URL if not provided
   const getActiveTabFromPath = () => {
@@ -52,33 +47,6 @@ const StudioHeader = ({
 
   const currentTab = activeTab || getActiveTabFromPath();
 
-  // Set profile from user metadata
-  useEffect(() => {
-    if (user) {
-      const metadataName = user.user_metadata?.full_name;
-      if (metadataName) {
-        setUserProfile({ full_name: metadataName });
-      }
-    }
-  }, [user]);
-
-  // Fetch profile from database
-  useEffect(() => {
-    const fetchProfile = async () => {
-      if (user?.id && !userProfile) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('full_name')
-          .eq('id', user.id)
-          .maybeSingle();
-        if (profile?.full_name) {
-          setUserProfile(profile);
-        }
-      }
-    };
-    fetchProfile();
-  }, [user?.id]);
-
   const handleTabClick = (tab: string) => {
     if (onTabChange) {
       onTabChange(tab);
@@ -97,7 +65,7 @@ const StudioHeader = ({
 
   return (
     <>
-      {/* About & Sign In / Profile Buttons - Absolute position (scrolls with page) */}
+      {/* About Button - Absolute position (scrolls with page) */}
       <div className="absolute top-44 md:top-52 lg:top-68 right-6 md:right-10 lg:right-12 z-50 flex items-center gap-3">
         <Link
           to="/studio/about"
@@ -105,24 +73,6 @@ const StudioHeader = ({
         >
           <Info className="w-5 h-5" />
         </Link>
-        {/* Profile/Sign In - Hidden on mobile, shown in overlay menu instead */}
-        {user ? (
-          <Link
-            to="/studio/profile"
-            className="hidden md:flex items-center gap-2.5 px-5 py-2.5 md:px-6 md:py-2.5 rounded-full border border-[#E6DBC7]/30 text-[#E6DBC7] text-sm md:text-base font-light hover:border-[#E6DBC7]/50 hover:bg-white/[0.03] transition-colors duration-300"
-          >
-            <User className="w-5 h-5" />
-            <span>{userProfile?.full_name?.split(' ')[0] || 'March'}</span>
-          </Link>
-        ) : (
-          <Link
-            to="/auth"
-            className="hidden md:flex items-center gap-2.5 px-5 py-2.5 md:px-6 md:py-2.5 rounded-full border border-[#E6DBC7]/30 text-[#E6DBC7] text-sm md:text-base font-light hover:border-[#E6DBC7]/50 hover:bg-white/[0.03] transition-colors duration-300"
-          >
-            <User className="w-5 h-5" />
-            <span>Sign In</span>
-          </Link>
-        )}
       </div>
 
       {/* Back Button - aligned with tabs */}

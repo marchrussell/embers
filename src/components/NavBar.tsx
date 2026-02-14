@@ -1,17 +1,18 @@
+import marchLogo from "@/assets/march-logo.png";
 import mLogo from "@/assets/m-logo.png";
 import { AuthSignInModal } from "@/components/AuthSignInModal";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { Menu, X } from "lucide-react";
+import { Menu, User, X } from "lucide-react";
 import { memo, Suspense, useCallback, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 // Sheet import removed - using custom overlay menu instead
 
 export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) => {
-  const { user, signOut, isAdmin} = useAuth();
+  const { user } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const isStudioRoute = location.pathname.startsWith('/studio');
@@ -52,10 +53,6 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
     setMobileMenuOpen(false);
   }, []);
 
-  const handleExploreClick = useCallback(() => {
-    setMobileMenuOpen(false);
-    setTimeout(() => window.scrollTo(0, 0), 0);
-  }, []);
 
   const displayName = firstName || user?.email?.split('@')[0] || 'PROFILE';
 
@@ -136,68 +133,82 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
           <div className="absolute inset-0 bg-gradient-to-b from-black/5 to-transparent" style={{ height: '140px' }} />
           <div className="relative z-10 flex items-center justify-between w-full">
             {/* M Logo - far left */}
-            {/* <Link to="/" className="flex items-center shrink-0">
-              <img 
-                src={mLogo} 
-                alt="M" 
+            <Link to="/" className="flex items-center shrink-0">
+              <img
+                src={mLogo}
+                alt="M"
                 className="h-10 md:h-12 w-auto"
                 style={{
                   filter: 'brightness(0) saturate(100%) invert(93%) sepia(8%) saturate(558%) hue-rotate(350deg) brightness(94%) contrast(91%) drop-shadow(0 0 12px rgba(230, 219, 199, 0.7))'
                 }}
               />
-            </Link> */}
+            </Link>
 
-            {/* Navigation items spread evenly across full width */}
-            <div className="flex-1 flex items-center justify-evenly px-12">
+            {/* Experiences link */}
+            <Link
+              to="/experiences"
+              className="relative hover:opacity-80 transition-colors uppercase whitespace-nowrap pb-1"
+              style={{
+                color: location.pathname.startsWith('/experiences') ? '#D4915A' : '#E6DBC7',
+                fontSize: '0.85rem',
+                letterSpacing: '0.12em',
+                fontWeight: 500
+              }}
+            >
+              Experiences
+              {location.pathname.startsWith('/experiences') && (
+                <span className="absolute bottom-0 left-0 right-0 h-[2px]" style={{ backgroundColor: '#D4915A' }} />
+              )}
+            </Link>
 
-              {/* MARCH logo - center */}
-              {/* <Link to="/">
-                <img 
-                  src={marchLogo} 
-                  alt="March" 
-                  className="h-8 md:h-10 w-auto"
-                  style={{
-                    filter: 'brightness(0) saturate(100%) invert(93%) sepia(8%) saturate(558%) hue-rotate(350deg) brightness(94%) contrast(91%) drop-shadow(0 0 12px rgba(230, 219, 199, 0.7))'
-                  }}
-                />
-              </Link> */}
-              <Link
-                to="/studio" 
-                className="relative hover:opacity-80 transition-colors uppercase whitespace-nowrap pb-1"
-                style={{ 
-                  color: location.pathname.startsWith('/studio') ? '#D4915A' : '#E6DBC7', 
-                  fontSize: '0.85rem', 
-                  letterSpacing: '0.12em', 
-                  fontWeight: 500 
+            {/* MARCH logo - center */}
+            <Link to="/">
+              <img
+                src={marchLogo}
+                alt="March"
+                className="h-8 md:h-10 w-auto"
+                style={{
+                  filter: 'brightness(0) saturate(100%) invert(93%) sepia(8%) saturate(558%) hue-rotate(350deg) brightness(94%) contrast(91%) drop-shadow(0 0 12px rgba(230, 219, 199, 0.7))'
                 }}
-              >
-                Studio
-                {location.pathname.startsWith('/studio') && (
-                  <span className="absolute bottom-0 left-0 right-0 h-[2px]" style={{ backgroundColor: '#D4915A' }} />
-                )}
-              </Link>
-            </div>
+              />
+            </Link>
 
-            {/* Right side - Date only */}
-            <div className="flex items-center shrink-0 gap-8">
-              {/* Dynamic Date */}
-              <span
-                className="whitespace-nowrap"
-                style={{ 
-                  color: '#E6DBC7', 
-                  fontSize: '0.95rem', 
-                  letterSpacing: '0.1em', 
-                  fontWeight: 500
-                }}
-              >
-                {(() => {
-                  const now = new Date();
-                  const day = String(now.getDate()).padStart(2, '0');
-                  const month = String(now.getMonth() + 1).padStart(2, '0');
-                  const year = now.getFullYear();
-                  return `${day} • ${month} • ${year}`;
-                })()}
-              </span>
+            {/* Online link */}
+            <Link
+              to="/studio"
+              className="relative hover:opacity-80 transition-colors uppercase whitespace-nowrap pb-1"
+              style={{
+                color: location.pathname.startsWith('/studio') ? '#D4915A' : '#E6DBC7',
+                fontSize: '0.85rem',
+                letterSpacing: '0.12em',
+                fontWeight: 500
+              }}
+            >
+              Online
+              {location.pathname.startsWith('/studio') && (
+                <span className="absolute bottom-0 left-0 right-0 h-[2px]" style={{ backgroundColor: '#D4915A' }} />
+              )}
+            </Link>
+
+            {/* Sign In / Profile */}
+            <div className="flex items-center shrink-0">
+              {user ? (
+                <Link
+                  to={isMyCoursesRoute ? "/my-courses/profile" : "/studio/profile"}
+                  className="flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-[#E6DBC7]/30 text-[#E6DBC7] text-sm font-light hover:border-[#E6DBC7]/50 hover:bg-white/[0.03] transition-colors duration-300"
+                >
+                  <User className="w-4 h-4" />
+                  <span>{displayName}</span>
+                </Link>
+              ) : (
+                <button
+                  onClick={() => setShowSignInModal(true)}
+                  className="flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-[#E6DBC7]/30 text-[#E6DBC7] text-sm font-light hover:border-[#E6DBC7]/50 hover:bg-white/[0.03] transition-colors duration-300"
+                >
+                  <User className="w-4 h-4" />
+                  <span>Sign In</span>
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -249,32 +260,18 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
               mobileMenuOpen ? 'translate-y-0' : '-translate-y-8'
             }`}>
               <Link 
-                to="/explore" 
-                onClick={handleExploreClick}
-                className="text-4xl md:text-5xl font-editorial font-light text-[#E6DBC7] hover:text-white transition-colors tracking-wide"
-              >
-                Explore
-              </Link>
-              <Link 
-                to="/events" 
+                to="/experiences" 
                 onClick={handleCloseMobileMenu}
                 className="text-4xl md:text-5xl font-editorial font-light text-[#E6DBC7] hover:text-white transition-colors tracking-wide"
               >
-                Events
-              </Link>
-              <Link 
-                to="/courses" 
-                onClick={handleCloseMobileMenu}
-                className="text-4xl md:text-5xl font-editorial font-light text-[#E6DBC7] hover:text-white transition-colors tracking-wide"
-              >
-                Courses
+                Experiences
               </Link>
               <Link
-                to="/studio" 
+                to="/studio"
                 onClick={handleCloseMobileMenu}
                 className="text-4xl md:text-5xl font-editorial font-light text-[#E6DBC7] hover:text-white transition-colors tracking-wide"
               >
-                Studio
+                Online
               </Link>
               
               {isAppRoute && (

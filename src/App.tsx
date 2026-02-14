@@ -18,6 +18,7 @@ import Index from "./pages/Index";
 const Signup = lazy(() => import("./pages/Signup"));
 
 // Lazy load all other pages
+const Experiences = lazy(() => import("./pages/Experiences"));
 const RiseMethod = lazy(() => import("./pages/RiseMethod"));
 const ArcWelcomeCallConfirmed = lazy(() => import("./pages/ArcWelcomeCallConfirmed"));
 const SafetyDisclosure = lazy(() => import("./pages/SafetyDisclosure"));
@@ -110,6 +111,7 @@ function AppContent() {
           <Routes>
             {/* Public routes */}
             <Route path="/" element={<Index />} />
+            <Route path="/experiences" element={<Experiences />} />
             <Route path="/rise-arc-method" element={<RiseMethod />} />
             <Route path="/arc/welcome-call-confirmed" element={<ArcWelcomeCallConfirmed />} />
             <Route path="/auth" element={<Auth />} />

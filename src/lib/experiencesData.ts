@@ -3,7 +3,7 @@
  * Central source of truth for all recurring events
  */
 
-import { EventSchedule, WEEKDAYS } from './eventDateUtils';
+import { EventSchedule, WEEKDAYS } from './experienceDateUtils';
 export type { EventSchedule };
 
 // Import images

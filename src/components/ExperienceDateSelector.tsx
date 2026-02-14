@@ -7,8 +7,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
-import { getUpcomingEventDates, formatTime, ScheduledEventDate, EVENT_CAPACITY_CONFIG } from "@/lib/eventSchedule2026";
-import { RecurrenceRule } from "@/lib/eventDateUtils";
+import { getUpcomingEventDates, formatTime, ScheduledEventDate, EVENT_CAPACITY_CONFIG } from "@/lib/experienceSchedule2026";
+import { RecurrenceRule } from "@/lib/experienceDateUtils";
 
 interface Props {
   eventId: string;
