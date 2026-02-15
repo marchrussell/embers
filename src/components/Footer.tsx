@@ -164,20 +164,6 @@ export const Footer = memo(() => {
             >
               Explore <ArrowRight className="w-5 h-5" />
             </a>
-            <a
-              href="https://www.marchrussell.com/courses"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#1A1A1A] text-[11px] uppercase tracking-[0.06em] font-medium hover:opacity-60 transition-opacity duration-200 flex items-center gap-2"
-            >
-              Courses <ArrowRight className="w-5 h-5" />
-            </a>
-            <a
-              href="/experiences"
-              className="text-[#1A1A1A] text-[11px] uppercase tracking-[0.06em] font-medium hover:opacity-60 transition-opacity duration-200 flex items-center gap-2"
-            >
-              Experiences <ArrowRight className="w-5 h-5" />
-            </a>
             <button
               onClick={() => setShowContactModal(true)}
               className="text-[#1A1A1A] text-[11px] uppercase tracking-[0.06em] font-medium hover:opacity-60 transition-opacity duration-200 flex items-center gap-2"
