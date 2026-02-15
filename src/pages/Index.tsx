@@ -551,10 +551,24 @@ Through breath, movement, and sensory practice, it creates space for the nervous
       }}></div>
 
         {/* Phone Mockups Section */}
-        <section className="py-16 md:py-24 lg:py-32 bg-background">
+        <section className="pt-24 pb-16 md:pt-32 md:pb-24 lg:pt-48 lg:pb-32 bg-background">
           <div className="mx-auto px-5 md:px-12 lg:px-20 w-full">
-            <PhoneMockups />
+            <div>
+              {/* Micro-heading above mockups - centered */}
+              <p className="text-center text-white/50 uppercase tracking-[0.12em] font-medium mb-10 md:mb-12" style={{
+                fontSize: 'clamp(0.7rem, 0.8vw, 0.8rem)'
+              }}>
+                A look inside your new practice home
+              </p>
+              
+              {/* Phone Mockups - centered */}
+              <PhoneMockups />
 
+              {/* Closing Line - moved here under mockups */}
+              <p className="text-center text-white/75 mt-12 md:mt-16 max-w-[800px] mx-auto leading-[1.7] italic" style={{
+                fontSize: 'clamp(0.95rem, 1.1vw, 1.1rem)'
+              }}>Your nervous system becomes your anchor — not your obstacle.</p>
+            </div>
             {/* Light pills below mockups */}
             <div className="flex flex-col items-center gap-4 md:gap-5 mt-12 md:mt-16">
               <div className="flex flex-wrap justify-center gap-4 md:gap-6">
@@ -705,42 +719,9 @@ Through breath, movement, and sensory practice, it creates space for the nervous
           </div>
         </section>
 
-        {/* Newsletter & Contact Card Section - PREMIUM REFINED */}
-        <section className="py-10 md:py-12 lg:py-14 bg-background">
-          <div className="max-w-3xl mx-auto px-6 md:px-8 space-y-3">
-            {/* Newsletter Row */}
-            
-            
-            {/* Send A Message Row */}
-            <button onClick={() => setShowContactModal(true)} className="w-full border-[1.25px] border-white rounded-[32px] md:rounded-[36px] h-[52px] md:h-[56px] px-5 md:px-6 flex items-center justify-center hover:bg-white/5 transition-colors">
-              <span className="text-white/80 text-[13px] md:text-[14px] tracking-[0.01em]">Send A Message</span>
-            </button>
-          </div>
-        </section>
-
         {/* Spacer after Contact Section */}
         <div className="h-12 md:h-16 lg:h-20 bg-background" />
         
-        {/* Individual Testimonial Modal */}
-        <Dialog open={showIndividualTestimonialModal} onOpenChange={setShowIndividualTestimonialModal}>
-          <DialogContent hideClose className="w-[96%] sm:w-[90%] max-w-4xl min-h-[300px] max-h-[90vh] overflow-y-auto backdrop-blur-xl bg-black/30 border border-white/30 rounded-xl p-8 sm:p-10 md:p-12 flex flex-col items-center justify-center text-center !left-1/2 !top-1/2 !-translate-x-1/2 !-translate-y-1/2 !m-0">
-            <button onClick={() => setShowIndividualTestimonialModal(false)} className="absolute top-5 right-5 md:top-6 md:right-6 z-50 opacity-70 hover:opacity-100 transition-opacity">
-              <X className="w-6 h-6 text-white" />
-            </button>
-            <div className="space-y-6 w-full max-w-3xl mx-auto">
-              <h3 className="font-unica font-medium text-base md:text-lg text-white">
-                {selectedTestimonial?.name}
-              </h3>
-              <p className="text-white/90" style={{
-              fontSize: 'clamp(0.9rem, 1vw, 1rem)',
-              lineHeight: 1.6
-            }}>
-                {selectedTestimonial?.quote}
-              </p>
-            </div>
-          </DialogContent>
-        </Dialog>
-
         <NewsletterModal open={showNewsletterModal} onOpenChange={setShowNewsletterModal} />
 
         <ClassPlayerModal classId={selectedClassId} open={showClassPlayer} onClose={() => setShowClassPlayer(false)} />
