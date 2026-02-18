@@ -5,8 +5,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import {
   BookOpen,
   Calendar,
-  Mail,
-  MessageSquare,
   Users
 } from "lucide-react";
 import { useEffect } from "react";
@@ -52,7 +50,6 @@ const AdminDashboard = () => {
         { title: "Classes", path: "/admin/classes", description: "Upload and manage breathwork video classes" },
         { title: "Programs", path: "/admin/programs", description: "Create and organize class programs" },
         { title: "Categories", path: "/admin/categories", description: "Manage class categories and their images" },
-        { title: "Courses", path: "/admin/courses", description: "Manage short courses and view purchases" },
       ],
     },
     {
@@ -72,23 +69,6 @@ const AdminDashboard = () => {
       items: [
         { title: "Live Sessions", path: "/admin/live-sessions", description: "Manage live breathwork sessions and Daily.co rooms" },
         { title: "Event Bookings", path: "/admin/event-bookings", description: "View event bookings and attendee lists" },
-      ],
-    },
-    {
-      name: "Communication",
-      icon: Mail,
-      color: "#C4A4B5",
-      items: [
-        { title: "Newsletter Subscribers", path: "/admin/newsletter-subscribers", description: "View and manage newsletter subscribers" },
-        { title: "Send Newsletter", path: "/admin/send-newsletter", description: "Compose and send newsletters to subscribers" },
-      ],
-    },
-    {
-      name: "Support",
-      icon: MessageSquare,
-      color: "#A8C4D4",
-      items: [
-        { title: "Feedback", path: "/admin/feedback", description: "Review user feedback" },
       ],
     },
   ];
