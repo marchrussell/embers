@@ -13,7 +13,7 @@ const icons: Record<IconType, React.ReactNode> = {
   check: <Check className="w-5 h-5 text-[#EC9037] mt-0.5 flex-shrink-0" />,
   sparkle: <span className="text-[#EC9037] flex-shrink-0">✨</span>,
   checkmark: <span className="text-[#EC9037] flex-shrink-0">✔️</span>,
-  bullet: <span className="text-white mt-1 flex-shrink-0">•</span>,
+  bullet: null,
 };
 
 export const BenefitListItem = ({
@@ -21,6 +21,14 @@ export const BenefitListItem = ({
   children,
   className,
 }: BenefitListItemProps) => {
+  if (icon === "bullet") {
+    return (
+      <li className={cn("text-white/90 list-disc ml-5", className)}>
+        {children}
+      </li>
+    );
+  }
+
   return (
     <li className={cn("text-white/90 flex items-start gap-3", className)}>
       {icons[icon]}

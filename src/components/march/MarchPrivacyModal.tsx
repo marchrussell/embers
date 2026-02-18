@@ -32,57 +32,30 @@ export const MarchPrivacyModal = ({ open, onAccept, onReadFullPolicy }: MarchPri
           <div className="space-y-5 mt-6 text-white/80 font-light text-sm leading-relaxed">
             <div>
               <h3 className="text-[#E6DBC7] font-medium text-base mb-2">What we collect</h3>
-              <ul className="space-y-1.5 pl-4">
-                <li className="flex items-start gap-2">
-                  <span className="text-[#E6DBC7] mt-1">•</span>
-                  <span>Your chat messages and March Chat's responses (to give you tailored support)</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#E6DBC7] mt-1">•</span>
-                  <span>Activity such as sessions viewed, completed, or favourited</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#E6DBC7] mt-1">•</span>
-                  <span>Basic account info like your name, email, and app settings</span>
-                </li>
+              <ul className="space-y-1.5 pl-5">
+                <li className="list-disc">Your chat messages and March Chat's responses (to give you tailored support)</li>
+                <li className="list-disc">Activity such as sessions viewed, completed, or favourited</li>
+                <li className="list-disc">Basic account info like your name, email, and app settings</li>
               </ul>
             </div>
 
             <div>
               <h3 className="text-[#E6DBC7] font-medium text-base mb-2">How it's used</h3>
-              <ul className="space-y-1.5 pl-4">
-                <li className="flex items-start gap-2">
-                  <span className="text-[#E6DBC7] mt-1">•</span>
-                  <span>To guide your breathwork practice and track progress</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#E6DBC7] mt-1">•</span>
-                  <span>To improve the app and your March Chat experience</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#E6DBC7] mt-1">•</span>
-                  <span>Never for advertising or resale</span>
-                </li>
+              <ul className="space-y-1.5 pl-5">
+                <li className="list-disc">To guide your breathwork practice and track progress</li>
+                <li className="list-disc">To improve the app and your March Chat experience</li>
+                <li className="list-disc">Never for advertising or resale</li>
               </ul>
             </div>
 
             <div>
               <h3 className="text-[#E6DBC7] font-medium text-base mb-2">How it's protected</h3>
-              <ul className="space-y-1.5 pl-4">
-                <li className="flex items-start gap-2">
-                  <span className="text-[#E6DBC7] mt-1">•</span>
-                  <span>Conversations are stored securely and encrypted</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#E6DBC7] mt-1">•</span>
-                  <span>Only authorised systems can process your data</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#E6DBC7] mt-1">•</span>
-                  <span>
-                    <span className="font-medium text-white">You can delete your chat history or account anytime in your Profile</span>
-                    {" "}(Profile → Data & Privacy)
-                  </span>
+              <ul className="space-y-1.5 pl-5">
+                <li className="list-disc">Conversations are stored securely and encrypted</li>
+                <li className="list-disc">Only authorised systems can process your data</li>
+                <li className="list-disc">
+                  <span className="font-medium text-white">You can delete your chat history or account anytime in your Profile</span>
+                  {" "}(Profile → Data & Privacy)
                 </li>
               </ul>
             </div>

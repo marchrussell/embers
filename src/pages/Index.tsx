@@ -391,46 +391,22 @@ const Index = () => {
               {/* Left Column - What's Included */}
               <div className="space-y-5">
                 <h3 className="font-editorial text-3xl md:text-4xl text-white mb-8">What's Included</h3>
-                <ul className="space-y-5 text-xl md:text-2xl text-white/80 leading-relaxed">
-                  <li className="flex items-start gap-3">
-                    <span className="text-white/50 mt-1">•</span>
-                    <span>Customized workshops for teams of any size</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-white/50 mt-1">•</span>
-                    <span>Stress management and energy optimization</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-white/50 mt-1">•</span>
-                    <span>On-site or virtual sessions</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-white/50 mt-1">•</span>
-                    <span>Measurable improvements in focus</span>
-                  </li>
+                <ul className="space-y-5 text-xl md:text-2xl text-white/80 leading-relaxed pl-6">
+                  <li className="list-disc">Customized workshops for teams of any size</li>
+                  <li className="list-disc">Stress management and energy optimization</li>
+                  <li className="list-disc">On-site or virtual sessions</li>
+                  <li className="list-disc">Measurable improvements in focus</li>
                 </ul>
               </div>
 
               {/* Right Column - Additional Info */}
               <div className="space-y-5">
                 <h3 className="font-editorial text-3xl md:text-4xl text-white mb-8">Benefits</h3>
-                <ul className="space-y-5 text-xl md:text-2xl text-white/80 leading-relaxed">
-                  <li className="flex items-start gap-3">
-                    <span className="text-white/50 mt-1">•</span>
-                    <span>Enhanced team performance</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-white/50 mt-1">•</span>
-                    <span>Reduced workplace stress</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-white/50 mt-1">•</span>
-                    <span>Improved mental clarity</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-white/50 mt-1">•</span>
-                    <span>Better work-life balance</span>
-                  </li>
+                <ul className="space-y-5 text-xl md:text-2xl text-white/80 leading-relaxed pl-6">
+                  <li className="list-disc">Enhanced team performance</li>
+                  <li className="list-disc">Reduced workplace stress</li>
+                  <li className="list-disc">Improved mental clarity</li>
+                  <li className="list-disc">Better work-life balance</li>
                 </ul>
               </div>
             </div>

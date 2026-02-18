@@ -51,76 +51,25 @@ const SafetyDisclosure = () => {
           <p className="text-white/80 font-light leading-relaxed mb-4 text-base">
             The breathing classes and techniques in this App are not suitable for anyone with the following conditions. Please do not practice breathwork, Online or In-Person, without consulting your doctor if you have experienced or have any of the following conditions:
           </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-white/70 font-light text-base">
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Pregnancy</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Epilepsy</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Serious mental illness</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Respiratory conditions</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Seizures</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>High Blood Pressure</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Eye conditions (detached retina, cataracts, glaucoma)</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Cardiovascular disease</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Heart conditions</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Osteoporosis</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Panic attacks</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Family history of aneurysms</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Recent surgery or injury</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Spiritual emergence</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Vertigo</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Spinal disorders</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Any conditions requiring regular medication</span>
-            </div>
-          </div>
+            <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-white/70 font-light text-base pl-5">
+              <li className="list-disc">Pregnancy</li>
+              <li className="list-disc">Epilepsy</li>
+              <li className="list-disc">Serious mental illness</li>
+              <li className="list-disc">Respiratory conditions</li>
+              <li className="list-disc">Seizures</li>
+              <li className="list-disc">High Blood Pressure</li>
+              <li className="list-disc">Eye conditions (detached retina, cataracts, glaucoma)</li>
+              <li className="list-disc">Cardiovascular disease</li>
+              <li className="list-disc">Heart conditions</li>
+              <li className="list-disc">Osteoporosis</li>
+              <li className="list-disc">Panic attacks</li>
+              <li className="list-disc">Family history of aneurysms</li>
+              <li className="list-disc">Recent surgery or injury</li>
+              <li className="list-disc">Spiritual emergence</li>
+              <li className="list-disc">Vertigo</li>
+              <li className="list-disc">Spinal disorders</li>
+              <li className="list-disc">Any conditions requiring regular medication</li>
+            </ul>
         </div>
 
         {/* Breath Holds */}
@@ -129,68 +78,23 @@ const SafetyDisclosure = () => {
           <p className="text-white/80 font-light leading-relaxed mb-4">
             Breath retention exercises (breath holds) are only appropriate for individuals in good health. If you have any concerns, it's advisable to consult your doctor before participating in these exercises. Please do not practice breath holds if you have any of the following:
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-white/70 font-light">
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Cancer</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Uncontrolled hyperthyroidism</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Schizophrenia</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Sleep apnea</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Pregnancy</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>High blood pressure</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Kidney disease</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Cardiovascular issues</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Epilepsy</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Chest pains or heart problems</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Near water</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Panic disorder and anxiety</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Sickle cell anemia</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Arterial aneurysm</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Diabetes</span>
-            </div>
-          </div>
+          <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-white/70 font-light pl-5">
+            <li className="list-disc">Cancer</li>
+            <li className="list-disc">Uncontrolled hyperthyroidism</li>
+            <li className="list-disc">Schizophrenia</li>
+            <li className="list-disc">Sleep apnea</li>
+            <li className="list-disc">Pregnancy</li>
+            <li className="list-disc">High blood pressure</li>
+            <li className="list-disc">Kidney disease</li>
+            <li className="list-disc">Cardiovascular issues</li>
+            <li className="list-disc">Epilepsy</li>
+            <li className="list-disc">Chest pains or heart problems</li>
+            <li className="list-disc">Near water</li>
+            <li className="list-disc">Panic disorder and anxiety</li>
+            <li className="list-disc">Sickle cell anemia</li>
+            <li className="list-disc">Arterial aneurysm</li>
+            <li className="list-disc">Diabetes</li>
+          </ul>
         </div>
 
         {/* Where Not to Practice */}
@@ -207,15 +111,9 @@ const SafetyDisclosure = () => {
           <p className="text-white/80 font-light leading-relaxed mb-4">
             If you are currently attempting to conceive, are pregnant or in the postpartum phase, please take note of the following precautions when practicing breathwork:
           </p>
-          <ul className="space-y-3 text-white/70 font-light">
-            <li className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Some breathing techniques involve breath retentions (holding your breath) which are not recommended and should not be attempted by you during this practice.</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Some breathing techniques involve muscle tension exercises, which involve squeezing and tensing various parts of the body, including in the abdomen region. This is not recommended and should not be attempted by you during this practice.</span>
-            </li>
+          <ul className="space-y-3 text-white/70 font-light pl-5">
+            <li className="list-disc">Some breathing techniques involve breath retentions (holding your breath) which are not recommended and should not be attempted by you during this practice.</li>
+            <li className="list-disc">Some breathing techniques involve muscle tension exercises, which involve squeezing and tensing various parts of the body, including in the abdomen region. This is not recommended and should not be attempted by you during this practice.</li>
           </ul>
           <p className="text-white/80 font-light leading-relaxed mt-4">
             Instead of practicing the aforementioned techniques, allow your breath to flow back to its natural rhythm and you can then continue as normal afterwards.
@@ -233,15 +131,9 @@ const SafetyDisclosure = () => {
           <p className="text-white/80 font-light leading-relaxed mb-4">
             If you have cardiovascular problems, please note:
           </p>
-          <ul className="space-y-3 text-white/70 font-light">
-            <li className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>It is recommended to practice breathing exercises while sitting upright comfortably on a chair or with your torso raised by propping your body up at an angle.</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-[#5B9C9E] mt-1">•</span>
-              <span>Breathe 30% slower than the pace that is set during any breathing exercises. Pay attention to your body and choose the actions that feel appropriate for you.</span>
-            </li>
+          <ul className="space-y-3 text-white/70 font-light pl-5">
+            <li className="list-disc">It is recommended to practice breathing exercises while sitting upright comfortably on a chair or with your torso raised by propping your body up at an angle.</li>
+            <li className="list-disc">Breathe 30% slower than the pace that is set during any breathing exercises. Pay attention to your body and choose the actions that feel appropriate for you.</li>
           </ul>
           <div className="bg-[#5B9C9E]/10 border border-[#5B9C9E]/30 rounded-lg p-4 mt-4">
             <p className="text-sm text-white/90 font-light">
@@ -264,10 +156,9 @@ const SafetyDisclosure = () => {
         {/* Tips */}
         <div className="mb-10 pb-8 border-b border-white/10">
           <h2 className="text-lg font-light text-white mb-4 uppercase tracking-wider">Tips</h2>
-          <div className="flex items-start gap-2 text-white/70 font-light">
-            <span className="text-[#5B9C9E] mt-1">•</span>
-            <span>It is advisable to practice breathwork on an empty stomach.</span>
-          </div>
+          <ul className="text-white/70 font-light pl-5">
+            <li className="list-disc">It is advisable to practice breathwork on an empty stomach.</li>
+          </ul>
         </div>
 
         {/* Legal Disclaimer */}

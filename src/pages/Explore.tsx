@@ -989,11 +989,10 @@ const Courses = () => {
                     <p className="text-white/60 text-xs uppercase tracking-[0.15em] mb-4 font-medium">{number}</p>
                     <h4 className="text-white font-editorial mb-6 text-[1.4rem] font-light leading-[1.2]">{title}</h4>
                     <p className="text-white/70 mb-6 leading-[1.65] text-[0.9rem]">{description}</p>
-                    <ul className="text-white/60 space-y-4 mb-6 flex-grow text-[0.85rem]">
+                    <ul className="text-white/60 space-y-4 mb-6 flex-grow text-[0.85rem] pl-5">
                       {items.map((item, idx) => (
-                        <li key={idx} className="flex items-start gap-2">
-                          <span className="text-white/40 mt-0.5">•</span>
-                          <span>{item}</span>
+                        <li key={idx} className="list-disc">
+                          {item}
                         </li>
                       ))}
                     </ul>
@@ -1062,10 +1061,10 @@ const Courses = () => {
                 <p className="text-white/60 text-xs uppercase tracking-[0.15em] mb-4 font-medium relative z-10">01</p>
                 <h4 className="text-white font-editorial mb-5 relative z-10" style={{ fontSize: 'clamp(1.6rem, 2vw, 2rem)', fontWeight: 300, lineHeight: 1.2 }}>Custom Workshops</h4>
                 <p className="text-white/70 mb-6 leading-[1.75] relative z-10" style={{ fontSize: 'clamp(0.95rem, 1.05vw, 1.05rem)' }}>Targeted, in-the-moment nervous system support for teams under real work pressure.</p>
-                <ul className="text-white/60 space-y-2 mb-8 flex-grow relative z-10" style={{ fontSize: 'clamp(0.85rem, 0.95vw, 0.95rem)' }}>
-                  <li className="flex items-start gap-2"><span className="text-white/40 mt-1">•</span><span>Best for: team offsites, leadership days, moments of high stress or change</span></li>
-                  <li className="flex items-start gap-2"><span className="text-white/40 mt-1">•</span><span>Formats: 30-minute ARC Reset or 60-minute ARC Workshop</span></li>
-                  <li className="flex items-start gap-2"><span className="text-white/40 mt-1">•</span><span>Online or in person</span></li>
+                <ul className="text-white/60 space-y-2 mb-8 flex-grow relative z-10 pl-5" style={{ fontSize: 'clamp(0.85rem, 0.95vw, 0.95rem)' }}>
+                  <li className="list-disc">Best for: team offsites, leadership days, moments of high stress or change</li>
+                  <li className="list-disc">Formats: 30-minute ARC Reset or 60-minute ARC Workshop</li>
+                  <li className="list-disc">Online or in person</li>
                 </ul>
                 <button onClick={() => setShowTeamsModal(true)} className="w-full bg-transparent text-white border border-white/40 px-5 py-4 min-h-[44px] rounded-none font-normal tracking-wide hover:bg-white/10 hover:border-white/60 transition-all flex items-center justify-center gap-2 relative z-10" style={{ fontSize: 'clamp(0.9rem, 1vw, 1rem)' }}>Book a Discovery Conversation</button>
               </div>
@@ -1075,12 +1074,12 @@ const Courses = () => {
                 <p className="text-white/60 text-xs uppercase tracking-[0.15em] mb-4 font-medium relative z-10">02</p>
                 <h4 className="text-white font-editorial mb-5 relative z-10" style={{ fontSize: 'clamp(1.6rem, 2vw, 2rem)', fontWeight: 300, lineHeight: 1.2 }}>Monthly Support</h4>
                 <p className="text-white/70 mb-6 leading-[1.75] relative z-10" style={{ fontSize: 'clamp(0.95rem, 1.05vw, 1.05rem)' }}>Consistent nervous system support that builds regulation, presence, and steadiness over time.</p>
-                <ul className="text-white/60 space-y-2 mb-8 flex-grow relative z-10" style={{ fontSize: 'clamp(0.85rem, 0.95vw, 0.95rem)' }}>
-                  <li className="flex items-start gap-2"><span className="text-white/40 mt-1">•</span><span>1 × 45-minute live session per month</span></li>
-                  <li className="flex items-start gap-2"><span className="text-white/40 mt-1">•</span><span>Up to 30 people</span></li>
-                  <li className="flex items-start gap-2"><span className="text-white/40 mt-1">•</span><span>Minimum 3-month engagement</span></li>
-                  <li className="flex items-start gap-2"><span className="text-white/40 mt-1">•</span><span>Includes studio membership for participants</span></li>
-                  <li className="flex items-start gap-2"><span className="text-white/40 mt-1">•</span><span>Online or in person</span></li>
+                <ul className="text-white/60 space-y-2 mb-8 flex-grow relative z-10 pl-5" style={{ fontSize: 'clamp(0.85rem, 0.95vw, 0.95rem)' }}>
+                  <li className="list-disc">1 × 45-minute live session per month</li>
+                  <li className="list-disc">Up to 30 people</li>
+                  <li className="list-disc">Minimum 3-month engagement</li>
+                  <li className="list-disc">Includes studio membership for participants</li>
+                  <li className="list-disc">Online or in person</li>
                 </ul>
                 <button onClick={() => setShowTeamsModal(true)} className="w-full bg-transparent text-white border border-white/40 px-5 py-4 min-h-[44px] rounded-none font-normal tracking-wide hover:bg-white/10 hover:border-white/60 transition-all flex items-center justify-center gap-2 relative z-10" style={{ fontSize: 'clamp(0.9rem, 1vw, 1rem)' }}>Book a Discovery Conversation</button>
               </div>
@@ -1090,11 +1089,11 @@ const Courses = () => {
                 <p className="text-white/60 text-xs uppercase tracking-[0.15em] mb-4 font-medium relative z-10">03</p>
                 <h4 className="text-white font-editorial mb-5 relative z-10" style={{ fontSize: 'clamp(1.6rem, 2vw, 2rem)', fontWeight: 300, lineHeight: 1.2 }}>ARC Foundations (8 Weeks)</h4>
                 <p className="text-white/70 mb-6 leading-[1.75] relative z-10" style={{ fontSize: 'clamp(0.95rem, 1.05vw, 1.05rem)' }}>A structured nervous system programme for teams ready for deeper, sustainable change.</p>
-                <ul className="text-white/60 space-y-2 mb-8 flex-grow relative z-10" style={{ fontSize: 'clamp(0.85rem, 0.95vw, 0.95rem)' }}>
-                  <li className="flex items-start gap-2"><span className="text-white/40 mt-1">•</span><span>8 weekly 60-minute sessions</span></li>
-                  <li className="flex items-start gap-2"><span className="text-white/40 mt-1">•</span><span>Up to 15 participants per cohort</span></li>
-                  <li className="flex items-start gap-2"><span className="text-white/40 mt-1">•</span><span>Larger teams run multiple cohorts</span></li>
-                  <li className="flex items-start gap-2"><span className="text-white/40 mt-1">•</span><span>Online or in person</span></li>
+                <ul className="text-white/60 space-y-2 mb-8 flex-grow relative z-10 pl-5" style={{ fontSize: 'clamp(0.85rem, 0.95vw, 0.95rem)' }}>
+                  <li className="list-disc">8 weekly 60-minute sessions</li>
+                  <li className="list-disc">Up to 15 participants per cohort</li>
+                  <li className="list-disc">Larger teams run multiple cohorts</li>
+                  <li className="list-disc">Online or in person</li>
                 </ul>
                 <button onClick={() => setShowTeamsModal(true)} className="w-full bg-transparent text-white border border-white/40 px-5 py-4 min-h-[44px] rounded-none font-normal tracking-wide hover:bg-white/10 hover:border-white/60 transition-all flex items-center justify-center gap-2 relative z-10" style={{ fontSize: 'clamp(0.9rem, 1vw, 1rem)' }}>Book a Discovery Conversation</button>
               </div>
