@@ -1,5 +1,5 @@
-import marchLogo from "@/assets/march-logo.png";
 import mLogo from "@/assets/m-logo.png";
+import marchLogo from "@/assets/march-logo.png";
 import { AuthSignInModal } from "@/components/AuthSignInModal";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { Button } from "@/components/ui/button";
@@ -197,7 +197,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                   to={isMyCoursesRoute ? "/my-courses/profile" : "/studio/profile"}
                   className="flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-[#E6DBC7]/30 text-[#E6DBC7] text-sm font-light hover:border-[#E6DBC7]/50 hover:bg-white/[0.03] transition-colors duration-300"
                 >
-                  <User className="w-4 h-4" />
+                  <User className="w-5 h-5" />
                   <span>{displayName}</span>
                 </Link>
               ) : (
@@ -205,7 +205,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                   onClick={() => setShowSignInModal(true)}
                   className="flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-[#E6DBC7]/30 text-[#E6DBC7] text-sm font-light hover:border-[#E6DBC7]/50 hover:bg-white/[0.03] transition-colors duration-300"
                 >
-                  <User className="w-4 h-4" />
+                  <User className="w-5 h-5" />
                   <span>Sign In</span>
                 </button>
               )}
