@@ -1,4 +1,5 @@
 import { PrivacyModal, TermsModal } from "@/components/LegalModals";
+import { SubscriptionModal } from "@/components/modals/LazyModals";
 import {
   ChangeEmailDialog,
   ChangePasswordDialog,
@@ -8,7 +9,6 @@ import {
 } from "@/components/profile";
 import { SafetyModal } from "@/components/SafetyModal";
 import { ProfileSkeleton } from "@/components/skeletons/ProfileSkeleton";
-import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { TermsMicrocopy } from "@/components/TermsMicrocopy";
 import { Button } from "@/components/ui/button";
 import {
@@ -311,7 +311,7 @@ const Profile = () => {
               className="inline-flex items-center gap-2 text-[#E6DBC7]/70 hover:text-[#E6DBC7] transition-colors text-sm md:text-base tracking-wide shrink-0"
             >
               <ArrowLeft className="w-5 h-5" />
-              <span className="hidden sm:inline">Back to Studio</span>
+              <span className="hidden sm:inline">Back</span>
               <span className="sm:hidden">Back</span>
             </Link>
           </div>

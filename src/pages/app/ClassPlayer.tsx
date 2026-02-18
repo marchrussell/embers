@@ -1,21 +1,21 @@
-import { useEffect, useState, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
-import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
-import { Play, Pause, SkipBack, SkipForward, ArrowLeft } from "lucide-react";
-import { ClassPlayerSkeleton } from "@/components/skeletons/ClassPlayerSkeleton";
 import { OptimizedImage } from "@/components/OptimizedImage";
-import { IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 import { SafetyDisclosureModal } from "@/components/SafetyDisclosureModal";
+import { ClassPlayerSkeleton } from "@/components/skeletons/ClassPlayerSkeleton";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
+import { Slider } from "@/components/ui/slider";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
+import { ArrowLeft, Pause, Play, SkipBack, SkipForward } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 const ClassPlayer = () => {
   const { id } = useParams();
@@ -173,7 +173,7 @@ const ClassPlayer = () => {
               className="text-white hover:bg-white/10 text-base md:text-lg"
             >
               <ArrowLeft className="h-5 w-5 mr-2" />
-              Back to Studio
+              Back
             </Button>
           </div>
 

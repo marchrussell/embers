@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
 import { FullPageSkeleton } from "@/components/skeletons/FullPageSkeleton";
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { getFunctionUrl } from "@/lib/supabaseConfig";
@@ -308,7 +308,7 @@ const LiveSessionRoom = () => {
           <div className="flex gap-4 justify-center">
             <Button variant="outline" onClick={() => navigate("/studio")}>
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Studio
+              Back
             </Button>
             {error.includes("membership") && (
               <Button onClick={() => navigate("/explore")}>

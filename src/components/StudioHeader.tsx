@@ -13,7 +13,7 @@ const StudioHeader = ({
   activeTab,
   onTabChange,
   showBackButton = false,
-  backButtonLabel = "Back to Studio",
+  backButtonLabel = "Back",
   backButtonPath = "/studio",
 }: StudioHeaderProps) => {
   const navigate = useNavigate();
