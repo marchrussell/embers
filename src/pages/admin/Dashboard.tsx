@@ -57,7 +57,6 @@ const AdminDashboard = () => {
       icon: Users,
       color: "#8B9DC3",
       items: [
-        { title: "ARC Applications", path: "/admin/arc-applications", description: "Review Rise ARC Method application forms" },
         { title: "App Users & Analytics", path: "/admin/users", description: "View users, subscriptions, and key metrics" },
         { title: "Guest Teachers", path: "/admin/guest-teachers", description: "Manage upcoming guest session teachers" },
       ],
