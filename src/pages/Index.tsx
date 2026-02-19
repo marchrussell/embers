@@ -1,4 +1,3 @@
-import heroBreathworkWide from "@/assets/hero-breathwork-wide.png";
 import { Footer } from "@/components/Footer";
 import { ClassPlayerModal, ContactFormModal, ContactTeamsModal, NewsletterModal, RiseArcIntroModal, SubscriptionModal, TestimonialsModal, VaseBreathModal } from "@/components/modals/LazyModals";
 import { NavBar } from "@/components/NavBar";
@@ -482,12 +481,11 @@ const Index = () => {
       <main>
         {/* Hero Section with Optimized Background */}
         <section className="relative h-[100dvh] overflow-hidden flex flex-col justify-center items-center">
-          <OptimizedImage src={heroBreathworkWide} alt="Hero background" className="absolute inset-0 w-full h-full object-cover object-[30%_40%] lg:object-center" priority={true} optimizationOptions={{
-          quality: 85,
-          format: 'webp',
-          width: 1920,
-          height: 1080
-        }} />
+          <div className="absolute inset-0 w-full h-full" style={{
+            backgroundImage: 'url("https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?w=1920&q=85")',
+            backgroundSize: 'cover',
+            backgroundPosition: '30% 40%',
+          }} />
           
           {/* Subtle dark overlay to reduce glare */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/5 to-black/10" />
@@ -498,18 +496,57 @@ const Index = () => {
             textShadow: '0 2px 12px rgba(0,0,0,0.5)',
             fontSize: 'clamp(2.4rem, 3.5vw, 3.5rem)',
             fontWeight: 300
-          }}>Embers is a place to come back to the body.
-Through breath, movement, and sensory practice, it creates space for the nervous system to settle, perception to soften, and experience to open.
+          }}>Where your nervous system resets - and your senses awaken.
 </p>
 
-          {/* Hero Pills */}
-          <div className="flex flex-wrap gap-2 md:gap-3 mt-5 md:mt-6">
-            {["Calm the Nervous System", "Sharpen Attention", "Restore Energy", "Sleep More Deeply"].map((label) => (
-              <Pill key={label} variant="dark">{label}</Pill>
-            ))}
+          {/* Step Inside CTA */}
+          <div className="mt-5 md:mt-6">
+            <Link
+              to="/studio"
+              className="inline-flex items-center gap-2 px-8 py-3 rounded-full border border-white/30 bg-black/40 backdrop-blur-sm text-white/90 hover:bg-white/10 transition-all duration-300"
+              style={{
+                fontSize: 'clamp(0.95rem, 1.1vw, 1.1rem)',
+                fontWeight: 400,
+                letterSpacing: '0.04em',
+              }}
+            >
+              Step inside
+              <ArrowRight className="w-5 h-5" />
+            </Link>
           </div>
           </div>
 
+        </section>
+
+        {/* Second Screen - Ripple Effect */}
+        <section className="relative min-h-[100dvh] overflow-hidden flex flex-col justify-between"
+          style={{
+            backgroundImage: 'linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.6)), url("https://images.unsplash.com/photo-1510797215324-95aa89f43c33?w=1920&q=80")',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        >
+          {/* Top Text */}
+          <div className="px-5 sm:px-8 md:px-16 pt-16 sm:pt-20 md:pt-28 lg:pt-32 max-w-[900px]">
+            <p className="font-editorial text-white leading-[1.35]" style={{
+              fontSize: 'clamp(2rem, 3vw, 3rem)',
+              fontWeight: 300,
+              textShadow: '0 2px 12px rgba(0,0,0,0.5)',
+            }}>
+              Ripple Effect is a place to come back to the body.
+              <br className="hidden md:block" />{' '}
+              Through breath, movement, and sensory practice, it creates space for the nervous system to settle, perception to soften, and experience to open.
+            </p>
+          </div>
+
+          {/* Bottom Pills */}
+          <div className="px-5 sm:px-8 md:px-16 pb-8 sm:pb-10 md:pb-12">
+            <div className="flex flex-wrap gap-2 md:gap-3">
+              {["Calm the Nervous System", "Sharpen Attention", "Restore Energy", "Sleep More Deeply"].map((label) => (
+                <Pill key={label} variant="dark">{label}</Pill>
+              ))}
+            </div>
+          </div>
         </section>
 
         {/* Glowing orange divider line after hero */}
@@ -548,12 +585,12 @@ Through breath, movement, and sensory practice, it creates space for the nervous
             {/* Light pills below mockups */}
             <div className="flex flex-col items-center gap-4 md:gap-5 mt-12 md:mt-16">
               <div className="flex flex-wrap justify-center gap-4 md:gap-6">
-                {["Daily resets", "Sleep Stories", "Courses"].map((label) => (
+                {["Daily Resets", "Sleep Stories", "Courses"].map((label) => (
                   <Pill key={label} variant="light">{label}</Pill>
                 ))}
               </div>
               <div className="flex flex-wrap justify-center gap-4 md:gap-6">
-                {["Workshops + Guest Experts", "Live gathering"].map((label) => (
+                {["Workshops + Guest Experts", "Live Gathering"].map((label) => (
                   <Pill key={label} variant="light">{label}</Pill>
                 ))}
               </div>

@@ -115,13 +115,13 @@ const AdminPrograms = () => {
       const filePath = `${fileName}`;
 
       const { error: uploadError } = await supabase.storage
-        .from('class-images')
+        .from('program-images')
         .upload(filePath, file);
 
       if (uploadError) throw uploadError;
 
       const { data: { publicUrl } } = supabase.storage
-        .from('class-images')
+        .from('program-images')
         .getPublicUrl(filePath);
 
       setFormData({ ...formData, image_url: publicUrl });
