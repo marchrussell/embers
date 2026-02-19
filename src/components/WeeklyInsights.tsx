@@ -115,7 +115,7 @@ export function WeeklyInsights() {
   };
 
   const handleChatWithMarch = () => {
-    navigate("/studio/march-chat", {
+    navigate("/online/march-chat", {
       state: { quickMessage: "Can you give me insights on my progress this week and suggest what I should focus on next?" }
     });
   };

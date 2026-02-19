@@ -13,7 +13,7 @@ export const QuickTipsModal = ({ open, onClose }: QuickTipsModalProps) => {
 
   const handleExploreSession = () => {
     onClose();
-    navigate("/studio");
+    navigate('/online');
   };
 
   const handleSafetyGuidelines = () => {

@@ -6,7 +6,7 @@ const SafetyDisclosure = () => {
     <div className="min-h-screen bg-background pb-24">
       {/* Header */}
       <div className="px-6 pt-6 pb-10">
-        <Link to="/studio/about" className="inline-block mb-12">
+        <Link to="/online/about" className="inline-block mb-12">
           <div className="flex items-center gap-3 group cursor-pointer">
             <ArrowLeft className="w-6 h-6 text-white group-hover:text-[#E6DBC7] transition-colors" />
             <span className="text-base md:text-lg text-white font-semibold group-hover:text-[#E6DBC7] transition-colors">Back to About</span>
@@ -164,7 +164,7 @@ const SafetyDisclosure = () => {
         {/* Legal Disclaimer */}
         <div className="mb-10">
           <p className="text-xs text-white/50 font-light leading-relaxed mb-6">
-            March Collective Ltd. assumes no responsibility for injuries suffered while practicing these techniques and March Collective Ltd. shall not be held liable for any damages, circumstances, conditions or injuries that may occur, directly or indirectly, from engaging in any activities or ideas presented in any Application made by March Collective Ltd.
+            Ripple Effect Ltd. assumes no responsibility for injuries suffered while practicing these techniques and Ripple Effect Ltd. shall not be held liable for any damages, circumstances, conditions or injuries that may occur, directly or indirectly, from engaging in any activities or ideas presented in any Application made by Ripple Effect Ltd.
           </p>
           <p className="text-xs text-white/60 font-light leading-relaxed mb-6">
             By continuing to access and use the March app, you agree that you have read and understood the above Safety Disclosure and accept all responsibility for your physical and mental health and any resultant injury or mishap that may affect your well-being or health in any way.

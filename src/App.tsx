@@ -26,8 +26,8 @@ const PasswordReset = lazy(() => import("./pages/PasswordReset"));
 const SharedSession = lazy(() => import("./pages/SharedSession"));
 
 // App pages (lazy loaded)
-const Studio = lazy(() => import("./pages/app/Studio"));
-const StudioProgram = lazy(() => import("./pages/app/StudioProgram"));
+const OnlinePage = lazy(() => import("./pages/app/Studio"));
+const OnlineProgram = lazy(() => import("./pages/app/StudioProgram"));
 const StartHere = lazy(() => import("./pages/app/StartHere"));
 const Library = lazy(() => import("./pages/app/Library"));
 const ClassPlayer = lazy(() => import("./pages/app/ClassPlayer"));
@@ -131,18 +131,18 @@ function AppContent() {
             <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
             <Route path="/onboarding/march" element={<ProtectedRoute><MarchOnboarding /></ProtectedRoute>} />
-            <Route path="/studio/march-dashboard" element={<ProtectedRoute><MarchDashboard /></ProtectedRoute>} />
-            <Route path="/studio/march-chat" element={<ProtectedRoute><MarchChat /></ProtectedRoute>} />
+            <Route path="/online/march-dashboard" element={<ProtectedRoute><MarchDashboard /></ProtectedRoute>} />
+            <Route path="/online/march-chat" element={<ProtectedRoute><MarchChat /></ProtectedRoute>} />
             
-            {/* Studio routes - Library and About are public, others protected */}
-            <Route path="/studio" element={<Studio />} />
-            <Route path="/studio/start-here" element={<StartHere />} />
-            <Route path="/studio/program/:slug" element={<StudioProgram />} />
-            <Route path="/studio/about" element={<AppAbout />} />
-            <Route path="/studio/favourites" element={<ProtectedRoute><Favourites /></ProtectedRoute>} />
-            <Route path="/studio/class/:id" element={<ProtectedRoute><ClassPlayer /></ProtectedRoute>} />
-            <Route path="/studio/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-            <Route path="/studio/live/:sessionId" element={<ProtectedRoute><LiveSession /></ProtectedRoute>} />
+            {/* Online routes - Library and About are public, others protected */}
+            <Route path="/online" element={<OnlinePage />} />
+            <Route path="/online/start-here" element={<StartHere />} />
+            <Route path="/online/program/:slug" element={<OnlineProgram />} />
+            <Route path="/online/about" element={<AppAbout />} />
+            <Route path="/online/favourites" element={<ProtectedRoute><Favourites /></ProtectedRoute>} />
+            <Route path="/online/class/:id" element={<ProtectedRoute><ClassPlayer /></ProtectedRoute>} />
+            <Route path="/online/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path="/online/live/:sessionId" element={<ProtectedRoute><LiveSession /></ProtectedRoute>} />
             
             {/* Live Session Room - supports guest access via token */}
             <Route path="/live/:sessionId" element={<LiveSessionRoom />} />

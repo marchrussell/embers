@@ -14,7 +14,7 @@ const StudioHeader = ({
   onTabChange,
   showBackButton = false,
   backButtonLabel = "Back",
-  backButtonPath = "/studio",
+  backButtonPath = '/online',
 }: StudioHeaderProps) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -32,15 +32,15 @@ const StudioHeader = ({
     }
     
     // Infer from path
-    if (path.includes('/studio/live')) return 'live';
-    if (path.includes('/studio/program')) return 'programs';
-    if (path.includes('/studio/favourites')) return 'library';
-    if (path.includes('/studio/start-here')) return 'home';
-    if (path === '/studio') return 'home';
+    if (path.includes('/online/live')) return 'live';
+    if (path.includes('/online/program')) return 'programs';
+    if (path.includes('/online/favourites')) return 'library';
+    if (path.includes('/online/start-here')) return 'home';
+    if (path === '/online') return 'home';
     
     // Category pages are part of library
     const libraryCategories = ['calm', 'energy', 'reset', 'sleep', 'awaken', 'release', 'meditations'];
-    if (libraryCategories.some(cat => path.includes(`/studio/${cat}`))) return 'library';
+    if (libraryCategories.some(cat => path.includes(`/online/${cat}`))) return 'library';
     
     return 'home';
   };
@@ -51,7 +51,7 @@ const StudioHeader = ({
     if (onTabChange) {
       onTabChange(tab);
     } else {
-      navigate(`/studio?tab=${tab}`);
+      navigate(`/online?tab=${tab}`);
     }
   };
 
@@ -68,7 +68,7 @@ const StudioHeader = ({
       {/* About Button - Absolute position (scrolls with page) */}
       <div className="absolute top-44 md:top-52 lg:top-68 right-6 md:right-10 lg:right-12 z-50 flex items-center gap-3">
         <Link
-          to="/studio/about"
+          to="/online/about"
           className="flex items-center justify-center w-12 h-12 md:w-11 md:h-11 rounded-full border border-[#E6DBC7]/30 text-[#E6DBC7] hover:border-[#E6DBC7]/50 hover:bg-white/[0.03] transition-colors duration-300"
         >
           <Info className="w-5 h-5" />

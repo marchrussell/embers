@@ -75,10 +75,10 @@ const Onboarding = () => {
       const redirectIntent = localStorage.getItem('postOnboardingRedirect');
       if (redirectIntent === 'nervous-system-program') {
         localStorage.removeItem('postOnboardingRedirect');
-        navigate("/studio?scrollTo=nervous-system", { replace: true });
+        navigate("/online?scrollTo=nervous-system", { replace: true });
       } else {
         // Navigate without full page reload
-        navigate("/studio", { replace: true });
+        navigate('/online', { replace: true });
       }
     } catch (error: any) {
       toast.error(error.message || "Failed to complete onboarding");
@@ -362,7 +362,7 @@ const Onboarding = () => {
                 By continuing to access and use The Studio App, you agree that you have read and understood the above Safety Disclosure and accept all responsibility for your physical and mental health and any resultant injury or mishap that may affect your well-being or health in any way.
               </p>
               <p className="text-foreground/70 font-light leading-relaxed text-xs sm:text-sm md:text-sm">
-                If you have questions or comments, you may email us at <a href="mailto:support@mood-360.com" className="text-[#E6DBC7] hover:underline">support@mood-360.com</a>
+                If you have questions or comments, you may email us at <a href="mailto:support@rippleeffect.com" className="text-[#E6DBC7] hover:underline">support@rippleeffect.com</a>
               </p>
             </div>
           </div>

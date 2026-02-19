@@ -135,7 +135,7 @@ const Library = ({ isEmbedded = false, onClearCategory, shouldClearCategory = fa
     if (sessionId) {
       setSelectedSessionId(sessionId);
       // Clear the URL param without navigating
-      navigate('/studio', { replace: true });
+      navigate('/online', { replace: true });
     }
   }, [searchParams, navigate]);
 
@@ -693,7 +693,7 @@ const Library = ({ isEmbedded = false, onClearCategory, shouldClearCategory = fa
           <div className="fixed top-36 md:top-40 lg:top-36 right-8 md:right-12 lg:right-16 z-50">
             {user ? (
               <Link
-                to="/studio/profile"
+                to="/online/profile"
                 className="block px-6 py-2 rounded-full border border-white/60 text-white/90 text-sm font-light tracking-wider uppercase hover:bg-white/10 hover:border-white transition-all cursor-pointer"
               >
                 {userProfile?.full_name?.split(' ')[0] || 'Profile'}
@@ -772,7 +772,7 @@ const Library = ({ isEmbedded = false, onClearCategory, shouldClearCategory = fa
                 <div className="mt-24 md:mt-32 mb-48">
                   {/* Header with arrows */}
                   <div className="flex items-center justify-between mb-10">
-                    <Link to="/studio/favourites" className="group inline-flex items-center gap-3">
+                    <Link to="/online/favourites" className="group inline-flex items-center gap-3">
                       <h2 className="text-2xl md:text-3xl font-bold text-[#E6DBC7]">
                         Favourites
                       </h2>

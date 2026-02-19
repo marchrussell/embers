@@ -41,13 +41,13 @@ export const WeeklyResetCard = ({
     if (onClick) {
       onClick();
     } else {
-      navigate('/studio?tab=live');
+      navigate('/online?tab=live');
     }
   };
 
   const handleCopyLink = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const shareUrl = `${window.location.origin}/studio?tab=live`;
+    const shareUrl = `${window.location.origin}/online?tab=live`;
     navigator.clipboard.writeText(shareUrl);
     toast.success("Link copied to clipboard");
   };

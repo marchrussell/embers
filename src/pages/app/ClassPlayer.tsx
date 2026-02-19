@@ -169,7 +169,7 @@ const ClassPlayer = () => {
           <div className="p-6">
             <Button
               variant="ghost"
-              onClick={() => navigate("/studio")}
+              onClick={() => navigate('/online')}
               className="text-white hover:bg-white/10 text-base md:text-lg"
             >
               <ArrowLeft className="h-5 w-5 mr-2" />

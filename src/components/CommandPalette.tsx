@@ -56,10 +56,10 @@ export const CommandPalette = () => {
 
   const appRoutes = user
     ? [
-        { label: "Studio", path: "/studio", icon: Library },
-        { label: "Profile", path: "/studio/profile", icon: User },
-        { label: "Mentorship Dashboard", path: "/studio/mentorship", icon: GraduationCap },
-        { label: "Mentorship Modules", path: "/studio/mentorship/modules", icon: BookOpen },
+        { label: "Studio", path: '/online', icon: Library },
+        { label: "Profile", path: "/online/profile", icon: User },
+        { label: "Mentorship Dashboard", path: "/online/mentorship", icon: GraduationCap },
+        { label: "Mentorship Modules", path: "/online/mentorship/modules", icon: BookOpen },
       ]
     : [];
 

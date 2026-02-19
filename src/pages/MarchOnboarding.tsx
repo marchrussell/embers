@@ -79,7 +79,7 @@ export default function MarchOnboarding() {
     }
 
     if (data?.onboarding_completed) {
-      navigate("/studio/march-dashboard");
+      navigate("/online/march-dashboard");
       return;
     }
 
@@ -459,7 +459,7 @@ export default function MarchOnboarding() {
       if (profileError) throw profileError;
 
       setTimeout(() => {
-        navigate("/studio/march-dashboard");
+        navigate("/online/march-dashboard");
       }, 3000);
     } catch (error) {
       console.error("Error saving onboarding:", error);

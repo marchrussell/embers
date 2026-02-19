@@ -399,7 +399,7 @@ const Courses = () => {
               
               {/* Step Inside The Studio CTA */}
               <div className="text-center mt-14 md:mt-24 lg:mt-40 px-4 md:px-0">
-                <Link to="/studio">
+                <Link to='/online'>
                   <GlowButton variant="white" size="lg" className="px-8 md:px-14 py-4 md:py-6 min-h-[48px]" style={{
                   fontSize: 'clamp(0.95rem, 1.1vw, 1.1rem)'
                 }}>

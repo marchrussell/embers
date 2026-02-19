@@ -28,7 +28,7 @@ const RefundPolicy = memo(() => {
 
             <div className="space-y-8 text-[#E6DBC7]/90" style={{ fontSize: 'clamp(0.9rem, 1vw, 1rem)', lineHeight: 1.7 }}>
               <p>
-                Thank you for choosing to learn and practise with March Collective Ltd ("March", "we", "us" or "our").
+                Thank you for choosing to learn and practise with Ripple Effect Ltd ("March", "we", "us" or "our").
                 This Refund Policy outlines your rights and our responsibilities regarding purchases of digital courses, memberships, workshops, and live events.
               </p>
               

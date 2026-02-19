@@ -283,7 +283,7 @@ export default function PitchDeck() {
                 {/* Images - single row, all equal height and LARGE */}
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 px-0 md:px-8 lg:px-16">
                   <div className="rounded-3xl overflow-hidden h-[220px] md:h-[260px] lg:h-[300px]">
-                    <img src={amphitheaterSpace} alt="Embers amphitheater" className="w-full h-full object-cover" />
+                    <img src={amphitheaterSpace} alt="Ripple Effect amphitheater" className="w-full h-full object-cover" />
                   </div>
                   <div className="rounded-3xl overflow-hidden h-[220px] md:h-[260px] lg:h-[300px]">
                     <img src={circularCeiling} alt="Circular ceiling" className="w-full h-full object-cover" />

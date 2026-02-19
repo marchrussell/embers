@@ -23,7 +23,7 @@ const About = () => {
           <div className="mt-20 flex items-center justify-between mb-12">
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-editorial text-[#E6DBC7]">Welcome</h1>
             <Link
-              to="/studio"
+              to='/online'
               className="inline-flex items-center gap-2 text-[#E6DBC7]/70 hover:text-[#E6DBC7] transition-colors text-sm md:text-base tracking-wide shrink-0"
             >
               <ArrowLeft className="w-5 h-5" />

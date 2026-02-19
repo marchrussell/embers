@@ -405,7 +405,7 @@ export default function MarchDashboard() {
         {/* Spacer for navbar with back button */}
         <div className="h-[240px] md:h-[284px] bg-background flex items-end px-4 md:px-6 pb-6 md:pb-8">
           <button 
-            onClick={() => navigate("/studio")}
+            onClick={() => navigate('/online')}
             className="text-white/80 hover:text-white transition-colors flex items-center gap-2"
           >
             <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

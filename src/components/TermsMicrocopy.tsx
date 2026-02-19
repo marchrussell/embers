@@ -5,7 +5,7 @@ export const TermsMicrocopy = memo(() => {
     <div className="text-center py-12 px-6 bg-black">
       <div className="max-w-lg mx-auto space-y-3">
         <p className="text-[#E6DBC7]/50 text-xs md:text-sm">
-          © March Collective Ltd
+          © Ripple Effect Ltd
         </p>
         <p className="text-[#E6DBC7]/40 text-xs leading-relaxed">
           All content is educational only and not a substitute for medical or psychological care.

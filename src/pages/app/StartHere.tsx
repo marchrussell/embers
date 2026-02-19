@@ -239,7 +239,7 @@ const StartHere = () => {
           </p>
 
           {/* Weekly Reset Card - now using shared component */}
-          <WeeklyResetCard onClick={() => navigate('/studio?tab=live')} />
+          <WeeklyResetCard onClick={() => navigate('/online?tab=live')} />
         </div>
 
         {/* Closing */}

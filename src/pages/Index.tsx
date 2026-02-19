@@ -502,7 +502,7 @@ const Index = () => {
           {/* Step Inside CTA */}
           <div className="mt-5 md:mt-6">
             <Link
-              to="/studio"
+              to='/online'
               className="inline-flex items-center gap-2 px-8 py-3 rounded-full border border-white/30 bg-black/40 backdrop-blur-sm text-white/90 hover:bg-white/10 transition-all duration-300"
               style={{
                 fontSize: 'clamp(0.95rem, 1.1vw, 1.1rem)',

@@ -24,7 +24,7 @@ const PrivacyPolicy = () => {
           
           <div className="space-y-8 text-[#E6DBC7]/90" style={{ fontSize: 'clamp(0.9rem, 1vw, 1rem)', lineHeight: 1.7 }}>
             <p>
-              March Collective Ltd ("March", "we", "us", or "our") is committed to protecting your personal information and respecting your privacy rights. This Privacy Policy explains how we collect, use, store, and safeguard your personal data when you:
+              Ripple Effect Ltd ("March", "we", "us", or "our") is committed to protecting your personal information and respecting your privacy rights. This Privacy Policy explains how we collect, use, store, and safeguard your personal data when you:
             </p>
             
             <ul className="list-disc pl-6 space-y-2 text-[#E6DBC7]/80">

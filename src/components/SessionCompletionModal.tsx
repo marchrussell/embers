@@ -39,13 +39,13 @@ export const SessionCompletionModal = ({
       setShowFeedbackModal(true);
     } else {
       onClose();
-      navigate('/studio');
+      navigate('/online');
     }
   };
 
   const handleCloseFeedback = () => {
     setShowFeedbackModal(false);
-    navigate('/studio');
+    navigate('/online');
   };
   
   const handleShare = async () => {

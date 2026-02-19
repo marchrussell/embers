@@ -29,7 +29,7 @@ const Auth = () => {
     try {
       await signIn(email, password);
       toast.success("Welcome back!");
-      navigate("/studio");
+      navigate('/online');
     } catch (error: any) {
       console.error("Sign in error:", error);
       const errorMessage = error.message || "Failed to sign in";

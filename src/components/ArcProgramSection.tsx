@@ -36,7 +36,7 @@ export const ArcProgramSection = ({
           {showStudioCard && (
             <div 
               className="group relative flex flex-col md:flex-row overflow-hidden rounded-3xl cursor-pointer bg-black border border-[#E6DBC7]/20 shadow-[0_0_60px_rgba(230,219,199,0.4)] transition-colors duration-500"
-              onClick={() => navigate('/studio')}
+              onClick={() => navigate('/online')}
               style={{ minHeight: '340px' }}
             >
               {/* Image Side */}

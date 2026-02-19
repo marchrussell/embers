@@ -254,7 +254,7 @@ const Profile = () => {
     try {
       console.log("Starting sign out...");
       // Navigate FIRST to avoid ProtectedRoute redirect to /auth
-      navigate("/studio", { replace: true });
+      navigate('/online', { replace: true });
       // Then sign out
       await signOut();
       toast.success("Signed out successfully");
@@ -290,7 +290,7 @@ const Profile = () => {
           open={showSubscriptionModal && !user}
           onClose={() => {
             setShowSubscriptionModal(false);
-            navigate('/studio');
+            navigate('/online');
           }}
         />
       </Suspense>
@@ -307,7 +307,7 @@ const Profile = () => {
               Welcome {capitalizedFirstName}
             </h1>
             <Link 
-              to="/studio"
+              to='/online'
               className="inline-flex items-center gap-2 text-[#E6DBC7]/70 hover:text-[#E6DBC7] transition-colors text-sm md:text-base tracking-wide shrink-0"
             >
               <ArrowLeft className="w-5 h-5" />

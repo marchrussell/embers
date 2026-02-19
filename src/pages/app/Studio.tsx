@@ -274,7 +274,7 @@ const Studio = () => {
 
   const handleShareLiveSession = (sessionKey: string) => {
     const session = liveSessionsData[sessionKey as keyof typeof liveSessionsData];
-    const shareUrl = `${window.location.origin}/studio?tab=live`;
+    const shareUrl = `${window.location.origin}/online?tab=live`;
     const shareText = `Join March Russell for ${session.title} - ${session.description}`;
     
     if (navigator.share) {
@@ -438,7 +438,7 @@ const Studio = () => {
                     </p>
                     
                     {/* Clickable Onboarding Card - Links to dedicated page */}
-                    <Link to="/studio/start-here" className="block relative h-[380px] md:h-[400px] overflow-hidden rounded-2xl border border-[#E6DBC7]/15 shadow-[0_0_40px_rgba(230,219,199,0.15)] cursor-pointer group hover:border-[#E6DBC7]/25 transition-all">
+                    <Link to="/online/start-here" className="block relative h-[380px] md:h-[400px] overflow-hidden rounded-2xl border border-[#E6DBC7]/15 shadow-[0_0_40px_rgba(230,219,199,0.15)] cursor-pointer group hover:border-[#E6DBC7]/25 transition-all">
                       <OptimizedImage src={startHereButterfly} alt="A Simple Place to Begin" className="absolute inset-0 w-full h-full object-cover object-center" optimizationOptions={IMAGE_PRESETS.hero} />
                       <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/80 via-black/40 to-transparent md:from-background/40 md:via-transparent md:to-transparent" />
                       
@@ -537,21 +537,21 @@ const Studio = () => {
                   if (!hasSubscription && !isAdmin && !isTestUser) {
                     setShowSubscriptionModal(true);
                   } else {
-                    navigate('/studio/live/weekly-reset');
+                    navigate('/online/live/weekly-reset');
                   }
                 }} />
                     <CourseCard title={liveSessionsData.monthlyPresence.title} subtitle={liveSessionsData.monthlyPresence.subtitle} description={liveSessionsData.monthlyPresence.description} image={liveSessionsData.monthlyPresence.image} badge={liveSessionsData.monthlyPresence.isLive ? "Live Now" : undefined} onClick={() => {
                   if (!hasSubscription && !isAdmin && !isTestUser) {
                     setShowSubscriptionModal(true);
                   } else {
-                    navigate('/studio/live/monthly-presence');
+                    navigate('/online/live/monthly-presence');
                   }
                 }} />
                     <CourseCard title={liveSessionsData.guestSession.title} subtitle={liveSessionsData.guestSession.subtitle} description={liveSessionsData.guestSession.description} image={liveSessionsData.guestSession.image} badge={liveSessionsData.guestSession.isLive ? "Live Now" : undefined} imagePosition="center bottom" onClick={() => {
                   if (!hasSubscription && !isAdmin && !isTestUser) {
                     setShowSubscriptionModal(true);
                   } else {
-                    navigate('/studio/live/guest-session');
+                    navigate('/online/live/guest-session');
                   }
                 }} />
                   </div>
@@ -581,7 +581,7 @@ const Studio = () => {
                     A structured space for learning the core skills that support long-term nervous system health, resilience, and functional breathing patterns — at your own pace.
                   </p>
                   <p className="text-base md:text-lg font-light text-[#E6DBC7]/60 leading-relaxed max-w-3xl mt-4">
-                    This space exists to help you build steadiness, capacity, and trust, so the rest of Embers can meet you more fully. Foundations can be used on its own, or alongside the rest of Embers. Many people find that the skills built here quietly support everything else.
+                    This space exists to help you build steadiness, capacity, and trust, so the rest of Ripple Effect can meet you more fully. Foundations can be used on its own, or alongside the rest of Ripple Effect. Many people find that the skills built here quietly support everything else.
                   </p>
                 </div>
 
@@ -770,7 +770,7 @@ const Studio = () => {
                 )}
                 
                 {/* All courses */}
-                {courses.map((course, index) => <div key={course.id} onClick={() => navigate(`/studio/program/${course.slug}`)} className="group relative flex flex-col lg:flex-row overflow-hidden rounded-2xl border border-white/[0.12] hover:border-white/25 transition-colors duration-500 cursor-pointer shadow-[0_0_60px_rgba(230,219,199,0.4)]" style={{
+                {courses.map((course, index) => <div key={course.id} onClick={() => navigate(`/online/program/${course.slug}`)} className="group relative flex flex-col lg:flex-row overflow-hidden rounded-2xl border border-white/[0.12] hover:border-white/25 transition-colors duration-500 cursor-pointer shadow-[0_0_60px_rgba(230,219,199,0.4)]" style={{
               minHeight: '400px',
               background: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.98) 55%)'
             }}>
@@ -821,7 +821,7 @@ const Studio = () => {
                     if (!hasSubscription && !isAdmin && !isTestUser) {
                       setShowSubscriptionModal(true);
                     } else {
-                      navigate('/studio/live/weekly-reset');
+                      navigate('/online/live/weekly-reset');
                     }
                   }}
                   className="group relative flex flex-col lg:flex-row overflow-hidden rounded-2xl border border-white/[0.12] hover:border-white/25 transition-colors duration-500 cursor-pointer shadow-[0_0_60px_rgba(230,219,199,0.4)]" 
@@ -922,7 +922,7 @@ const Studio = () => {
                     if (!hasSubscription && !isAdmin && !isTestUser) {
                       setShowSubscriptionModal(true);
                     } else {
-                      navigate('/studio/live/monthly-presence');
+                      navigate('/online/live/monthly-presence');
                     }
                   }}
                   className="group relative flex flex-col lg:flex-row overflow-hidden rounded-2xl border border-white/[0.12] hover:border-white/25 transition-colors duration-500 cursor-pointer shadow-[0_0_60px_rgba(230,219,199,0.4)]" 
@@ -1023,7 +1023,7 @@ const Studio = () => {
                     if (!hasSubscription && !isAdmin && !isTestUser) {
                       setShowSubscriptionModal(true);
                     } else {
-                      navigate('/studio/live/guest-session');
+                      navigate('/online/live/guest-session');
                     }
                   }}
                   className="group relative flex flex-col lg:flex-row overflow-hidden rounded-2xl border border-white/[0.12] hover:border-white/25 transition-colors duration-500 cursor-pointer shadow-[0_0_60px_rgba(230,219,199,0.4)]" 

@@ -306,7 +306,7 @@ const LiveSessionRoom = () => {
               : "Please check the link and try again."}
           </p>
           <div className="flex gap-4 justify-center">
-            <Button variant="outline" onClick={() => navigate("/studio")}>
+            <Button variant="outline" onClick={() => navigate('/online')}>
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back
             </Button>
@@ -334,7 +334,7 @@ const LiveSessionRoom = () => {
     return (
       <div className="min-h-screen bg-black flex flex-col">
         <div className="p-6 flex items-center justify-between border-b border-white/10">
-          <Button variant="ghost" onClick={() => navigate("/studio")} className="text-white/70 hover:text-white">
+          <Button variant="ghost" onClick={() => navigate('/online')} className="text-white/70 hover:text-white">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
@@ -370,7 +370,7 @@ const LiveSessionRoom = () => {
 
             <Button
               variant="outline"
-              onClick={() => navigate("/studio")}
+              onClick={() => navigate('/online')}
               className="border-white/20 text-white/70 hover:text-white"
             >
               Return to Studio
@@ -386,7 +386,7 @@ const LiveSessionRoom = () => {
       {/* Header - hidden when in session */}
       {!hasJoined && (
         <div className="p-6 flex items-center justify-between border-b border-white/10">
-          <Button variant="ghost" onClick={() => navigate("/studio")} className="text-white/70 hover:text-white">
+          <Button variant="ghost" onClick={() => navigate('/online')} className="text-white/70 hover:text-white">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>

@@ -51,7 +51,7 @@ const PaymentSuccess = () => {
           
           if (profile?.has_completed_onboarding && profile?.has_accepted_safety_disclosure) {
             toast.success("Welcome back! Your subscription is active.");
-            navigate("/studio");
+            navigate('/online');
           } else {
             // Redirect to onboarding for safety disclosure
             navigate("/onboarding");

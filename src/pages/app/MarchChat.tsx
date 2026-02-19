@@ -281,7 +281,7 @@ export default function MarchChat() {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => navigate("/studio/march-dashboard")}
+              onClick={() => navigate("/online/march-dashboard")}
               className="hover:bg-[hsl(var(--warm-amber))]/10"
             >
               <ArrowLeft className="h-6 w-6" />
