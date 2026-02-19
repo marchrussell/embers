@@ -144,7 +144,7 @@ const StudioProgram = () => {
         <div className="pt-44 px-6 text-center">
           <p className="text-[#E6DBC7]/60 text-xl">Program not found</p>
           <button
-            onClick={() => navigate('/studio?tab=programs')}
+            onClick={() => navigate('/online?tab=programs')}
             className="mt-4 text-[#EC9037] hover:text-[#EC9037]/80 transition-colors"
           >
             Back to Programs
