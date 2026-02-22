@@ -11,7 +11,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { formatEventDate, getNextEventDate } from "@/lib/experienceDateUtils";
-import { eventsData } from "@/lib/experiencesData";
+import { experiencesData } from "@/lib/experiencesData";
 import { companyLogos, marchImages, programImages } from "@/lib/sharedAssets";
 import { ArrowRight, X } from "lucide-react";
 import { Suspense, useCallback, useEffect, useState } from "react";
@@ -670,7 +670,7 @@ const Index = () => {
 
             {/* Vertical Event Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-[1200px] mx-auto">
-              {eventsData
+              {experiencesData
                 .filter(event => event.id !== 'breath-presence-inperson' && event.id !== 'breathwork-to-dub')
                 .map((event) => {
                 const nextDate = getNextEventDate(event.recurrence, event.time);

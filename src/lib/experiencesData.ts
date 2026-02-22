@@ -16,7 +16,7 @@ import weeklyResetEvent from "@/assets/weekly-reset-event.jpg";
 // Venue address
 const AUFI_ADDRESS = "AUFI, 20 Eastcastle St, London W1W 8DB";
 
-export const eventsData: EventSchedule[] = [
+export const experiencesData: EventSchedule[] = [
   {
     id: 'unwind-rest',
     title: 'Unwind & Rest',

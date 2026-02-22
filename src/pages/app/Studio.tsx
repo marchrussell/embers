@@ -63,6 +63,16 @@ const courseImages: Record<string, string> = {
   'emotional-first-aid-kit': emotionalFirstAid,
   'nervous-system-reset': trialProgramImage
 };
+// Placeholder categories for Functional Breathing — replaced by Supabase data once categories are seeded
+const breathingPlaceholders = [
+  { id: 'p1', name: 'Nasal Breathing Foundations', duration: 10, image: null },
+  { id: 'p2', name: 'Slow & Low Breath', duration: 12, image: null },
+  { id: 'p3', name: 'Coherence Breathing', duration: 15, image: null },
+  { id: 'p4', name: 'Extended Exhale Practice', duration: 10, image: null },
+  { id: 'p5', name: 'Box Breathing Intro', duration: 8, image: null },
+  { id: 'p6', name: 'Breath Awareness', duration: 8, image: null },
+];
+
 const Studio = () => {
   const {
     user,
@@ -84,6 +94,8 @@ const Studio = () => {
   const [openCalendarId, setOpenCalendarId] = useState<string | null>(null);
   const [shouldClearLibraryCategory, setShouldClearLibraryCategory] = useState(false);
   const [foundationsFilter, setFoundationsFilter] = useState<'nervous-system' | 'functional-breathing' | null>(null);
+  const [breathingCategories, setBreathingCategories] = useState<any[]>([]);
+  const [breathingCategoriesLoading, setBreathingCategoriesLoading] = useState(false);
   
   // Fetch next guest teacher from database
   const { teacher: nextGuestTeacher } = useNextGuestTeacher();
@@ -166,6 +178,35 @@ const Studio = () => {
       setActiveTab(tabParam);
     }
   }, [searchParams]);
+  // Lazy-fetch breathing categories from Supabase when the user opens that view.
+  // Falls back to breathingPlaceholders when no rows are returned.
+  // To wire up real data: add a `foundation` column to the categories table and
+  // set it to 'functional-breathing' for the relevant rows.
+  useEffect(() => {
+    if (foundationsFilter !== 'functional-breathing') return;
+    let isMounted = true;
+
+    const fetchBreathingCategories = async () => {
+      setBreathingCategoriesLoading(true);
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { data } = await (supabase as any)
+          .from('categories')
+          .select('*')
+          .eq('foundation', 'functional-breathing')
+          .order('name');
+        if (isMounted) setBreathingCategories(data || []);
+      } catch {
+        // No matching categories yet — placeholders will show
+      } finally {
+        if (isMounted) setBreathingCategoriesLoading(false);
+      }
+    };
+
+    fetchBreathingCategories();
+    return () => { isMounted = false; };
+  }, [foundationsFilter]);
+
   const handleSessionClick = (sessionId: string) => {
     if (!sessionId) {
       toast.error("Session not found");
@@ -703,36 +744,185 @@ const Studio = () => {
 
                 {/* Filtered Content Views */}
                 {foundationsFilter === 'nervous-system' && (
-                  <div className="space-y-8">
+                  <div className="space-y-12">
+                    {/* Title & Intro */}
                     <div>
-                      <h3 className="text-2xl md:text-3xl font-editorial text-[#E6DBC7] mb-4">
+                      <h3 className="text-2xl md:text-3xl font-editorial text-[#E6DBC7] mb-5 tracking-wide uppercase">
                         Support Your Nervous System
                       </h3>
-                      <p className="text-base md:text-lg font-light text-[#E6DBC7]/60 leading-relaxed max-w-2xl">
-                        Calm, restore, and build resilience in your nervous system.
-                      </p>
+                      <div className="space-y-3 max-w-2xl">
+                        <p className="text-base font-light text-[#E6DBC7]/60 leading-relaxed">
+                          Practices in this space are designed to support regulation, recovery, and long-term adaptability.
+                        </p>
+                        <p className="text-base font-light text-[#E6DBC7]/60 leading-relaxed">
+                          You might come here to settle, restore balance, or gently build capacity over time.
+                          There's no right place to start — choose what feels most supportive today.
+                        </p>
+                      </div>
                     </div>
-                    {/* Placeholder for future content */}
-                    <div className="py-16 text-center border border-dashed border-[#E6DBC7]/20 rounded-2xl">
-                      <p className="text-[#E6DBC7]/50 text-lg font-light">Content coming soon</p>
+
+                    {/* Sub-section 1: Settle & Restore */}
+                    <div className="space-y-5">
+                      <div>
+                        <p className="text-[11px] uppercase tracking-[0.15em] text-[#D4A574] font-medium mb-2">Down-regulation and recovery</p>
+                        <h4 className="text-xl md:text-2xl font-editorial text-[#E6DBC7] mb-2">Settle & Restore</h4>
+                        <p className="text-sm font-light text-[#E6DBC7]/55 leading-relaxed max-w-2xl">
+                          Practices designed to calm the nervous system, support deep rest, and help the body return to balance after stress, anxiety, or fatigue. This is a supportive entry point when things feel overwhelming, depleted, or unsettled.
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        {[
+                          { title: 'Body Scan for Rest', duration: 15 },
+                          { title: 'Slow Breath & Release', duration: 10 },
+                          { title: 'Stillness Practice', duration: 20 },
+                        ].map((item, i) => (
+                          <div
+                            key={i}
+                            className="relative overflow-hidden flex items-center gap-3 md:gap-4 py-2 opacity-50 cursor-default"
+                          >
+                            <div className="w-16 h-16 md:w-20 md:h-20 bg-[#E6DBC7]/10 rounded flex-shrink-0" />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs text-[#D4A574] font-medium tracking-widest uppercase mb-0.5">Settle & Restore</p>
+                              <h5 className="text-base md:text-lg font-normal text-[#E6DBC7] truncate">{item.title}</h5>
+                              <p className="text-sm text-[#E6DBC7]/50 font-light">{item.duration} min</p>
+                            </div>
+                            <div className="pr-2 md:pr-4">
+                              <Play className="w-5 h-5 text-[#E6DBC7]/30" strokeWidth={1.5} fill="none" />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Sub-section 2: Gentle Activation */}
+                    <div className="space-y-5">
+                      <div>
+                        <p className="text-[11px] uppercase tracking-[0.15em] text-[#D4A574] font-medium mb-2">Safe mobilisation and engagement</p>
+                        <h4 className="text-xl md:text-2xl font-editorial text-[#E6DBC7] mb-2">Gentle Activation</h4>
+                        <p className="text-sm font-light text-[#E6DBC7]/55 leading-relaxed max-w-2xl">
+                          Practices that gently increase energy and alertness without tipping into stress or overdrive. Designed to support circulation, movement, and engagement while maintaining nervous system safety. Helpful when you feel flat, stuck, or restless rather than calm.
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        {[
+                          { title: 'Grounded Energy Flow', duration: 12 },
+                          { title: 'Wake & Warm', duration: 8 },
+                          { title: 'Gentle Arousal Breath', duration: 10 },
+                        ].map((item, i) => (
+                          <div
+                            key={i}
+                            className="relative overflow-hidden flex items-center gap-3 md:gap-4 py-2 opacity-50 cursor-default"
+                          >
+                            <div className="w-16 h-16 md:w-20 md:h-20 bg-[#E6DBC7]/10 rounded flex-shrink-0" />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs text-[#D4A574] font-medium tracking-widest uppercase mb-0.5">Gentle Activation</p>
+                              <h5 className="text-base md:text-lg font-normal text-[#E6DBC7] truncate">{item.title}</h5>
+                              <p className="text-sm text-[#E6DBC7]/50 font-light">{item.duration} min</p>
+                            </div>
+                            <div className="pr-2 md:pr-4">
+                              <Play className="w-5 h-5 text-[#E6DBC7]/30" strokeWidth={1.5} fill="none" />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Sub-section 3: Resilience & Capacity */}
+                    <div className="space-y-5">
+                      <div>
+                        <p className="text-[11px] uppercase tracking-[0.15em] text-[#D4A574] font-medium mb-2">Long-term adaptability</p>
+                        <h4 className="text-xl md:text-2xl font-editorial text-[#E6DBC7] mb-2">Resilience & Capacity</h4>
+                        <p className="text-sm font-light text-[#E6DBC7]/55 leading-relaxed max-w-2xl">
+                          Practices that gradually build nervous system capacity — the ability to stay present, regulated, and responsive under greater demand. Focused on adaptability and steadiness over time, not performance or endurance.
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        {[
+                          { title: 'Tolerance Window Expansion', duration: 18 },
+                          { title: 'Pendulation Practice', duration: 14 },
+                          { title: 'Integration & Stillness', duration: 20 },
+                        ].map((item, i) => (
+                          <div
+                            key={i}
+                            className="relative overflow-hidden flex items-center gap-3 md:gap-4 py-2 opacity-50 cursor-default"
+                          >
+                            <div className="w-16 h-16 md:w-20 md:h-20 bg-[#E6DBC7]/10 rounded flex-shrink-0" />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs text-[#D4A574] font-medium tracking-widest uppercase mb-0.5">Resilience & Capacity</p>
+                              <h5 className="text-base md:text-lg font-normal text-[#E6DBC7] truncate">{item.title}</h5>
+                              <p className="text-sm text-[#E6DBC7]/50 font-light">{item.duration} min</p>
+                            </div>
+                            <div className="pr-2 md:pr-4">
+                              <Play className="w-5 h-5 text-[#E6DBC7]/30" strokeWidth={1.5} fill="none" />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 )}
 
                 {foundationsFilter === 'functional-breathing' && (
-                  <div className="space-y-8">
+                  <div className="space-y-10">
+                    {/* Title & Intro */}
                     <div>
-                      <h3 className="text-2xl md:text-3xl font-editorial text-[#E6DBC7] mb-4">
+                      <h3 className="text-2xl md:text-3xl font-editorial text-[#E6DBC7] mb-5 tracking-wide uppercase">
                         Functional Breathing
                       </h3>
-                      <p className="text-base md:text-lg font-light text-[#E6DBC7]/60 leading-relaxed max-w-2xl">
-                        Build functional breathing foundations that support steadiness and resilience.
-                      </p>
+                      <div className="space-y-3 max-w-2xl">
+                        <p className="text-base font-light text-[#E6DBC7]/60 leading-relaxed">
+                          Functional breathing is one of the simplest ways to support nervous system regulation and optimal health.
+                        </p>
+                        <p className="text-base font-light text-[#E6DBC7]/60 leading-relaxed">
+                          The practices here focus on building ease, efficiency, and steadier breathing patterns over time — supporting resilience and recovery without force.
+                        </p>
+                      </div>
                     </div>
-                    {/* Placeholder for future content */}
-                    <div className="py-16 text-center border border-dashed border-[#E6DBC7]/20 rounded-2xl">
-                      <p className="text-[#E6DBC7]/50 text-lg font-light">Content coming soon</p>
-                    </div>
+
+                    {/* Unified session grid — Library card style */}
+                    {breathingCategoriesLoading ? (
+                      <div className="grid grid-cols-2 gap-6">
+                        {[1, 2, 3, 4, 5, 6].map((i) => (
+                          <div key={i} className="h-56 rounded-lg bg-[#E6DBC7]/10 animate-pulse" />
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-6">
+                        {(breathingCategories.length > 0 ? breathingCategories : breathingPlaceholders).map((item, i) => {
+                          const isPlaceholder = breathingCategories.length === 0;
+                          return (
+                            <div
+                              key={item.id ?? i}
+                              className={`relative overflow-hidden rounded-lg h-56 ${isPlaceholder ? 'opacity-50 cursor-default' : 'cursor-pointer'}`}
+                            >
+                              {item.image ? (
+                                <OptimizedImage
+                                  src={item.image}
+                                  alt={item.name}
+                                  className="absolute inset-0 w-full h-full object-cover"
+                                  optimizationOptions={IMAGE_PRESETS.categoryCard}
+                                  loading="lazy"
+                                />
+                              ) : (
+                                <div className="absolute inset-0 bg-[#E6DBC7]/10" />
+                              )}
+                              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+                              <div className="relative h-full flex flex-col justify-end p-6">
+                                <h5 className="text-2xl font-editorial text-[#E6DBC7] mb-2 leading-tight">{item.name}</h5>
+                                <p className="text-base font-light text-[#E6DBC7]/70">
+                                  {isPlaceholder ? `${item.duration} min` : `${item.session_count ?? 0} sessions`}
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {/* Safety note */}
+                    <p className="text-xs text-[#E6DBC7]/35 font-light leading-relaxed max-w-xl">
+                      Start gently. If you feel dizzy, panicky, or uncomfortable, return to a natural breath or choose a different practice.
+                    </p>
                   </div>
                 )}
               </div>

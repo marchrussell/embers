@@ -13,7 +13,7 @@ import {
   getOutlookCalendarUrl,
 } from "@/lib/calendarUtils";
 import { formatEventDate, getNextEventDate } from "@/lib/experienceDateUtils";
-import { EventSchedule, eventsData } from "@/lib/experiencesData";
+import { EventSchedule, experiencesData } from "@/lib/experiencesData";
 import { Calendar, Share } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -64,7 +64,7 @@ const Experiences = () => {
   }, []);
 
   // Generate calendar event details from event data
-  const getCalendarEvent = (event: typeof eventsData[0]): CalendarEvent => {
+  const getCalendarEvent = (event: typeof experiencesData[0]): CalendarEvent => {
     const nextDate = getNextEventDate(event.recurrence, event.time);
     const [hours, minutes] = event.time.split(':').map(Number);
 
@@ -88,26 +88,26 @@ const Experiences = () => {
     };
   };
 
-  const handleDownloadICal = (event: typeof eventsData[0]) => {
+  const handleDownloadICal = (event: typeof experiencesData[0]) => {
     const calendarEvent = getCalendarEvent(event);
     const filename = event.title.replace(/\s+/g, '-').toLowerCase();
     downloadICalFile(calendarEvent, filename);
     setOpenCalendarId(null);
   };
 
-  const handleGoogleCalendar = (event: typeof eventsData[0]) => {
+  const handleGoogleCalendar = (event: typeof experiencesData[0]) => {
     const calendarEvent = getCalendarEvent(event);
     window.open(getGoogleCalendarUrl(calendarEvent), '_blank');
     setOpenCalendarId(null);
   };
 
-  const handleOutlookCalendar = (event: typeof eventsData[0]) => {
+  const handleOutlookCalendar = (event: typeof experiencesData[0]) => {
     const calendarEvent = getCalendarEvent(event);
     window.open(getOutlookCalendarUrl(calendarEvent), '_blank');
     setOpenCalendarId(null);
   };
 
-  const handleShare = (event: typeof eventsData[0]) => {
+  const handleShare = (event: typeof experiencesData[0]) => {
     const shareUrl = `${window.location.origin}/experiences#${event.id}`;
     const shareText = `Join March Russell for ${event.title} - ${event.subtitle}`;
     
@@ -156,7 +156,7 @@ const Experiences = () => {
             </p>
             </div>
           <div className="space-y-9 md:space-y-10 lg:space-y-12 max-w-[1600px] mx-auto">
-              {eventsData
+              {experiencesData
                 .filter((event) => {
                   const nextDate = getNextEventDate(event.recurrence, event.time);
                   return nextDate !== null;

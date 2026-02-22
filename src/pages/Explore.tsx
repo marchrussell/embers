@@ -46,7 +46,7 @@ import { RiseArcApplicationForm } from "@/components/RiseArcApplicationForm";
 import RiseArcMethodModal from "@/components/RiseArcMethodModal";
 import { ExploreSkeleton } from "@/components/skeletons/ExploreSkeleton";
 import { formatEventDate, getNextEventDate } from "@/lib/experienceDateUtils";
-import { eventsData } from "@/lib/experiencesData";
+import { experiencesData } from "@/lib/experiencesData";
 const useScrollAnimation = () => {
   const ref = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -1206,7 +1206,7 @@ const Courses = () => {
 
             {/* Vertical Event Cards - 3 events (excluding in-person Breath, Presence) */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-[1200px] mx-auto">
-              {eventsData
+              {experiencesData
                 .filter(event => event.id !== 'breath-presence-inperson' && event.id !== 'breathwork-to-dub')
                 .map((event) => {
                 const nextDate = getNextEventDate(event.recurrence, event.time);
