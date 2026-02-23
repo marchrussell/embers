@@ -1,8 +1,8 @@
 import startHereButterfly from "@/assets/start-here-butterfly.jpg";
 import { Footer } from "@/components/Footer";
 import { NavBar } from "@/components/NavBar";
-import StudioFooter from "@/components/StudioFooter";
-import StudioHeader from "@/components/StudioHeader";
+import OnlineFooter from "@/components/OnlineFooter";
+import OnlineHeader from "@/components/OnlineHeader";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { WeeklyResetCard } from "@/components/WeeklyResetCard";
 import { useAuth } from "@/contexts/AuthContext";
@@ -82,7 +82,7 @@ const StartHere = () => {
   return (
     <div className="min-h-screen bg-background">
       <NavBar />
-      <StudioHeader />
+      <OnlineHeader />
 
       {/* Hero Section - positioned to start where tab content begins */}
       <div className="relative h-[320px] sm:h-[380px] md:h-[420px] z-10 mt-[280px] sm:mt-[320px] md:mt-[380px]">
@@ -249,7 +249,7 @@ const StartHere = () => {
           </p>
         </div>
 
-        <StudioFooter />
+        <OnlineFooter />
       </div>
 
       <div className="hidden md:block">

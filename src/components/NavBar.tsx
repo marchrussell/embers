@@ -15,31 +15,34 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
   const { user } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  const isStudioRoute = location.pathname.startsWith('/studio');
+  const isStudioRoute = location.pathname.startsWith('/online');
   const isMyCoursesRoute = location.pathname.startsWith('/my-courses');
   const isAppRoute = isStudioRoute || isMyCoursesRoute;
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [firstName, setFirstName] = useState<string | null>(null);
+  const [profileLoaded, setProfileLoaded] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
       if (!user) {
         setFirstName(null);
+        setProfileLoaded(false);
         return;
       }
-      
+
       const { data } = await supabase
         .from('profiles')
         .select('full_name')
         .eq('id', user.id)
         .single();
-      
+
       if (data?.full_name) {
         const name = data.full_name.split(' ')[0];
         setFirstName(name);
       }
+      setProfileLoaded(true);
     };
 
     fetchProfile();
@@ -54,14 +57,14 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
   }, []);
 
 
-  const displayName = firstName || user?.email?.split('@')[0] || 'PROFILE';
+  const displayName = profileLoaded ? (firstName || user?.email?.split('@')[0] || 'PROFILE') : null;
 
   return (
     <>
       <AuthSignInModal
         open={showSignInModal} 
         onClose={() => setShowSignInModal(false)} 
-        onSuccess={() => navigate("/studio")}
+        onSuccess={() => navigate(location.pathname)}
         onOpenSubscription={handleOpenSubscription}
         footerVariant="signup"
       />
@@ -175,17 +178,17 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
 
             {/* Online link */}
             <Link
-              to="/studio"
+              to='/online'
               className="relative hover:opacity-80 transition-colors uppercase whitespace-nowrap pb-1"
               style={{
-                color: location.pathname.startsWith('/studio') ? '#D4915A' : '#E6DBC7',
+                color: location.pathname.startsWith('/online') ? '#D4915A' : '#E6DBC7',
                 fontSize: '0.85rem',
                 letterSpacing: '0.12em',
                 fontWeight: 500
               }}
             >
               Online
-              {location.pathname.startsWith('/studio') && (
+              {location.pathname.startsWith('/online') && (
                 <span className="absolute bottom-0 left-0 right-0 h-[2px]" style={{ backgroundColor: '#D4915A' }} />
               )}
             </Link>
@@ -194,7 +197,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
             <div className="flex items-center shrink-0">
               {user ? (
                 <Link
-                  to={isMyCoursesRoute ? "/my-courses/profile" : "/studio/profile"}
+                  to={isMyCoursesRoute ? "/my-courses/profile" : "/online/profile"}
                   className="flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-[#E6DBC7]/30 text-[#E6DBC7] text-sm font-light hover:border-[#E6DBC7]/50 hover:bg-white/[0.03] transition-colors duration-300"
                 >
                   <User className="w-5 h-5" />
@@ -267,7 +270,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                 Experiences
               </Link>
               <Link
-                to="/studio"
+                to='/online'
                 onClick={handleCloseMobileMenu}
                 className="text-4xl md:text-5xl font-editorial font-light text-[#E6DBC7] hover:text-white transition-colors tracking-wide"
               >
@@ -278,7 +281,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                 <div className="border-t border-[#E6DBC7]/20 pt-10 md:pt-12 mt-8">
                   {user ? (
                     <Link 
-                      to={isMyCoursesRoute ? "/my-courses/profile" : "/studio/profile"}
+                      to={isMyCoursesRoute ? "/my-courses/profile" : "/online/profile"}
                       onClick={handleCloseMobileMenu}
                       className="text-3xl md:text-4xl font-editorial font-light text-white/90 hover:text-white transition-colors tracking-wide"
                     >

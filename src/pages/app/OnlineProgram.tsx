@@ -9,9 +9,9 @@ import SessionDetailModal from "./SessionDetail";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { OptimizedImage } from "@/components/OptimizedImage";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
-import StudioFooter from "@/components/StudioFooter";
+import OnlineFooter from "@/components/OnlineFooter";
 import { Footer } from "@/components/Footer";
-import StudioHeader from "@/components/StudioHeader";
+import OnlineHeader from "@/components/OnlineHeader";
 
 // Course images
 import anxietyResetDandelion from "@/assets/anxiety-reset-dandelion.jpg";
@@ -49,7 +49,7 @@ const courseImages: Record<string, string> = {
   'nervous-system-reset': trialProgramImage,
 };
 
-const StudioProgram = () => {
+const OnlineProgram = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { user, hasSubscription, isAdmin, isTestUser } = useAuth();
@@ -157,7 +157,7 @@ const StudioProgram = () => {
   return (
     <div className="min-h-screen bg-background">
       <NavBar />
-      <StudioHeader />
+      <OnlineHeader />
 
       {/* Program Hero Header - matches StartHere layout exactly */}
       <div className="relative h-[420px] z-10 mt-[340px] md:mt-[380px]">
@@ -264,7 +264,7 @@ const StudioProgram = () => {
       </div>
 
       <div className="px-6 md:px-10 lg:px-12">
-        <StudioFooter />
+        <OnlineFooter />
       </div>
 
       <Footer />
@@ -286,4 +286,4 @@ const StudioProgram = () => {
   );
 };
 
-export default StudioProgram;
+export default OnlineProgram;

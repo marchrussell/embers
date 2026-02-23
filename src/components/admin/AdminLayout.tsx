@@ -1,8 +1,8 @@
 import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
 import { useAuth } from "@/contexts/AuthContext";
 import { ArrowLeft } from "lucide-react";
-import { ReactNode, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { ReactNode } from "react";
+import { Link, Navigate } from "react-router-dom";
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -13,20 +13,13 @@ interface AdminLayoutProps {
 
 export const AdminLayout = ({ children, title, description, actions }: AdminLayoutProps) => {
   const { isAdmin, loading } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!loading && !isAdmin) {
-      navigate("/");
-    }
-  }, [isAdmin, loading, navigate]);
 
   if (loading) {
     return <AdminSkeleton />;
   }
 
   if (!isAdmin) {
-    return null;
+    return <Navigate to="/" replace />;
   }
 
   return (

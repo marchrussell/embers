@@ -2,7 +2,7 @@ import favouritesHeroImage from "@/assets/favourites-hero.jpg";
 import { ClassPlayerModal } from "@/components/ClassPlayerModal";
 import { NavBar } from "@/components/NavBar";
 import { SessionCardSkeleton } from "@/components/skeletons/SessionCardSkeleton";
-import StudioHeader from "@/components/StudioHeader";
+import OnlineHeader from "@/components/OnlineHeader";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavourites } from "@/hooks/useFavourites";
@@ -92,7 +92,7 @@ const Favourites = () => {
   return (
     <>
       <NavBar />
-      <StudioHeader />
+      <OnlineHeader />
       <Suspense fallback={null}>
         <SubscriptionModal
           open={showSubscriptionModal}

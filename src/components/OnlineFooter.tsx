@@ -1,4 +1,4 @@
-const StudioFooter = () => {
+const OnlineFooter = () => {
   return (
     <div className="text-center my-6 md:py-16 lg:py-20 mt-10 md:mt-16 border-t border-[#E6DBC7]/5 px-5 md:px-8 ">
       <p className="text-[#E6DBC7]/40 text-sm mb-2 md:mb-3">
@@ -14,4 +14,4 @@ const StudioFooter = () => {
   );
 };
 
-export default StudioFooter;
+export default OnlineFooter;

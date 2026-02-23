@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { NavBar } from "@/components/NavBar";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Calendar, Clock, Video } from "lucide-react";
+import { Calendar, Clock, Video } from "lucide-react";
 import { Footer } from "@/components/Footer";
-import StudioFooter from "@/components/StudioFooter";
+import OnlineFooter from "@/components/OnlineFooter";
 import weeklyResetEvent from "@/assets/weekly-reset-event.jpg";
 import liveSessionCountdownBg from "@/assets/live-session-countdown-bg.png";
 import heroHandsSession from "@/assets/hero-hands-session.png";
 import marchPortrait from "@/assets/march-portrait-casual.jpg";
 import guestSessionBg from "@/assets/guest-session-bg.png";
-import StudioHeader from "@/components/StudioHeader";
+import OnlineHeader from "@/components/OnlineHeader";
 import { useNextGuestTeacher, formatGuestSessionDate, getNextThirdThursday } from "@/hooks/useNextGuestTeacher";
 
 interface LiveSessionData {
@@ -53,7 +53,6 @@ const staticSessionsConfig: Record<string, LiveSessionData> = {
 const LiveSession = () => {
   const { sessionId } = useParams<{ sessionId: string }>();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   
   // Fetch next guest teacher for guest-session page
@@ -161,7 +160,7 @@ const LiveSession = () => {
   return (
     <div className="min-h-screen bg-background">
       <NavBar />
-      <StudioHeader />
+      <OnlineHeader />
       
       {/* Hero Section - matches StartHere layout */}
       <div className="relative h-[500px] z-10 mt-[340px] md:mt-[380px]">
@@ -318,7 +317,7 @@ const LiveSession = () => {
         </div>
       </div>
 
-      <StudioFooter />
+      <OnlineFooter />
       <Footer />
     </div>
   );

@@ -5,8 +5,8 @@ import weeklyResetEvent from "@/assets/weekly-reset-event.jpg";
 import { Footer } from "@/components/Footer";
 import { NavBar } from "@/components/NavBar";
 import { OptimizedImage } from "@/components/OptimizedImage";
-import StudioFooter from "@/components/StudioFooter";
-import StudioHeader from "@/components/StudioHeader";
+import OnlineFooter from "@/components/OnlineFooter";
+import OnlineHeader from "@/components/OnlineHeader";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { Button } from "@/components/ui/button";
 import { GlowButton } from "@/components/ui/glow-button";
@@ -73,7 +73,7 @@ const breathingPlaceholders = [
   { id: 'p6', name: 'Breath Awareness', duration: 8, image: null },
 ];
 
-const Studio = () => {
+const Online = () => {
   const {
     user,
     hasSubscription,
@@ -161,7 +161,7 @@ const Studio = () => {
           }
         }
       } catch (error) {
-        console.error('Studio: Error fetching data:', error);
+        console.error('Online: Error fetching data:', error);
       } finally {
         setIsLoading(false);
       }
@@ -461,7 +461,7 @@ const Studio = () => {
 
   return <div className="min-h-screen bg-background">
       <NavBar />
-      <StudioHeader activeTab={activeTab} onTabChange={handleTabChange} />
+      <OnlineHeader activeTab={activeTab} onTabChange={handleTabChange} />
 
       {/* Tab Navigation - Content area positioned below fixed header */}
       <div className="pt-44 md:pt-72 lg:pt-88 px-6 md:px-10 lg:px-12 pb-24 md:pb-0">
@@ -1462,7 +1462,7 @@ const Studio = () => {
 
           {/* Studio Footer - shown on mobile with bottom padding for sticky tabs */}
           <div className="block md:hidden">
-            <StudioFooter />
+            <OnlineFooter />
           </div> 
         </div>
 
@@ -1479,4 +1479,4 @@ const Studio = () => {
       <SessionDetailModal sessionId={selectedSessionId} open={!!selectedSessionId} onClose={() => setSelectedSessionId(null)} />
     </div>;
 };
-export default Studio;
+export default Online;

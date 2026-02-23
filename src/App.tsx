@@ -26,8 +26,8 @@ const PasswordReset = lazy(() => import("./pages/PasswordReset"));
 const SharedSession = lazy(() => import("./pages/SharedSession"));
 
 // App pages (lazy loaded)
-const OnlinePage = lazy(() => import("./pages/app/Studio"));
-const OnlineProgram = lazy(() => import("./pages/app/StudioProgram"));
+const OnlinePage = lazy(() => import("./pages/app/Online"));
+const OnlineProgram = lazy(() => import("./pages/app/OnlineProgram"));
 const StartHere = lazy(() => import("./pages/app/StartHere"));
 const Library = lazy(() => import("./pages/app/Library"));
 const ClassPlayer = lazy(() => import("./pages/app/ClassPlayer"));

@@ -1,7 +1,7 @@
 import { ArrowLeft, Info } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-interface StudioHeaderProps {
+interface OnlineHeaderProps {
   activeTab?: string;
   onTabChange?: (tab: string) => void;
   showBackButton?: boolean;
@@ -9,13 +9,13 @@ interface StudioHeaderProps {
   backButtonPath?: string;
 }
 
-const StudioHeader = ({
+const OnlineHeader = ({
   activeTab,
   onTabChange,
   showBackButton = false,
   backButtonLabel = "Back",
   backButtonPath = '/online',
-}: StudioHeaderProps) => {
+}: OnlineHeaderProps) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -23,25 +23,25 @@ const StudioHeader = ({
   const getActiveTabFromPath = () => {
     const path = location.pathname;
     const search = location.search;
-    
+
     // Check URL params first
     const params = new URLSearchParams(search);
     const tabParam = params.get('tab');
     if (tabParam && ['home', 'library', 'foundations', 'programs', 'live'].includes(tabParam)) {
       return tabParam;
     }
-    
+
     // Infer from path
     if (path.includes('/online/live')) return 'live';
     if (path.includes('/online/program')) return 'programs';
     if (path.includes('/online/favourites')) return 'library';
     if (path.includes('/online/start-here')) return 'home';
     if (path === '/online') return 'home';
-    
+
     // Category pages are part of library
     const libraryCategories = ['calm', 'energy', 'reset', 'sleep', 'awaken', 'release', 'meditations'];
     if (libraryCategories.some(cat => path.includes(`/online/${cat}`))) return 'library';
-    
+
     return 'home';
   };
 
@@ -139,4 +139,4 @@ const StudioHeader = ({
   );
 };
 
-export default StudioHeader;
+export default OnlineHeader;
