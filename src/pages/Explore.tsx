@@ -107,7 +107,7 @@ const Courses = () => {
     const fetchData = async () => {
       try {
         // Fetch categories, classes, and courses in parallel
-        const [categoriesResult, classesResult, coursesResult] = await Promise.all([supabase.from('categories').select('*').order('name'), supabase.from('classes').select('*, created_at').eq('is_published', true).order('order_index'), supabase.from('courses').select('*').eq('is_published', true).order('order_index')]);
+        const [categoriesResult, classesResult, coursesResult] = await Promise.all([supabase.from('categories').select('*').order('name'), supabase.from('classes').select('*, class_categories(category_id)').eq('is_published', true).order('order_index'), supabase.from('courses').select('*').eq('is_published', true).order('order_index')]);
         if (!isMounted) return;
         if (coursesResult.data) {
           setCourses(coursesResult.data);
@@ -115,14 +115,17 @@ const Courses = () => {
         if (categoriesResult.data) {
           setCategories(categoriesResult.data);
           if (classesResult.data) {
-            // Group classes by category
-            const grouped = classesResult.data.reduce((acc: Record<string, any[]>, classItem) => {
-              if (classItem.category_id) {
-                if (!acc[classItem.category_id]) {
-                  acc[classItem.category_id] = [];
-                }
-                acc[classItem.category_id].push(classItem);
+            // Group classes by all their categories (many-to-many via junction table)
+            const grouped = classesResult.data.reduce((acc: Record<string, any[]>, classItem: any) => {
+              const categoryIds: string[] = (classItem.class_categories || []).map((cc: any) => cc.category_id);
+              // Fallback to legacy category_id if junction table has no rows yet
+              if (categoryIds.length === 0 && classItem.category_id) {
+                categoryIds.push(classItem.category_id);
               }
+              categoryIds.forEach(catId => {
+                if (!acc[catId]) acc[catId] = [];
+                acc[catId].push(classItem);
+              });
               return acc;
             }, {});
             setClassesByCategory(grouped);

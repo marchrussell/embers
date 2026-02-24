@@ -7,10 +7,30 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
-  __InternalSupabase: {
-    PostgrestVersion: "13.0.5"
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
   }
   public: {
     Tables: {
@@ -131,9 +151,44 @@ export type Database = {
         }
         Relationships: []
       }
+      class_categories: {
+        Row: {
+          id: string
+          class_id: string
+          category_id: string
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          class_id: string
+          category_id: string
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          class_id?: string
+          category_id?: string
+          created_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_categories_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_categories_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       classes: {
         Row: {
-          audio_url: string
           category_id: string | null
           created_at: string | null
           description: string | null
@@ -153,9 +208,9 @@ export type Database = {
           teacher_name: string | null
           title: string
           updated_at: string | null
+          audio_url: string
         }
         Insert: {
-          audio_url: string
           category_id?: string | null
           created_at?: string | null
           description?: string | null
@@ -175,9 +230,9 @@ export type Database = {
           teacher_name?: string | null
           title: string
           updated_at?: string | null
+          audio_url: string
         }
         Update: {
-          audio_url?: string
           category_id?: string | null
           created_at?: string | null
           description?: string | null
@@ -197,6 +252,7 @@ export type Database = {
           teacher_name?: string | null
           title?: string
           updated_at?: string | null
+          video_url?: string
         }
         Relationships: [
           {
@@ -564,6 +620,48 @@ export type Database = {
         }
         Relationships: []
       }
+      featured_session: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          duration: number
+          id: string
+          image_url: string
+          is_active: boolean | null
+          session_id: string
+          teacher_name: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description: string
+          duration: number
+          id?: string
+          image_url: string
+          is_active?: boolean | null
+          session_id: string
+          teacher_name: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          duration?: number
+          id?: string
+          image_url?: string
+          is_active?: boolean | null
+          session_id?: string
+          teacher_name?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       feedback: {
         Row: {
           actioned: boolean | null
@@ -873,7 +971,7 @@ export type Database = {
           submodule_id: string | null
           title: string
           updated_at: string | null
-          video_url: string
+          audio_url: string
           week_number: number | null
         }
         Insert: {
@@ -892,7 +990,7 @@ export type Database = {
           submodule_id?: string | null
           title: string
           updated_at?: string | null
-          video_url: string
+          audio_url: string
           week_number?: number | null
         }
         Update: {
@@ -1617,7 +1715,7 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "user_progress_class_id_fkey"
+            foreignKeyName: "user_progress_session_id_fkey"
             columns: ["class_id"]
             isOneToOne: false
             referencedRelation: "classes"
@@ -1839,6 +1937,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
       app_role: [
@@ -1851,3 +1952,4 @@ export const Constants = {
     },
   },
 } as const
+

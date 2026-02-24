@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
@@ -30,7 +29,7 @@ interface Class {
   category_id: string | null;
   safety_note: string | null;
   show_safety_reminder: boolean;
-  category?: { id: string; name: string };
+  categories?: { id: string; name: string }[];
 }
 
 interface Category {
@@ -61,7 +60,7 @@ const AdminClasses = () => {
     audio_url: "",
     image_url: "",
     duration_minutes: "",
-    category_id: "",
+    category_ids: [] as string[],
     technique: "",
     is_published: false,
     requires_subscription: false,
@@ -101,14 +100,19 @@ const AdminClasses = () => {
       .from("classes")
       .select(`
         *,
-        category:categories!classes_category_id_fkey(id, name)
+        class_categories(category_id, categories(id, name))
       `)
       .order("created_at", { ascending: false });
-    
+
     if (error) {
       toast({ title: "Error fetching classes", description: error.message, variant: "destructive" });
     } else {
-      setClasses(data || []);
+      // Flatten junction data into a `categories` array on each class
+      const normalized = (data || []).map((c: any) => ({
+        ...c,
+        categories: (c.class_categories || []).map((cc: any) => cc.categories).filter(Boolean),
+      }));
+      setClasses(normalized);
     }
   };
 
@@ -209,8 +213,8 @@ const AdminClasses = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.title || !formData.description || !formData.audio_url || !formData.image_url || !formData.duration_minutes || !formData.category_id) {
-      toast({ title: "Missing required fields", description: "Please fill in all required fields", variant: "destructive" });
+    if (!formData.title || !formData.description || !formData.audio_url || !formData.image_url || !formData.duration_minutes || formData.category_ids.length === 0) {
+      toast({ title: "Missing required fields", description: "Please fill in all required fields including at least one category", variant: "destructive" });
       return;
     }
 
@@ -220,6 +224,7 @@ const AdminClasses = () => {
       return;
     }
 
+    // First category is used as the legacy primary category_id for backward compat
     const classData = {
       title: formData.title,
       teacher_name: formData.teacher_name || null,
@@ -228,11 +233,21 @@ const AdminClasses = () => {
       audio_url: formData.audio_url,
       image_url: formData.image_url || null,
       duration_minutes: formData.duration_minutes ? parseInt(formData.duration_minutes) : null,
-      category_id: formData.category_id || null,
+      category_id: formData.category_ids[0] || null,
       is_published: formData.is_published,
       requires_subscription: formData.requires_subscription,
       safety_note: formData.safety_note || null,
       show_safety_reminder: formData.show_safety_reminder,
+    };
+
+    const syncCategories = async (classId: string) => {
+      // Remove existing junction rows then insert the new set
+      await supabase.from("class_categories").delete().eq("class_id", classId);
+      if (formData.category_ids.length > 0) {
+        const rows = formData.category_ids.map(catId => ({ class_id: classId, category_id: catId }));
+        const { error } = await supabase.from("class_categories").insert(rows);
+        if (error) throw error;
+      }
     };
 
     if (editingClass) {
@@ -240,23 +255,33 @@ const AdminClasses = () => {
         .from("classes")
         .update(classData)
         .eq("id", editingClass.id);
-      
+
       if (error) {
         toast({ title: "Error updating class", description: error.message, variant: "destructive" });
       } else {
-        toast({ title: "Class updated successfully" });
-        fetchClasses();
-        resetForm();
+        try {
+          await syncCategories(editingClass.id);
+          toast({ title: "Class updated successfully" });
+          fetchClasses();
+          resetForm();
+        } catch (err: any) {
+          toast({ title: "Class saved but categories failed to sync", description: err.message, variant: "destructive" });
+        }
       }
     } else {
-      const { error } = await supabase.from("classes").insert(classData);
-      
-      if (error) {
-        toast({ title: "Error creating class", description: error.message, variant: "destructive" });
+      const { data: inserted, error } = await supabase.from("classes").insert(classData).select("id").single();
+
+      if (error || !inserted) {
+        toast({ title: "Error creating class", description: error?.message, variant: "destructive" });
       } else {
-        toast({ title: "Class created successfully" });
-        fetchClasses();
-        resetForm();
+        try {
+          await syncCategories(inserted.id);
+          toast({ title: "Class created successfully" });
+          fetchClasses();
+          resetForm();
+        } catch (err: any) {
+          toast({ title: "Class saved but categories failed to sync", description: err.message, variant: "destructive" });
+        }
       }
     }
   };
@@ -284,7 +309,7 @@ const AdminClasses = () => {
       audio_url: classItem.audio_url || "",
       image_url: classItem.image_url || "",
       duration_minutes: classItem.duration_minutes?.toString() || "",
-      category_id: classItem.category_id || "",
+      category_ids: classItem.categories?.map(c => c.id) || (classItem.category_id ? [classItem.category_id] : []),
       technique: "",
       is_published: classItem.is_published,
       requires_subscription: classItem.requires_subscription,
@@ -368,7 +393,7 @@ const AdminClasses = () => {
               description: classItem.description || "",
               teacher_name: classItem.teacher_name || "March Russell",
               duration: classItem.duration_minutes || 0,
-              category: classItem.category?.name || "CALM",
+              category: classItem.categories?.[0]?.name || "CALM",
               image_url: classItem.image_url || "",
               is_active: true,
             })
@@ -388,7 +413,7 @@ const AdminClasses = () => {
               description: classItem.description || "",
               teacher_name: classItem.teacher_name || "March Russell",
               duration: classItem.duration_minutes || 0,
-              category: classItem.category?.name || "CALM",
+              category: classItem.categories?.[0]?.name || "CALM",
               image_url: classItem.image_url || "",
               is_active: true,
             });
@@ -427,7 +452,7 @@ const AdminClasses = () => {
       audio_url: "",
       image_url: "",
       duration_minutes: "",
-      category_id: "",
+      category_ids: [],
       technique: "",
       is_published: false,
       requires_subscription: false,
@@ -547,17 +572,40 @@ const AdminClasses = () => {
                   </div>
                 </div>
                 <div>
-                  <Label htmlFor="category">Category *</Label>
-                  <Select value={formData.category_id} onValueChange={(value) => setFormData({ ...formData, category_id: value })}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categories.map((cat) => (
-                        <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Label className="text-white/80">
+                    Categories * {formData.category_ids.length > 0 && <span className="text-white/50 font-normal">(first selected = primary)</span>}
+                  </Label>
+                  <div className="mt-2 grid grid-cols-2 gap-2">
+                    {categories.map((cat) => {
+                      const checked = formData.category_ids.includes(cat.id);
+                      return (
+                        <label
+                          key={cat.id}
+                          className={`flex items-center gap-2 px-3 py-2 rounded-lg border cursor-pointer transition-colors ${
+                            checked
+                              ? "border-white/50 bg-white/10 text-white"
+                              : "border-white/15 bg-white/5 text-white/60 hover:border-white/30"
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            className="accent-white"
+                            checked={checked}
+                            onChange={() => {
+                              const next = checked
+                                ? formData.category_ids.filter(id => id !== cat.id)
+                                : [...formData.category_ids, cat.id];
+                              setFormData({ ...formData, category_ids: next });
+                            }}
+                          />
+                          <span className="text-sm">{cat.name}</span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                  {formData.category_ids.length === 0 && (
+                    <p className="text-xs text-red-400/80 mt-1">Please select at least one category</p>
+                  )}
                 </div>
                 
                 <div>
@@ -680,7 +728,7 @@ const AdminClasses = () => {
             {filteredClasses.map((classItem) => (
               <TableRow key={classItem.id} className="border-b border-[#E6DBC7]/10 hover:bg-white/5">
                 <TableCell className="font-medium text-white py-4">{classItem.title}</TableCell>
-                <TableCell className="text-foreground/70 py-4">{classItem.category?.name || "-"}</TableCell>
+                <TableCell className="text-foreground/70 py-4">{classItem.categories?.map(c => c.name).join(", ") || "-"}</TableCell>
                 <TableCell className="text-foreground/70 py-4">{classItem.duration_minutes ? `${classItem.duration_minutes} min` : "-"}</TableCell>
                 <TableCell className="py-4">
                   <button

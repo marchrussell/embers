@@ -34,7 +34,7 @@ export default function SessionDetailModal({
   } = useAuth();
   const { isFavourite, toggleFavourite } = useFavourites();
   const [session, setSession] = useState<any>(null);
-  const [category, setCategory] = useState<any>(null);
+  const [sessionCategories, setSessionCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showPlayer, setShowPlayer] = useState(false);
   const [showSafetyModal, setShowSafetyModal] = useState(false);
@@ -49,7 +49,7 @@ export default function SessionDetailModal({
     }
     if (!sessionId) {
       setSession(null);
-      setCategory(null);
+      setSessionCategories([]);
       setLoading(false);
       return;
     }
@@ -87,19 +87,29 @@ export default function SessionDetailModal({
         
         setSession(classData);
 
-        // Fetch category (non-blocking)
-        if (classData.category_id) {
-          supabase
-            .from("categories")
-            .select("*")
-            .eq("id", classData.category_id)
-            .maybeSingle()
-            .then(({ data: categoryData }) => {
-              if (isMounted && categoryData) {
-                setCategory(categoryData);
+        // Fetch all categories via junction table (non-blocking)
+        supabase
+          .from("class_categories")
+          .select("categories(*)")
+          .eq("class_id", sessionId.trim())
+          .then(({ data: junctionData }) => {
+            if (isMounted) {
+              const cats = (junctionData || []).map((row: any) => row.categories).filter(Boolean);
+              // Fallback to legacy category_id if junction table has no rows
+              if (cats.length === 0 && classData.category_id) {
+                supabase
+                  .from("categories")
+                  .select("*")
+                  .eq("id", classData.category_id)
+                  .maybeSingle()
+                  .then(({ data: fallbackCat }) => {
+                    if (isMounted && fallbackCat) setSessionCategories([fallbackCat]);
+                  });
+              } else {
+                setSessionCategories(cats);
               }
-            });
-        }
+            }
+          });
 
         setLoading(false);
       } catch (error) {
@@ -175,7 +185,7 @@ export default function SessionDetailModal({
         <DialogContent className="max-w-5xl w-[95%] md:w-[90%] max-h-[90vh] bg-black/95 backdrop-blur-2xl border border-white/[0.08] p-0 overflow-y-auto rounded-xl shadow-[0_8px_40px_rgba(0,0,0,0.35)]" onCloseAutoFocus={() => {
         // Clean up state after modal closes
         setSession(null);
-        setCategory(null);
+        setSessionCategories([]);
       }}>
           <DialogTitle className="sr-only">
             {session?.title || "Session Details"}
@@ -234,11 +244,10 @@ export default function SessionDetailModal({
                   if (isLocked) {
                     onShowSubscription?.();
                     onClose();
-                  } else if (session.show_safety_reminder) {
-                    // Show safety modal first if enabled
+                  } else if (session.show_safety_reminder || session.safety_note) {
+                    // Show safety popup if the class has a custom note or the reminder is toggled on
                     setShowSafetyModal(true);
                   } else {
-                    // Directly open player if no safety reminder
                     setShowPlayer(true);
                   }
                 }} className="flex-1 border-2 border-white text-white h-[52px] md:h-[56px] px-5 md:px-8 rounded-full flex items-center justify-center gap-2.5 font-medium text-[15px] md:text-[17px] tracking-wide transition-all hover:bg-white/10">
@@ -251,11 +260,15 @@ export default function SessionDetailModal({
 
               {/* Right side - Tabs for Explore, Description, and Safety */}
               <div className="flex flex-col px-7 md:px-10 lg:px-6 lg:pr-6">
-                {/* Category badge - aligned with content */}
-                {category && (
-                  <span className="text-[#D97757] text-xs md:text-sm font-light tracking-[0.12em] uppercase mb-5">
-                    {category.name}
-                  </span>
+                {/* Category badges - aligned with content */}
+                {sessionCategories.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-5">
+                    {sessionCategories.map((cat: any) => (
+                      <span key={cat.id} className="text-[#D97757] text-xs md:text-sm font-light tracking-[0.12em] uppercase">
+                        {cat.name}
+                      </span>
+                    ))}
+                  </div>
                 )}
 
                 {/* Tabs with improved styling */}
@@ -373,7 +386,7 @@ export default function SessionDetailModal({
       </Dialog>
 
       {/* Safety Reminder Modal */}
-      {session?.show_safety_reminder && <Dialog open={showSafetyModal} onOpenChange={setShowSafetyModal}>
+      {(session?.show_safety_reminder || session?.safety_note) && <Dialog open={showSafetyModal} onOpenChange={setShowSafetyModal}>
           <DialogContent className="backdrop-blur-xl bg-black/30 border border-white/30 max-w-2xl rounded-xl">
             <DialogHeader>
               <DialogTitle className="text-white text-3xl font-editorial">Safety Reminder</DialogTitle>

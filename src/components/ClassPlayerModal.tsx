@@ -27,7 +27,7 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
   const { user } = useAuth();
   const { isFavourite, toggleFavourite } = useFavourites();
   const [classData, setClassData] = useState<any>(null);
-  const [category, setCategory] = useState<any>(null);
+  const [classCategories, setClassCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
@@ -71,17 +71,22 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
             setIsPlaying(true);
           }
           
-          // Fetch category
-          if (data.category_id) {
-            const { data: categoryData } = await supabase
+          // Fetch all categories via junction table
+          const { data: junctionData } = await supabase
+            .from("class_categories")
+            .select("categories(*)")
+            .eq("class_id", classId);
+          const cats = (junctionData || []).map((row: any) => row.categories).filter(Boolean);
+          if (cats.length > 0) {
+            setClassCategories(cats);
+          } else if (data.category_id) {
+            // Fallback to legacy category_id
+            const { data: fallbackCat } = await supabase
               .from("categories")
               .select("*")
               .eq("id", data.category_id)
               .single();
-            
-            if (categoryData) {
-              setCategory(categoryData);
-            }
+            if (fallbackCat) setClassCategories([fallbackCat]);
           }
           
           // Create audio element with lazy loading
@@ -441,9 +446,9 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
                   <p className="text-[#E6DBC7]/70 text-base font-light">
                     {classData?.teacher_name || "March Russell"} • {classData?.duration_minutes || 0} min
                   </p>
-                  {category && (
+                  {classCategories.length > 0 && (
                     <p className="text-[#EC9037] text-sm mt-2 font-light tracking-[0.15em] uppercase">
-                      {category.name}
+                      {classCategories.map((c: any) => c.name).join(" · ")}
                     </p>
                   )}
                 </div>
@@ -517,9 +522,9 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
                       <p className="text-[#E6DBC7]/70 text-lg font-light">
                         {classData?.teacher_name || "March Russell"} • {classData?.duration_minutes || 0} min
                       </p>
-                      {category && (
+                      {classCategories.length > 0 && (
                         <p className="text-[#EC9037] text-base mt-3 font-light tracking-[0.15em] uppercase">
-                          {category.name}
+                          {classCategories.map((c: any) => c.name).join(" · ")}
                         </p>
                       )}
                     </div>
