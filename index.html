@@ -5,16 +5,59 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ripple Effect</title>
+
+    <!-- Preconnect to improve performance -->
+    <link rel="preconnect" href="https://qnqbmxjlqufzrqxptqsd.supabase.co" crossorigin />
+    <link rel="dns-prefetch" href="https://qnqbmxjlqufzrqxptqsd.supabase.co" />
   
- <!-- Resource hints for better performance -->
+    <!-- Resource hints for better performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&display=swap" />
 
-<!-- Preload critical fonts with proper MIME type -->
+    <!-- Preload critical fonts with proper MIME type -->
     <link rel="preload" as="font" href="/fonts/PPEditorialOld-Regular.otf" type="font/otf" crossorigin="anonymous" />
     <link rel="preload" as="font" href="/fonts/PPEditorialOld-Italic.otf" type="font/otf" crossorigin="anonymous" />
+
+    <!-- Inline critical CSS for faster FCP -->
+    <style>
+      /* Critical above-the-fold styles */
+      @font-face {
+        font-family: 'PP Editorial Old';
+        src: url('/fonts/PPEditorialOld-Regular.otf') format('opentype');
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+      
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      html {
+        scroll-behavior: smooth;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      
+      body {
+        background-color: hsl(15 33% 2%);
+        color: hsl(39 38% 84%);
+        font-family: system-ui, -apple-system, sans-serif;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+      
+      /* Hero section critical styles */
+      .hero-section {
+        min-height: 100vh;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
