@@ -79,8 +79,8 @@ export const CLOUD_IMAGE_PRESETS = {
  */
 export const CLOUD_IMAGES = {
   // Hero images
-  heroBreathworkWide: 'hero/hero-breathwork-wide.webp',
-  threeWaysMushroom: 'hero/three-ways-mushroom-v2.webp',
+  heroBreathworkWide: 'hero/breathwork-wide.webp',
+  threeWaysMushroom: 'hero/three-ways-mushroom.webp',
   communityHeroKef: 'hero/community-hero-kef.webp',
   
   // About/Bio images

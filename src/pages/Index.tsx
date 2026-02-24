@@ -13,6 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatEventDate, getNextEventDate } from "@/lib/experienceDateUtils";
 import { experiencesData } from "@/lib/experiencesData";
 import { companyLogos, marchImages, programImages } from "@/lib/sharedAssets";
+import { getCloudImageUrl, CLOUD_IMAGES } from "@/lib/cloudImageUrls";
 import { ArrowRight, X } from "lucide-react";
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -482,7 +483,7 @@ const Index = () => {
         {/* Hero Section with Optimized Background */}
         <section className="relative h-[100dvh] overflow-hidden flex flex-col justify-center items-center">
           <div className="absolute inset-0 w-full h-full" style={{
-            backgroundImage: 'url("https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?w=1920&q=85")',
+            backgroundImage: `url("${getCloudImageUrl(CLOUD_IMAGES.threeWaysMushroom, { width: 1920, quality: 85 })}")`,
             backgroundSize: 'cover',
             backgroundPosition: '30% 40%',
           }} />
@@ -521,7 +522,7 @@ const Index = () => {
         {/* Second Screen - Ripple Effect */}
         <section className="relative min-h-[100dvh] overflow-hidden flex flex-col justify-between"
           style={{
-            backgroundImage: 'linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.6)), url("https://images.unsplash.com/photo-1510797215324-95aa89f43c33?w=1920&q=80")',
+            backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.6)), url("${getCloudImageUrl(CLOUD_IMAGES.heroBreathworkWide, { width: 1920, quality: 80 })}")`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
