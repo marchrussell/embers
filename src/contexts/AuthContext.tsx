@@ -1,3 +1,4 @@
+// @refresh reset
 import { supabase } from "@/integrations/supabase/client";
 import { Session, User } from "@supabase/supabase-js";
 import React, { createContext, useContext, useEffect, useRef, useState } from "react";
@@ -45,6 +46,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         .from("user_roles")
         .select("role")
         .eq("user_id", userId);
+
+        console.log('checkAdminRole data', data);
       
       if (error || !data) {
         setIsAdmin(false);
@@ -273,11 +276,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       );
 
       // Run additional checks in the background (don't block sign-in completion)
+      setLoading(true);
       Promise.all([
         checkAdminRole(data.session.user.id),
         checkSubscription(data.session.user.id),
         checkOnboardingStatus(data.session.user.id)
-      ]).catch(() => {});
+      ]).catch(() => {}).finally(() => setLoading(false));
     }
   };
 

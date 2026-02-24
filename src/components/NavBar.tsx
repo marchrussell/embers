@@ -7,17 +7,17 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Menu, User, X } from "lucide-react";
 import { memo, Suspense, useCallback, useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 // Sheet import removed - using custom overlay menu instead
 
 export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) => {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const location = useLocation();
-  const navigate = useNavigate();
-  const isStudioRoute = location.pathname.startsWith('/online');
+
+  const isOnlineRoute = location.pathname.startsWith('/online');
   const isMyCoursesRoute = location.pathname.startsWith('/my-courses');
-  const isAppRoute = isStudioRoute || isMyCoursesRoute;
+  const isAppRoute = isOnlineRoute || isMyCoursesRoute;
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [firstName, setFirstName] = useState<string | null>(null);
@@ -59,12 +59,14 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
 
   const displayName = profileLoaded ? (firstName || user?.email?.split('@')[0] || 'PROFILE') : null;
 
+
+  console.log('navbar user isAdmin', isAdmin)
   return (
     <>
       <AuthSignInModal
         open={showSignInModal} 
         onClose={() => setShowSignInModal(false)} 
-        onSuccess={() => navigate(location.pathname)}
+        //onSuccess={() => navigate(location)}
         onOpenSubscription={handleOpenSubscription}
         footerVariant="signup"
       />
@@ -193,6 +195,25 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
               )}
             </Link>
 
+            {/* Admin link - only visible to admins */}
+            {isAdmin && (
+              <Link
+                to="/admin"
+                className="relative hover:opacity-80 transition-colors uppercase whitespace-nowrap pb-1"
+                style={{
+                  color: location.pathname.startsWith('/admin') ? '#D4915A' : '#E6DBC7',
+                  fontSize: '0.85rem',
+                  letterSpacing: '0.12em',
+                  fontWeight: 500
+                }}
+              >
+                Admin
+                {location.pathname.startsWith('/admin') && (
+                  <span className="absolute bottom-0 left-0 right-0 h-[2px]" style={{ backgroundColor: '#D4915A' }} />
+                )}
+              </Link>
+            )}
+
             {/* Sign In / Profile */}
             <div className="flex items-center shrink-0">
               {user ? (
@@ -276,7 +297,16 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
               >
                 Online
               </Link>
-              
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  onClick={handleCloseMobileMenu}
+                  className="text-4xl md:text-5xl font-editorial font-light text-[#E6DBC7] hover:text-white transition-colors tracking-wide"
+                >
+                  Admin
+                </Link>
+              )}
+
               {isAppRoute && (
                 <div className="border-t border-[#E6DBC7]/20 pt-10 md:pt-12 mt-8">
                   {user ? (
