@@ -133,107 +133,200 @@
 @layer base {
   :root {
     /* March Design System - Background Colors */
-    --bg-dark: 0 0% 4%;
-    --bg-coffee: 30 15% 12%;
-    --bg-bone: 40 30% 88%;
-    --bg-bone-light: 40 30% 94%;
+    --bg-dark: 0 0% 0%;
+    --bg-coffee: 30 10% 26%;
+    --bg-bone: 39 38% 84%;
+    --bg-bone-light: 39 35% 94%;
 
     /* March Design System - Text Colors */
-    --text-light: 40 20% 88%;
-    --text-dark: 0 0% 10%;
+    --text-light: 39 38% 84%;
+    --text-light-muted: 39 38% 84%;
+    --text-dark: 30 13% 7%;
+    --text-dark-muted: 30 13% 7%;
 
     /* March Design System - Accent Colors */
-    --accent-warm-primary: 25 70% 55%;
-    --accent-warm-secondary: 35 60% 70%;
+    --accent-warm-primary: 30 29% 55%;
+    --accent-warm-secondary: 30 29% 55%;
+
+    /* Border Colors (HSL) */
+    --border-light: 0 0% 100%;
+    --border-dark: 30 13% 7%;
+    --border-subtle-light: 0 0% 100%;
+    --border-subtle-dark: 30 13% 20%;
+    
+    /* Radius */
+    --radius-pill: 999px;
+    --radius-card: 24px;
+    --radius-sm: 12px;
+    
+    /* Spacing Scale */
+    --space-4: 4px;
+    --space-8: 8px;
+    --space-16: 16px;
+    --space-24: 24px;
+    --space-32: 32px;
+    --space-40: 40px;
+    --space-64: 64px;
+    --space-96: 96px;
+    --space-120: 120px;
+    --space-160: 160px;
 
     /* Shadcn/UI Theme Colors */
-    --background: 0 0% 4%;
-    --foreground: 40 20% 88%;
+    --background: 0 0% 0%;
+    --foreground: 39 38% 84%;
 
-    --card: 0 0% 6%;
-    --card-foreground: 40 20% 88%;
+    --card: 0 0% 4%;
+    --card-foreground: 39 38% 84%;
 
-    --popover: 0 0% 6%;
-    --popover-foreground: 40 20% 88%;
+    --popover: 0 0% 4%;
+    --popover-foreground: 39 38% 84%;
 
-    --primary: 25 70% 55%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 30 80% 57%;
+    --primary-foreground: 0 0% 0%;
 
-    --secondary: 0 0% 12%;
-    --secondary-foreground: 40 20% 88%;
+    --secondary: 39 38% 84%;
+    --secondary-foreground: 0 0% 0%;
 
     --muted: 0 0% 15%;
-    --muted-foreground: 40 10% 60%;
+    --muted-foreground: 39 20% 50%;
 
-    --accent: 35 60% 70%;
-    --accent-foreground: 0 0% 10%;
+    --accent: 30 52% 64%;
+    --accent-foreground: 0 0% 0%;
 
-    --destructive: 0 62% 50%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 39 38% 84%;
 
-    --border: 0 0% 18%;
-    --input: 0 0% 18%;
-    --ring: 25 70% 55%;
+    --border: 0 0% 100%;
+    --input: 0 0% 0%;
+    --ring: 0 0% 100%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     /* Sidebar Colors */
-    --sidebar-background: 0 0% 6%;
-    --sidebar-foreground: 40 20% 88%;
-    --sidebar-primary: 25 70% 55%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 12%;
-    --sidebar-accent-foreground: 40 20% 88%;
-    --sidebar-border: 0 0% 18%;
-    --sidebar-ring: 25 70% 55%;
+    --sidebar-background: 0 0% 4%;
+    --sidebar-foreground: 39 38% 84%;
+    --sidebar-primary: 30 80% 57%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 0 0% 15%;
+    --sidebar-accent-foreground: 39 38% 84%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 30 80% 57%;
   }
 
   .dark {
-    /* Dark mode uses the same values since the app is dark-themed */
-    --background: 0 0% 4%;
-    --foreground: 40 20% 88%;
+    --background: 0 0% 0%;
+    --foreground: 39 38% 84%;
 
-    --card: 0 0% 6%;
-    --card-foreground: 40 20% 88%;
+    --card: 0 0% 4%;
+    --card-foreground: 39 38% 84%;
 
-    --popover: 0 0% 6%;
-    --popover-foreground: 40 20% 88%;
+    --popover: 0 0% 4%;
+    --popover-foreground: 39 38% 84%;
 
-    --primary: 25 70% 55%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 30 80% 57%;
+    --primary-foreground: 0 0% 0%;
 
-    --secondary: 0 0% 12%;
-    --secondary-foreground: 40 20% 88%;
+    --secondary: 39 38% 84%;
+    --secondary-foreground: 0 0% 0%;
 
     --muted: 0 0% 15%;
-    --muted-foreground: 40 10% 60%;
+    --muted-foreground: 39 20% 50%;
 
-    --accent: 35 60% 70%;
-    --accent-foreground: 0 0% 10%;
+    --accent: 30 52% 64%;
+    --accent-foreground: 0 0% 0%;
 
-    --destructive: 0 62% 50%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 39 38% 84%;
 
-    --border: 0 0% 18%;
-    --input: 0 0% 18%;
-    --ring: 25 70% 55%;
+    --border: 0 0% 100%;
+    --input: 0 0% 0%;
+    --ring: 0 0% 100%;
+    --sidebar-background: 0 0% 4%;
+    --sidebar-foreground: 39 38% 84%;
+    --sidebar-primary: 30 80% 57%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 0 0% 15%;
+    --sidebar-accent-foreground: 39 38% 84%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 30 80% 57%;
   }
 }
 
-/* Base styles */
-* {
-  border-color: hsl(var(--border));
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    font-size: 14px;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  @media (max-width: 1400px) {
+    html {
+      font-size: 13.5px;
+    }
+  }
+  
+  @media (max-width: 1200px) {
+    html {
+      font-size: 13px;
+    }
+  }
+  
+  @media (max-width: 992px) {
+    html {
+      font-size: 12.5px;
+    }
+  }
+
+  body {
+    @apply bg-background text-foreground font-unica;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
 }
 
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
-  font-family: 'Unica77', system-ui, -apple-system, sans-serif;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Optimized animations */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
+
+.animate-shimmer {
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+.page-transition {
+  animation: pageTransition 0.15s ease-out;
+}
+
+@keyframes pageTransition {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Glowing border effect for Events page */
+.flowing-border-btn {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid rgba(255,255,255,0.6);
+  box-shadow: 0 0 12px rgba(255,255,255,0.3), 0 0 24px rgba(255,255,255,0.15), inset 0 0 8px rgba(255,255,255,0.1);
+}
+
+img {
+  content-visibility: auto;
+  contain-intrinsic-size: 300px 300px;
+}
+
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.will-change-transform { will-change: transform; }
+.will-change-opacity { will-change: opacity; }
