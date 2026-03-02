@@ -27,7 +27,7 @@ const OnlineHeader = ({
     // Check URL params first
     const params = new URLSearchParams(search);
     const tabParam = params.get('tab');
-    if (tabParam && ['home', 'library', 'foundations', 'programs', 'live'].includes(tabParam)) {
+    if (tabParam && ['home', 'library', 'programs', 'live'].includes(tabParam)) {
       return tabParam;
     }
 
@@ -58,7 +58,6 @@ const OnlineHeader = ({
   const tabs = [
     { id: 'home', label: 'Home' },
     { id: 'library', label: 'Library' },
-    { id: 'foundations', label: 'Foundations' },
     { id: 'programs', label: 'Courses' },
     { id: 'live', label: 'Live' },
   ];
