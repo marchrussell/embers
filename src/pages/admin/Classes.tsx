@@ -742,6 +742,7 @@ const AdminClasses = () => {
               <TableHead className="text-[#E6DBC7] font-normal text-sm py-4">Title</TableHead>
               <TableHead className="text-[#E6DBC7] font-normal text-sm py-4">Category</TableHead>
               <TableHead className="text-[#E6DBC7] font-normal text-sm py-4">Duration</TableHead>
+              <TableHead className="text-[#E6DBC7] font-normal text-sm py-4">Intensity</TableHead>
               <TableHead className="text-[#E6DBC7] font-normal text-sm py-4">Status</TableHead>
               <TableHead className="text-[#E6DBC7] font-normal text-sm py-4">Access</TableHead>
               <TableHead className="text-[#E6DBC7] font-normal text-sm py-4 text-right">Actions</TableHead>
@@ -753,6 +754,7 @@ const AdminClasses = () => {
                 <TableCell className="font-medium text-white py-4">{classItem.title}</TableCell>
                 <TableCell className="text-foreground/70 py-4">{classItem.categories?.map(c => c.name).join(", ") || "-"}</TableCell>
                 <TableCell className="text-foreground/70 py-4">{classItem.duration_minutes ? `${classItem.duration_minutes} min` : "-"}</TableCell>
+                <TableCell className="text-foreground/70 py-4">{classItem.intensity || "-"}</TableCell>
                 <TableCell className="py-4">
                   <button
                     onClick={() => togglePublish(classItem)}
@@ -777,8 +779,8 @@ const AdminClasses = () => {
                 <TableCell className="py-4">
                   <div className="flex gap-2 justify-end">
                     <Button 
-                      variant="ghost" 
-                      size="sm" 
+                      variant="ghost"
+                      size="default"
                       onClick={() => setAsFeatured(classItem)}
                       title="Set as featured class"
                       className="hover:bg-white/10"
