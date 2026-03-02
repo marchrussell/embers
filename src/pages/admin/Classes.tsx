@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
@@ -29,6 +30,7 @@ interface Class {
   category_id: string | null;
   safety_note: string | null;
   show_safety_reminder: boolean;
+  intensity: string | null;
   categories?: { id: string; name: string }[];
 }
 
@@ -66,6 +68,7 @@ const AdminClasses = () => {
     requires_subscription: false,
     safety_note: "",
     show_safety_reminder: false,
+    intensity: "",
   });
 
   useEffect(() => {
@@ -238,6 +241,7 @@ const AdminClasses = () => {
       requires_subscription: formData.requires_subscription,
       safety_note: formData.safety_note || null,
       show_safety_reminder: formData.show_safety_reminder,
+      intensity: formData.intensity || null,
     };
 
     const syncCategories = async (classId: string) => {
@@ -315,6 +319,7 @@ const AdminClasses = () => {
       requires_subscription: classItem.requires_subscription,
       safety_note: classItem.safety_note || "",
       show_safety_reminder: classItem.show_safety_reminder || false,
+      intensity: classItem.intensity || "",
     });
     setIsDialogOpen(true);
   };
@@ -458,6 +463,7 @@ const AdminClasses = () => {
       requires_subscription: false,
       safety_note: "",
       show_safety_reminder: false,
+      intensity: "",
     });
     setEditingClass(null);
     setIsDialogOpen(false);
@@ -630,7 +636,24 @@ const AdminClasses = () => {
                   />
                   <p className="text-xs text-muted-foreground mt-1">Short description of the breathing technique used</p>
                 </div>
-                
+
+                <div>
+                  <Label htmlFor="intensity">Intensity</Label>
+                  <Select
+                    value={formData.intensity}
+                    onValueChange={(val) => setFormData({ ...formData, intensity: val })}
+                  >
+                    <SelectTrigger id="intensity" className="mt-1 bg-white/5 border-white/20 text-white">
+                      <SelectValue placeholder="Select intensity" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {["Gentle–Moderate", "Moderate", "Moderate–Strong", "Strong"].map((level) => (
+                        <SelectItem key={level} value={level}>{level}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
                 <div className="space-y-4 pt-4 border-t border-border">
                   <h3 className="text-lg font-semibold">Safety Note</h3>
                   <div>
