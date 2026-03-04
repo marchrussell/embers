@@ -197,6 +197,7 @@ export type Database = {
           goal_fit: Json | null
           id: string
           image_url: string | null
+          is_featured: boolean | null
           is_published: boolean | null
           order_index: number | null
           program_id: string | null
@@ -220,6 +221,7 @@ export type Database = {
           goal_fit?: Json | null
           id?: string
           image_url?: string | null
+          is_featured?: boolean | null
           is_published?: boolean | null
           order_index?: number | null
           program_id?: string | null
@@ -243,6 +245,7 @@ export type Database = {
           goal_fit?: Json | null
           id?: string
           image_url?: string | null
+          is_featured?: boolean | null
           is_published?: boolean | null
           order_index?: number | null
           program_id?: string | null

@@ -85,17 +85,16 @@ const AdminClasses = () => {
 
   const fetchFeaturedClass = async () => {
     const { data, error } = await supabase
-      .from("featured_class")
-      .select("class_id")
-      .eq("is_active", true)
+      .from("classes")
+      .select("id")
+      .eq("is_featured", true)
       .maybeSingle();
-    
+
     if (error) {
       console.error("Error fetching featured class:", error);
     }
-    
-    console.log("Featured class data:", data);
-    setFeaturedClassId(data?.class_id || null);
+
+    setFeaturedClassId(data?.id || null);
   };
 
   const fetchClasses = async () => {
@@ -338,112 +337,53 @@ const AdminClasses = () => {
   };
 
   const setAsFeatured = async (classItem: Class) => {
-    console.log("Setting as featured:", { classItemId: classItem.id, featuredClassId });
-    const isCurrentlyFeatured = String(featuredClassId) === String(classItem.id);
-    
-    if (isCurrentlyFeatured) {
-      if (!confirm("Remove this class from being featured on the library page?")) return;
-    } else {
-      if (!confirm("Set this class as the featured class on the library page?")) return;
-    }
+    const isCurrentlyFeatured = featuredClassId === classItem.id;
 
     try {
       if (isCurrentlyFeatured) {
-        // Deactivate the currently featured class
         const { error } = await supabase
-          .from("featured_class")
-          .update({ is_active: false })
-          .eq("class_id", String(classItem.id));
+          .from("classes")
+          .update({ is_featured: false })
+          .eq("id", classItem.id);
 
-        if (error) {
-          console.error("Error deactivating featured class:", error);
-          throw error;
-        }
+        if (error) throw error;
 
         setFeaturedClassId(null);
-        toast({ 
-          title: "Featured class removed", 
-          description: `${classItem.title} is no longer featured` 
+        toast({
+          title: "Featured class removed",
+          description: `${classItem.title} is no longer featured`,
         });
       } else {
-        // First, deactivate all current featured classes
-        const { error: deactivateError } = await supabase
-          .from("featured_class")
-          .update({ is_active: false })
-          .eq("is_active", true);
+        // Unfeature any currently featured class
+        const { error: clearError } = await supabase
+          .from("classes")
+          .update({ is_featured: false })
+          .eq("is_featured", true);
 
-        if (deactivateError) {
-          console.error("Error deactivating all featured classes:", deactivateError);
-          throw deactivateError;
-        }
+        if (clearError) throw clearError;
 
-        // Check if this class already has a featured_class record
-        const { data: existing, error: selectError } = await supabase
-          .from("featured_class")
-          .select("id")
-          .eq("class_id", String(classItem.id))
-          .maybeSingle();
+        // Set this class as featured
+        const { error: setError } = await supabase
+          .from("classes")
+          .update({ is_featured: true })
+          .eq("id", classItem.id);
 
-        if (selectError) {
-          console.error("Error checking existing featured class:", selectError);
-          throw selectError;
-        }
+        if (setError) throw setError;
 
-        if (existing) {
-          // Update existing record
-          const { error: updateError } = await supabase
-            .from("featured_class")
-            .update({
-              title: classItem.title,
-              description: classItem.description || "",
-              teacher_name: classItem.teacher_name || "March Russell",
-              duration: classItem.duration_minutes || 0,
-              category: classItem.categories?.[0]?.name || "CALM",
-              image_url: classItem.image_url || "",
-              is_active: true,
-            })
-            .eq("id", existing.id);
-
-          if (updateError) {
-            console.error("Error updating featured class:", updateError);
-            throw updateError;
-          }
-        } else {
-          // Insert new featured class record
-          const { error: insertError } = await supabase
-            .from("featured_class")
-            .insert({
-              class_id: String(classItem.id),
-              title: classItem.title,
-              description: classItem.description || "",
-              teacher_name: classItem.teacher_name || "March Russell",
-              duration: classItem.duration_minutes || 0,
-              category: classItem.categories?.[0]?.name || "CALM",
-              image_url: classItem.image_url || "",
-              is_active: true,
-            });
-
-          if (insertError) {
-            console.error("Error inserting featured class:", insertError);
-            throw insertError;
-          }
-        }
-
-        toast({ 
-          title: "Featured class updated", 
-          description: `${classItem.title} is now the featured class on the library page` 
+        setFeaturedClassId(classItem.id);
+        toast({
+          title: "Featured class updated",
+          description: `${classItem.title} is now the featured class`,
         });
       }
-      
-      // Refresh to update UI
-      await fetchFeaturedClass();
+
       await fetchClasses();
     } catch (error: any) {
       console.error("Error in setAsFeatured:", error);
-      toast({ 
-        title: "Error updating featured class", 
-        description: error.message || "An error occurred", 
-        variant: "destructive" 
+      toast({
+        title: "Error updating featured class",
+        description: error.message || "An error occurred",
+        variant: "destructive",
       });
     }
   };

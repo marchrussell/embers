@@ -133,7 +133,7 @@ const Online = () => {
         // Fetch featured session
         const {
           data: featured
-        } = await supabase.from('featured_class').select('*').eq('is_active', true).maybeSingle();
+        } = await supabase.from('classes').select('*').eq('is_featured', true).eq('is_published', true).maybeSingle();
         if (featured) {
           setFeaturedSession(featured);
         }
@@ -487,11 +487,11 @@ const Online = () => {
                     {/* Horizontal card with square image and glassmorphism */}
                     <div 
                       onClick={() => {
-                        if (!featuredSession.class_id) {
+                        if (!featuredSession.id) {
                           toast.error("Unable to load session");
                           return;
                         }
-                        handleSessionClick(featuredSession.class_id);
+                        handleSessionClick(featuredSession.id);
                       }} 
                       className="group cursor-pointer overflow-hidden rounded-xl border border-[#E6DBC7]/20 transition-all shadow-[0_8px_30px_rgba(230,219,199,0.1)]"
                     >
@@ -516,7 +516,7 @@ const Online = () => {
                               {featuredSession.short_description || featuredSession.description}
                             </p>
                             <p className="text-xs md:text-sm text-[#E6DBC7]/40 font-light">
-                              {featuredSession.teacher_name} • {featuredSession.duration} min
+                              {featuredSession.teacher_name} • {featuredSession.duration_minutes} min
                             </p>
                           </div>
                         

@@ -169,9 +169,9 @@ const Library = ({ isEmbedded = false, onClearCategory, shouldClearCategory = fa
         
         // Fetch featured session (non-blocking)
         void supabase
-          .from('featured_class')
-          .select('*')
-          .eq('is_active', true)
+          .from('classes')
+          .select('id')
+          .eq('is_featured', true)
           .maybeSingle()
           .then(({ data: featured, error: featuredError }) => {
             if (isMounted && !featuredError && featured) {
@@ -963,7 +963,7 @@ const Library = ({ isEmbedded = false, onClearCategory, shouldClearCategory = fa
             setSelectedSessionId(null);
           }}
           onShowSubscription={() => setShowSubscriptionModal(true)}
-          isFeaturedClass={featuredSession?.class_id === selectedSessionId}
+          isFeaturedClass={featuredSession?.id === selectedSessionId}
         />
         
         <Suspense fallback={null}>
@@ -1001,7 +1001,7 @@ const Library = ({ isEmbedded = false, onClearCategory, shouldClearCategory = fa
           setSelectedSessionId(null);
         }}
         onShowSubscription={() => setShowSubscriptionModal(true)}
-        isFeaturedClass={featuredSession?.class_id === selectedSessionId}
+        isFeaturedClass={featuredSession?.id === selectedSessionId}
       />
       
       <ArcCardsModal 
