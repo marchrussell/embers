@@ -587,7 +587,7 @@ const AdminClasses = () => {
                       <SelectValue placeholder="Select intensity" />
                     </SelectTrigger>
                     <SelectContent>
-                      {["Gentle", "Gentle–Moderate", "Moderate", "Moderate–Strong", "Strong"].map((level) => (
+                      {["Gentle", "Gentle–Moderate", "Moderate", "Moderate–Strong", "Strong", "Very Strong"].map((level) => (
                         <SelectItem key={level} value={level}>{level}</SelectItem>
                       ))}
                     </SelectContent>
