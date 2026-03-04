@@ -10,10 +10,10 @@ import { Pill } from "@/components/ui/pill";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
 import { formatEventDate, getNextEventDate } from "@/lib/experienceDateUtils";
 import { experiencesData } from "@/lib/experiencesData";
 import { companyLogos, marchImages, programImages } from "@/lib/sharedAssets";
-import { getCloudImageUrl, CLOUD_IMAGES } from "@/lib/cloudImageUrls";
 import { ArrowRight, X } from "lucide-react";
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -504,7 +504,7 @@ const Index = () => {
           <div className="mt-5 md:mt-6">
             <Link
               to='/online'
-              className="inline-flex items-center gap-2 px-8 py-3 rounded-full border border-white/30 bg-black/40 backdrop-blur-sm text-white/90 hover:bg-white/10 transition-all duration-300"
+              className="inline-flex items-center gap-2 px-9 py-3 rounded-full border border-white/30 bg-black/40 backdrop-blur-sm text-white/90 hover:bg-white/10 transition-all duration-300"
               style={{
                 fontSize: 'clamp(0.95rem, 1.1vw, 1.1rem)',
                 fontWeight: 400,
