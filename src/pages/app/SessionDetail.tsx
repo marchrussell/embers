@@ -219,7 +219,9 @@ export default function SessionDetailModal({
                   {/* Title and info overlay - top left with internal padding */}
                   <div className="relative z-10">
                     <h2 className="text-white text-2xl md:text-3xl font-editorial mb-1 md:mb-2">{session.title}</h2>
-                    <p className="text-white/80 text-sm md:text-base font-light">{session.teacher_name} • {session.duration_minutes} min • Technique</p>
+                    <p className="text-white/80 text-sm md:text-base font-light">
+                      {session.teacher_name} • {session.duration_minutes} min{session.technique ? ` • ${session.technique}` : ''}{session.intensity ? ` • ${session.intensity}` : ''}
+                    </p>
                   </div>
                   
                   {/* Action buttons - bottom with improved spacing */}

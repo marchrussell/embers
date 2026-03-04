@@ -208,6 +208,7 @@ export type Database = {
           show_safety_reminder: boolean | null
           teacher_name: string | null
           intensity: string | null
+          technique: string | null
           title: string
           updated_at: string | null
           audio_url: string
@@ -231,6 +232,7 @@ export type Database = {
           short_description?: string | null
           show_safety_reminder?: boolean | null
           intensity?: string | null
+          technique?: string | null
           teacher_name?: string | null
           title: string
           updated_at?: string | null
@@ -255,6 +257,7 @@ export type Database = {
           short_description?: string | null
           show_safety_reminder?: boolean | null
           intensity?: string | null
+          technique?: string | null
           teacher_name?: string | null
           title?: string
           updated_at?: string | null

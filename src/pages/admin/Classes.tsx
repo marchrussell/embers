@@ -31,6 +31,7 @@ interface Class {
   safety_note: string | null;
   show_safety_reminder: boolean;
   intensity: string | null;
+  technique: string | null;
   categories?: { id: string; name: string }[];
 }
 
@@ -241,6 +242,7 @@ const AdminClasses = () => {
       safety_note: formData.safety_note || null,
       show_safety_reminder: formData.show_safety_reminder,
       intensity: formData.intensity || null,
+      technique: formData.technique || null,
     };
 
     const syncCategories = async (classId: string) => {

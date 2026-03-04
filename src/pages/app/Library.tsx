@@ -223,7 +223,9 @@ const Library = ({ isEmbedded = false, onClearCategory, shouldClearCategory = fa
                   teacher: classItem.teacher_name,
                   image: classItem.image_url,
                   locked: classItem.requires_subscription && !hasSubscription && !isAdmin && !isTestUser,
-                  created_at: classItem.created_at
+                  created_at: classItem.created_at,
+                  technique: classItem.technique,
+                  intensity: classItem.intensity,
                 });
               }
               return acc;
@@ -562,7 +564,7 @@ const Library = ({ isEmbedded = false, onClearCategory, shouldClearCategory = fa
                         {session.description || `A ${session.duration} minute practice to help you ${selectedCategory.name.toLowerCase()}.`}
                       </p>
                       <p className="text-xs md:text-sm text-[#E6DBC7]/40 font-light">
-                        {session.teacher} • {session.duration} min
+                        {session.teacher} • {session.duration} min{session.technique ? ` • ${session.technique}` : ''}{session.intensity ? ` • ${session.intensity}` : ''}
                       </p>
                     </div>
                   
@@ -656,7 +658,7 @@ const Library = ({ isEmbedded = false, onClearCategory, shouldClearCategory = fa
                       {session.title}
                     </h3>
                     <p className="text-sm text-[#E6DBC7]/60 font-light">
-                      {session.teacher} • {session.duration} min • Technique
+                      {session.teacher} • {session.duration} min{session.technique ? ` • ${session.technique}` : ''}{session.intensity ? ` • ${session.intensity}` : ''}
                     </p>
                   </div>
                 
