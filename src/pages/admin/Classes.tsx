@@ -516,7 +516,7 @@ const AdminClasses = () => {
                       onChange={handleAudioUpload}
                       disabled={uploading}
                     />
-                    <p className="text-xs text-muted-foreground">Upload audio file (max 50MB, .wav or .mp3)</p>
+                    <p className="text-xs text-muted-foreground">Upload audio file (max 150MB, .wav or .mp3)</p>
                   </div>
                 </div>
                 <div>
