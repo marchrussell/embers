@@ -78,23 +78,24 @@ export const CLOUD_IMAGE_PRESETS = {
  * These are the images that have been migrated to Cloud Storage
  */
 export const CLOUD_IMAGES = {
-  // Hero images
-  heroBreathworkWide: 'hero/breathwork-wide.webp',
-  threeWaysMushroom: 'hero/three-ways-mushroom.webp',
-  communityHeroKef: 'hero/community-hero-kef.webp',
+  // Home images
+  heroBreathworkWide: 'home/breathwork-wide.webp',
+  threeWaysMushroom: 'home/three-ways-mushroom.webp',
+  exploreAudioPlayer: 'home/explore-audio-player.webp',
+  exploreTestimonials: 'home/explore-testimonials.webp',
+
+  // Experiences images
+  breathPresence: 'experiences/breath-presence-heart-connection-in-person.webp',
+  breathWorkToDub: 'experiences/breathwork-to-dub-in-person.webp',
+  monthlyBreath: 'experiences/monthly-breath-presence-online.webp',
+  moreWaysToPractice: 'experiences/more-ways-to-practice.jpg',
+  unwindReset: 'experiences/unwind-reset.webp',
+  weeklyReset: 'experiences/weekly-reset.webp',
   
   // About/Bio images
   marchBioPhoto: 'about/march-bio-photo.webp',
   marchTeacher: 'about/march-russell-teacher.webp',
   
-  // Logos
-  zoe: 'logos/zoe-logo.webp',
-  tesla: 'logos/tesla-logo.webp',
-  google: 'logos/google-logo.webp',
-  itv: 'logos/itv-logo.webp',
-  justeat: 'logos/justeat-logo.webp',
-  marchLogo: 'logos/march-logo.webp',
-  mLogo: 'logos/m-logo.webp',
 } as const;
 
 /**
