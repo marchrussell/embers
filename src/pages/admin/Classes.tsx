@@ -71,7 +71,7 @@ const AdminClasses = () => {
     safety_note: "",
     show_safety_reminder: false,
     intensity: "",
-    start_here_position: "" as "" | "1" | "2",
+    start_here_position: "none" as "none" | "1" | "2",
   });
 
   useEffect(() => {
@@ -230,7 +230,7 @@ const AdminClasses = () => {
     }
 
     // First category is used as the legacy primary category_id for backward compat
-    const newStartHerePosition = formData.start_here_position ? parseInt(formData.start_here_position) : null;
+    const newStartHerePosition = formData.start_here_position !== "none" ? parseInt(formData.start_here_position) : null;
 
     const classData = {
       title: formData.title,
@@ -338,7 +338,7 @@ const AdminClasses = () => {
       safety_note: classItem.safety_note || "",
       show_safety_reminder: classItem.show_safety_reminder || false,
       intensity: classItem.intensity || "",
-      start_here_position: (classItem.start_here_position?.toString() || "") as "" | "1" | "2",
+      start_here_position: (classItem.start_here_position?.toString() || "none") as "none" | "1" | "2",
     });
     setIsDialogOpen(true);
   };
@@ -424,7 +424,7 @@ const AdminClasses = () => {
       safety_note: "",
       show_safety_reminder: false,
       intensity: "",
-      start_here_position: "",
+      start_here_position: "none",
     });
     setEditingClass(null);
     setIsDialogOpen(false);
@@ -619,13 +619,13 @@ const AdminClasses = () => {
                   <Label htmlFor="start_here_position" className="text-white/80">Start Here Page</Label>
                   <Select
                     value={formData.start_here_position}
-                    onValueChange={(val) => setFormData({ ...formData, start_here_position: val as "" | "1" | "2" })}
+                    onValueChange={(val) => setFormData({ ...formData, start_here_position: val as "none" | "1" | "2" })}
                   >
                     <SelectTrigger id="start_here_position" className="bg-white/5 border-white/20 text-white">
                       <SelectValue placeholder="Not shown on Start Here" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">Not shown</SelectItem>
+                      <SelectItem value="none">Not shown</SelectItem>
                       <SelectItem value="1">Position 1 (first card)</SelectItem>
                       <SelectItem value="2">Position 2 (second card)</SelectItem>
                     </SelectContent>
