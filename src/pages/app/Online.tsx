@@ -10,7 +10,7 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { formatGuestSessionDate, getNextThirdThursday, useNextGuestTeacher } from "@/hooks/useNextGuestTeacher";
 import { Suspense, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { LiveSessionsData } from "./online/types";
 import HomeTab from "./online/HomeTab";
 import ProgramsTab from "./online/ProgramsTab";
@@ -18,25 +18,21 @@ import LiveTab from "./online/LiveTab";
 import Library from "./Library";
 import SessionDetailModal from "./SessionDetail";
 
+const VALID_TABS = ['home', 'library', 'programs', 'live'];
+
 const Online = () => {
   const { hasSubscription, isAdmin, isTestUser } = useAuth();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState(() => {
-    const tab = searchParams.get('tab');
-    return tab && ['home', 'library', 'programs', 'live'].includes(tab) ? tab : 'home';
-  });
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [shouldClearLibraryCategory, setShouldClearLibraryCategory] = useState(false);
 
   const { teacher: nextGuestTeacher } = useNextGuestTeacher();
 
-  // Sync tab with URL param changes (e.g. back/forward navigation)
+  // Derive active tab from URL — URL is the single source of truth
   const tabParam = searchParams.get('tab');
-  const validTab = tabParam && ['home', 'library', 'programs', 'live'].includes(tabParam) ? tabParam : null;
-  if (validTab && validTab !== activeTab) {
-    setActiveTab(validTab);
-  }
+  const activeTab = tabParam && VALID_TABS.includes(tabParam) ? tabParam : 'home';
 
   const liveSessionsData: LiveSessionsData = useMemo(() => ({
     weeklyReset: {
@@ -85,7 +81,7 @@ const Online = () => {
   }), [nextGuestTeacher]);
 
   const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
+    navigate(`/online?tab=${tab}`, { replace: true });
     setShouldClearLibraryCategory(true);
   };
 

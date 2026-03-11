@@ -5,33 +5,20 @@ import OnlineFooter from "@/components/OnlineFooter";
 import OnlineHeader from "@/components/OnlineHeader";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { WeeklyResetCard } from "@/components/WeeklyResetCard";
-import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 import SessionDetailModal from "@/pages/app/SessionDetail";
+import SessionPlayCard from "@/pages/app/online/components/SessionPlayCard";
 import { Suspense, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const StartHere = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
-  const [userProfile, setUserProfile] = useState<any>(null);
   const [sessions, setSessions] = useState<{
     breathPractice?: { id: string; title: string; duration: number; image_url: string; description: string };
     somaticPractice?: { id: string; title: string; duration: number; image_url: string; description: string };
   }>({});
-
-  // Set profile from user metadata
-  useEffect(() => {
-    if (user) {
-      const metadataName = user.user_metadata?.full_name;
-      if (metadataName) {
-        setUserProfile({ full_name: metadataName });
-      }
-    }
-  }, [user]);
 
   useEffect(() => {
     const fetchSessions = async () => {
@@ -132,96 +119,26 @@ const StartHere = () => {
             Two gentle practices to help you settle in
           </p>
 
-          {/* Practice Cards - matching StudioProgram lesson cards */}
           <div className="grid gap-4 sm:gap-6">
             {sessions?.somaticPractice && (
-              <div 
+              <SessionPlayCard
+                title={sessions.somaticPractice.title}
+                description={sessions.somaticPractice.description || "Simple, slow, grounding movements"}
+                meta={`March Russell • ${sessions.somaticPractice.duration} min`}
+                imageUrl={sessions.somaticPractice.image_url}
                 onClick={() => handleSessionClick(sessions.somaticPractice!.id)}
-                className="group cursor-pointer overflow-hidden rounded-xl border border-[#E6DBC7]/20 transition-all shadow-[0_8px_30px_rgba(230,219,199,0.1)]"
-              >
-                <div className="flex flex-col sm:flex-row h-auto sm:h-[140px] md:h-[160px] lg:h-[180px]">
-                  {/* Image - Top on mobile, Left on tablet+ */}
-                  <div 
-                    className="relative w-full sm:w-[140px] md:w-[200px] lg:w-[240px] h-[140px] sm:h-full flex-shrink-0 bg-cover bg-center"
-                    style={{
-                      backgroundImage: sessions.somaticPractice.image_url 
-                        ? `url('${getOptimizedImageUrl(sessions.somaticPractice.image_url, IMAGE_PRESETS.card)}')` 
-                        : undefined
-                    }}
-                  >
-                    <div className="absolute inset-0 bg-black/0" />
-                  </div>
-                  
-                  {/* Glassmorphism Content - Bottom on mobile, Right on tablet+ */}
-                  <div className="flex-1 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 px-5 sm:px-6 md:px-10 py-4 sm:py-6 backdrop-blur-xl bg-black/30 border-t sm:border-t-0 sm:border-l border-white/5">
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-base sm:text-lg md:text-xl font-editorial text-[#E6DBC7] mb-1.5 sm:mb-2">
-                        {sessions.somaticPractice.title}
-                      </h3>
-                      <p className="text-xs sm:text-sm md:text-base text-[#E6DBC7]/60 font-light mb-2 sm:mb-3 leading-relaxed line-clamp-2 sm:line-clamp-none">
-                        {sessions.somaticPractice.description || "Simple, slow, grounding movements"}
-                      </p>
-                      <p className="text-xs md:text-sm text-[#E6DBC7]/40 font-light">
-                        March Russell • {sessions.somaticPractice.duration} min
-                      </p>
-                    </div>
-                  
-                    {/* Play Button - always visible */}
-                    <div className="flex-shrink-0 self-end sm:self-center">
-                      <div className="w-11 h-11 md:w-14 md:h-14 rounded-full border border-[#E6DBC7]/50 flex items-center justify-center transition-all bg-[#E6DBC7]/10">
-                        <svg className="w-5 h-5 text-[#E6DBC7] transition-all ml-0.5" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M8 5v14l11-7z" />
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                mobileStacked
+              />
             )}
-
             {sessions?.breathPractice && (
-              <div 
+              <SessionPlayCard
+                title={sessions.breathPractice.title}
+                description={sessions.breathPractice.description || "A brief breathwork session to settle your system"}
+                meta={`March Russell • ${sessions.breathPractice.duration} min`}
+                imageUrl={sessions.breathPractice.image_url}
                 onClick={() => handleSessionClick(sessions.breathPractice!.id)}
-                className="group cursor-pointer overflow-hidden rounded-xl border border-[#E6DBC7]/20 transition-all shadow-[0_8px_30px_rgba(230,219,199,0.1)]"
-              >
-                <div className="flex flex-col sm:flex-row h-auto sm:h-[140px] md:h-[160px] lg:h-[180px]">
-                  {/* Image - Top on mobile, Left on tablet+ */}
-                  <div 
-                    className="relative w-full sm:w-[140px] md:w-[200px] lg:w-[240px] h-[140px] sm:h-full flex-shrink-0 bg-cover bg-center"
-                    style={{
-                      backgroundImage: sessions.breathPractice.image_url 
-                        ? `url('${getOptimizedImageUrl(sessions.breathPractice.image_url, IMAGE_PRESETS.card)}')` 
-                        : undefined
-                    }}
-                  >
-                    <div className="absolute inset-0 bg-black/0" />
-                  </div>
-                  
-                  {/* Glassmorphism Content - Bottom on mobile, Right on tablet+ */}
-                  <div className="flex-1 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 px-5 sm:px-6 md:px-10 py-4 sm:py-6 backdrop-blur-xl bg-black/30 border-t sm:border-t-0 sm:border-l border-white/5">
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-base sm:text-lg md:text-xl font-editorial text-[#E6DBC7] mb-1.5 sm:mb-2">
-                        {sessions.breathPractice.title}
-                      </h3>
-                      <p className="text-xs sm:text-sm md:text-base text-[#E6DBC7]/60 font-light mb-2 sm:mb-3 leading-relaxed line-clamp-2 sm:line-clamp-none">
-                        {sessions.breathPractice.description || "A brief breathwork session to settle your system"}
-                      </p>
-                      <p className="text-xs md:text-sm text-[#E6DBC7]/40 font-light">
-                        March Russell • {sessions.breathPractice.duration} min
-                      </p>
-                    </div>
-                  
-                    {/* Play Button - always visible */}
-                    <div className="flex-shrink-0 self-end sm:self-center">
-                      <div className="w-11 h-11 md:w-14 md:h-14 rounded-full border border-[#E6DBC7]/50 flex items-center justify-center transition-all bg-[#E6DBC7]/10">
-                        <svg className="w-5 h-5 text-[#E6DBC7] transition-all ml-0.5" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M8 5v14l11-7z" />
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                mobileStacked
+              />
             )}
           </div>
         </div>

@@ -59,8 +59,6 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
 
   const displayName = profileLoaded ? (firstName || user?.email?.split('@')[0] || 'PROFILE') : null;
 
-
-  console.log('navbar user isAdmin', isAdmin)
   return (
     <>
       <AuthSignInModal
