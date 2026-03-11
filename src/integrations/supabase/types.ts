@@ -206,6 +206,7 @@ export type Database = {
           safety_note: string | null
           short_description: string | null
           show_safety_reminder: boolean | null
+          start_here_position: number | null
           teacher_name: string | null
           intensity: string | null
           technique: string | null
@@ -231,6 +232,7 @@ export type Database = {
           safety_note?: string | null
           short_description?: string | null
           show_safety_reminder?: boolean | null
+          start_here_position?: number | null
           intensity?: string | null
           technique?: string | null
           teacher_name?: string | null
@@ -256,6 +258,7 @@ export type Database = {
           safety_note?: string | null
           short_description?: string | null
           show_safety_reminder?: boolean | null
+          start_here_position?: number | null
           intensity?: string | null
           technique?: string | null
           teacher_name?: string | null

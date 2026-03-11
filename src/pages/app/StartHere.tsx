@@ -11,60 +11,35 @@ import SessionPlayCard from "@/pages/app/online/components/SessionPlayCard";
 import { Suspense, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+interface StartHereClass {
+  id: string;
+  title: string;
+  duration_minutes: number | null;
+  image_url: string | null;
+  short_description: string | null;
+  description: string | null;
+  teacher_name: string | null;
+}
+
 const StartHere = () => {
   const navigate = useNavigate();
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
-  const [sessions, setSessions] = useState<{
-    breathPractice?: { id: string; title: string; duration: number; image_url: string; description: string };
-    somaticPractice?: { id: string; title: string; duration: number; image_url: string; description: string };
-  }>({});
+  const [sessions, setSessions] = useState<StartHereClass[]>([]);
 
   useEffect(() => {
     const fetchSessions = async () => {
       const { data } = await supabase
         .from('classes')
-        .select('id, title, duration_minutes, image_url, short_description, description')
-        .eq('is_published', true);
+        .select('id, title, duration_minutes, image_url, short_description, description, teacher_name')
+        .not('start_here_position', 'is', null)
+        .order('start_here_position');
 
-      if (data) {
-        // Find "The Landing" for morning practice
-        const theLanding = data.find(s => 
-          s.title?.toLowerCase().includes('landing')
-        );
-        // Find "Perfect Breath Reset" for breath break
-        const perfectBreathReset = data.find(s => 
-          s.title?.toLowerCase().includes('perfect breath') || 
-          s.title?.toLowerCase().includes('breath reset')
-        );
-
-        setSessions({
-          breathPractice: theLanding ? {
-            id: theLanding.id,
-            title: theLanding.title,
-            duration: theLanding.duration_minutes || 10,
-            image_url: theLanding.image_url || '',
-            description: 'Use as a breath break during the day to reset and recalibrate'
-          } : undefined,
-          somaticPractice: perfectBreathReset ? {
-            id: perfectBreathReset.id,
-            title: perfectBreathReset.title,
-            duration: perfectBreathReset.duration_minutes || 12,
-            image_url: perfectBreathReset.image_url || '',
-            description: 'Practice once daily in the morning — the first moment you wake up'
-          } : undefined
-        });
-      }
+      setSessions(data || []);
     };
 
     fetchSessions();
   }, []);
-
-  const handleSessionClick = (sessionId: string) => {
-    if (sessionId) {
-      setSelectedSessionId(sessionId);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -73,13 +48,13 @@ const StartHere = () => {
 
       {/* Hero Section - positioned to start where tab content begins */}
       <div className="relative h-[320px] sm:h-[380px] md:h-[420px] z-10 mt-[280px] sm:mt-[320px] md:mt-[380px]">
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center transition-transform duration-700"
           style={{ backgroundImage: `url('${startHereButterfly}')` }}
         />
         <div className="absolute inset-0 bg-black/30" />
         <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
-        
+
         <div className="relative h-full flex items-end px-6 md:px-10 lg:px-12 pb-10 sm:pb-14">
           <div className="w-full">
             <p className="text-[#D4A574] text-xs sm:text-sm tracking-[0.15em] uppercase font-light mb-2 sm:mb-3">
@@ -94,7 +69,7 @@ const StartHere = () => {
 
       {/* Main Content */}
       <div className="px-6 md:px-10 lg:px-12 pt-10 sm:pt-14 md:pt-16 pb-16 sm:pb-20 md:pb-24">
-        
+
         {/* Subtitle - moved below hero */}
         <p className="text-lg sm:text-xl md:text-2xl text-[#E6DBC7]/80 font-editorial italic leading-relaxed mb-12 sm:mb-16 md:mb-20">
           No pressure. No expectations. Just a gentle way to arrive.
@@ -120,26 +95,17 @@ const StartHere = () => {
           </p>
 
           <div className="grid gap-4 sm:gap-6">
-            {sessions?.somaticPractice && (
+            {sessions.map((session) => (
               <SessionPlayCard
-                title={sessions.somaticPractice.title}
-                description={sessions.somaticPractice.description || "Simple, slow, grounding movements"}
-                meta={`March Russell • ${sessions.somaticPractice.duration} min`}
-                imageUrl={sessions.somaticPractice.image_url}
-                onClick={() => handleSessionClick(sessions.somaticPractice!.id)}
+                key={session.id}
+                title={session.title}
+                description={session.short_description || session.description || ""}
+                meta={[session.teacher_name, session.duration_minutes ? `${session.duration_minutes} min` : null].filter(Boolean).join(" • ")}
+                imageUrl={session.image_url || ""}
+                onClick={() => setSelectedSessionId(session.id)}
                 mobileStacked
               />
-            )}
-            {sessions?.breathPractice && (
-              <SessionPlayCard
-                title={sessions.breathPractice.title}
-                description={sessions.breathPractice.description || "A brief breathwork session to settle your system"}
-                meta={`March Russell • ${sessions.breathPractice.duration} min`}
-                imageUrl={sessions.breathPractice.image_url}
-                onClick={() => handleSessionClick(sessions.breathPractice!.id)}
-                mobileStacked
-              />
-            )}
+            ))}
           </div>
         </div>
 
@@ -171,7 +137,7 @@ const StartHere = () => {
 
       <div className="hidden md:block">
         <Footer />
-      </div>      
+      </div>
 
       {/* Session Detail Modal */}
       <SessionDetailModal

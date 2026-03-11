@@ -32,6 +32,7 @@ interface Class {
   show_safety_reminder: boolean;
   intensity: string | null;
   technique: string | null;
+  start_here_position: number | null;
   categories?: { id: string; name: string }[];
 }
 
@@ -70,6 +71,7 @@ const AdminClasses = () => {
     safety_note: "",
     show_safety_reminder: false,
     intensity: "",
+    start_here_position: "" as "" | "1" | "2",
   });
 
   useEffect(() => {
@@ -228,6 +230,8 @@ const AdminClasses = () => {
     }
 
     // First category is used as the legacy primary category_id for backward compat
+    const newStartHerePosition = formData.start_here_position ? parseInt(formData.start_here_position) : null;
+
     const classData = {
       title: formData.title,
       teacher_name: formData.teacher_name || null,
@@ -243,7 +247,20 @@ const AdminClasses = () => {
       show_safety_reminder: formData.show_safety_reminder,
       intensity: formData.intensity || null,
       technique: formData.technique || null,
+      start_here_position: newStartHerePosition,
     };
+
+    // If assigning a start here position, clear it from any other class first
+    if (newStartHerePosition !== null) {
+      const clearQuery = supabase
+        .from("classes")
+        .update({ start_here_position: null })
+        .eq("start_here_position", newStartHerePosition);
+      if (editingClass) {
+        clearQuery.neq("id", editingClass.id);
+      }
+      await clearQuery;
+    }
 
     const syncCategories = async (classId: string) => {
       // Remove existing junction rows then insert the new set
@@ -321,6 +338,7 @@ const AdminClasses = () => {
       safety_note: classItem.safety_note || "",
       show_safety_reminder: classItem.show_safety_reminder || false,
       intensity: classItem.intensity || "",
+      start_here_position: (classItem.start_here_position?.toString() || "") as "" | "1" | "2",
     });
     setIsDialogOpen(true);
   };
@@ -406,6 +424,7 @@ const AdminClasses = () => {
       safety_note: "",
       show_safety_reminder: false,
       intensity: "",
+      start_here_position: "",
     });
     setEditingClass(null);
     setIsDialogOpen(false);
@@ -596,6 +615,24 @@ const AdminClasses = () => {
                   </Select>
                 </div>
 
+                <div className="space-y-2">
+                  <Label htmlFor="start_here_position" className="text-white/80">Start Here Page</Label>
+                  <Select
+                    value={formData.start_here_position}
+                    onValueChange={(val) => setFormData({ ...formData, start_here_position: val as "" | "1" | "2" })}
+                  >
+                    <SelectTrigger id="start_here_position" className="bg-white/5 border-white/20 text-white">
+                      <SelectValue placeholder="Not shown on Start Here" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">Not shown</SelectItem>
+                      <SelectItem value="1">Position 1 (first card)</SelectItem>
+                      <SelectItem value="2">Position 2 (second card)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground">Show this class on the Start Here page. Only one class per position.</p>
+                </div>
+
                 <div className="space-y-4 pt-4 border-t border-border">
                   <h3 className="text-lg font-semibold">Safety Note</h3>
                   <div>
@@ -693,7 +730,16 @@ const AdminClasses = () => {
           <TableBody>
             {filteredClasses.map((classItem) => (
               <TableRow key={classItem.id} className="border-b border-[#E6DBC7]/10 hover:bg-white/5">
-                <TableCell className="font-medium text-white py-4">{classItem.title}</TableCell>
+                <TableCell className="font-medium text-white py-4">
+                  <div className="flex items-center gap-2">
+                    {classItem.title}
+                    {classItem.start_here_position && (
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-500/20 text-blue-300">
+                        Start {classItem.start_here_position}
+                      </span>
+                    )}
+                  </div>
+                </TableCell>
                 <TableCell className="text-foreground/70 py-4">{classItem.categories?.map(c => c.name).join(", ") || "-"}</TableCell>
                 <TableCell className="text-foreground/70 py-4">{classItem.duration_minutes ? `${classItem.duration_minutes} min` : "-"}</TableCell>
                 <TableCell className="text-foreground/70 py-4">{classItem.intensity || "-"}</TableCell>
