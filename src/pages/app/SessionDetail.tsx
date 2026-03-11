@@ -369,7 +369,7 @@ export default function SessionDetailModal({
                     <div className="text-white/80 font-light leading-[1.7] text-[15px] md:text-base space-y-4">
                       <p>Some people find daily practices are enough.</p>
                       <p>Others need guided support to shift deeper patterns of stress, shutdown, or disconnection.</p>
-                      <p>That's where The Rise ARC Method exists.</p>
+                      <p>That's why The Rise ARC Method exists.</p>
                       <p>A 4-month guided process for those ready to go deeper — to rebuild stability, autonomy, emotional presence, and connection.</p>
                     </div>
                     

@@ -179,8 +179,8 @@ const AdminClasses = () => {
       return;
     }
 
-    if (file.size > 150 * 1024 * 1024) {
-      toast({ title: "File too large", description: "Please upload an audio file smaller than 150MB", variant: "destructive" });
+    if (file.size > 50 * 1024 * 1024) {
+      toast({ title: "File too large", description: "Please upload an audio file smaller than 50MB", variant: "destructive" });
       return;
     }
 
@@ -516,7 +516,7 @@ const AdminClasses = () => {
                       onChange={handleAudioUpload}
                       disabled={uploading}
                     />
-                    <p className="text-xs text-muted-foreground">Upload audio file (max 150MB, .wav or .mp3)</p>
+                    <p className="text-xs text-muted-foreground">Upload audio file (max 50MB, .wav or .mp3)</p>
                   </div>
                 </div>
                 <div>
