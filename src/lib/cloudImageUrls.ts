@@ -91,6 +91,9 @@ export const CLOUD_IMAGES = {
   moreWaysToPractice: 'experiences/more-ways-to-practice.jpg',
   unwindReset: 'experiences/unwind-reset.webp',
   weeklyReset: 'experiences/weekly-reset.webp',
+
+  // Online images
+  startHereButterfly: 'online/start-here-butterfly.webp',
   
   // About/Bio images
   marchBioPhoto: 'about/march-bio-photo.webp',

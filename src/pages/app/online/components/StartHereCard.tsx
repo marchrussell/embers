@@ -1,9 +1,11 @@
-import startHereButterfly from "@/assets/start-here-butterfly.jpg";
-import { Button } from "@/components/ui/button";
 import { OptimizedImage } from "@/components/OptimizedImage";
+import { Button } from "@/components/ui/button";
+import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
 import { IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 import { memo } from "react";
 import { Link } from "react-router-dom";
+
+const startHereButterfly = getCloudImageUrl(CLOUD_IMAGES.startHereButterfly);
 
 const StartHereCard = memo(() => (
   <Link
