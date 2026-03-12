@@ -61,10 +61,10 @@ const SessionPlayCard = memo(({
             <h3 className="text-base sm:text-lg md:text-xl font-editorial text-[#E6DBC7] mb-1.5 sm:mb-2">
               {title}
             </h3>
-            <p className="text-xs sm:text-sm md:text-base text-green-400 font-light mb-2 sm:mb-3 leading-relaxed line-clamp-2">
+            <p className="text-xs sm:text-sm md:text-base text-[#E6DBC7]/60 font-light mb-2 sm:mb-3 leading-relaxed line-clamp-2">
               {description}
             </p>
-            <p className="text-xs md:text-sm text-[#E6DBC7]/40 font-light">{meta}</p>
+            <p className="text-xs md:text-sm  text-green-400 font-light">{meta}</p>
           </div>
 
           {/* Play button */}
