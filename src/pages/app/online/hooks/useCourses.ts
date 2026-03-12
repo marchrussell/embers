@@ -16,7 +16,8 @@ export const useCourses = () => {
           .from('courses')
           .select('*')
           .eq('is_published', true)
-          .order('order_index');
+          .order('order_index')
+          .abortSignal(controller.signal);
 
         if (!controller.signal.aborted && data) {
           setCourses(data);

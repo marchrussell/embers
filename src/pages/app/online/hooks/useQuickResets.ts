@@ -17,7 +17,8 @@ export const useQuickResets = () => {
           .select('id, title, short_description, image_url, teacher_name, duration_minutes, requires_subscription')
           .eq('is_quick_reset', true)
           .eq('is_published', true)
-          .order('order_index');
+          .order('order_index')
+          .abortSignal(controller.signal);
 
         if (!controller.signal.aborted && data) {
           setQuickResets(data);

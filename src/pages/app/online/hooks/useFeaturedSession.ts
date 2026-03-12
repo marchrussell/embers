@@ -17,6 +17,7 @@ export const useFeaturedSession = () => {
           .select('*')
           .eq('is_featured', true)
           .eq('is_published', true)
+          .abortSignal(controller.signal)
           .maybeSingle();
 
         if (!controller.signal.aborted && data) {
