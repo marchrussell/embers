@@ -1,14 +1,20 @@
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
+import { Lock } from "lucide-react";
 import { memo } from "react";
 
 interface SessionPlayCardProps {
   title: string;
   description: string;
+  /** Formatted string e.g. "Teacher • 15 min • Technique • Intensity" */
   meta: string;
   imageUrl: string | null;
   onClick: () => void;
   /** Stack image above content on mobile (used in StartHere). Defaults to false (always horizontal). */
   mobileStacked?: boolean;
+  /** Show lock overlay on image */
+  locked?: boolean;
+  /** Show ✨ NEW badge on image */
+  isNew?: boolean;
 }
 
 const SessionPlayCard = memo(({
@@ -18,6 +24,8 @@ const SessionPlayCard = memo(({
   imageUrl,
   onClick,
   mobileStacked = false,
+  locked = false,
+  isNew = false,
 }: SessionPlayCardProps) => {
   const imageStyle = imageUrl
     ? { backgroundImage: `url('${getOptimizedImageUrl(imageUrl, IMAGE_PRESETS.card)}')` }
@@ -26,7 +34,7 @@ const SessionPlayCard = memo(({
   return (
     <div
       onClick={onClick}
-      className="group cursor-pointer overflow-hidden rounded-xl border border-[#E6DBC7]/20 transition-all shadow-[0_8px_30px_rgba(230,219,199,0.1)]"
+      className="group cursor-pointer overflow-hidden rounded-xl border border-[#E6DBC7]/20 transition-all shadow-[0_8px_30px_rgba(230,219,199,0.1)] hover:border-[#E6DBC7]/30"
     >
       <div className={`flex ${mobileStacked ? 'flex-col sm:flex-row h-auto sm:h-[140px] md:h-[160px] lg:h-[180px]' : 'h-[140px] md:h-[160px] lg:h-[180px]'}`}>
         {/* Image */}
@@ -35,6 +43,16 @@ const SessionPlayCard = memo(({
           style={imageStyle}
         >
           <div className="absolute inset-0 bg-black/0" />
+          {isNew && (
+            <div className="absolute top-3 left-3 z-10">
+              <span className="text-[10px] text-amber-400 font-medium">✨ NEW</span>
+            </div>
+          )}
+          {locked && (
+            <div className="absolute inset-0 flex items-center justify-center bg-background/60">
+              <Lock className="w-6 h-6 text-[#E6DBC7]" strokeWidth={1.5} />
+            </div>
+          )}
         </div>
 
         {/* Content */}

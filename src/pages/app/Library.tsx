@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useFavourites } from "@/hooks/useFavourites";
 import { supabase } from "@/integrations/supabase/client";
 import { ChevronLeft, ChevronRight, Heart, Lock } from "lucide-react";
+import SessionPlayCard from "./online/components/SessionPlayCard";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import SessionDetailModal from "./SessionDetail";
@@ -517,73 +518,35 @@ const Library = ({ isEmbedded = false, onClearCategory, shouldClearCategory = fa
                 return a.locked ? 1 : -1;
               })
               .map((session: any) => {
-              return (
-              <div
-                key={session.id}
-                onClick={() => {
-                  if (session.locked && !hasSubscription) {
-                    setShowSubscriptionModal(true);
-                  } else {
-                    handleSessionClick(session.id);
-                  }
-                }}
-                className="group cursor-pointer overflow-hidden rounded-xl border border-[#E6DBC7]/20 transition-all shadow-[0_8px_30px_rgba(230,219,199,0.1)] hover:border-[#E6DBC7]/30"
-              >
-                <div className="flex h-[140px] md:h-[160px] lg:h-[180px]">
-                  {/* Image - Left, fills full height */}
-                  <div 
-                    className="relative w-[140px] md:w-[200px] lg:w-[240px] h-full flex-shrink-0 bg-cover bg-center"
-                    style={{ backgroundImage: `url('${getOptimizedImageUrl(session.image, IMAGE_PRESETS.card)}')` }}
-                  >
-                    <div className="absolute inset-0 bg-black/0" />
-                    
-                    {/* NEW Badge - show if created within last 7 days */}
-                    {session.created_at && (() => {
-                      const createdDate = new Date(session.created_at);
-                      const daysSinceCreation = Math.floor((Date.now() - createdDate.getTime()) / (1000 * 60 * 60 * 24));
-                      return daysSinceCreation <= 7 && (
-                        <div className="absolute top-3 left-3 z-10">
-                          <span className="text-[10px] text-amber-400 font-medium">✨ NEW</span>
-                        </div>
-                      );
-                    })()}
-                    {session.locked && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-background/60">
-                        <Lock className="w-6 h-6 text-[#E6DBC7]" strokeWidth={1.5} />
-                      </div>
-                    )}
-                  </div>
-                  
-                  {/* Glassmorphism Content - Right */}
-                  <div className="flex-1 flex items-center justify-between gap-4 px-6 md:px-10 py-6 backdrop-blur-xl bg-black/30 border-l border-white/5">
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-lg md:text-xl font-editorial text-[#E6DBC7] mb-2">
-                        {session.title}
-                      </h3>
-                      <p className="text-sm md:text-base text-[#E6DBC7]/60 font-light mb-3 leading-relaxed line-clamp-2">
-                        {session.description || `A ${session.duration} minute practice to help you ${selectedCategory.name.toLowerCase()}.`}
-                      </p>
-                      <p className="text-xs md:text-sm text-[#E6DBC7]/40 font-light">
-                        {session.teacher} • {session.duration} min{session.technique ? ` • ${session.technique}` : ''}{session.intensity ? ` • ${session.intensity}` : ''}
-                      </p>
-                    </div>
-                  
-                    {/* Action Buttons */}
-                    <div className="flex items-center">
-                      {/* Play Button */}
-                      <div className="flex-shrink-0">
-                        <div className="w-11 h-11 md:w-14 md:h-14 rounded-full border border-[#E6DBC7]/50 flex items-center justify-center transition-all bg-[#E6DBC7]/10">
-                          <svg className="w-5 h-5 text-[#E6DBC7] transition-all ml-0.5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M8 5v14l11-7z" />
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              );
-            })}
+                const isNew = session.created_at
+                  ? Math.floor((Date.now() - new Date(session.created_at).getTime()) / (1000 * 60 * 60 * 24)) <= 7
+                  : false;
+                const meta = [
+                  session.teacher,
+                  `${session.duration} min`,
+                  session.technique,
+                  session.intensity,
+                ].filter(Boolean).join(' • ');
+
+                return (
+                  <SessionPlayCard
+                    key={session.id}
+                    title={session.title}
+                    description={session.description || `A ${session.duration} minute practice to help you ${selectedCategory.name.toLowerCase()}.`}
+                    meta={meta}
+                    imageUrl={session.image}
+                    locked={session.locked}
+                    isNew={isNew}
+                    onClick={() => {
+                      if (session.locked && !hasSubscription) {
+                        setShowSubscriptionModal(true);
+                      } else {
+                        handleSessionClick(session.id);
+                      }
+                    }}
+                  />
+                );
+              })}
           </div>
         </div>
       </div>
