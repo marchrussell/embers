@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { BookOpen, Pencil, Plus, Star, Trash2 } from "lucide-react";
+import { BookOpen, Pencil, Plus, Star, Trash2, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -33,6 +33,7 @@ interface Class {
   intensity: string | null;
   technique: string | null;
   start_here_position: number | null;
+  is_quick_reset: boolean;
   categories?: { id: string; name: string }[];
 }
 
@@ -72,6 +73,7 @@ const AdminClasses = () => {
     show_safety_reminder: false,
     intensity: "",
     start_here_position: "none" as "none" | "1" | "2",
+    is_quick_reset: false,
   });
 
   useEffect(() => {
@@ -248,6 +250,7 @@ const AdminClasses = () => {
       intensity: formData.intensity || null,
       technique: formData.technique || null,
       start_here_position: newStartHerePosition,
+      is_quick_reset: formData.is_quick_reset,
     };
 
     // If assigning a start here position, clear it from any other class first
@@ -339,6 +342,7 @@ const AdminClasses = () => {
       show_safety_reminder: classItem.show_safety_reminder || false,
       intensity: classItem.intensity || "",
       start_here_position: (classItem.start_here_position?.toString() || "none") as "none" | "1" | "2",
+      is_quick_reset: (classItem as any).is_quick_reset || false,
     });
     setIsDialogOpen(true);
   };
@@ -408,6 +412,23 @@ const AdminClasses = () => {
     }
   };
 
+  const toggleQuickReset = async (classItem: Class) => {
+    const { error } = await supabase
+      .from("classes")
+      .update({ is_quick_reset: !classItem.is_quick_reset })
+      .eq("id", classItem.id);
+
+    if (error) {
+      toast({ title: "Error updating class", description: error.message, variant: "destructive" });
+    } else {
+      toast({
+        title: classItem.is_quick_reset ? "Removed from Quick Resets" : "Added to Quick Resets",
+        description: classItem.title,
+      });
+      fetchClasses();
+    }
+  };
+
   const resetForm = () => {
     setFormData({
       title: "",
@@ -425,6 +446,7 @@ const AdminClasses = () => {
       show_safety_reminder: false,
       intensity: "",
       start_here_position: "none",
+      is_quick_reset: false,
     });
     setEditingClass(null);
     setIsDialogOpen(false);
@@ -677,6 +699,14 @@ const AdminClasses = () => {
                   />
                   <Label htmlFor="requires_subscription" className="mb-0">Requires Subscription (Lock for non-subscribers)</Label>
                 </div>
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="is_quick_reset"
+                    checked={formData.is_quick_reset}
+                    onCheckedChange={(checked) => setFormData({ ...formData, is_quick_reset: checked })}
+                  />
+                  <Label htmlFor="is_quick_reset" className="mb-0">Quick Reset (show in Quick Resets section on Home)</Label>
+                </div>
                 <div className="flex gap-2 pt-4">
                   <Button type="submit" className="flex-1 bg-white text-black hover:bg-white/90" disabled={uploading}>
                     {editingClass ? "Update" : "Create"} Class
@@ -738,6 +768,11 @@ const AdminClasses = () => {
                         Start {classItem.start_here_position}
                       </span>
                     )}
+                    {classItem.is_quick_reset && (
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-yellow-500/20 text-yellow-300">
+                        Quick Reset
+                      </span>
+                    )}
                   </div>
                 </TableCell>
                 <TableCell className="text-foreground/70 py-4">{classItem.categories?.map(c => c.name).join(", ") || "-"}</TableCell>
@@ -766,7 +801,16 @@ const AdminClasses = () => {
                 </TableCell>
                 <TableCell className="py-4">
                   <div className="flex gap-2 justify-end">
-                    <Button 
+                    <Button
+                      variant="ghost"
+                      size="default"
+                      onClick={() => toggleQuickReset(classItem)}
+                      title="Toggle Quick Reset"
+                      className="hover:bg-white/10"
+                    >
+                      <Zap className={`h-5 w-5 ${classItem.is_quick_reset ? "fill-yellow-400 text-yellow-400" : "text-yellow-400"}`} />
+                    </Button>
+                    <Button
                       variant="ghost"
                       size="default"
                       onClick={() => setAsFeatured(classItem)}

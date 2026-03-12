@@ -29,6 +29,16 @@ export interface LiveSessionsData {
   guestSession: LiveSessionData;
 }
 
+export interface QuickResetSession {
+  id: string;
+  title: string;
+  short_description: string | null;
+  image_url: string | null;
+  teacher_name: string | null;
+  duration_minutes: number | null;
+  requires_subscription: boolean | null;
+}
+
 export interface FeaturedSession {
   id: string;
   title: string;

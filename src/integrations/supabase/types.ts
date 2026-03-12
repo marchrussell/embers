@@ -198,6 +198,7 @@ export type Database = {
           id: string
           image_url: string | null
           is_featured: boolean | null
+          is_quick_reset: boolean | null
           is_published: boolean | null
           order_index: number | null
           program_id: string | null
@@ -224,6 +225,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_featured?: boolean | null
+          is_quick_reset?: boolean | null
           is_published?: boolean | null
           order_index?: number | null
           program_id?: string | null
@@ -250,6 +252,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_featured?: boolean | null
+          is_quick_reset?: boolean | null
           is_published?: boolean | null
           order_index?: number | null
           program_id?: string | null
