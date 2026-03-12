@@ -19,10 +19,12 @@ export function useNextGuestTeacher() {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     const fetchNextTeacher = async () => {
       try {
         const now = new Date().toISOString();
-        
+
         const { data, error: fetchError } = await supabase
           .from('guest_teachers')
           .select('*')
@@ -30,19 +32,22 @@ export function useNextGuestTeacher() {
           .gte('session_date', now)
           .order('session_date', { ascending: true })
           .limit(1)
+          .abortSignal(controller.signal)
           .maybeSingle();
 
         if (fetchError) throw fetchError;
-        setTeacher(data);
+        if (!controller.signal.aborted) setTeacher(data);
       } catch (err) {
+        if (controller.signal.aborted) return;
         console.error('Error fetching next guest teacher:', err);
         setError(err instanceof Error ? err : new Error('Unknown error'));
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) setLoading(false);
       }
     };
 
     fetchNextTeacher();
+    return () => controller.abort();
   }, []);
 
   return { teacher, loading, error };
