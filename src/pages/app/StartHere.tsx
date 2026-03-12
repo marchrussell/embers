@@ -1,4 +1,6 @@
-import startHereButterfly from "@/assets/start-here-butterfly.jpg";
+import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
+
+const startHereButterfly = getCloudImageUrl(CLOUD_IMAGES.startHereButterfly);
 import { Footer } from "@/components/Footer";
 import { NavBar } from "@/components/NavBar";
 import OnlineFooter from "@/components/OnlineFooter";
