@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [hasMentorshipGuided, setHasMentorshipGuided] = useState(false);
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
   const [hasAcceptedSafetyDisclosure, setHasAcceptedSafetyDisclosure] = useState(false);
-  const [isCheckingSubscription, setIsCheckingSubscription] = useState(false);
+  const isCheckingSubscriptionRef = useRef(false);
   const initialLoadRef = useRef(true);
   const authCheckedRef = useRef(false);
 
@@ -47,8 +47,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         .select("role")
         .eq("user_id", userId);
 
-        console.log('checkAdminRole data', data);
-      
       if (error || !data) {
         setIsAdmin(false);
         setIsTestUser(false);
@@ -104,14 +102,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const checkSubscription = async (userId?: string) => {
+  const checkSubscription = async (userId?: string, accessToken?: string) => {
     // Prevent concurrent calls
-    if (isCheckingSubscription) {
+    if (isCheckingSubscriptionRef.current) {
       return;
     }
 
-    setIsCheckingSubscription(true);
-    
+    isCheckingSubscriptionRef.current = true;
+
     try {
       // Get user ID from parameter or current user
       const targetUserId = userId || user?.id;
@@ -127,17 +125,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         .eq("user_id", targetUserId)
         .in("status", ["active", "trialing", "past_due"])
         .maybeSingle();
-      
+
       if (!localError && localSub) {
         setHasSubscription(true);
         return;
       }
-      
+
       // Fallback: call edge function to check Stripe (only if no local subscription found)
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.access_token) {
+      const token = accessToken ?? (await supabase.auth.getSession()).data.session?.access_token;
+      if (token) {
         const { data } = await supabase.functions.invoke("check-subscription", {
-          headers: { Authorization: `Bearer ${session.access_token}` }
+          headers: { Authorization: `Bearer ${token}` }
         });
         setHasSubscription(data?.subscribed || false);
       } else {
@@ -147,7 +145,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.error("AuthContext: Error checking subscription:", error);
       setHasSubscription(false);
     } finally {
-      setIsCheckingSubscription(false);
+      isCheckingSubscriptionRef.current = false;
     }
   };
 
@@ -164,10 +162,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       async (event, session) => {
         // Skip if this is the initial load
         if (initialLoadRef.current) return;
-        
+
+        // On token refresh, just update session/user — no need to re-run DB checks
+        if (event === "TOKEN_REFRESHED") {
+          setSession(session);
+          setUser(session?.user ?? null);
+          return;
+        }
+
         setSession(session);
         setUser(session?.user ?? null);
-        
+
         if (session?.user) {
           authCheckedRef.current = true;
           setLoading(true);
@@ -183,7 +188,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           // Run checks in parallel
           await Promise.all([
             checkAdminRole(session.user.id),
-            checkSubscription(session.user.id),
+            checkSubscription(session.user.id, session.access_token),
             checkOnboardingStatus(session.user.id)
           ]).catch(() => {});
           
@@ -222,7 +227,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         try {
           await Promise.all([
             checkAdminRole(session.user.id).catch(() => {}),
-            checkSubscription(session.user.id).catch(() => {}),
+            checkSubscription(session.user.id, session.access_token).catch(() => {}),
             checkOnboardingStatus(session.user.id).catch(() => {})
           ]);
         } catch (err) {
@@ -260,12 +265,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     if (error) throw error;
 
-    // Immediately update state with the returned session
-    // This ensures the UI reflects the logged-in state before signIn() returns
+    // Immediately update state with the returned session so the UI reflects
+    // the logged-in state before signIn() returns. onAuthStateChange (SIGNED_IN)
+    // will fire next and run the DB checks (admin, subscription, onboarding).
     if (data.session) {
       setSession(data.session);
       setUser(data.session.user);
-      authCheckedRef.current = true;
 
       // Identify user in PostHog (dynamic import to defer analytics bundle)
       import("@/lib/posthog").then(({ identifyUser }) =>
@@ -274,14 +279,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           created_at: data.session.user.created_at,
         })
       );
-
-      // Run additional checks in the background (don't block sign-in completion)
-      setLoading(true);
-      Promise.all([
-        checkAdminRole(data.session.user.id),
-        checkSubscription(data.session.user.id),
-        checkOnboardingStatus(data.session.user.id)
-      ]).catch(() => {}).finally(() => setLoading(false));
     }
   };
 
