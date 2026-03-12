@@ -768,6 +768,11 @@ const AdminClasses = () => {
                         Start {classItem.start_here_position}
                       </span>
                     )}
+                    {featuredClassId === classItem.id && (
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-purple-500/20 text-purple-300">
+                        Featured
+                      </span>
+                    )}
                     {classItem.is_quick_reset && (
                       <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-yellow-500/20 text-yellow-300">
                         Quick Reset
