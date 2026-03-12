@@ -334,7 +334,7 @@ serve(async (req) => {
                 startDate,
                 endDate,
                 organizerName: 'March Russell',
-                organizerEmail: 'march@marchrussell.com',
+                organizerEmail: 'support@emberstudio.xyz',
               };
               
               const icalContent = generateICalContent(icalDetails);
@@ -380,7 +380,7 @@ serve(async (req) => {
 
               await resend.emails.send({
                 from: "MARCH <onboarding@resend.dev>",
-                to: ["march@marchrussell.com"],
+                to: ["support@emberstudio.xyz"],
                 subject: `New Booking: ${eventTitle} — ${attendeeName}`,
                 html: adminEmailHtml,
               });

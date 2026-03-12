@@ -291,7 +291,7 @@ Breathwork can have powerful effects on your nervous system, respiratory system,
 
 Please review our full Safety Disclosure for detailed information about contraindications and safe practice guidelines.
 
-If you have any detailed questions about whether breathwork is right for you, please get in touch with March directly at march@marchrussell.com
+If you have any detailed questions about whether breathwork is right for you, please get in touch with March directly at support@emberstudio.xyz
 
 Once you've consulted with your doctor and received clearance, I'd be happy to help you build a practice plan that works for you. 💛"
 

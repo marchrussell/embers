@@ -96,7 +96,7 @@ serve(async (req) => {
     // Send notification to admin
     await resend.emails.send({
       from: "March Russell <onboarding@resend.dev>",
-      to: ["march@marchrussell.com"],
+      to: ["support@emberstudio.xyz"],
       subject: `New Ticket Sale: ${event.title}`,
       html: `
         <h1>New Ticket Sale!</h1>
