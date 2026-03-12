@@ -7,7 +7,7 @@ import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavourites } from "@/hooks/useFavourites";
 import { supabase } from "@/integrations/supabase/client";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import SessionDetailModal from "./SessionDetail";
 import { useFavouriteSessions } from "./library/hooks/useFavouriteSessions";
@@ -32,17 +32,41 @@ const Library = ({ isEmbedded = false, onClearCategory, shouldClearCategory = fa
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<LibraryCategory | null>(null);
   const [selectedProgram, setSelectedProgram] = useState<LibraryProgram | null>(null);
-  const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
-  const [userProfile, setUserProfile] = useState<{ full_name: string } | null>(null);
+  const [selectedSessionId, setSelectedSessionId] = useState<string | null>(() => {
+    return new URLSearchParams(window.location.search).get('session');
+  });
+  const [dbUserProfile, setDbUserProfile] = useState<{ full_name: string } | null>(null);
+  const metadataProfile = user?.user_metadata?.full_name ? { full_name: user.user_metadata.full_name as string } : null;
+  const userProfile = metadataProfile ?? dbUserProfile;
   const [showArcCardsModal, setShowArcCardsModal] = useState(false);
   const nervousSystemProgramRef = useRef<HTMLDivElement>(null);
   const favouritesScrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
 
-  const { categoriesWithSessions, categories, isLoading: isLoadingData } = useLibraryData({ hasSubscription, isAdmin, isTestUser });
+  const { categoriesWithSessions, isLoading: isLoadingData } = useLibraryData({ hasSubscription, isAdmin, isTestUser });
   const { favouriteSessions } = useFavouriteSessions({ favouriteIds, hasSubscription, isAdmin, isTestUser });
   const { featuredSession } = useFeaturedSession();
+
+  // Adjust state when shouldClearCategory prop changes — avoids setState-in-effect cascade
+  const [prevShouldClear, setPrevShouldClear] = useState(shouldClearCategory);
+  if (prevShouldClear !== shouldClearCategory && shouldClearCategory) {
+    setPrevShouldClear(shouldClearCategory);
+    setSelectedCategory(null);
+    setSelectedProgram(null);
+    onClearCategory?.();
+  }
+
+  // Derive selected category from URL param — avoids setState-in-effect cascade
+  const urlCategory = useMemo(() => {
+    const categoryParam = searchParams.get('category');
+    if (categoryParam && categoriesWithSessions.length > 0) {
+      return categoriesWithSessions.find(cat => cat.name === categoryParam) ?? null;
+    }
+    return null;
+  }, [searchParams, categoriesWithSessions]);
+
+  const activeCategory = selectedCategory ?? urlCategory;
 
   const checkFavouritesScroll = () => {
     if (favouritesScrollRef.current) {
@@ -61,8 +85,8 @@ const Library = ({ isEmbedded = false, onClearCategory, shouldClearCategory = fa
     }
   };
 
-  // Update scroll state when favourites change
-  useEffect(() => {
+  // Update scroll state when favourites change — useLayoutEffect to measure DOM before paint
+  useLayoutEffect(() => {
     checkFavouritesScroll();
   }, [favouriteSessions.length]);
 
@@ -70,15 +94,6 @@ const Library = ({ isEmbedded = false, onClearCategory, shouldClearCategory = fa
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  // Clear selected category when shouldClearCategory changes to true
-  useEffect(() => {
-    if (shouldClearCategory) {
-      setSelectedCategory(null);
-      setSelectedProgram(null);
-      onClearCategory?.();
-    }
-  }, [shouldClearCategory, onClearCategory]);
 
   // Check for scroll intent from URL params
   useEffect(() => {
@@ -90,31 +105,21 @@ const Library = ({ isEmbedded = false, onClearCategory, shouldClearCategory = fa
     }
   }, [searchParams, isLoadingData]);
 
-  // Check for session param from homepage - open session modal immediately
-  useEffect(() => {
-    const sessionId = searchParams.get('session');
-    if (sessionId) {
-      setSelectedSessionId(sessionId);
-      navigate('/online', { replace: true });
-    }
-  }, [searchParams, navigate]);
+  // Navigate away after consuming session param — setState is in lazy initializer above
+  if (searchParams.get('session')) {
+    navigate('/online', { replace: true });
+  }
 
   // Scroll to top when category is selected
   useEffect(() => {
-    if (selectedCategory) {
+    if (activeCategory) {
       window.scrollTo(0, 0);
     }
-  }, [selectedCategory]);
+  }, [activeCategory]);
 
-  // Set profile from user metadata immediately, fallback to DB
+  // Fetch profile from DB only when user metadata has no name
   useEffect(() => {
-    if (!user?.id) return;
-
-    const metadataName = user.user_metadata?.full_name;
-    if (metadataName) {
-      setUserProfile({ full_name: metadataName });
-      return;
-    }
+    if (!user?.id || user.user_metadata?.full_name) return;
 
     let cancelled = false;
     supabase
@@ -124,21 +129,12 @@ const Library = ({ isEmbedded = false, onClearCategory, shouldClearCategory = fa
       .maybeSingle()
       .then(({ data: profile, error }) => {
         if (!cancelled && !error && profile?.full_name) {
-          setUserProfile(profile);
+          setDbUserProfile(profile);
         }
       });
 
     return () => { cancelled = true; };
-  }, [user?.id]);
-
-  // Handle URL category parameter
-  useEffect(() => {
-    const categoryParam = searchParams.get('category');
-    if (categoryParam && categories.length > 0) {
-      const match = categoriesWithSessions.find(cat => cat.name === categoryParam);
-      if (match) setSelectedCategory(match);
-    }
-  }, [searchParams, categories, categoriesWithSessions]);
+  }, [user?.id, user?.user_metadata?.full_name]);
 
   const handleSessionClick = (sessionId: string) => {
     if (!sessionId) return;
@@ -183,10 +179,10 @@ const Library = ({ isEmbedded = false, onClearCategory, shouldClearCategory = fa
 
   // View selection
   let viewContent;
-  if (selectedCategory) {
+  if (activeCategory) {
     viewContent = (
       <CategoryView
-        category={selectedCategory}
+        category={activeCategory}
         isEmbedded={isEmbedded}
         hasSubscription={hasSubscription}
         onSessionClick={handleSessionClick}
