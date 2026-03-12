@@ -18,6 +18,8 @@ export function useFavourites(): UseFavouritesReturn {
 
   // Fetch favourites on mount and when user changes
   useEffect(() => {
+    const controller = new AbortController();
+
     const fetchFavourites = async () => {
       if (!user?.id) {
         setFavouriteIds([]);
@@ -29,19 +31,24 @@ export function useFavourites(): UseFavouritesReturn {
         const { data, error } = await supabase
           .from('user_favourites')
           .select('session_id')
-          .eq('user_id', user.id);
+          .eq('user_id', user.id)
+          .abortSignal(controller.signal);
 
         if (error) throw error;
         setFavouriteIds(data?.map(f => f.session_id) || []);
       } catch (error) {
+        if (controller.signal.aborted) return;
         console.error('Error fetching favourites:', error);
         setFavouriteIds([]);
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
       }
     };
 
     fetchFavourites();
+    return () => controller.abort();
   }, [user?.id]);
 
   const isFavourite = useCallback(
