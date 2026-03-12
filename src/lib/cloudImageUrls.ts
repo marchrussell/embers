@@ -81,7 +81,7 @@ export const CLOUD_IMAGES = {
   // Home images
   heroBreathworkWide: 'home/breathwork-wide.webp',
   threeWaysMushroom: 'home/three-ways-mushroom.webp',
-  exploreAudioPlayer: 'home/explore-audio-player.webp',
+  exploreAudioPlayer: 'home/explore-studio-audio-player.webp',
   exploreTestimonials: 'home/explore-testimonials.webp',
 
   // Experiences images
