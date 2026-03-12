@@ -82,7 +82,7 @@ export const CLOUD_IMAGES = {
   heroBreathworkWide: 'home/breathwork-wide.webp',
   threeWaysMushroom: 'home/three-ways-mushroom.webp',
   exploreAudioPlayer: 'home/explore-studio-audio-player.webp',
-  exploreTestimonials: 'home/explore-testimonials.webp',
+  exploreTestimonials: 'home/explore-studio-testimonials.webp',
 
   // Experiences images
   breathPresence: 'experiences/breath-presence-heart-connection-in-person.webp',

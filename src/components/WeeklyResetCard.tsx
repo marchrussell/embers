@@ -1,7 +1,4 @@
 import { IconButton } from "@/components/ui/icon-button";
-import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
-
-const weeklyResetImage = getCloudImageUrl(CLOUD_IMAGES.weeklyReset);
 import {
   Popover,
   PopoverContent,
@@ -13,10 +10,13 @@ import {
   openGoogleCalendar,
   openOutlookCalendar,
 } from "@/lib/calendarUtils";
+import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
 import { ArrowLeft, Calendar, Clock, Share } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+
+const weeklyResetImage = getCloudImageUrl(CLOUD_IMAGES.weeklyReset);
 
 interface WeeklyResetCardProps {
   /** Variant determines the card layout style */
@@ -67,7 +67,7 @@ export const WeeklyResetCard = ({
     const endDate = new Date(startDate.getTime() + 30 * 60000);
 
     return {
-      title: 'Weekly Session on Ember Studio',
+      title: 'Weekly Session on Embers Studio',
       description: 'A grounding, guided session to help you soften, settle, and reset\n\nSession with March Russell',
       location: 'Online',
       startDate,

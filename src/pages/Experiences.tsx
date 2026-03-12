@@ -312,7 +312,7 @@ const Experiences = () => {
                 More Ways to Practice
               </h2>
 
-              {/* The Ember Studio Card - Horizontal Layout */}
+              {/* The Embers Studio Card - Horizontal Layout */}
               <div 
                 className="group relative flex flex-col md:flex-row overflow-hidden rounded-3xl cursor-pointer bg-black border border-[#E6DBC7]/20 shadow-[0_0_60px_rgba(230,219,199,0.4)] transition-colors duration-500"
                 onClick={() => navigate('/online')}
@@ -322,7 +322,7 @@ const Experiences = () => {
                 <div className="relative md:w-[45%] h-[240px] md:h-auto shrink-0 overflow-hidden">
                   <img 
                     src={studioBreatheSilhouette} 
-                    alt="Ember Studio"
+                    alt="Embers Studio"
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]"
                   />
                   {/* Gradient overlay for seamless blend */}
@@ -340,7 +340,7 @@ const Experiences = () => {
                     Monthly Membership
                   </p>
                   <h3 className="font-editorial text-[clamp(1.8rem,2.5vw,2.4rem)] text-[#E6DBC7] font-light leading-[1.1] mb-5">
-                    Ember Studio
+                    Embers Studio
                   </h3>
                   <p className="text-[15px] md:text-[16px] text-[#E6DBC7]/75 mb-10 max-w-[440px] leading-[1.65]">
                     A monthly membership for short daily resets, guided practices, courses and live weekly sessions that help you stay grounded, clear, and connected.

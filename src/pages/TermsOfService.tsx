@@ -1,5 +1,5 @@
-import { NavBar } from "@/components/NavBar";
 import Footer from "@/components/Footer";
+import { NavBar } from "@/components/NavBar";
 import { Card } from "@/components/ui/card";
 
 const TermsOfService = () => {
@@ -24,7 +24,7 @@ const TermsOfService = () => {
           
           <div className="space-y-8 text-[#E6DBC7]/90" style={{ fontSize: 'clamp(0.9rem, 1vw, 1rem)', lineHeight: 1.7 }}>
             <p>
-              Thank you for choosing March, operated by Ember Studio Ltd ("March", "we", "us", or "our"), registered in England and Wales.
+              Thank you for choosing March, operated by Embers Studio Ltd ("March", "we", "us", or "our"), registered in England and Wales.
             </p>
             
             <p>
@@ -220,7 +220,7 @@ const TermsOfService = () => {
             <section className="space-y-4">
               <h2 className="font-editorial text-[#E6DBC7] text-xl font-medium">8. Intellectual Property</h2>
               <p>
-                All content, materials, video/audio sessions, trademarks, and software are owned by Ember Studio Ltd.
+                All content, materials, video/audio sessions, trademarks, and software are owned by Embers Studio Ltd.
                 You receive a personal, non-transferable, non-commercial licence to use the Services.
               </p>
               <p>
@@ -243,7 +243,7 @@ const TermsOfService = () => {
               <h2 className="font-editorial text-[#E6DBC7] text-xl font-medium">10. Limitation of Liability</h2>
               <p>To the fullest extent permitted by law:</p>
               <ul className="list-disc pl-6 space-y-2 text-[#E6DBC7]/80">
-                <li>Ember Studio Ltd is not liable for indirect, incidental, or consequential damages.</li>
+                <li>Embers Studio Ltd is not liable for indirect, incidental, or consequential damages.</li>
                 <li>We make no guarantees of specific outcomes or results from any practice or course.</li>
                 <li>Total liability shall not exceed the amount paid by you in the preceding 12 months.</li>
               </ul>
@@ -255,7 +255,7 @@ const TermsOfService = () => {
             {/* Section 11 */}
             <section className="space-y-4">
               <h2 className="font-editorial text-[#E6DBC7] text-xl font-medium">11. Indemnity</h2>
-              <p>You agree to indemnify and hold harmless Ember Studio Ltd from claims arising from:</p>
+              <p>You agree to indemnify and hold harmless Embers Studio Ltd from claims arising from:</p>
               <ul className="list-disc pl-6 space-y-2 text-[#E6DBC7]/80">
                 <li>Your misuse of the Services</li>
                 <li>Violation of these Terms</li>

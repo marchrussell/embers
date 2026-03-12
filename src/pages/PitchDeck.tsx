@@ -1,26 +1,17 @@
-import { useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { SectionHeading } from "@/components/SectionHeading";
-import sanctuaryCircle from "@/assets/pitch-deck/sanctuary-circle.jpg";
-import hearthLounge from "@/assets/pitch-deck/hearth-lounge.jpg";
-import thermalRoom from "@/assets/pitch-deck/thermal-room.jpg";
-import studioSpace from "@/assets/pitch-deck/studio-space.png";
-import earthTexture from "@/assets/pitch-deck/earth-texture.jpg";
-import ambientGathering from "@/assets/pitch-deck/ambient-gathering.png";
-import candlelightBlur from "@/assets/pitch-deck/candlelight-blur.png";
-import warmGathering from "@/assets/pitch-deck/warm-gathering.png";
-import ambientWarmth from "@/assets/pitch-deck/ambient-warmth.png";
 import marchTeacher from "@/assets/march-russell-teacher.jpg";
-import jossStoddart from "@/assets/pitch-deck/joss-stoddart.png";
-import sanctuaryGathering from "@/assets/pitch-deck/sanctuary-gathering.jpg";
-import loungeSpace from "@/assets/pitch-deck/lounge-space.jpg";
-import thermalSpace from "@/assets/pitch-deck/thermal-space.jpg";
-import studioRoom from "@/assets/pitch-deck/studio-room.png";
 import amphitheaterSpace from "@/assets/pitch-deck/amphitheater-space.jpg";
 import circularCeiling from "@/assets/pitch-deck/circular-ceiling.jpg";
+import jossStoddart from "@/assets/pitch-deck/joss-stoddart.png";
+import loungeSpace from "@/assets/pitch-deck/lounge-space.jpg";
 import problemCandles from "@/assets/pitch-deck/problem-candles.jpg";
+import sanctuaryGathering from "@/assets/pitch-deck/sanctuary-gathering.jpg";
 import slide3GroupSession from "@/assets/pitch-deck/slide-3-group-session.png";
+import studioRoom from "@/assets/pitch-deck/studio-room.png";
+import thermalSpace from "@/assets/pitch-deck/thermal-space.jpg";
+import { SectionHeading } from "@/components/SectionHeading";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useState } from "react";
 
 const slides = [
   {
@@ -283,7 +274,7 @@ export default function PitchDeck() {
                 {/* Images - single row, all equal height and LARGE */}
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 px-0 md:px-8 lg:px-16">
                   <div className="rounded-3xl overflow-hidden h-[220px] md:h-[260px] lg:h-[300px]">
-                    <img src={amphitheaterSpace} alt="Ember Studio amphitheater" className="w-full h-full object-cover" />
+                    <img src={amphitheaterSpace} alt="Embers Studio amphitheater" className="w-full h-full object-cover" />
                   </div>
                   <div className="rounded-3xl overflow-hidden h-[220px] md:h-[260px] lg:h-[300px]">
                     <img src={circularCeiling} alt="Circular ceiling" className="w-full h-full object-cover" />

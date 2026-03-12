@@ -1,5 +1,5 @@
+import { AlertTriangle, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, AlertTriangle } from "lucide-react";
 
 const SafetyDisclosure = () => {
   return (
@@ -164,7 +164,7 @@ const SafetyDisclosure = () => {
         {/* Legal Disclaimer */}
         <div className="mb-10">
           <p className="text-xs text-white/50 font-light leading-relaxed mb-6">
-            Ember Studio Ltd. assumes no responsibility for injuries suffered while practicing these techniques and Ember Studio Ltd. shall not be held liable for any damages, circumstances, conditions or injuries that may occur, directly or indirectly, from engaging in any activities or ideas presented in any Application made by Ember Studio Ltd.
+            Embers Studio Ltd. assumes no responsibility for injuries suffered while practicing these techniques and Embers Studio Ltd. shall not be held liable for any damages, circumstances, conditions or injuries that may occur, directly or indirectly, from engaging in any activities or ideas presented in any Application made by Embers Studio Ltd.
           </p>
           <p className="text-xs text-white/60 font-light leading-relaxed mb-6">
             By continuing to access and use the March app, you agree that you have read and understood the above Safety Disclosure and accept all responsibility for your physical and mental health and any resultant injury or mishap that may affect your well-being or health in any way.

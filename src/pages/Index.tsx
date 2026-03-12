@@ -9,13 +9,12 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Pill } from "@/components/ui/pill";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
 import { formatEventDate, getNextEventDate } from "@/lib/experienceDateUtils";
 import { experiencesData } from "@/lib/experiencesData";
 import { companyLogos, marchImages, programImages } from "@/lib/sharedAssets";
 import { ArrowRight, X } from "lucide-react";
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Index = () => {
@@ -52,174 +51,12 @@ const Index = () => {
   const [categories, setCategories] = useState<any[]>([]);
   const [featuredSessions, setFeaturedSessions] = useState<any[]>([]);
 
-  // Fetch categories and featured sessions for app summary
-  useEffect(() => {
-    let isMounted = true;
-    const fetchAppData = async () => {
-      try {
-        const [categoriesResult, classesResult] = await Promise.all([supabase.from('categories').select('*').order('name'), supabase.from('classes').select(`
-            *,
-            categories!classes_category_id_fkey (
-              name
-            )
-          `).eq('is_published', true)]);
-        if (!isMounted) return;
-        if (categoriesResult.data) {
-          const categoryOrder = ['CALM', 'ENERGY', 'RESET', 'SLEEP', 'EXPAND', 'HEAL'];
-          const sorted = [...categoriesResult.data].filter(cat => categoryOrder.includes(cat.name)).sort((a, b) => categoryOrder.indexOf(a.name) - categoryOrder.indexOf(b.name));
-          setCategories(sorted);
-        }
-        if (classesResult.data && classesResult.data.length > 0) {
-          // Find the specific sessions we want (handle trailing spaces by trimming both sides)
-          const targetTitles = ['The Landing', 'Instant Energy Boost', 'Box Breathing'];
-          const filtered = classesResult.data.filter(c => {
-            const trimmedTitle = c.title.trim();
-            return targetTitles.some(target => trimmedTitle === target);
-          });
-
-          // Order them in the specific order we want
-          const orderMap: Record<string, number> = {
-            'The Landing': 0,
-            'Instant Energy Boost': 1,
-            'Box Breathing': 2
-          };
-          const sorted = filtered.sort((a, b) => (orderMap[a.title.trim()] ?? 99) - (orderMap[b.title.trim()] ?? 99));
-          
-          // If we found sessions, set them; otherwise use any 3 published sessions as fallback
-          if (sorted.length > 0) {
-            setFeaturedSessions(sorted);
-          } else {
-            // Fallback: use first 3 published sessions
-            setFeaturedSessions(classesResult.data.slice(0, 3));
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching app data:', error);
-      }
-    };
-    fetchAppData();
-
-    // Safety timeout
-    const safetyTimeout = setTimeout(() => {
-      if (isMounted && featuredSessions.length === 0) {
-        console.warn('Index: Safety timeout for featured sessions');
-      }
-    }, 5000);
-    return () => {
-      isMounted = false;
-      clearTimeout(safetyTimeout);
-    };
-  }, []);
   useEffect(() => {
     if (location.state?.openSubscription) {
       setShowSubscriptionModal(true);
     }
   }, [location.state]);
-  const handleSubmit = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.firstName || !formData.lastName || !formData.email || !formData.message) {
-      toast({
-        title: "All fields required",
-        description: "Please fill in all fields to send a message.",
-        variant: "destructive"
-      });
-      return;
-    }
-    if (formData.message.trim().length < 5) {
-      toast({
-        title: "Message too short",
-        description: "Please write at least 5 characters in your message.",
-        variant: "destructive"
-      });
-      return;
-    }
-    try {
-      const fullName = `${formData.firstName.trim()} ${formData.lastName.trim()}`;
-
-      // Send the message
-      const {
-        error
-      } = await supabase.functions.invoke('send-contact-email', {
-        body: {
-          name: fullName,
-          email: formData.email.trim().toLowerCase(),
-          message: formData.message.trim(),
-          type: 'contact'
-        }
-      });
-      if (error) throw error;
-
-      // If newsletter checkbox is checked, also subscribe them
-      if (subscribeToNewsletter) {
-        try {
-          const {
-            error: dbError
-          } = await supabase.from('newsletter_subscribers').insert([{
-            email: formData.email.trim().toLowerCase(),
-            name: fullName
-          }]);
-          if (dbError && dbError.code !== '23505') {
-            // Ignore duplicate error
-            throw dbError;
-          }
-
-          // Send confirmation email
-          await supabase.functions.invoke('send-contact-email', {
-            body: {
-              name: fullName,
-              email: formData.email.trim().toLowerCase(),
-              message: '',
-              type: 'newsletter'
-            }
-          });
-        } catch (newsletterError) {
-          console.error('Error subscribing to newsletter:', newsletterError);
-          // Don't fail the message send if newsletter fails
-        }
-      }
-      toast({
-        title: subscribeToNewsletter ? "Message sent and subscribed!" : "Message sent!",
-        description: subscribeToNewsletter ? "Thank you for your message. You've also been subscribed to our newsletter." : "Thank you for your message. We'll get back to you soon."
-      });
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        message: ""
-      });
-      setSubscribeToNewsletter(false);
-    } catch (error) {
-      console.error('Error sending message:', error);
-      toast({
-        title: "Error sending message",
-        description: "Please try again later or contact us directly.",
-        variant: "destructive"
-      });
-    }
-  }, [formData, subscribeToNewsletter, toast]);
-
-  // Video testimonials data
-  const videoTestimonials = [{
-    name: "Shay OB.",
-    videoUrl: "/videos/shay-obrien-testimonial.mp4",
-    posterUrl: "/videos/shay-obrien-poster.jpg?v=2",
-    quote: "I have been working with March for a couple of months now and the change is quite profound. I feel a deeper sense of calm, clarity and I am generally more present. My background is that I am spinning lots of plates in the business world running my own investment fund. I also have 3 children at school and have just moved country so it's often hectic. My sessions with March bring restore my balance. I also use March's App to work in between sessions. I look forward to my little moment of serenity with my breathwork session. I cannot recommend breathwork enough and especially with March who has a lovely gentle and caring presence."
-  }, {
-    name: "Sara M.",
-    videoUrl: "/videos/sara-testimonial.mp4",
-    posterUrl: "/videos/sara-poster.jpg?v=2",
-    quote: "I began breathwork with March a year after losing my brother very suddenly and traumatically. I have been diagnosed with complex PTSD but despite the usual avenues of CBT therapy, counselling & medication I was still suffering horrendously. I was experiencing regular panic attacks, chest pains, chronic anxiety to name just a few. I had never tried any breathwork and it was completely new for me. March made me feel very comfortable and we started with the very basics and would build on that in our weekly sessions. I found this a very helpful way to learn to incorporate the techniques into my daily routine. After a few months of sessions, my anxiety and panic attacks had reduced dramatically, along with all of my other symptoms too. It's been a year since I completed my programme and I still use the techniques regularly and especially whenever I am feeling stressed, overwhelmed or feel the chest pains sneaking in again. I cannot thank March enough for his work with me and couldn't recommend his programme enough, it's changed my life."
-  }, {
-    name: "Alex C.",
-    videoUrl: "/videos/alex-chandler-testimonial.mp4",
-    posterUrl: "/videos/alex-chandler-poster.jpg?v=3",
-    quote: "March's breathwork has become the most influential voice in helping me through a deeply personal bereavement. The magic of that is this voice is just breathing. It has taught me a lot, changed the way in which I recognise stress and emotion and given me profound clarity to confront my grief."
-  }, {
-    name: "Ben F.",
-    videoUrl: "/videos/ben-field-testimonial.mp4",
-    posterUrl: "/videos/ben-field-poster.jpg?v=2",
-    quote: "I did a breathwork program with March when I was going through a difficult time in my life, and the effects were like no other form of therapy I've ever experienced. March's calming presence as he guides you through one of the wildest sensory experiences is incredibly reassuring. Each time I left with a sense of clarity, somehow lighter and importantly more grounded."
-  }];
+  
   return <div className="min-h-screen bg-background">
       <NavBar />
       <Suspense fallback={null}>
@@ -424,61 +261,6 @@ const Index = () => {
         </DialogContent>
       </Dialog>
 
-      {/* RISE Method Modal */}
-      <Dialog open={showRiseModal} onOpenChange={setShowRiseModal}>
-        <DialogContent hideClose className="max-w-5xl max-h-[90vh] overflow-y-auto backdrop-blur-xl bg-black/30 border border-white/30 p-0">
-          <button onClick={() => setShowRiseModal(false)} className="absolute top-8 right-8 z-50 opacity-70 hover:opacity-100 transition-opacity">
-            <X className="w-7 h-7 md:w-8 md:h-8 text-white" />
-          </button>
-          
-          <div className="p-10 md:p-12 pt-20 md:pt-24 space-y-7 md:space-y-8">
-            <div className="text-center space-y-3">
-              <h2 className="font-['PP_Editorial_Old'] text-4xl md:text-5xl lg:text-6xl text-white">The RISE Method</h2>
-              <p className="text-xl md:text-2xl lg:text-3xl font-light text-white/90 max-w-3xl mx-auto">
-                A transformative 12-week program that teaches you to regulate your nervous system
-              </p>
-            </div>
-            
-            <div className="space-y-5 md:space-y-6 text-xl md:text-2xl text-white/90 leading-relaxed font-light">
-              <p>
-                The RISE Method combines ancient breathwork and meditation wisdom with cutting-edge neuroscience to create lasting change. You'll learn to shift from chronic stress patterns into states of calm, clarity, and confidence—building resilience that transforms every area of your life.
-              </p>
-              
-              <div className="pt-3 space-y-5 md:space-y-6">
-                <h3 className="text-xl md:text-2xl lg:text-3xl font-light text-white">Two Pathways to Transformation:</h3>
-                
-                <div className="space-y-5">
-                  <div className="bg-white/5 border border-white/20 p-5 md:p-6 rounded-lg">
-                    <h4 className="font-light text-white mb-3 text-lg md:text-xl lg:text-2xl">DIY Version</h4>
-                    <p className="text-lg md:text-xl lg:text-2xl text-white/80 leading-relaxed">
-                      Self-guided access to the complete 5-month curriculum, video lessons, breathwork protocols, and worksheets. Perfect for self-motivated individuals who want to work at their own pace.
-                    </p>
-                  </div>
-                  
-                  <div className="bg-white/5 border border-white/20 p-5 md:p-6 rounded-lg">
-                    <h4 className="font-light text-white mb-3 text-lg md:text-xl lg:text-2xl">Personalized Mentorship</h4>
-                    <p className="text-lg md:text-xl lg:text-2xl text-white/80 leading-relaxed">
-                      Everything in the DIY version (complete 5-month curriculum, video lessons, breathwork protocols, and worksheets) PLUS one-on-one weekly sessions with March, tailored breathwork protocols, direct feedback, and ongoing support. Ideal for those seeking accountability and personalized guidance.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              
-              <p className="pt-3 md:pt-5 font-light text-lg md:text-xl">
-                Whether you choose the DIY path or personalized mentorship, The RISE Method gives you the tools to master your nervous system and create profound, lasting change.
-              </p>
-            </div>
-
-            <div className="pt-6 md:pt-8 border-t border-white/20 space-y-4 md:space-y-5">
-              <p className="text-lg md:text-xl lg:text-2xl text-white/70 font-light text-center">Let's discuss your goals and see if The RISE Method is right for you</p>
-              <Button onClick={() => window.open('https://calendly.com/march-marchrussell/welcome-call', '_blank')} className="w-full bg-transparent border-2 border-white text-white hover:bg-white hover:text-black transition-all rounded-full py-6 md:py-7 text-xl md:text-2xl">
-                Book a Discovery Call
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-      
       <main>
         {/* Hero Section with Optimized Background */}
         <section className="relative h-[100dvh] overflow-hidden flex flex-col justify-center items-center">
@@ -519,7 +301,7 @@ const Index = () => {
 
         </section>
 
-        {/* Second Screen - Ember Studio */}
+        {/* Second Screen - Embers Studio */}
         <section className="relative min-h-[100dvh] overflow-hidden flex flex-col justify-between"
           style={{
             backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.6)), url("${getCloudImageUrl(CLOUD_IMAGES.heroBreathworkWide, { width: 1920, quality: 80 })}")`,
@@ -534,7 +316,7 @@ const Index = () => {
               fontWeight: 300,
               textShadow: '0 2px 12px rgba(0,0,0,0.5)',
             }}>
-              Ember Studio is a place to come back to the body.
+              Embers Studio is a place to come back to the body.
               <br className="hidden md:block" />{' '}
               Through breath, movement, and sensory practice, it creates space for the nervous system to settle, perception to soften, and experience to open.
             </p>
