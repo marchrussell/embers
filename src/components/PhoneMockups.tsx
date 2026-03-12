@@ -1,23 +1,24 @@
-import { Play, Heart, Pause, Star } from "lucide-react";
-import categoryCalm from "@/assets/category-awaken.jpg";
 import categoryEnergy from "@/assets/category-energy.jpg";
+import categoryRelease from "@/assets/category-release.jpg";
 import categoryReset from "@/assets/category-reset.jpg";
 import categorySleep from "@/assets/category-sleep.jpg";
-import categoryRelease from "@/assets/category-release.jpg";
-import reviewsBg from "@/assets/reviews-bg.jpg";
-import programHero from "@/assets/program-hero-flowers.jpg";
-import nowPlayingBg from "@/assets/now-playing-bg.jpg";
+import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
+import { Heart, Pause, Play, Star } from "lucide-react";
 
 // Shared phone frame styles
 const phoneFrameStyles = "w-[280px] h-[560px] bg-black rounded-[28px] overflow-hidden shadow-[0_0_60px_rgba(230,219,199,0.4)] border border-white/20";
+const nowPlayingBg = getCloudImageUrl(CLOUD_IMAGES.exploreAudioPlayer, { width: 600, quality: 80 });
+const programHero = getCloudImageUrl(CLOUD_IMAGES.breathPresence, { width: 600, quality: 80 });
+const categoryCalm = getCloudImageUrl(CLOUD_IMAGES.startHereButterfly, { width: 600, quality: 80 });
+const reviewsBg = getCloudImageUrl(CLOUD_IMAGES.exploreTestimonials, { width: 600, quality: 80 });
 
 export const PhoneMockups = () => {
   const sessions = [
-    { title: "The Landing", duration: "10 min", image: categoryCalm },
-    { title: "Box Breathing", duration: "7 min", image: categoryEnergy },
-    { title: "Breathe Efficiently", duration: "14 min", image: categoryReset },
-    { title: "The Perfect Breath", duration: "10 min", image: categorySleep },
-    { title: "Quieten Your Mind", duration: "11 min", image: categoryRelease },
+    { title: "NSDR: Gentle Reset", duration: "11 min", image: categoryCalm },
+    { title: "Finding Steady Ground", duration: "8 min", image: categoryEnergy },
+    { title: "Physiological Sign for Immediate Relief", duration: "4 min", image: categoryReset },
+    { title: "Gentle Nervous System Reset", duration: "8 min", image: categorySleep },
+    { title: "Softening Tension", duration: "7 min", image: categoryRelease },
   ];
 
   return (
@@ -32,8 +33,8 @@ export const PhoneMockups = () => {
               <img src={categoryCalm} alt="Calm" className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
               <div className="absolute bottom-4 left-6">
-                <h3 className="text-white font-editorial text-[26px]">Calm</h3>
-                <p className="text-white/60 text-[12px]">9 sessions</p>
+                <h3 className="text-white font-editorial text-[26px]">Calm & Restore</h3>
+                <p className="text-white/60 text-[12px]">10 sessions</p>
               </div>
             </div>
             
@@ -99,20 +100,20 @@ export const PhoneMockups = () => {
               <img src={programHero} alt="Course" className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
               <div className="absolute bottom-4 left-6">
-                <h3 className="text-white font-editorial text-[26px]">The Power of Breathwork</h3>
-                <p className="text-white/60 text-[12px]">5 Lessons</p>
+                <h3 className="text-white font-editorial text-[26px]">Mental Detox</h3>
+                <p className="text-white/60 text-[12px]">15 Days - 11 Lessons</p>
+                <p className="text-white/60 text-[12px]">Stablise/Regulate/Restore</p>
               </div>
             </div>
             
             {/* Lessons list */}
             <div className="px-6 py-4 space-y-3">
               {[
-                { num: 1, title: "Welcome & Introduction", duration: "3 mins" },
-                { num: 2, title: "The Science", duration: "8 mins" },
-                { num: 3, title: "Your First Practice", duration: "12 mins" },
-                { num: 4, title: "Building Habits", duration: "5 mins" },
-                { num: 5, title: "Regulation in Real Time", duration: "6 mins" },
-                { num: 6, title: "Designing Your Habit", duration: "7 mins" },
+                { num: 1, title: "Regulating with Triangle Breathing", duration: "3 mins" },
+                { num: 2, title: "Finding Steady Ground", duration: "8 mins" },
+                { num: 3, title: "NSDR: Gentle Reset", duration: "12 mins" },
+                { num: 4, title: "Sleep Transition", duration: "5 mins" },
+                { num: 5, title: "Clear The Way", duration: "6 mins" },
               ].map((lesson, i) => (
                 <div key={i} className="flex items-center gap-3">
                   <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-white text-[12px]">
