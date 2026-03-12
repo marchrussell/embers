@@ -121,10 +121,10 @@ export const SafetyDisclosureModal = ({ isOpen, onAccept, userId }: SafetyDisclo
               <p>
                 Please consult a medical professional if you have any medical history, conditions, or concerns, and reach out to March at{" "}
                 <a 
-                  href="mailto:march@marchrussell.com" 
+                  href="mailto:support@emberstudio.xyz" 
                   className="text-[#E6DBC7] hover:text-[#E6DBC7]/80 underline transition-colors"
                 >
-                  march@marchrussell.com
+                  support@emberstudio.xyz
                 </a>
                 {" "}if you have any questions.
               </p>

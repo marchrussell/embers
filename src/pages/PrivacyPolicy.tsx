@@ -24,7 +24,7 @@ const PrivacyPolicy = () => {
           
           <div className="space-y-8 text-[#E6DBC7]/90" style={{ fontSize: 'clamp(0.9rem, 1vw, 1rem)', lineHeight: 1.7 }}>
             <p>
-              Ripple Effect Ltd ("March", "we", "us", or "our") is committed to protecting your personal information and respecting your privacy rights. This Privacy Policy explains how we collect, use, store, and safeguard your personal data when you:
+              Ember Studio Ltd ("March", "we", "us", or "our") is committed to protecting your personal information and respecting your privacy rights. This Privacy Policy explains how we collect, use, store, and safeguard your personal data when you:
             </p>
             
             <ul className="list-disc pl-6 space-y-2 text-[#E6DBC7]/80">
@@ -42,7 +42,7 @@ const PrivacyPolicy = () => {
 
             <p>
               For any questions, contact:{" "}
-              <a href="mailto:support@marchrussell.com" className="underline hover:text-[#E6DBC7]">support@marchrussell.com</a>
+              <a href="mailto:support@emberstudio.xyz" className="underline hover:text-[#E6DBC7]">support@emberstudio.xyz</a>
             </p>
 
             {/* Section 1 */}
@@ -198,7 +198,7 @@ const PrivacyPolicy = () => {
               </ul>
               <p>
                 To exercise your rights, email{" "}
-                <a href="mailto:support@marchrussell.com" className="underline hover:text-[#E6DBC7]">support@marchrussell.com</a>.
+                <a href="mailto:support@emberstudio.xyz" className="underline hover:text-[#E6DBC7]">support@emberstudio.xyz</a>.
                 We will respond within 30 days as required by law.
               </p>
             </section>
@@ -215,7 +215,7 @@ const PrivacyPolicy = () => {
               </ul>
               <p>
                 Requests can be emailed to{" "}
-                <a href="mailto:support@marchrussell.com" className="underline hover:text-[#E6DBC7]">support@marchrussell.com</a>.
+                <a href="mailto:support@emberstudio.xyz" className="underline hover:text-[#E6DBC7]">support@emberstudio.xyz</a>.
               </p>
             </section>
 
@@ -261,8 +261,8 @@ const PrivacyPolicy = () => {
               <p>If you have questions, concerns, or requests regarding this Policy or your personal data, contact:</p>
               <p className="text-[#E6DBC7]">
                 📧{" "}
-                <a href="mailto:support@marchrussell.com" className="underline hover:text-[#E6DBC7]/80">
-                  support@marchrussell.com
+                <a href="mailto:support@emberstudio.xyz" className="underline hover:text-[#E6DBC7]/80">
+                  support@emberstudio.xyz
                 </a>
               </p>
               <p className="text-[#E6DBC7]">

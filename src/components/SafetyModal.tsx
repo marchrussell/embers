@@ -109,7 +109,7 @@ export const SafetyModal = ({ open, onOpenChange }: SafetyModalProps) => {
           {/* Legal Disclaimer */}
           <div className="mb-8 md:mb-10">
             <p className="text-sm text-foreground/70 font-light leading-relaxed mb-6">
-              Ripple Effect Ltd. assumes no responsibility for injuries suffered while practicing these techniques and Ripple Effect Ltd. shall not be held liable for any damages, circumstances, conditions or injuries that may occur, directly or indirectly, from engaging in any activities or ideas presented in any Application made by Ripple Effect Ltd.
+              Ember Studio Ltd. assumes no responsibility for injuries suffered while practicing these techniques and Ember Studio Ltd. shall not be held liable for any damages, circumstances, conditions or injuries that may occur, directly or indirectly, from engaging in any activities or ideas presented in any Application made by Ember Studio Ltd.
             </p>
             <p className="text-sm text-foreground/70 font-light leading-relaxed mb-6">
               By continuing to access and use the March app, you agree that you have read and understood the above Safety Disclosure and accept all responsibility for your physical and mental health and any resultant injury or mishap that may affect your well-being or health in any way.
@@ -123,8 +123,8 @@ export const SafetyModal = ({ open, onOpenChange }: SafetyModalProps) => {
             </p>
             <p className="text-sm text-foreground/70 font-light">
               If you have questions or comments, you may email us at{" "}
-              <a href="mailto:march@marchrussell.com" className="text-[#EC9037] hover:underline">
-                march@marchrussell.com
+              <a href="mailto:support@emberstudio.xyz" className="text-[#EC9037] hover:underline">
+                support@emberstudio.xyz
               </a>
             </p>
           </div>

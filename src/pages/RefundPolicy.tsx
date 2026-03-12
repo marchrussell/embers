@@ -28,7 +28,7 @@ const RefundPolicy = memo(() => {
 
             <div className="space-y-8 text-[#E6DBC7]/90" style={{ fontSize: 'clamp(0.9rem, 1vw, 1rem)', lineHeight: 1.7 }}>
               <p>
-                Thank you for choosing to learn and practise with Ripple Effect Ltd ("March", "we", "us" or "our").
+                Thank you for choosing to learn and practise with Ember Studio Ltd ("March", "we", "us" or "our").
                 This Refund Policy outlines your rights and our responsibilities regarding purchases of digital courses, memberships, workshops, and live events.
               </p>
               
@@ -147,10 +147,10 @@ const RefundPolicy = memo(() => {
                 <p className="text-[#E6DBC7]">
                   📧{" "}
                   <a 
-                    href="mailto:march@marchrussell.com" 
+                    href="mailto:support@emberstudio.xyz" 
                     className="underline hover:text-[#E6DBC7]/80 transition-colors"
                   >
-                    march@marchrussell.com
+                    support@emberstudio.xyz
                   </a>
                 </p>
                 <p className="mt-4">Include:</p>

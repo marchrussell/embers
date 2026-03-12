@@ -101,7 +101,7 @@ const PaymentSuccess = () => {
         
         // Provide helpful error message
         const errorMsg = error.message || "Verification service unavailable";
-        setError(`Unable to verify payment. Your payment was successful - please contact support at march@marchrussell.com with your session ID: ${sessionId?.slice(-8)}`);
+        setError(`Unable to verify payment. Your payment was successful - please contact support at support@emberstudio.xyz with your session ID: ${sessionId?.slice(-8)}`);
         
         toast.error("Verification issue - please contact support to activate your account", {
           duration: 10000,

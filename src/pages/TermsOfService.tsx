@@ -24,7 +24,7 @@ const TermsOfService = () => {
           
           <div className="space-y-8 text-[#E6DBC7]/90" style={{ fontSize: 'clamp(0.9rem, 1vw, 1rem)', lineHeight: 1.7 }}>
             <p>
-              Thank you for choosing March, operated by Ripple Effect Ltd ("March", "we", "us", or "our"), registered in England and Wales.
+              Thank you for choosing March, operated by Ember Studio Ltd ("March", "we", "us", or "our"), registered in England and Wales.
             </p>
             
             <p>
@@ -88,7 +88,7 @@ const TermsOfService = () => {
                 <li>Subscriptions renew automatically unless cancelled.</li>
                 <li>Renewal charges are processed through your original payment method.</li>
                 <li>You may cancel anytime through your account settings or by emailing{" "}
-                  <a href="mailto:march@marchrussell.com" className="underline hover:text-[#E6DBC7]">march@marchrussell.com</a>.</li>
+                  <a href="mailto:support@emberstudio.xyz" className="underline hover:text-[#E6DBC7]">support@emberstudio.xyz</a>.</li>
                 <li>You will retain access until the end of your current billing period.</li>
               </ul>
 
@@ -102,7 +102,7 @@ const TermsOfService = () => {
               <p>
                 Refunds are only provided if the service is faulty, unavailable, or not as described.
                 Refund requests may be made at{" "}
-                <a href="mailto:march@marchrussell.com" className="underline hover:text-[#E6DBC7]">march@marchrussell.com</a>.
+                <a href="mailto:support@emberstudio.xyz" className="underline hover:text-[#E6DBC7]">support@emberstudio.xyz</a>.
               </p>
 
               <h4 className="text-[#E6DBC7]/90 font-medium mt-4">Price Changes</h4>
@@ -220,7 +220,7 @@ const TermsOfService = () => {
             <section className="space-y-4">
               <h2 className="font-editorial text-[#E6DBC7] text-xl font-medium">8. Intellectual Property</h2>
               <p>
-                All content, materials, video/audio sessions, trademarks, and software are owned by Ripple Effect Ltd.
+                All content, materials, video/audio sessions, trademarks, and software are owned by Ember Studio Ltd.
                 You receive a personal, non-transferable, non-commercial licence to use the Services.
               </p>
               <p>
@@ -243,7 +243,7 @@ const TermsOfService = () => {
               <h2 className="font-editorial text-[#E6DBC7] text-xl font-medium">10. Limitation of Liability</h2>
               <p>To the fullest extent permitted by law:</p>
               <ul className="list-disc pl-6 space-y-2 text-[#E6DBC7]/80">
-                <li>Ripple Effect Ltd is not liable for indirect, incidental, or consequential damages.</li>
+                <li>Ember Studio Ltd is not liable for indirect, incidental, or consequential damages.</li>
                 <li>We make no guarantees of specific outcomes or results from any practice or course.</li>
                 <li>Total liability shall not exceed the amount paid by you in the preceding 12 months.</li>
               </ul>
@@ -255,7 +255,7 @@ const TermsOfService = () => {
             {/* Section 11 */}
             <section className="space-y-4">
               <h2 className="font-editorial text-[#E6DBC7] text-xl font-medium">11. Indemnity</h2>
-              <p>You agree to indemnify and hold harmless Ripple Effect Ltd from claims arising from:</p>
+              <p>You agree to indemnify and hold harmless Ember Studio Ltd from claims arising from:</p>
               <ul className="list-disc pl-6 space-y-2 text-[#E6DBC7]/80">
                 <li>Your misuse of the Services</li>
                 <li>Violation of these Terms</li>
@@ -287,8 +287,8 @@ const TermsOfService = () => {
               <p>For questions, concerns, or support:</p>
               <p className="text-[#E6DBC7]">
                 📧{" "}
-                <a href="mailto:march@marchrussell.com" className="underline hover:text-[#E6DBC7]/80">
-                  march@marchrussell.com
+                <a href="mailto:support@emberstudio.xyz" className="underline hover:text-[#E6DBC7]/80">
+                  support@emberstudio.xyz
                 </a>
               </p>
               <p className="text-[#E6DBC7]">

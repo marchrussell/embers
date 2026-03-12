@@ -69,8 +69,8 @@ export const MarchPrivacyModal = ({ open, onAccept, onReadFullPolicy }: MarchPri
             <div className="pt-2 space-y-2 text-xs text-white/60">
               <p>
                 💬 Questions or requests?{" "}
-                <a href="mailto:march@marchrussell.com" className="text-[#E6DBC7] hover:text-[#E6DBC7]/80 underline">
-                  march@marchrussell.com
+                <a href="mailto:support@emberstudio.xyz" className="text-[#E6DBC7] hover:text-[#E6DBC7]/80 underline">
+                  support@emberstudio.xyz
                 </a>
               </p>
               <p>

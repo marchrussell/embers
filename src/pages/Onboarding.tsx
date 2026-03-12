@@ -156,7 +156,7 @@ const Onboarding = () => {
 
             <p className="text-[10px] md:text-xs text-center text-foreground/60 pt-4 md:pt-6 font-light">
               The Studio is free for anyone who can't afford it.<br />
-              Please email march@marchrussell.com to receive access.
+              Please email support@emberstudio.xyz to receive access.
             </p>
             
             <div className="text-center pt-4">
@@ -196,8 +196,8 @@ const Onboarding = () => {
             
             <p className="text-foreground/80 font-light leading-relaxed text-sm sm:text-base md:text-base">
               Please consult a medical professional if you have any medical history, conditions, or concerns, and reach out to March at{" "}
-              <a href="mailto:march@marchrussell.com" className="text-[#E6DBC7] hover:text-[#E6DBC7]/80 underline transition-colors">
-                march@marchrussell.com
+              <a href="mailto:support@emberstudio.xyz" className="text-[#E6DBC7] hover:text-[#E6DBC7]/80 underline transition-colors">
+                support@emberstudio.xyz
               </a>
               {" "}if you have any questions.
             </p>
@@ -362,7 +362,7 @@ const Onboarding = () => {
                 By continuing to access and use The Studio App, you agree that you have read and understood the above Safety Disclosure and accept all responsibility for your physical and mental health and any resultant injury or mishap that may affect your well-being or health in any way.
               </p>
               <p className="text-foreground/70 font-light leading-relaxed text-xs sm:text-sm md:text-sm">
-                If you have questions or comments, you may email us at <a href="mailto:support@rippleeffect.com" className="text-[#E6DBC7] hover:underline">support@rippleeffect.com</a>
+                If you have questions or comments, you may email us at <a href="mailto:support@emberstudio.xyz" className="text-[#E6DBC7] hover:underline">support@emberstudio.xyz</a>
               </p>
             </div>
           </div>

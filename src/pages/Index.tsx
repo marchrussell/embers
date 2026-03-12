@@ -519,7 +519,7 @@ const Index = () => {
 
         </section>
 
-        {/* Second Screen - Ripple Effect */}
+        {/* Second Screen - Ember Studio */}
         <section className="relative min-h-[100dvh] overflow-hidden flex flex-col justify-between"
           style={{
             backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.6)), url("${getCloudImageUrl(CLOUD_IMAGES.heroBreathworkWide, { width: 1920, quality: 80 })}")`,
@@ -534,7 +534,7 @@ const Index = () => {
               fontWeight: 300,
               textShadow: '0 2px 12px rgba(0,0,0,0.5)',
             }}>
-              Ripple Effect is a place to come back to the body.
+              Ember Studio is a place to come back to the body.
               <br className="hidden md:block" />{' '}
               Through breath, movement, and sensory practice, it creates space for the nervous system to settle, perception to soften, and experience to open.
             </p>

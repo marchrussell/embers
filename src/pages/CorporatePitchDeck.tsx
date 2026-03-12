@@ -383,10 +383,10 @@ const CorporatePitchDeck = () => {
                         <div className="pt-8 space-y-3">
                           <div className="flex flex-col gap-1">
                             <a 
-                              href="mailto:march@marchrussell.com"
+                              href="mailto:support@emberstudio.xyz"
                               className="font-unica text-[clamp(0.8rem,0.9vw,0.85rem)] text-white hover:text-white/70 transition-colors"
                             >
-                              march@marchrussell.com
+                              support@emberstudio.xyz
                             </a>
                             <a 
                               href="https://marchrussell.com"

@@ -372,7 +372,7 @@ const Profile = () => {
               />
               <ProfileMenuItem 
                 label="Contact Support" 
-                onClick={() => window.location.href = "mailto:march@marchrussell.com?subject=Support Request"} 
+                onClick={() => window.location.href = "mailto:support@emberstudio.xyz?subject=Support Request"} 
               />
               <ProfileMenuItem 
                 label="Safety Information" 
