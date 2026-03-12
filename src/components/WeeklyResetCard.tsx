@@ -1,5 +1,7 @@
-import weeklyResetImage from "@/assets/weekly-reset-event.jpg";
 import { IconButton } from "@/components/ui/icon-button";
+import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
+
+const weeklyResetImage = getCloudImageUrl(CLOUD_IMAGES.weeklyReset);
 import {
   Popover,
   PopoverContent,
