@@ -65,7 +65,7 @@ export const WeeklyResetCard = ({
     const endDate = new Date(startDate.getTime() + 30 * 60000);
 
     return {
-      title: 'Weekly Reset - Live Session',
+      title: 'Weekly Session on Ember Studio',
       description: 'A grounding, guided session to help you soften, settle, and reset\n\nSession with March Russell',
       location: 'Online',
       startDate,
@@ -94,19 +94,19 @@ export const WeeklyResetCard = ({
   return (
     <div
       onClick={handleCardClick}
-      className={`group cursor-pointer overflow-hidden rounded-xl border border-[#E6DBC7]/20 transition-all shadow-[0_8px_30px_rgba(230,219,199,0.1)] ${className}`}
+      className={`group cursor-pointer overflow-hidden rounded-xl border border-[#E6DBC7]/20 transition-all shadow-[0_8px_30px_rgba(230,219,199,0.1)] hover:border-[#E6DBC7]/30 ${className}`}
     >
-      <div className="flex flex-col sm:flex-row h-auto sm:h-[140px] md:h-[160px] lg:h-[180px]">
+      <div className="flex flex-col sm:flex-row">
         {/* Image - Top on mobile, Left on tablet+ */}
         <div
-          className="relative w-full sm:w-[140px] md:w-[200px] lg:w-[240px] h-[200px] sm:h-full flex-shrink-0 bg-cover bg-center"
+          className="relative w-full sm:w-[140px] md:w-[200px] lg:w-[240px] h-[140px] sm:h-auto sm:self-stretch flex-shrink-0 bg-cover bg-center"
           style={{ backgroundImage: `url('${weeklyResetImage}')` }}
         >
           <div className="absolute inset-0 bg-black/0" />
         </div>
 
         {/* Glassmorphism Content - Bottom on mobile, Right on tablet+ */}
-        <div className="flex-1 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 md:px-10 backdrop-blur-xl bg-black/30 border-t sm:border-t-0 sm:border-l border-white/5">
+        <div className="flex-1 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 px-5 sm:px-6 md:px-10 py-6 backdrop-blur-xl bg-black/30 border-t sm:border-t-0 sm:border-l border-white/5">
           <div className="flex-1 min-w-0">
             <h3 className="text-lg md:text-xl font-editorial text-[#E6DBC7] mb-2">
               Weekly Reset
