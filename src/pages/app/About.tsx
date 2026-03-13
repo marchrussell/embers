@@ -3,10 +3,12 @@ import { Footer } from "@/components/Footer";
 import { PrivacyModal, TermsModal } from "@/components/LegalModals";
 import { NavBar } from "@/components/NavBar";
 import { OptimizedImage } from "@/components/OptimizedImage";
-import { marchImages } from "@/lib/sharedAssets";
+import { getCloudImageUrl } from "@/lib/cloudImageUrls";
 import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+
+const marchBioPhoto = getCloudImageUrl('about/march-bio-photo.webp', { width: 800, quality: 80 });
 
 const About = () => {
   const [showTerms, setShowTerms] = useState(false);
@@ -38,14 +40,14 @@ const About = () => {
             <div className="md:hidden">
               <div className="flex flex-col gap-0 items-stretch mb-6">
                 <OptimizedImage 
-                  src={marchImages.bio} 
+                  src={marchBioPhoto} 
                   alt="March Russell - Breathwork Facilitator"
                   className="w-full h-auto object-cover rounded-t-lg"
                 />
                 <div 
                   className="flex-1 relative rounded-b-lg overflow-hidden"
                   style={{
-                    backgroundImage: `url(${marchImages.bio})`,
+                    backgroundImage: `url(${marchBioPhoto})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                   }}
@@ -70,7 +72,7 @@ const About = () => {
               {/* Image column */}
               <div className="lg:col-span-2">
                 <OptimizedImage 
-                  src={marchImages.bio} 
+                  src={marchBioPhoto} 
                   alt="March Russell - Breathwork Facilitator"
                   className="w-full h-auto object-cover rounded-xl shadow-2xl"
                 />

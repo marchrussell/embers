@@ -1,6 +1,5 @@
 import energyCategoryImage from "@/assets/energy-ocean-sunset.jpg";
 import { supabase } from "@/integrations/supabase/client";
-import { programImages } from "@/lib/sharedAssets";
 import { useEffect, useMemo, useState } from "react";
 import { LibraryCategory, LibrarySession } from "../types";
 
@@ -128,7 +127,7 @@ export const useLibraryData = ({
       const description = CATEGORY_DESCRIPTIONS[cat.name] ?? cat.description;
       const image = cat.name === 'ENERGY'
         ? energyCategoryImage
-        : (cat.image_url || programImages.breathingBasics);
+        : (cat.image_url);
 
       return {
         id: cat.id,
@@ -140,5 +139,5 @@ export const useLibraryData = ({
     });
   }, [categories, classesByCategory]);
 
-  return { programs, categoriesWithSessions, classesByCategory, categories, isLoading };
+  return { progams, categoriesWithSessions, classesByCategory, categories, isLoading };
 };

@@ -195,7 +195,7 @@ const Index = () => {
                 fontSize: 'clamp(0.85rem, 0.92vw, 0.95rem)',
                 lineHeight: 1.65
               }}>
-                  A guided 14-day reset desugned to calm responses, soften emotional reactivity, and support your nervous system back toward balance.
+                  A guided 14-day reset designed to calm responses, soften emotional reactivity, and support your nervous system back toward balance.
                 </p>
 
                 <Button onClick={() => {
