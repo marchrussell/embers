@@ -147,10 +147,10 @@ const RefundPolicy = memo(() => {
                 <p className="text-[#E6DBC7]">
                   📧{" "}
                   <a 
-                    href="mailto:support@emberstudio.xyz" 
+                    href="mailto:support@embersstudio.io" 
                     className="underline hover:text-[#E6DBC7]/80 transition-colors"
                   >
-                    support@emberstudio.xyz
+                    support@embersstudio.io
                   </a>
                 </p>
                 <p className="mt-4">Include:</p>

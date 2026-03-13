@@ -92,7 +92,7 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
               <ul className="list-disc pl-6 space-y-2 text-[#E6DBC7]/80">
                 <li>Subscriptions renew automatically unless cancelled.</li>
                 <li>Renewal charges are processed through your original payment method.</li>
-                <li>You may cancel anytime through your account settings or by emailing support@emberstudio.xyz.</li>
+                <li>You may cancel anytime through your account settings or by emailing support@embersstudio.io.</li>
                 <li>You will retain access until the end of your current billing period.</li>
               </ul>
 
@@ -105,7 +105,7 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
               <h4 className="text-[#E6DBC7]/90 font-medium mt-4">Refunds</h4>
               <p>
                 Refunds are only provided if the service is faulty, unavailable, or not as described.
-                Refund requests may be made at support@emberstudio.xyz.
+                Refund requests may be made at support@embersstudio.io.
               </p>
 
               <h4 className="text-[#E6DBC7]/90 font-medium mt-4">Price Changes</h4>
@@ -224,8 +224,8 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
               <p>For questions, concerns, or support:</p>
               <p className="text-[#E6DBC7]">
                 📧{" "}
-                <a href="mailto:support@emberstudio.xyz" className="underline hover:text-[#E6DBC7]/80 transition-colors">
-                  support@emberstudio.xyz
+                <a href="mailto:support@embersstudio.io" className="underline hover:text-[#E6DBC7]/80 transition-colors">
+                  support@embersstudio.io
                 </a>
               </p>
               <p className="text-[#E6DBC7]">
@@ -289,7 +289,7 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => {
             </p>
 
             <p>
-              For any questions, contact: support@emberstudio.xyz
+              For any questions, contact: support@embersstudio.io
             </p>
 
             {/* Section 1 */}
@@ -374,12 +374,12 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => {
 
             <section className="space-y-4">
               <h2 className="font-editorial text-[#E6DBC7] text-xl font-medium">10. Your Rights (UK & EU GDPR)</h2>
-              <p>You have the right to access, correct, delete, restrict, object to processing, withdraw consent, and request data portability. To exercise your rights, email support@emberstudio.xyz. We will respond within 30 days.</p>
+              <p>You have the right to access, correct, delete, restrict, object to processing, withdraw consent, and request data portability. To exercise your rights, email support@embersstudio.io. We will respond within 30 days.</p>
             </section>
 
             <section className="space-y-4">
               <h2 className="font-editorial text-[#E6DBC7] text-xl font-medium">11. California Residents (CCPA)</h2>
-              <p>You have the right to know what data is collected, request deletion, opt out of the sale of personal data (we do not sell data), and access your personal information. Requests can be emailed to support@emberstudio.xyz.</p>
+              <p>You have the right to know what data is collected, request deletion, opt out of the sale of personal data (we do not sell data), and access your personal information. Requests can be emailed to support@embersstudio.io.</p>
             </section>
 
             <section className="space-y-4">
@@ -402,8 +402,8 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => {
               <p>For questions, concerns, or requests regarding this Policy or your personal data, contact:</p>
               <p className="text-[#E6DBC7]">
                 📧{" "}
-                <a href="mailto:support@emberstudio.xyz" className="underline hover:text-[#E6DBC7]/80 transition-colors">
-                  support@emberstudio.xyz
+                <a href="mailto:support@embersstudio.io" className="underline hover:text-[#E6DBC7]/80 transition-colors">
+                  support@embersstudio.io
                 </a>
               </p>
               <p className="text-[#E6DBC7]">
@@ -567,10 +567,10 @@ export const RefundModal = ({ open, onOpenChange }: LegalModalProps) => {
               <p className="text-[#E6DBC7]">
                 📧{" "}
                 <a 
-                  href="mailto:support@emberstudio.xyz" 
+                  href="mailto:support@embersstudio.io" 
                   className="underline hover:text-[#E6DBC7]/80 transition-colors"
                 >
-                  support@emberstudio.xyz
+                  support@embersstudio.io
                 </a>
               </p>
               <p className="mt-4">Include:</p>

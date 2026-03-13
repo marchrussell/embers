@@ -17,7 +17,7 @@ Thank you for choosing to be part of our community at March Russell Ltd, doing b
 We are committed to protecting your personal information and respecting your privacy rights.
 
 If you have any questions about this notice or how we handle your data, please contact us at:
-📧 support@marchrussell.com
+📧 support@embersstudio.io
 🌐 www.marchrussell.com
 
 1. What This Policy Covers
@@ -60,14 +60,6 @@ We process data on the following legal bases:
 - Legal obligation (for accounting or compliance purposes)
 
 4. How Your Data Is Stored & Processed
-
-Our website and app are built using Lovable, a development and hosting platform operated by Lovable Labs, Inc. ("Lovable").
-
-Some of your personal data may be stored or processed through Lovable''s secure cloud services and its subprocessors (such as Supabase, OpenAI, Google, or AWS).
-
-Lovable may transfer data internationally, including to the United States. Such transfers are protected under Standard Contractual Clauses (SCCs) or equivalent safeguards.
-You can learn more about Lovable''s practices here:
-👉 https://www.lovable.dev/privacy
 
 We also use Stripe for payment processing. Stripe acts as an independent data controller for billing information. See:
 👉 https://stripe.com/privacy
@@ -117,7 +109,7 @@ You have the right to:
 - Withdraw consent at any time
 - Port your data to another provider
 
-To exercise any of these rights, email support@marchrussell.com.
+To exercise any of these rights, email support@embersstudio.io.
 We will respond within 30 days.
 
 11. California Residents (CCPA)
@@ -128,7 +120,7 @@ If you live in California, you have additional rights under the California Consu
 - The right to opt out of data sale (we do not sell data)
 - The right to non-discrimination for exercising privacy rights
 
-To submit a request, contact support@marchrussell.com.
+To submit a request, contact support@embersstudio.io.
 
 12. Children & Age Restrictions
 
@@ -144,14 +136,13 @@ The updated version will always be posted at www.marchrussell.com/privacy with t
 14. Contact Us
 
 If you have any questions about this notice or your data, please contact:
-📧 support@marchrussell.com
-🌐 www.marchrussell.com
+📧 support@embersstudio.io
+🌐 www.embersstudio.io
 
 If you are based in the UK or EU and wish to raise a complaint, you can contact your local data protection authority (e.g., the UK ICO: https://ico.org.uk).
 
 ✅ Summary of Key Points
 
-- Platform built and hosted via Lovable
 - Payments handled securely via Stripe
 - 7-day free trial available
 - Minimum user age: 16+

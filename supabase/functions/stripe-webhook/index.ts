@@ -1,10 +1,10 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import Stripe from "https://esm.sh/stripe@18.5.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 import { Resend } from "https://esm.sh/resend@4.0.0";
-import { 
-  eventBookingConfirmationEmail, 
+import Stripe from "https://esm.sh/stripe@18.5.0";
+import {
   eventBookingAdminNotificationEmail,
+  eventBookingConfirmationEmail,
   generateICalContent,
   ICalEventDetails
 } from "../_shared/email-templates.ts";
@@ -334,7 +334,7 @@ serve(async (req) => {
                 startDate,
                 endDate,
                 organizerName: 'March Russell',
-                organizerEmail: 'support@emberstudio.xyz',
+                organizerEmail: 'support@embersstudio.io',
               };
               
               const icalContent = generateICalContent(icalDetails);
@@ -380,7 +380,7 @@ serve(async (req) => {
 
               await resend.emails.send({
                 from: "MARCH <onboarding@resend.dev>",
-                to: ["support@emberstudio.xyz"],
+                to: ["support@embersstudio.io"],
                 subject: `New Booking: ${eventTitle} — ${attendeeName}`,
                 html: adminEmailHtml,
               });

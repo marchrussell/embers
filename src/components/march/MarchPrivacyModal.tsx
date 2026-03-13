@@ -1,5 +1,5 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Shield } from "lucide-react";
 
 interface MarchPrivacyModalProps {
@@ -69,8 +69,8 @@ export const MarchPrivacyModal = ({ open, onAccept, onReadFullPolicy }: MarchPri
             <div className="pt-2 space-y-2 text-xs text-white/60">
               <p>
                 💬 Questions or requests?{" "}
-                <a href="mailto:support@emberstudio.xyz" className="text-[#E6DBC7] hover:text-[#E6DBC7]/80 underline">
-                  support@emberstudio.xyz
+                <a href="mailto:support@embersstudio.io" className="text-[#E6DBC7] hover:text-[#E6DBC7]/80 underline">
+                  support@embersstudio.io
                 </a>
               </p>
               <p>

@@ -123,8 +123,8 @@ export const SafetyModal = ({ open, onOpenChange }: SafetyModalProps) => {
             </p>
             <p className="text-sm text-foreground/70 font-light">
               If you have questions or comments, you may email us at{" "}
-              <a href="mailto:support@emberstudio.xyz" className="text-[#EC9037] hover:underline">
-                support@emberstudio.xyz
+              <a href="mailto:support@embersstudio.io" className="text-[#EC9037] hover:underline">
+                support@embersstudio.io
               </a>
             </p>
           </div>

@@ -13,10 +13,10 @@ export const TermsMicrocopy = memo(() => {
         <p className="text-[#E6DBC7]/40 text-xs">
           For support:{" "}
           <a 
-            href="mailto:support@emberstudio.xyz"
+            href="mailto:support@embersstudio.io"
             className="underline hover:text-[#E6DBC7]/60 transition-colors"
           >
-            support@emberstudio.xyz
+            support@embersstudio.io
           </a>
         </p>
       </div>

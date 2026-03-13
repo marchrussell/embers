@@ -88,7 +88,7 @@ const TermsOfService = () => {
                 <li>Subscriptions renew automatically unless cancelled.</li>
                 <li>Renewal charges are processed through your original payment method.</li>
                 <li>You may cancel anytime through your account settings or by emailing{" "}
-                  <a href="mailto:support@emberstudio.xyz" className="underline hover:text-[#E6DBC7]">support@emberstudio.xyz</a>.</li>
+                  <a href="mailto:support@embersstudio.io" className="underline hover:text-[#E6DBC7]">support@embersstudio.io</a>.</li>
                 <li>You will retain access until the end of your current billing period.</li>
               </ul>
 
@@ -102,7 +102,7 @@ const TermsOfService = () => {
               <p>
                 Refunds are only provided if the service is faulty, unavailable, or not as described.
                 Refund requests may be made at{" "}
-                <a href="mailto:support@emberstudio.xyz" className="underline hover:text-[#E6DBC7]">support@emberstudio.xyz</a>.
+                <a href="mailto:support@embersstudio.io" className="underline hover:text-[#E6DBC7]">support@embersstudio.io</a>.
               </p>
 
               <h4 className="text-[#E6DBC7]/90 font-medium mt-4">Price Changes</h4>
@@ -287,8 +287,8 @@ const TermsOfService = () => {
               <p>For questions, concerns, or support:</p>
               <p className="text-[#E6DBC7]">
                 📧{" "}
-                <a href="mailto:support@emberstudio.xyz" className="underline hover:text-[#E6DBC7]/80">
-                  support@emberstudio.xyz
+                <a href="mailto:support@embersstudio.io" className="underline hover:text-[#E6DBC7]/80">
+                  support@embersstudio.io
                 </a>
               </p>
               <p className="text-[#E6DBC7]">

@@ -1,10 +1,10 @@
+import { ButtonLoadingSpinner } from "@/components/skeletons";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ModalCloseButton } from "@/components/ui/modal-close-button";
 import { supabase } from "@/integrations/supabase/client";
 import { AlertTriangle, Wind } from "lucide-react";
-import { ButtonLoadingSpinner } from "@/components/skeletons";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -121,10 +121,10 @@ export const SafetyDisclosureModal = ({ isOpen, onAccept, userId }: SafetyDisclo
               <p>
                 Please consult a medical professional if you have any medical history, conditions, or concerns, and reach out to March at{" "}
                 <a 
-                  href="mailto:support@emberstudio.xyz" 
+                  href="mailto:support@embersstudio.io" 
                   className="text-[#E6DBC7] hover:text-[#E6DBC7]/80 underline transition-colors"
                 >
-                  support@emberstudio.xyz
+                  support@embersstudio.io
                 </a>
                 {" "}if you have any questions.
               </p>

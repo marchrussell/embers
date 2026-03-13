@@ -8,7 +8,7 @@ const OnlineFooter = () => {
         All content is educational only and not a substitute for medical or psychological care.
       </p>
       <p className="text-[#E6DBC7]/30 text-xs">
-        For support: <a href="mailto:support@emberstudio.xyz" className="hover:text-[#E6DBC7]/50 transition-colors underline-offset-2">support@emberstudio.xyz</a>
+        For support: <a href="mailto:support@embersstudio.io" className="hover:text-[#E6DBC7]/50 transition-colors underline-offset-2">support@embersstudio.io</a>
       </p>
     </div>
   );

@@ -171,8 +171,8 @@ const SafetyDisclosure = () => {
           </p>
           <p className="text-xs text-white/50 font-light">
             If you have questions or comments, you may email us at{" "}
-            <a href="mailto:support@emberstudio.xyz" className="text-[#5B9C9E] hover:underline">
-              support@emberstudio.xyz
+            <a href="mailto:support@embersstudio.io" className="text-[#5B9C9E] hover:underline">
+              support@embersstudio.io
             </a>
           </p>
         </div>

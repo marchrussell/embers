@@ -42,7 +42,7 @@ const PrivacyPolicy = () => {
 
             <p>
               For any questions, contact:{" "}
-              <a href="mailto:support@emberstudio.xyz" className="underline hover:text-[#E6DBC7]">support@emberstudio.xyz</a>
+              <a href="mailto:support@embersstudio.io" className="underline hover:text-[#E6DBC7]">support@embersstudio.io</a>
             </p>
 
             {/* Section 1 */}
@@ -198,7 +198,7 @@ const PrivacyPolicy = () => {
               </ul>
               <p>
                 To exercise your rights, email{" "}
-                <a href="mailto:support@emberstudio.xyz" className="underline hover:text-[#E6DBC7]">support@emberstudio.xyz</a>.
+                <a href="mailto:support@embersstudio.io" className="underline hover:text-[#E6DBC7]">support@embersstudio.io</a>.
                 We will respond within 30 days as required by law.
               </p>
             </section>
@@ -215,7 +215,7 @@ const PrivacyPolicy = () => {
               </ul>
               <p>
                 Requests can be emailed to{" "}
-                <a href="mailto:support@emberstudio.xyz" className="underline hover:text-[#E6DBC7]">support@emberstudio.xyz</a>.
+                <a href="mailto:support@embersstudio.io" className="underline hover:text-[#E6DBC7]">support@embersstudio.io</a>.
               </p>
             </section>
 
@@ -261,8 +261,8 @@ const PrivacyPolicy = () => {
               <p>If you have questions, concerns, or requests regarding this Policy or your personal data, contact:</p>
               <p className="text-[#E6DBC7]">
                 📧{" "}
-                <a href="mailto:support@emberstudio.xyz" className="underline hover:text-[#E6DBC7]/80">
-                  support@emberstudio.xyz
+                <a href="mailto:support@embersstudio.io" className="underline hover:text-[#E6DBC7]/80">
+                  support@embersstudio.io
                 </a>
               </p>
               <p className="text-[#E6DBC7]">

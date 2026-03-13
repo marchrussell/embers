@@ -203,10 +203,10 @@ const About = () => {
                   <p className="text-foreground/70 text-base md:text-lg">
                     For any questions or support, please reach out through the contact form on our main website or reach out to March on{" "}
                     <a
-                      href="mailto:support@emberstudio.xyz"
+                      href="mailto:support@embersstudio.io"
                       className="text-[#E6DBC7] hover:text-[#E6DBC7]/80 transition-colors underline"
                     >
-                      support@emberstudio.xyz
+                      support@embersstudio.io
                     </a>.
                   </p>
                 </div>

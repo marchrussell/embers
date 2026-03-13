@@ -1,9 +1,9 @@
+import { PaymentVerificationSkeleton } from "@/components/skeletons/PaymentVerificationSkeleton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { PaymentVerificationSkeleton } from "@/components/skeletons/PaymentVerificationSkeleton";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { CheckCircle2 } from "lucide-react";
@@ -101,7 +101,7 @@ const PaymentSuccess = () => {
         
         // Provide helpful error message
         const errorMsg = error.message || "Verification service unavailable";
-        setError(`Unable to verify payment. Your payment was successful - please contact support at support@emberstudio.xyz with your session ID: ${sessionId?.slice(-8)}`);
+        setError(`Unable to verify payment. Your payment was successful - please contact support at support@embersstudio.io with your session ID: ${sessionId?.slice(-8)}`);
         
         toast.error("Verification issue - please contact support to activate your account", {
           duration: 10000,
