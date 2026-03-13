@@ -5,261 +5,49 @@ import { OptimizedImage } from "@/components/OptimizedImage";
 import { PhoneMockups } from "@/components/PhoneMockups";
 import { TermsMicrocopy } from "@/components/TermsMicrocopy";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Pill } from "@/components/ui/pill";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { useToast } from "@/hooks/use-toast";
 import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
 import { formatEventDate, getNextEventDate } from "@/lib/experienceDateUtils";
 import { experiencesData } from "@/lib/experiencesData";
-import { companyLogos, marchImages, programImages } from "@/lib/sharedAssets";
-import { ArrowRight, X } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Suspense, useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+
+const nervousSystemImg = getCloudImageUrl(CLOUD_IMAGES.moreWaysToPractice, { width: 960, quality: 85 });
 
 const Index = () => {
   const location = useLocation();
-  const navigate = useNavigate();
-  const {
-    toast
-  } = useToast();
-  const isMobile = useIsMobile();
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
-  const [showMeetMarchModal, setShowMeetMarchModal] = useState(false);
-  const [showCorporateModal, setShowCorporateModal] = useState(false);
-  const [showRiseModal, setShowRiseModal] = useState(false);
   const [showVaseBreathModal, setShowVaseBreathModal] = useState(false);
   const [showTestimonialsModal, setShowTestimonialsModal] = useState(false);
   const [showContactModal, setShowContactModal] = useState(false);
   const [showTeamsModal, setShowTeamsModal] = useState(false);
   const [showNewsletterModal, setShowNewsletterModal] = useState(false);
   const [showArcIntroModal, setShowArcIntroModal] = useState(false);
-  const [showIndividualTestimonialModal, setShowIndividualTestimonialModal] = useState(false);
   const [showClassPlayer, setShowClassPlayer] = useState(false);
   const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
-  const [selectedTestimonial, setSelectedTestimonial] = useState<{
-    name: string;
-    quote: string;
-  } | null>(null);
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    message: ""
-  });
-  const [subscribeToNewsletter, setSubscribeToNewsletter] = useState(false);
-  const [categories, setCategories] = useState<any[]>([]);
-  const [featuredSessions, setFeaturedSessions] = useState<any[]>([]);
 
   useEffect(() => {
     if (location.state?.openSubscription) {
       setShowSubscriptionModal(true);
     }
   }, [location.state]);
-  
+
   return <div className="min-h-screen bg-background">
       <NavBar />
       <Suspense fallback={null}>
         <SubscriptionModal open={showSubscriptionModal} onClose={() => setShowSubscriptionModal(false)} />
-        
+
         <TestimonialsModal open={showTestimonialsModal} onOpenChange={setShowTestimonialsModal} />
-        
+
         <ContactFormModal open={showContactModal} onOpenChange={setShowContactModal} />
-        
+
         <ContactTeamsModal open={showTeamsModal} onOpenChange={setShowTeamsModal} />
-        
+
         <RiseArcIntroModal open={showArcIntroModal} onOpenChange={setShowArcIntroModal} />
-        
+
         <VaseBreathModal open={showVaseBreathModal} onOpenChange={setShowVaseBreathModal} onOpenSubscription={() => setShowSubscriptionModal(true)} />
-        
-        
       </Suspense>
-      
-      {/* Meet March Modal - Redesigned to fit without scrolling */}
-      <Dialog open={showMeetMarchModal} onOpenChange={setShowMeetMarchModal}>
-        <DialogContent hideClose className="w-[95vw] max-w-[960px] max-h-[80vh] lg:overflow-visible overflow-y-auto backdrop-blur-xl bg-black/40 border border-white/20 rounded-[24px] p-10 md:p-12">
-          {/* Close button - top right inside padding */}
-          <button onClick={() => setShowMeetMarchModal(false)} className="absolute top-5 right-5 md:top-6 md:right-6 z-50 opacity-70 hover:opacity-100 transition-opacity">
-            <X className="w-6 h-6 text-white" />
-          </button>
-
-          {/* Mobile/Tablet Layout - Stacked with scroll */}
-          <div className="lg:hidden space-y-6 pt-6">
-            {/* Image at top */}
-            <div className="relative w-full aspect-[4/3] overflow-hidden rounded-lg">
-              <OptimizedImage src={marchImages.bio} alt="March - Breathwork Facilitator" className="w-full h-full object-cover" priority={false} />
-            </div>
-
-            {/* Text content */}
-            <div className="space-y-6">
-              <p className="text-white text-[clamp(0.9rem,1vw,1rem)] leading-[1.6]">
-                Hi, I'm a London based certified breathwork facilitator. Having extensively explored meditation since my teens, my dedication to the practice has taken me around the world, from Buddhist monasteries to learning from some of the best teachers in India, Europe and UK.
-              </p>
-
-              {/* How did breathwork help me? */}
-              <div className="border-t border-white/[0.14] pt-6 space-y-6">
-                <h3 className="font-editorial text-[22px] text-white">How did breathwork help me?</h3>
-                <p className="text-white text-[clamp(0.9rem,1vw,1rem)] leading-[1.6]">
-                  Breathwork has had a profound impact on my life. Bouts of depression, anxiety and a lack of self-confidence took me through a rollercoaster during my early 20's. The instantly tangible effects of breathing tools filled me with confidence to implement a regular practice, and over time, I started to feel more at home in my own body.
-                </p>
-              </div>
-
-              {/* What do I teach? */}
-              <div className="border-t border-white/[0.14] pt-6 space-y-6">
-                <h3 className="font-editorial text-[22px] text-white">What do I teach?</h3>
-                <p className="text-white text-[clamp(0.9rem,1vw,1rem)] leading-[1.6]">
-                  I am a trained and certified breathwork facilitator. Having explored a variety of modalities, I provide well-rounded support with scientifically-backed breathing tools. Your breath is like a fingerprint — everyone's pattern is unique, so techniques are carefully determined by your needs.
-                </p>
-              </div>
-
-              {/* Featured on ITV */}
-              <div className="flex items-center justify-center gap-2 pt-8 mt-6">
-                <span className="text-white/50 text-sm tracking-wide uppercase">Featured on</span>
-                <OptimizedImage src={companyLogos.itv} alt="ITV" className="h-10 w-auto object-contain opacity-70" priority={false} />
-              </div>
-
-              {/* Contact link - secondary CTA */}
-              <button onClick={() => {
-              setShowMeetMarchModal(false);
-              setShowContactModal(true);
-            }} className="flex items-center justify-center gap-3 text-white/90 hover:text-white transition-colors text-[15px] tracking-wide pt-4 w-full">
-                Contact Me <ArrowRight className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-
-          {/* Desktop Layout - 2 columns, image matches text height */}
-          <div className="hidden lg:grid lg:grid-cols-[280px,1fr] gap-10 items-stretch pt-2">
-            {/* Column 1: Image - Stretches to match text height */}
-            <div className="relative overflow-hidden rounded-lg">
-              <OptimizedImage src={marchImages.bio} alt="March - Breathwork Facilitator" className="w-full h-full object-cover" priority={false} />
-            </div>
-
-            {/* Column 2: All text content */}
-            <div className="flex flex-col space-y-5 max-w-[580px]">
-              {/* Intro */}
-              <p className="text-white text-[clamp(0.9rem,1vw,1rem)] leading-[1.6]">
-                Hi, I'm a London based certified breathwork facilitator. Having extensively explored meditation since my teens, my dedication to the practice has taken me around the world, from Buddhist monasteries to learning from some of the best teachers in India, Europe and UK.
-              </p>
-
-              {/* How did breathwork help me? */}
-              <div className="border-t border-white/[0.14] pt-5 space-y-3">
-                <h3 className="font-editorial text-[26px] text-white leading-[1.2]">How did breathwork help me?</h3>
-                <p className="text-white text-[clamp(0.9rem,1vw,1rem)] leading-[1.6]">
-                  Breathwork has had a profound impact on my life. Bouts of depression, anxiety and a lack of self-confidence took me through a rollercoaster during my early 20's. The instantly tangible effects of breathing tools filled me with confidence to implement a regular practice, and over time, I started to feel more at home in my own body.
-                </p>
-              </div>
-
-              {/* What do I teach? */}
-              <div className="border-t border-white/[0.14] pt-5 space-y-3">
-                <h3 className="font-editorial text-[26px] text-white leading-[1.2]">What do I teach?</h3>
-                <p className="text-white text-[clamp(0.9rem,1vw,1rem)] leading-[1.6]">
-                  I am a trained and certified breathwork facilitator. Having explored a variety of modalities, I provide well-rounded support with scientifically-backed breathing tools. Your breath is like a fingerprint — everyone's pattern is unique, so techniques are carefully determined by your needs.
-                </p>
-              </div>
-
-              {/* Footer row: Featured on ITV + Contact link */}
-              <div className="flex items-center justify-between pt-12 mt-6 border-t border-white/[0.14]">
-                <div className="flex items-center gap-2">
-                  <span className="text-white/50 text-sm tracking-wide uppercase">Featured on</span>
-                  <OptimizedImage src={companyLogos.itv} alt="ITV" className="h-10 w-auto object-contain opacity-70" priority={false} />
-                </div>
-                <button onClick={() => {
-                setShowMeetMarchModal(false);
-                setShowContactModal(true);
-              }} className="flex items-center gap-3 text-white/90 hover:text-white transition-colors text-[15px] tracking-wide">
-                  Contact Me <ArrowRight className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Corporate Work Modal - REDUCED */}
-      <Dialog open={showCorporateModal} onOpenChange={setShowCorporateModal}>
-        <DialogContent hideClose className="max-w-4xl max-h-[90vh] overflow-y-auto backdrop-blur-xl bg-black/30 border border-white/30 p-0">
-          <button onClick={() => setShowCorporateModal(false)} className="absolute top-8 right-8 z-50 opacity-70 hover:opacity-100 transition-opacity">
-            <X className="w-7 h-7 md:w-8 md:h-8 text-white" />
-          </button>
-          
-          <div className="p-10 pt-20 md:p-14 md:pt-24 space-y-8">
-            {/* Header */}
-            <div className="text-center space-y-3">
-              <h2 className="font-['PP_Editorial_Old'] text-4xl md:text-5xl lg:text-6xl text-white">Corporate Breathwork</h2>
-              <p className="text-xl md:text-2xl lg:text-3xl text-white/80 font-light max-w-3xl mx-auto">
-                Transform your workplace with scientifically-backed breathwork training
-              </p>
-            </div>
-            
-            {/* Company Logos */}
-            <div className="pt-6">
-              <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 md:gap-14">
-                <OptimizedImage src={companyLogos.zoe} alt="ZOE" className="h-6 sm:h-9 md:h-10 w-auto object-contain opacity-70" optimizationOptions={{
-                quality: 75,
-                width: 150,
-                height: 40
-              }} priority={false} />
-                <OptimizedImage src={companyLogos.tesla} alt="Tesla" className="h-6 sm:h-14 md:h-16 w-auto object-contain opacity-70" optimizationOptions={{
-                quality: 75,
-                width: 200,
-                height: 64
-              }} priority={false} />
-                <OptimizedImage src={companyLogos.google} alt="Google" className="h-7 sm:h-11 md:h-12 w-auto object-contain opacity-70" optimizationOptions={{
-                quality: 75,
-                width: 150,
-                height: 48
-              }} priority={false} />
-                <OptimizedImage src={companyLogos.justeat} alt="Just Eat" className="h-16 sm:h-32 md:h-36 w-auto object-contain opacity-70" optimizationOptions={{
-                quality: 75,
-                width: 350,
-                height: 144
-              }} priority={false} />
-                <OptimizedImage src={companyLogos.itv} alt="ITV" className="h-14 sm:h-28 md:h-32 w-auto object-contain opacity-70" optimizationOptions={{
-                quality: 75,
-                width: 250,
-                height: 128
-              }} priority={false} />
-              </div>
-            </div>
-
-            {/* Two Column Layout */}
-            <div className="grid md:grid-cols-2 gap-10 pt-6 pb-14">
-              {/* Left Column - What's Included */}
-              <div className="space-y-5">
-                <h3 className="font-editorial text-3xl md:text-4xl text-white mb-8">What's Included</h3>
-                <ul className="space-y-5 text-xl md:text-2xl text-white/80 leading-relaxed pl-6">
-                  <li className="list-disc">Customized workshops for teams of any size</li>
-                  <li className="list-disc">Stress management and energy optimization</li>
-                  <li className="list-disc">On-site or virtual sessions</li>
-                  <li className="list-disc">Measurable improvements in focus</li>
-                </ul>
-              </div>
-
-              {/* Right Column - Additional Info */}
-              <div className="space-y-5">
-                <h3 className="font-editorial text-3xl md:text-4xl text-white mb-8">Benefits</h3>
-                <ul className="space-y-5 text-xl md:text-2xl text-white/80 leading-relaxed pl-6">
-                  <li className="list-disc">Enhanced team performance</li>
-                  <li className="list-disc">Reduced workplace stress</li>
-                  <li className="list-disc">Improved mental clarity</li>
-                  <li className="list-disc">Better work-life balance</li>
-                </ul>
-              </div>
-            </div>
-
-            {/* CTA Section */}
-            <div className="pt-14 pb-10 border-t border-white/20 space-y-4 mt-14">
-              <p className="text-xl md:text-2xl text-white/70 font-light text-center">
-                Schedule a free consultation to discuss how breathwork can benefit your team
-              </p>
-              <Button onClick={() => window.open('https://calendly.com/march-marchrussell/arc-resilience-leadership-for-teams-discovery-call', '_blank')} className="w-full bg-transparent border-2 border-white text-white hover:bg-white hover:text-black transition-all rounded-full py-6 md:py-7 text-xl md:text-2xl">
-                Book a Discovery Call
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
 
       <main>
         {/* Hero Section with Optimized Background */}
@@ -269,7 +57,7 @@ const Index = () => {
             backgroundSize: 'cover',
             backgroundPosition: '30% 40%',
           }} />
-          
+
           {/* Subtle dark overlay to reduce glare */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/5 to-black/10" />
 
@@ -332,14 +120,7 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Glowing orange divider line after hero */}
-        <div className="w-full" style={{
-        height: '4px',
-        backgroundColor: '#E64C20',
-        boxShadow: '0 0 80px rgba(230, 76, 32, 1), 0 0 140px rgba(230, 76, 32, 1), 0 0 200px rgba(230, 76, 32, 0.9)'
-      }}></div>
-
-        {/* Glowing orange divider line after Why This Work Matters */}
+        {/* Glowing orange divider line */}
         <div className="w-full" style={{
         height: '4px',
         backgroundColor: '#E64C20',
@@ -356,7 +137,7 @@ const Index = () => {
               }}>
                 A look inside your new practice home
               </p>
-              
+
               {/* Phone Mockups - centered */}
               <PhoneMockups />
 
@@ -388,7 +169,7 @@ const Index = () => {
             <div className="grid md:grid-cols-2 min-h-[280px] sm:min-h-[320px] md:min-h-[380px]">
               {/* Left: Image */}
               <div className="relative min-h-[160px] sm:min-h-[180px] md:min-h-[380px]">
-                <OptimizedImage src={programImages.trial} alt="Nervous system program" className="absolute inset-0 w-full h-full object-cover" style={{
+                <OptimizedImage src={nervousSystemImg} alt="Nervous system program" className="absolute inset-0 w-full h-full object-cover" style={{
                 objectPosition: 'center 65%'
               }} optimizationOptions={{
                 quality: 85,
@@ -397,7 +178,7 @@ const Index = () => {
                 height: 500
               }} priority={true} />
               </div>
-              
+
               {/* Right: Content */}
               <div className="bg-black flex flex-col justify-center px-6 sm:px-8 md:px-10 lg:px-12 py-6 sm:py-8 md:py-10">
                 <h3 className="font-editorial text-white mb-5 sm:mb-6" style={{
@@ -405,28 +186,27 @@ const Index = () => {
                 lineHeight: 1.15,
                 fontWeight: 400
               }}>
-                  14-Day Program
+                  14-Day Course
                 </h3>
                 <p className="text-[#EC9037] font-light tracking-[0.1em] mb-5 sm:mb-6 uppercase" style={{
                 fontSize: 'clamp(0.7rem, 0.8vw, 0.85rem)'
-              }}>14-DAY PROGRAM ON THE STUDIO</p>
+              }}>Nervous System Reset</p>
                 <p className="text-white/90 mb-5 sm:mb-6" style={{
                 fontSize: 'clamp(0.85rem, 0.92vw, 0.95rem)',
                 lineHeight: 1.65
               }}>
-                  Are you stuck in chronic stress, overwhelm, or reactive patterns? Modern life can keep your system in fight-or-flight. This 7-Day Program helps you guide your nervous system back into balance — restoring clarity, emotional steadiness, and a felt sense of safety in your body.
+                  A guided 14-day reset desugned to calm responses, soften emotional reactivity, and support your nervous system back toward balance.
                 </p>
-                
+
                 <Button onClick={() => {
-                localStorage.setItem('postOnboardingRedirect', 'nervous-system-program');
-                setShowSubscriptionModal(true);
+                  window.open('https://marchrussell.com/courses', '_blank');
               }} className="bg-transparent text-white border border-white hover:bg-white/10 transition-all rounded-full inline-flex items-center justify-center w-fit" style={{
                 fontSize: 'clamp(0.85rem, 0.9vw, 0.95rem)',
                 fontWeight: 400,
                 letterSpacing: '0.02em',
                 padding: '0.6rem 1.4rem'
               }}>
-                Start the 7-Day Program
+                Start the 14-Day Course
               </Button>
               </div>
             </div>
@@ -517,13 +297,13 @@ const Index = () => {
 
         {/* Spacer after Contact Section */}
         <div className="h-12 md:h-16 lg:h-20 bg-background" />
-        
+
         <NewsletterModal open={showNewsletterModal} onOpenChange={setShowNewsletterModal} />
 
         <ClassPlayerModal classId={selectedClassId} open={showClassPlayer} onClose={() => setShowClassPlayer(false)} />
 
       </main>
-      
+
       <TermsMicrocopy />
       <Footer />
     </div>;
