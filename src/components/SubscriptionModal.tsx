@@ -3,7 +3,7 @@ import { ButtonLoadingSpinner } from "@/components/skeletons";
 import { Dialog, DialogPortal } from "@/components/ui/dialog";
 import { GlowButton } from "@/components/ui/glow-button";
 import { useAuth } from "@/contexts/AuthContext";
-import { MARCH_DAILY_PRICES } from "@/lib/stripePrices";
+import { SUBSCRIPTION_PRICES } from "@/lib/stripePrices";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Check, X } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -105,8 +105,8 @@ export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => 
   const annualMonthlyEquivalent = prices?.annual?.monthlyEquivalent || FALLBACK_PRICES.annual.monthlyEquivalent;
 
   // Get the correct price ID to use (from the fetched data or static config)
-  const monthlyPriceId = prices?.monthly?.id || MARCH_DAILY_PRICES.MONTHLY;
-  const annualPriceId = prices?.annual?.id || MARCH_DAILY_PRICES.ANNUAL;
+  const monthlyPriceId = prices?.monthly?.id || SUBSCRIPTION_PRICES.MONTHLY;
+  const annualPriceId = prices?.annual?.id || SUBSCRIPTION_PRICES.ANNUAL;
 
   const handleSubscribeClick = async (priceId: string, e?: React.MouseEvent) => {
     // Prevent double-clicks
