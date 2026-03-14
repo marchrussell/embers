@@ -108,7 +108,7 @@ const handler = async (req: Request): Promise<Response> => {
       // Send contact form message to March
       console.log("📤 Attempting to send contact email via Resend...");
       const contactResponse = await resend.emails.send({
-        from: "March Russell <onboarding@resend.dev>",
+        from: "Embers Studio <hello@embersstudio.io",
         to: ["support@embersstudio.io"],
         replyTo: email,
         subject: `New Contact Form Message from ${sanitizedName}`,
@@ -138,7 +138,7 @@ const handler = async (req: Request): Promise<Response> => {
       // Send newsletter confirmation to subscriber
       console.log("📤 Attempting to send newsletter welcome email via Resend...");
       const newsletterResponse = await resend.emails.send({
-        from: "March Russell <onboarding@resend.dev>",
+        from: "Embers Studio <hello@embersstudio.io",
         to: [email],
         subject: "A Warm Welcome",
         html: newsletterWelcomeEmail(firstName),

@@ -79,14 +79,14 @@ serve(async (req) => {
         if (customer.email && resend) {
           // Send payment failure email
           const emailResult = await resend.emails.send({
-            from: "MARCH <onboarding@resend.dev>",
+            from: "Embers Studio <hello@embersstudio.io>",
             to: [customer.email],
             subject: "Payment Failed - Please Update Your Payment Details",
             html: `
               <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
                 <h1 style="color: #dc2626;">Payment Failed</h1>
                 <p>Hi there,</p>
-                <p>We were unable to process your payment for your MARCH subscription.</p>
+                <p>We were unable to process your payment for your Embers Studio subscription.</p>
                 <p><strong>Attempt ${invoice.attempt_count} of 4</strong></p>
                 <p>To continue enjoying your subscription, please update your payment details as soon as possible.</p>
                 <p style="margin: 30px 0;">
@@ -100,7 +100,7 @@ serve(async (req) => {
                 </p>
                 <p style="color: #666; font-size: 14px;">
                   Best regards,<br>
-                  The MARCH Team
+                  The Embers Studio Team
                 </p>
               </div>
             `,
@@ -153,14 +153,14 @@ serve(async (req) => {
           
           if (customer.email && resend) {
             await resend.emails.send({
-              from: "MARCH <onboarding@resend.dev>",
+              from: "Embers Studio <hello@embersstudio.io>",
               to: [customer.email],
               subject: "Action Required: Subscription Payment Issue",
               html: `
                 <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
                   <h1 style="color: #dc2626;">Subscription Payment Issue</h1>
                   <p>Hi there,</p>
-                  <p>Your MARCH subscription payment is ${subscription.status}.</p>
+                  <p>Your Embers Studio subscription payment is ${subscription.status}.</p>
                   <p>Please update your payment details to avoid interruption of service.</p>
                   <p style="margin: 30px 0;">
                     <a href="${Deno.env.get("SUPABASE_URL")?.replace("https://", "https://")}/app/profile" 
@@ -170,7 +170,7 @@ serve(async (req) => {
                   </p>
                   <p style="color: #666; font-size: 14px;">
                     Best regards,<br>
-                    The MARCH Team
+                    The Embers Studio Team
                   </p>
                 </div>
               `,
@@ -206,14 +206,14 @@ serve(async (req) => {
         
         if (customer.email && resend) {
           await resend.emails.send({
-            from: "MARCH <onboarding@resend.dev>",
+            from: "Embers Studio <hello@embersstudio.io>",
             to: [customer.email],
-            subject: "Your MARCH Subscription Has Been Canceled",
+            subject: "Your Embers Studio Subscription Has Been Canceled",
             html: `
               <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
                 <h1 style="color: #333;">Subscription Canceled</h1>
                 <p>Hi there,</p>
-                <p>Your MARCH subscription has been canceled due to payment issues.</p>
+                <p>Your Embers Studio subscription has been canceled due to payment issues.</p>
                 <p>We're sorry to see you go! If this was unintentional, you can resubscribe at any time.</p>
                 <p style="margin: 30px 0;">
                   <a href="${Deno.env.get("SUPABASE_URL")?.replace("https://", "https://")}/app/profile" 
@@ -226,7 +226,7 @@ serve(async (req) => {
                 </p>
                 <p style="color: #666; font-size: 14px;">
                   Best regards,<br>
-                  The MARCH Team
+                  The Embers Studio Team
                 </p>
               </div>
             `,
@@ -329,11 +329,11 @@ serve(async (req) => {
               // Generate iCal content
               const icalDetails: ICalEventDetails = {
                 title: eventTitle,
-                description: `Join March Russell for ${eventTitle}.\n\nBooking confirmed for ${quantity} ${parseInt(quantity) === 1 ? 'person' : 'people'}.\n\nLocation: ${location}`,
+                description: `Join Embers Studio for ${eventTitle}.\n\nBooking confirmed for ${quantity} ${parseInt(quantity) === 1 ? 'person' : 'people'}.\n\nLocation: ${location}`,
                 location,
                 startDate,
                 endDate,
-                organizerName: 'March Russell',
+                organizerName: 'Embers Studio',
                 organizerEmail: 'support@embersstudio.io',
               };
               
@@ -351,7 +351,7 @@ serve(async (req) => {
               });
 
               await resend.emails.send({
-                from: "MARCH <onboarding@resend.dev>",
+                from: "Embers Studio <hello@embersstudio.io>",
                 to: [attendeeEmail],
                 subject: `Booking Confirmed: ${eventTitle}`,
                 html: emailHtml,
@@ -379,7 +379,7 @@ serve(async (req) => {
               });
 
               await resend.emails.send({
-                from: "MARCH <onboarding@resend.dev>",
+                from: "Embers Studio <hello@embersstudio.io>",
                 to: ["support@embersstudio.io"],
                 subject: `New Booking: ${eventTitle} — ${attendeeName}`,
                 html: adminEmailHtml,
@@ -425,7 +425,7 @@ serve(async (req) => {
                 .single();
 
               await resend.emails.send({
-                from: "MARCH <onboarding@resend.dev>",
+                from: "Embers Studio <hello@embersstudio.io>",
                 to: [session.customer_details.email],
                 subject: `Welcome to ${courseData?.title || 'Your Course'}!`,
                 html: `
@@ -445,7 +445,7 @@ serve(async (req) => {
                     </p>
                     <p style="color: #666; font-size: 14px;">
                       Best regards,<br>
-                      March
+                      Embers Studio
                     </p>
                   </div>
                 `,

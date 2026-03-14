@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { Resend } from "https://esm.sh/resend@2.0.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
+import { Resend } from "https://esm.sh/resend@2.0.0";
 import * as templates from "../_shared/email-templates.ts";
 
 const corsHeaders = {
@@ -128,11 +128,11 @@ serve(async (req) => {
 
     // Send email via Resend
     const { error: sendError } = await resend.emails.send({
-      from: "March <hello@marchrussell.com>",
+      from: "Embers Studio <hello@embersstudio.io>",
       to: [to],
       subject: config.subject,
       html,
-      reply_to: "hello@marchrussell.com",
+      reply_to: "hello@embersstudio.io",
     });
 
     if (sendError) {
