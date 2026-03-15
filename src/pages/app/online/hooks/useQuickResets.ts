@@ -14,7 +14,7 @@ export const useQuickResets = () => {
         setIsLoading(true);
         const { data } = await supabase
           .from('classes')
-          .select('id, title, short_description, image_url, teacher_name, duration_minutes, requires_subscription')
+          .select('id, title, short_description, image_url, teacher_name, duration_minutes, requires_subscription, intensity, technique')
           .eq('is_quick_reset', true)
           .eq('is_published', true)
           .order('order_index')
