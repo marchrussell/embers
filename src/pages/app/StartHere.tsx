@@ -1,6 +1,3 @@
-import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
-
-const startHereButterfly = getCloudImageUrl(CLOUD_IMAGES.startHereButterfly);
 import { Footer } from "@/components/Footer";
 import { NavBar } from "@/components/NavBar";
 import OnlineFooter from "@/components/OnlineFooter";
@@ -8,10 +5,13 @@ import OnlineHeader from "@/components/OnlineHeader";
 import { WeeklyResetCard } from "@/components/WeeklyResetCard";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { supabase } from "@/integrations/supabase/client";
+import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
 import SessionDetailModal from "@/pages/app/SessionDetail";
 import SessionPlayCard from "@/pages/app/online/components/SessionPlayCard";
 import { Suspense, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+const startHereButterfly = getCloudImageUrl(CLOUD_IMAGES.startHereButterfly);
 
 interface StartHereClass {
   id: string;
@@ -21,6 +21,8 @@ interface StartHereClass {
   short_description: string | null;
   description: string | null;
   teacher_name: string | null;
+  intensity: string;
+  technique: string;
 }
 
 const StartHere = () => {
@@ -33,7 +35,7 @@ const StartHere = () => {
     const fetchSessions = async () => {
       const { data } = await supabase
         .from('classes')
-        .select('id, title, duration_minutes, image_url, short_description, description, teacher_name')
+        .select('id, title, duration_minutes, image_url, short_description, description, teacher_name, intensity, technique')
         .not('start_here_position', 'is', null)
         .order('start_here_position');
 
@@ -102,7 +104,7 @@ const StartHere = () => {
                 key={session.id}
                 title={session.title}
                 description={session.short_description || session.description || ""}
-                meta={[session.teacher_name, session.duration_minutes ? `${session.duration_minutes} min` : null].filter(Boolean).join(" • ")}
+                meta={[session.teacher_name, session.duration_minutes ? `${session.duration_minutes} min` : null, session.intensity, session.technique].filter(Boolean).join(" • ")}
                 imageUrl={session.image_url || ""}
                 onClick={() => setSelectedSessionId(session.id)}
                 mobileStacked
