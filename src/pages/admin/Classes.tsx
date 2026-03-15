@@ -28,6 +28,7 @@ interface Class {
   requires_subscription: boolean;
   order_index: number | null;
   category_id: string | null;
+  short_description: string | null;
   safety_note: string | null;
   show_safety_reminder: boolean;
   intensity: string | null;
@@ -330,19 +331,19 @@ const AdminClasses = () => {
       title: classItem.title,
       teacher_name: classItem.teacher_name || "",
       description: classItem.description || "",
-      short_description: (classItem as any).short_description || "",
+      short_description: classItem.short_description || "",
       audio_url: classItem.audio_url || "",
       image_url: classItem.image_url || "",
       duration_minutes: classItem.duration_minutes?.toString() || "",
       category_ids: classItem.categories?.map(c => c.id) || (classItem.category_id ? [classItem.category_id] : []),
-      technique: "",
+      technique: classItem.technique || "",
       is_published: classItem.is_published,
       requires_subscription: classItem.requires_subscription,
       safety_note: classItem.safety_note || "",
       show_safety_reminder: classItem.show_safety_reminder || false,
       intensity: classItem.intensity || "",
       start_here_position: (classItem.start_here_position?.toString() || "none") as "none" | "1" | "2",
-      is_quick_reset: (classItem as any).is_quick_reset || false,
+      is_quick_reset: classItem.is_quick_reset || false,
     });
     setIsDialogOpen(true);
   };
