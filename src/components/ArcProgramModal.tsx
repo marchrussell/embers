@@ -1,9 +1,9 @@
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { ButtonLoadingSpinner } from "@/components/skeletons/ButtonLoadingSpinner";
-import { ArrowRight, Check } from "lucide-react";
-import { RISE_ARC_PRICES } from "@/lib/stripePrices";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
+import { RISE_ARC_PRICES } from "@/lib/stripePrices";
+import { Check } from "lucide-react";
 import { useState } from "react";
 
 type ProgramType = 'self-study' | 'group' | 'one-on-one';
@@ -76,8 +76,6 @@ const programContent = {
   }
 };
 
-const CALENDLY_URL = "https://calendly.com/march-marchrussell/welcome-call";
-
 export function ArcProgramModal({ open, onOpenChange, programType, onApply }: ArcProgramModalProps) {
   const content = programContent[programType];
   const [loading, setLoading] = useState(false);
@@ -95,7 +93,7 @@ export function ArcProgramModal({ open, onOpenChange, programType, onApply }: Ar
       try {
         const { data, error } = await supabase.functions.invoke('create-checkout', {
           body: {
-            priceId: RISE_ARC_PRICES.SELF_STUDY,
+            priceId: RISE_ARC_PRICES,
             mode: 'payment'
           }
         });
