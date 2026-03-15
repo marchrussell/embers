@@ -37,6 +37,8 @@ export interface QuickResetSession {
   teacher_name: string | null;
   duration_minutes: number | null;
   requires_subscription: boolean | null;
+  intensity: string;
+  technique: string;
 }
 
 export interface FeaturedSession {
@@ -47,4 +49,6 @@ export interface FeaturedSession {
   image_url: string | null;
   teacher_name: string | null;
   duration_minutes: number | null;
+  intensity: string;
+  technique: string;
 }
