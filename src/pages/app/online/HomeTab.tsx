@@ -1,14 +1,14 @@
-import { useNavigate } from "react-router-dom";
-import { useRef, useState, useEffect } from "react";
-import { toast } from "sonner";
-import { ChevronLeft, ChevronRight, Lock } from "lucide-react";
-import { useFeaturedSession } from "./hooks/useFeaturedSession";
-import { useQuickResets } from "./hooks/useQuickResets";
-import CourseCard from "./components/CourseCard";
-import StartHereCard from "./components/StartHereCard";
-import SessionPlayCard from "./components/SessionPlayCard";
 import { IconButton } from "@/components/ui/icon-button";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
+import { ChevronLeft, ChevronRight, Lock } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import CourseCard from "./components/CourseCard";
+import SessionPlayCard from "./components/SessionPlayCard";
+import StartHereCard from "./components/StartHereCard";
+import { useFeaturedSession } from "./hooks/useFeaturedSession";
+import { useQuickResets } from "./hooks/useQuickResets";
 import { LiveSessionsData } from "./types";
 
 interface HomeTabProps {
@@ -173,7 +173,7 @@ const HomeTab = ({
           <SessionPlayCard
             title={featuredSession.title}
             description={featuredSession.short_description || featuredSession.description || ''}
-            meta={`${featuredSession.teacher_name} • ${featuredSession.duration_minutes} min`}
+            meta={`${featuredSession.teacher_name} • ${featuredSession.duration_minutes} min • ${featuredSession.intensity} • ${featuredSession.technique}`}
             imageUrl={featuredSession.image_url}
             onClick={() => {
               if (!featuredSession.id) {

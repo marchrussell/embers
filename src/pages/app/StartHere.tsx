@@ -104,7 +104,7 @@ const StartHere = () => {
                 key={session.id}
                 title={session.title}
                 description={session.short_description || session.description || ""}
-                meta={[session.teacher_name, session.duration_minutes ? `${session.duration_minutes} min` : null, session.intensity, session.technique].filter(Boolean).join(" • ")}
+                meta={`${session.teacher_name} • ${session.duration_minutes} min • ${session.intensity} • ${session.technique}`}
                 imageUrl={session.image_url || ""}
                 onClick={() => setSelectedSessionId(session.id)}
                 mobileStacked
