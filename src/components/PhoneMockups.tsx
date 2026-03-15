@@ -12,14 +12,26 @@ const programHero = getCloudImageUrl(CLOUD_IMAGES.breathPresence, { width: 600, 
 const categoryCalm = getCloudImageUrl(CLOUD_IMAGES.startHereButterfly, { width: 600, quality: 80 });
 const reviewsBg = getCloudImageUrl(CLOUD_IMAGES.exploreTestimonials, { width: 600, quality: 80 });
 
+const sessions = [
+  { title: "NSDR: Gentle Reset", duration: "11 min", image: categoryCalm },
+  { title: "Finding Steady Ground", duration: "8 min", image: categoryEnergy },
+  { title: "Physiological Sign for Immediate Relief", duration: "4 min", image: categoryReset },
+  { title: "Gentle Nervous System Reset", duration: "8 min", image: categorySleep },
+  { title: "Softening Tension", duration: "7 min", image: categoryRelease },
+];
+
+const stabaliseLessons = [
+  { num: 1, title: "Regulating with Triangle Breathing", duration: "3 mins", image: categoryCalm },
+  { num: 2, title: "Finding Steady Ground", duration: "8 mins", image: categoryCalm},
+  { num: 3, title: "NSDR: Gentle Reset", duration: "12 mins", image: categoryCalm },
+  { num: 4, title: "Sleep Transition", duration: "5 mins", image: categoryCalm },
+];
+
+const openLessons = [
+  { num: 1, title: "Clear The Way", duration: "6 mins", image: categoryCalm },
+];
+
 export const PhoneMockups = () => {
-  const sessions = [
-    { title: "NSDR: Gentle Reset", duration: "11 min", image: categoryCalm },
-    { title: "Finding Steady Ground", duration: "8 min", image: categoryEnergy },
-    { title: "Physiological Sign for Immediate Relief", duration: "4 min", image: categoryReset },
-    { title: "Gentle Nervous System Reset", duration: "8 min", image: categorySleep },
-    { title: "Softening Tension", duration: "7 min", image: categoryRelease },
-  ];
 
   return (
     <div className="py-8 w-full max-w-[1800px] mx-auto px-4">
@@ -101,24 +113,41 @@ export const PhoneMockups = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
               <div className="absolute bottom-4 left-6">
                 <h3 className="text-white font-editorial text-[26px]">Mental Detox</h3>
-                <p className="text-white/60 text-[12px]">15 Days - 11 Lessons</p>
-                <p className="text-white/60 text-[12px]">Stablise/Regulate/Restore</p>
               </div>
             </div>
             
             {/* Lessons list */}
             <div className="px-6 py-4 space-y-3">
-              {[
-                { num: 1, title: "Regulating with Triangle Breathing", duration: "3 mins" },
-                { num: 2, title: "Finding Steady Ground", duration: "8 mins" },
-                { num: 3, title: "NSDR: Gentle Reset", duration: "12 mins" },
-                { num: 4, title: "Sleep Transition", duration: "5 mins" },
-                { num: 5, title: "Clear The Way", duration: "6 mins" },
-              ].map((lesson, i) => (
+              <div>
+                <p className="text-white/60 text-[12px]">15 Days - 11 Lessons</p>
+                <p className="text-white/60 text-[12px]">Stablise/Regulate/Restore</p>
+              </div>
+              {stabaliseLessons.map((lesson, i) => (
                 <div key={i} className="flex items-center gap-3">
-                  <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-white text-[12px]">
-                    {lesson.num}
+                  <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 relative">
+                    <img src={lesson.image} alt={lesson.title} className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                      <Play className="w-4 h-4 text-white fill-white" />
+                    </div>
+                </div>
+                  <div className="flex-1">
+                    <p className="text-white text-[14px]">{lesson.title}</p>
+                    <p className="text-white/40 text-[12px]">{lesson.duration}</p>
                   </div>
+                </div>
+              ))}
+             
+              <div>
+                <p className="text-white/60 text-[12px]">Open</p>
+              </div>
+              {openLessons.map((lesson, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 relative">
+                    <img src={lesson.image} alt={lesson.title} className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                      <Play className="w-4 h-4 text-white fill-white" />
+                    </div>
+                </div>
                   <div className="flex-1">
                     <p className="text-white text-[14px]">{lesson.title}</p>
                     <p className="text-white/40 text-[12px]">{lesson.duration}</p>
