@@ -1,5 +1,5 @@
-import SessionPlayCard from "@/pages/app/online/components/SessionPlayCard";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
+import SessionPlayCard from "@/pages/app/online/components/SessionPlayCard";
 import { memo } from "react";
 import { LibraryCategory, LibrarySession } from "./types";
 
@@ -65,19 +65,13 @@ const CategoryView = memo(({
             const isNew = session.created_at
               ? Math.floor((now - new Date(session.created_at).getTime()) / (1000 * 60 * 60 * 24)) <= 7
               : false;
-            const meta = [
-              session.teacher,
-              `${session.duration} min`,
-              session.technique,
-              session.intensity,
-            ].filter(Boolean).join(' • ');
-
+        
             return (
               <SessionPlayCard
                 key={session.id}
                 title={session.title}
                 description={session.description || `A ${session.duration} minute practice to help you ${category.name.toLowerCase()}.`}
-                meta={meta}
+                meta={[session.teacher, session.duration != null && `${session.duration} min`, session.intensity, session.technique].filter(Boolean).join(' • ')}
                 imageUrl={session.image}
                 locked={session.locked}
                 isNew={isNew}

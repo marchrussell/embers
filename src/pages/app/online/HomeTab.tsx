@@ -173,7 +173,7 @@ const HomeTab = ({
           <SessionPlayCard
             title={featuredSession.title}
             description={featuredSession.short_description || featuredSession.description || ''}
-            meta={`${featuredSession.teacher_name} • ${featuredSession.duration_minutes} min • ${featuredSession.intensity} • ${featuredSession.technique}`}
+            meta={[featuredSession.teacher_name, featuredSession.duration_minutes != null && `${featuredSession.duration_minutes} min`, featuredSession.intensity, featuredSession.technique].filter(Boolean).join(' • ')}
             imageUrl={featuredSession.image_url}
             onClick={() => {
               if (!featuredSession.id) {

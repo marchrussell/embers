@@ -29,26 +29,21 @@ export interface LiveSessionsData {
   guestSession: LiveSessionData;
 }
 
-export interface QuickResetSession {
+export interface BaseSession {
   id: string;
   title: string;
-  short_description: string | null;
-  image_url: string | null;
-  teacher_name: string | null;
   duration_minutes: number | null;
-  requires_subscription: boolean | null;
-  intensity: string;
-  technique: string;
+  image_url: string | null;
+  short_description: string | null;
+  teacher_name: string | null;
+  intensity: string | null;
+  technique: string | null;
 }
 
-export interface FeaturedSession {
-  id: string;
-  title: string;
+export interface QuickResetSession extends BaseSession {
+  requires_subscription: boolean | null;
+}
+
+export interface FeaturedSession extends BaseSession {
   description: string | null;
-  short_description: string | null;
-  image_url: string | null;
-  teacher_name: string | null;
-  duration_minutes: number | null;
-  intensity: string;
-  technique: string;
 }

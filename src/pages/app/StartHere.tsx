@@ -8,28 +8,17 @@ import { supabase } from "@/integrations/supabase/client";
 import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
 import SessionDetailModal from "@/pages/app/SessionDetail";
 import SessionPlayCard from "@/pages/app/online/components/SessionPlayCard";
+import { FeaturedSession } from "@/pages/app/online/types";
 import { Suspense, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const startHereButterfly = getCloudImageUrl(CLOUD_IMAGES.startHereButterfly);
 
-interface StartHereClass {
-  id: string;
-  title: string;
-  duration_minutes: number | null;
-  image_url: string | null;
-  short_description: string | null;
-  description: string | null;
-  teacher_name: string | null;
-  intensity: string;
-  technique: string;
-}
-
 const StartHere = () => {
   const navigate = useNavigate();
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
-  const [sessions, setSessions] = useState<StartHereClass[]>([]);
+  const [sessions, setSessions] = useState<FeaturedSession[]>([]);
 
   useEffect(() => {
     const fetchSessions = async () => {
@@ -104,7 +93,7 @@ const StartHere = () => {
                 key={session.id}
                 title={session.title}
                 description={session.short_description || session.description || ""}
-                meta={`${session.teacher_name} • ${session.duration_minutes} min • ${session.intensity} • ${session.technique}`}
+                meta={[session.teacher_name, session.duration_minutes != null && `${session.duration_minutes} min`, session.intensity, session.technique].filter(Boolean).join(' • ')}
                 imageUrl={session.image_url || ""}
                 onClick={() => setSelectedSessionId(session.id)}
                 mobileStacked
