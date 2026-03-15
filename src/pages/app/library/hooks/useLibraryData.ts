@@ -20,7 +20,6 @@ interface UseLibraryDataParams {
 }
 
 interface UseLibraryDataReturn {
-  programs: any[];
   categoriesWithSessions: LibraryCategory[];
   classesByCategory: Record<string, LibrarySession[]>;
   categories: any[];
@@ -32,7 +31,6 @@ export const useLibraryData = ({
   isAdmin,
   isTestUser,
 }: UseLibraryDataParams): UseLibraryDataReturn => {
-  const [programs, setPrograms] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [classesByCategory, setClassesByCategory] = useState<Record<string, LibrarySession[]>>({});
   const [isLoading, setIsLoading] = useState(true);
@@ -45,16 +43,6 @@ export const useLibraryData = ({
     const fetchData = async () => {
       try {
         setIsLoading(true);
-
-        // Fetch programs (non-blocking)
-        void supabase
-          .from('programs')
-          .select('*, requires_subscription')
-          .eq('is_published', true)
-          .then(({ data: programsData }) => {
-            if (isMounted && programsData) setPrograms(programsData);
-          });
-
         // Fetch categories
         const { data: categoriesData } = await supabase
           .from('categories')
@@ -139,5 +127,5 @@ export const useLibraryData = ({
     });
   }, [categories, classesByCategory]);
 
-  return { progams, categoriesWithSessions, classesByCategory, categories, isLoading };
+  return { categoriesWithSessions, classesByCategory, categories, isLoading };
 };

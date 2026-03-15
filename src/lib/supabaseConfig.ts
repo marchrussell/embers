@@ -5,7 +5,7 @@
 
 export const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
 
-// Extract project ID from URL (e.g., "zduvevumquhmgagcumwa" from "https://zduvevumquhmgagcumwa.supabase.co")
+// Extract project ID from URL (e.g., "qnqbmxjlqufzrqxptqsd" from "https://qnqbmxjlqufzrqxptqsd.supabase.co")
 export const SUPABASE_PROJECT_ID = SUPABASE_URL?.match(/https:\/\/([^.]+)\.supabase\.co/)?.[1] ?? '';
 
 /**
