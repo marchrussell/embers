@@ -229,7 +229,7 @@ export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => 
 
               <div className="mt-8">
                 <p className="text-xs sm:text-sm text-white/40 text-center font-light leading-relaxed">
-                  You will be automatically charged after your 7-day free trial ends unless you cancel before then. Cancel anytime during the trial at no charge.
+                  You will be automatically charged after your 7 day free trial ends unless you cancel before then. Cancel anytime during the trial at no charge.
                 </p>
               </div>
             </div>

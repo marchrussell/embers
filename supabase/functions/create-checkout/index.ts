@@ -67,6 +67,10 @@ serve(async (req) => {
       cancel_url: `${origin}/`,
     };
 
+    if (checkoutMode === 'subscription') {
+      sessionParams.subscription_data = { trial_period_days: 7 };
+    }
+
     // Add coupon if provided
     if (couponCode) {
       try {
