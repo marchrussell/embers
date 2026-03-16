@@ -90,7 +90,7 @@ serve(async (req) => {
                 <p><strong>Attempt ${invoice.attempt_count} of 4</strong></p>
                 <p>To continue enjoying your subscription, please update your payment details as soon as possible.</p>
                 <p style="margin: 30px 0;">
-                  <a href="${Deno.env.get("SUPABASE_URL")?.replace("https://", "https://")}/app/profile" 
+                  <a href="https://marchrussell.com/app/profile"
                      style="background-color: #d4a574; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
                     Update Payment Details
                   </a>
@@ -163,7 +163,7 @@ serve(async (req) => {
                   <p>Your Embers Studio subscription payment is ${subscription.status}.</p>
                   <p>Please update your payment details to avoid interruption of service.</p>
                   <p style="margin: 30px 0;">
-                    <a href="${Deno.env.get("SUPABASE_URL")?.replace("https://", "https://")}/app/profile" 
+                    <a href="https://marchrussell.com/app/profile"
                        style="background-color: #d4a574; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
                       Update Payment Details
                     </a>
@@ -216,7 +216,7 @@ serve(async (req) => {
                 <p>Your Embers Studio subscription has been canceled due to payment issues.</p>
                 <p>We're sorry to see you go! If this was unintentional, you can resubscribe at any time.</p>
                 <p style="margin: 30px 0;">
-                  <a href="${Deno.env.get("SUPABASE_URL")?.replace("https://", "https://")}/app/profile" 
+                  <a href="https://marchrussell.com/app/profile"
                      style="background-color: #d4a574; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
                     Resubscribe Now
                   </a>

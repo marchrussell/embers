@@ -7,7 +7,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const logStep = (step: string, details?: any) => {
+const logStep = (step: string, details?: Record<string, unknown>) => {
   const detailsStr = details ? ` - ${JSON.stringify(details)}` : '';
   console.log(`[CHECK-SUBSCRIPTION] ${step}${detailsStr}`);
 };
@@ -180,12 +180,6 @@ serve(async (req) => {
       productId = subscription.items.data[0].price.product;
       logStep("Determined subscription tier", { productId });
       
-      // Persist subscription data to database using service role key for write access
-      const supabaseAdmin = createClient(
-        Deno.env.get("SUPABASE_URL") ?? "",
-        Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
-      );
-      
       // Prepare upsert data with safe date conversions
       const upsertData: any = {
         user_id: user.id,
@@ -220,11 +214,6 @@ serve(async (req) => {
       logStep("No active subscription found");
       
       // Update database to reflect no active subscription
-      const supabaseAdmin = createClient(
-        Deno.env.get("SUPABASE_URL") ?? "",
-        Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
-      );
-      
       const { error: updateError } = await supabaseAdmin
         .from("user_subscriptions")
         .update({

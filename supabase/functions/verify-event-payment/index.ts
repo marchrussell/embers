@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
-import { Resend } from "https://esm.sh/resend@2.0.0";
+import { Resend } from "https://esm.sh/resend@4.0.0";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 
 const corsHeaders = {
@@ -75,7 +75,7 @@ serve(async (req) => {
     const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
     
     await resend.emails.send({
-      from: "March Russell <onboarding@resend.dev>",
+      from: "Embers Studio <hello@embersstudio.io>",
       to: [attendeeEmail],
       subject: `Your ticket(s) for ${event.title}`,
       html: `
@@ -95,7 +95,7 @@ serve(async (req) => {
 
     // Send notification to admin
     await resend.emails.send({
-      from: "March Russell <onboarding@resend.dev>",
+      from: "Embers Studio <hello@embersstudio.io>",
       to: ["support@embersstudio.io"],
       subject: `New Ticket Sale: ${event.title}`,
       html: `
