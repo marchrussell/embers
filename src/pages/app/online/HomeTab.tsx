@@ -75,7 +75,10 @@ const HomeTab = ({
         <p className="text-base md:text-lg font-light text-[#E6DBC7]/60 mb-10">
           A gentle way to arrive — nothing to keep up with.
         </p>
-        <StartHereCard />
+        <StartHereCard
+          locked={!hasSubscription && !isAdmin && !isTestUser}
+          onLockedClick={onSubscriptionRequired}
+        />
       </section>
 
       {/* Quick Resets */}
@@ -175,7 +178,12 @@ const HomeTab = ({
             description={featuredSession.short_description || featuredSession.description || ''}
             meta={[featuredSession.teacher_name, featuredSession.duration_minutes != null && `${featuredSession.duration_minutes} min`, featuredSession.intensity, featuredSession.technique].filter(Boolean).join(' • ')}
             imageUrl={featuredSession.image_url}
+            locked={!hasSubscription && !isAdmin && !isTestUser}
             onClick={() => {
+              if (!hasSubscription && !isAdmin && !isTestUser) {
+                onSubscriptionRequired();
+                return;
+              }
               if (!featuredSession.id) {
                 toast.error("Unable to load session");
                 return;
@@ -202,6 +210,7 @@ const HomeTab = ({
             image={liveSessionsData.weeklyReset.image}
             badge={liveSessionsData.weeklyReset.isLive ? "Live Now" : undefined}
             imagePosition="center 70%"
+            locked={!hasSubscription && !isAdmin && !isTestUser}
             onClick={() => handleLiveCardClick('/online/live/weekly-reset')}
           />
           <CourseCard
@@ -210,6 +219,7 @@ const HomeTab = ({
             description={liveSessionsData.monthlyPresence.description}
             image={liveSessionsData.monthlyPresence.image}
             badge={liveSessionsData.monthlyPresence.isLive ? "Live Now" : undefined}
+            locked={!hasSubscription && !isAdmin && !isTestUser}
             onClick={() => handleLiveCardClick('/online/live/monthly-presence')}
           />
           <CourseCard
@@ -219,6 +229,7 @@ const HomeTab = ({
             image={liveSessionsData.guestSession.image}
             badge={liveSessionsData.guestSession.isLive ? "Live Now" : undefined}
             imagePosition="center bottom"
+            locked={!hasSubscription && !isAdmin && !isTestUser}
             onClick={() => handleLiveCardClick('/online/live/guest-session')}
           />
         </div>

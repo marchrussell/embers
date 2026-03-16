@@ -2,14 +2,26 @@ import { OptimizedImage } from "@/components/OptimizedImage";
 import { Button } from "@/components/ui/button";
 import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
 import { IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
+import { Lock } from "lucide-react";
 import { memo } from "react";
 import { Link } from "react-router-dom";
 
 const startHereButterfly = getCloudImageUrl(CLOUD_IMAGES.startHereButterfly);
 
-const StartHereCard = memo(() => (
+interface StartHereCardProps {
+  locked?: boolean;
+  onLockedClick?: () => void;
+}
+
+const StartHereCard = memo(({ locked = false, onLockedClick }: StartHereCardProps) => (
   <Link
     to="/online/start-here"
+    onClick={(e) => {
+      if (locked) {
+        e.preventDefault();
+        onLockedClick?.();
+      }
+    }}
     className="block relative h-[380px] md:h-[400px] overflow-hidden rounded-2xl border border-[#E6DBC7]/15 shadow-[0_0_40px_rgba(230,219,199,0.15)] cursor-pointer group hover:border-[#E6DBC7]/25 transition-all"
   >
     <OptimizedImage
@@ -19,6 +31,11 @@ const StartHereCard = memo(() => (
       optimizationOptions={IMAGE_PRESETS.hero}
     />
     <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/80 via-black/40 to-transparent md:from-background/40 md:via-transparent md:to-transparent" />
+    {locked && (
+      <div className="absolute top-4 right-4 z-10">
+        <Lock className="w-5 h-5 text-white/80" />
+      </div>
+    )}
 
     <div className="absolute inset-0 md:relative md:h-full flex flex-col md:flex-row rounded-2xl">
       <div className="hidden md:block md:w-[45%] relative rounded-l-2xl overflow-hidden">
