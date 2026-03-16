@@ -222,7 +222,7 @@ export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => 
                     onClick={(e) => handleSubscribeClick(monthlyPriceId, e)}
                     disabled={!!loadingPlan || pricesLoading}
                   >
-                    {loadingPlan === 'monthly' ? <ButtonLoadingSpinner /> : "Subscribe"}
+                    {loadingPlan === 'monthly' ? <ButtonLoadingSpinner /> : "Start 7 Day Free Trial"}
                   </GlowButton>
                 </div>
               </div>
