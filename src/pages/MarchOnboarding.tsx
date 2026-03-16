@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
@@ -55,37 +56,34 @@ export default function MarchOnboarding() {
     scrollToBottom();
   }, [messages]);
 
+  const welcomeShown = useRef(false);
+
   useEffect(() => {
-    if (!user) {
-      navigate("/auth");
-      return;
-    }
-    
-    // Check if onboarding already completed
-    checkOnboardingStatus();
+    if (!user) navigate("/auth");
   }, [user, navigate]);
 
-  const checkOnboardingStatus = async () => {
-    if (!user) return;
+  const { data: onboardingStatus } = useQuery({
+    queryKey: ['onboarding', user?.id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("user_onboarding")
+        .select("onboarding_completed")
+        .eq("user_id", user!.id)
+        .maybeSingle();
+      return data;
+    },
+    enabled: !!user?.id,
+  });
 
-    const { data, error } = await supabase
-      .from("user_onboarding")
-      .select("onboarding_completed")
-      .eq("user_id", user.id)
-      .maybeSingle();
-
-    if (error) {
-      console.error("Error checking onboarding:", error);
-    }
-
-    if (data?.onboarding_completed) {
+  useEffect(() => {
+    if (onboardingStatus === undefined) return;
+    if (onboardingStatus?.onboarding_completed) {
       navigate("/online/march-dashboard");
-      return;
+    } else if (!welcomeShown.current) {
+      welcomeShown.current = true;
+      showWelcomeMessage();
     }
-
-    // Start onboarding
-    showWelcomeMessage();
-  };
+  }, [onboardingStatus]);
 
   const addMessage = (text: string, isFromMarch: boolean, options?: any[], multiSelect?: boolean) => {
     setMessages(prev => [...prev, { text, isFromMarch, options, multiSelect }]);

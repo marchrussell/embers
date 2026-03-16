@@ -13,6 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { BookOpen, Eye, EyeOff, Pencil, Plus, Search, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface Program {
   id: string;
@@ -40,9 +41,7 @@ interface Category {
 const AdminPrograms = () => {
   const { isAdmin, loading } = useAuth();
   const navigate = useNavigate();
-  const [programs, setPrograms] = useState<Program[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [classes, setClasses] = useState<Class[]>([]);
+  const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingProgram, setEditingProgram] = useState<Program | null>(null);
   const [selectedClasses, setSelectedClasses] = useState<string[]>([]);
@@ -64,34 +63,24 @@ const AdminPrograms = () => {
     }
   }, [isAdmin, loading, navigate]);
 
-  useEffect(() => {
-    fetchPrograms();
-    fetchCategories();
-    fetchClasses();
-  }, []);
+  const { data: programs = [] } = useQuery<Program[]>({
+    queryKey: ['admin-programs'],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("programs").select("*").order("created_at", { ascending: false });
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: !!isAdmin,
+  });
 
-  const fetchPrograms = async () => {
-    const { data, error } = await supabase
-      .from("programs")
-      .select("*")
-      .order("created_at", { ascending: false });
-    
-    if (error) {
-      toast({ title: "Error fetching programs", description: error.message, variant: "destructive" });
-    } else {
-      setPrograms(data || []);
-    }
-  };
-
-  const fetchCategories = async () => {
-    const { data } = await supabase.from("categories").select("id, name").order("name");
-    setCategories(data || []);
-  };
-
-  const fetchClasses = async () => {
-    const { data } = await supabase.from("classes").select("id, title, duration_minutes").order("title");
-    setClasses(data || []);
-  };
+  const { data: classes = [] } = useQuery<Class[]>({
+    queryKey: ['admin-classes-list'],
+    queryFn: async () => {
+      const { data } = await supabase.from("classes").select("id, title, duration_minutes").order("title");
+      return data || [];
+    },
+    enabled: !!isAdmin,
+  });
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -169,7 +158,7 @@ const AdminPrograms = () => {
       } else {
         await updateProgramClasses(editingProgram.id);
         toast({ title: "Program updated successfully" });
-        fetchPrograms();
+        queryClient.invalidateQueries({ queryKey: ['admin-programs'] });
         resetForm();
       }
     } else {
@@ -180,7 +169,7 @@ const AdminPrograms = () => {
       } else {
         if (data) await updateProgramClasses(data.id);
         toast({ title: "Program created successfully" });
-        fetchPrograms();
+        queryClient.invalidateQueries({ queryKey: ['admin-programs'] });
         resetForm();
       }
     }
@@ -209,7 +198,7 @@ const AdminPrograms = () => {
       toast({ title: "Error deleting program", description: error.message, variant: "destructive" });
     } else {
       toast({ title: "Program deleted successfully" });
-      fetchPrograms();
+      queryClient.invalidateQueries({ queryKey: ['admin-programs'] });
     }
   };
 
@@ -243,7 +232,7 @@ const AdminPrograms = () => {
     if (error) {
       toast({ title: "Error updating program", description: error.message, variant: "destructive" });
     } else {
-      fetchPrograms();
+      queryClient.invalidateQueries({ queryKey: ['admin-programs'] });
     }
   };
 

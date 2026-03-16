@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Sparkles, TrendingUp, TrendingDown, Calendar, Award } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
 interface WeeklyInsightsData {
   sessionsCompleted: number;
@@ -18,101 +18,61 @@ interface WeeklyInsightsData {
 export function WeeklyInsights() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [insights, setInsights] = useState<WeeklyInsightsData | null>(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!user) return;
-    loadWeeklyInsights();
-  }, [user]);
-
-  const loadWeeklyInsights = async () => {
-    if (!user) return;
-
-    try {
+  const { data: insights, isLoading: loading } = useQuery<WeeklyInsightsData | null>({
+    queryKey: ['weekly-insights', user?.id],
+    queryFn: async () => {
       const sevenDaysAgo = new Date();
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-      // Load completed sessions
-      const { data: sessions } = await supabase
-        .from("user_progress")
-        .select(`
-          completed_at,
-          classes (
-            focus_tags
-          )
-        `)
-        .eq("user_id", user.id)
-        .eq("completed", true)
-        .gte("completed_at", sevenDaysAgo.toISOString());
+      const [{ data: sessions }, { data: moodLogs }] = await Promise.all([
+        supabase
+          .from("user_progress")
+          .select(`completed_at, classes ( focus_tags )`)
+          .eq("user_id", user!.id)
+          .eq("completed", true)
+          .gte("completed_at", sevenDaysAgo.toISOString()),
+        supabase
+          .from("user_mood_logs")
+          .select("mood_score, logged_at")
+          .eq("user_id", user!.id)
+          .gte("logged_at", sevenDaysAgo.toISOString())
+          .order("logged_at", { ascending: true }),
+      ]);
 
-      // Load mood logs
-      const { data: moodLogs } = await supabase
-        .from("user_mood_logs")
-        .select("mood_score, logged_at")
-        .eq("user_id", user.id)
-        .gte("logged_at", sevenDaysAgo.toISOString())
-        .order("logged_at", { ascending: true });
-
-      // Calculate insights
       const sessionsCompleted = sessions?.length || 0;
-      
-      // Mood trend
+
       let moodTrend: "improving" | "declining" | "stable" = "stable";
       let avgMood = 0;
-      
+
       if (moodLogs && moodLogs.length >= 2) {
         avgMood = moodLogs.reduce((sum, log) => sum + (log.mood_score || 0), 0) / moodLogs.length;
-        const firstHalf = moodLogs.slice(0, Math.floor(moodLogs.length / 2));
-        const secondHalf = moodLogs.slice(Math.floor(moodLogs.length / 2));
-        
-        const firstAvg = firstHalf.reduce((sum, log) => sum + (log.mood_score || 0), 0) / firstHalf.length;
-        const secondAvg = secondHalf.reduce((sum, log) => sum + (log.mood_score || 0), 0) / secondHalf.length;
-        
+        const mid = Math.floor(moodLogs.length / 2);
+        const firstAvg = moodLogs.slice(0, mid).reduce((s, l) => s + (l.mood_score || 0), 0) / mid;
+        const secondAvg = moodLogs.slice(mid).reduce((s, l) => s + (l.mood_score || 0), 0) / (moodLogs.length - mid);
         if (secondAvg > firstAvg + 0.5) moodTrend = "improving";
         else if (secondAvg < firstAvg - 0.5) moodTrend = "declining";
       }
 
-      // Top focus areas
       const focusTags = sessions
         ?.flatMap((s: any) => s.classes?.focus_tags || [])
         .filter((tag): tag is string => !!tag) || [];
-      
-      const tagCounts = focusTags.reduce((acc, tag) => {
-        acc[tag] = (acc[tag] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>);
-      
-      const topFocusAreas = Object.entries(tagCounts)
-        .sort(([, a], [, b]) => b - a)
-        .slice(0, 3)
-        .map(([tag]) => tag);
+      const tagCounts = focusTags.reduce((acc, tag) => { acc[tag] = (acc[tag] || 0) + 1; return acc; }, {} as Record<string, number>);
+      const topFocusAreas = Object.entries(tagCounts).sort(([, a], [, b]) => b - a).slice(0, 3).map(([tag]) => tag);
 
-      // Consistency
       let consistency: "excellent" | "good" | "needs-work" = "needs-work";
       if (sessionsCompleted >= 5) consistency = "excellent";
       else if (sessionsCompleted >= 3) consistency = "good";
 
-      // Days since last practice
       const lastSession = sessions?.[0];
       const daysSinceLastPractice = lastSession?.completed_at
         ? Math.floor((Date.now() - new Date(lastSession.completed_at).getTime()) / (1000 * 60 * 60 * 24))
         : 7;
 
-      setInsights({
-        sessionsCompleted,
-        moodTrend,
-        avgMood,
-        topFocusAreas,
-        consistency,
-        daysSinceLastPractice,
-      });
-    } catch (error) {
-      console.error("Error loading weekly insights:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+      return { sessionsCompleted, moodTrend, avgMood, topFocusAreas, consistency, daysSinceLastPractice };
+    },
+    enabled: !!user?.id,
+  });
 
   const handleChatWithMarch = () => {
     navigate("/online/march-chat", {

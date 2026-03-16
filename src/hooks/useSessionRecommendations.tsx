@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useQuery } from "@tanstack/react-query";
 
 interface Session {
   id: string;
@@ -24,52 +24,37 @@ interface RecommendationParams {
 
 export const useSessionRecommendations = () => {
   const { user } = useAuth();
-  const [onboardingData, setOnboardingData] = useState<any>(null);
-  const [recentMood, setRecentMood] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    if (!user) {
-      setIsLoading(false);
-      return;
-    }
+  const { data: onboardingData = null, isLoading } = useQuery({
+    queryKey: ['onboarding', user?.id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("user_onboarding")
+        .select("*")
+        .eq("user_id", user!.id)
+        .maybeSingle();
+      return data ?? null;
+    },
+    enabled: !!user?.id,
+  });
 
-    const loadUserData = async () => {
-      try {
-        // Load onboarding preferences
-        const { data: onboarding } = await supabase
-          .from("user_onboarding")
-          .select("*")
-          .eq("user_id", user.id)
-          .maybeSingle();
-
-        setOnboardingData(onboarding);
-
-        // Load recent mood (last 7 days average)
-        const sevenDaysAgo = new Date();
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-
-        const { data: moodLogs } = await supabase
-          .from("user_mood_logs")
-          .select("mood_score")
-          .eq("user_id", user.id)
-          .gte("logged_at", sevenDaysAgo.toISOString())
-          .order("logged_at", { ascending: false })
-          .limit(7);
-
-        if (moodLogs && moodLogs.length > 0) {
-          const avgMood = moodLogs.reduce((sum, log) => sum + log.mood_score, 0) / moodLogs.length;
-          setRecentMood(Math.round(avgMood));
-        }
-      } catch (error) {
-        console.error("Error loading user data for recommendations:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadUserData();
-  }, [user]);
+  const { data: recentMood = null } = useQuery<number | null>({
+    queryKey: ['recent-mood', user?.id],
+    queryFn: async () => {
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+      const { data: moodLogs } = await supabase
+        .from("user_mood_logs")
+        .select("mood_score")
+        .eq("user_id", user!.id)
+        .gte("logged_at", sevenDaysAgo.toISOString())
+        .order("logged_at", { ascending: false })
+        .limit(7);
+      if (!moodLogs || moodLogs.length === 0) return null;
+      return Math.round(moodLogs.reduce((sum, log) => sum + log.mood_score, 0) / moodLogs.length);
+    },
+    enabled: !!user?.id,
+  });
 
   const getRecommendedSessions = async (params?: Partial<RecommendationParams>): Promise<Session[]> => {
     try {

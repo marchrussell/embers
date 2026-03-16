@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef, Suspense } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -27,18 +28,10 @@ import featherTexture from "@/assets/feather-texture.jpg";
 export default function MarchDashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true);
-  const [onboardingData, setOnboardingData] = useState<any>(null);
   const [todaySession, setTodaySession] = useState<any>(null);
   const [alternativeSessions, setAlternativeSessions] = useState<any[]>([]);
   const [upcomingSessions, setUpcomingSessions] = useState<any[]>([]);
   const [moodScore, setMoodScore] = useState([3]);
-  const [weeklyStreak, setWeeklyStreak] = useState(0);
-  const [totalSessions, setTotalSessions] = useState(0);
-  const [thisMonthSessions, setThisMonthSessions] = useState(0);
-  const [currentStreak, setCurrentStreak] = useState(0);
-  const [totalMinutes, setTotalMinutes] = useState(0);
-  const [moodTrend, setMoodTrend] = useState<'improving' | 'stable' | 'declining' | null>(null);
   const [showSwapDialog, setShowSwapDialog] = useState(false);
   const [isSwapping, setIsSwapping] = useState(false);
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
@@ -58,184 +51,136 @@ export default function MarchDashboard() {
     isLoading: recommendationsLoading 
   } = useSessionRecommendations();
 
+  // Redirect if not logged in
   useEffect(() => {
-    if (!user) {
-      navigate("/auth");
-      return;
-    }
+    if (!user) navigate("/auth");
+  }, [user, navigate]);
 
-    checkOnboardingAndLoadData();
-    
-    // Safety timeout - force loading to false after 8 seconds
-    const safetyTimeout = setTimeout(() => {
-      if (isLoading) {
-        console.warn('MarchDashboard: Safety timeout triggered');
-        setIsLoading(false);
-      }
-    }, 8000);
-    
-    return () => clearTimeout(safetyTimeout);
-  }, [user]);
-
-  const checkOnboardingAndLoadData = async () => {
-    if (!user) return;
-
-    try {
-      // Check onboarding status
-      const { data: onboarding, error: onboardingError } = await supabase
+  const { data: onboardingData, isLoading: onboardingLoading } = useQuery({
+    queryKey: ['onboarding', user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
         .from("user_onboarding")
         .select("*")
-        .eq("user_id", user.id)
+        .eq("user_id", user!.id)
         .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user?.id,
+  });
 
-      if (onboardingError) throw onboardingError;
+  // Redirect to onboarding if not completed
+  useEffect(() => {
+    if (onboardingData && !onboardingData.onboarding_completed) {
+      navigate("/onboarding/march");
+    }
+  }, [onboardingData, navigate]);
 
-      if (!onboarding || !onboarding.onboarding_completed) {
-        navigate("/onboarding/march");
-        return;
-      }
+  const onboardingComplete = !!onboardingData?.onboarding_completed;
 
-      setOnboardingData(onboarding);
-
-      // Load today's recommended session
-      await loadTodaySession();
-
-      // Load upcoming sessions (next 2 recommendations)
-      await loadUpcomingSessions();
-
-      // Calculate weekly streak and total sessions
-      const { data: progress, error: progressError } = await supabase
+  const { data: progressStats } = useQuery({
+    queryKey: ['dashboard-progress', user?.id],
+    queryFn: async () => {
+      const { data: progress } = await supabase
         .from("user_progress")
         .select("completed_at, completed, class_id")
-        .eq("user_id", user.id)
+        .eq("user_id", user!.id)
         .eq("completed", true)
         .order("completed_at", { ascending: true });
 
-      if (!progressError && progress) {
-        // Weekly sessions
-        const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-        const weeklySessions = progress.filter(p => 
-          p.completed_at && new Date(p.completed_at) >= weekAgo
-        );
-        setWeeklyStreak(weeklySessions.length);
-        
-        // Total sessions ever
-        setTotalSessions(progress.length);
-        
-        // This month's sessions
-        const startOfMonth = new Date();
-        startOfMonth.setDate(1);
-        startOfMonth.setHours(0, 0, 0, 0);
-        const monthSessions = progress.filter(p => 
-          p.completed_at && new Date(p.completed_at) >= startOfMonth
-        );
-        setThisMonthSessions(monthSessions.length);
+      if (!progress) return { weeklyStreak: 0, totalSessions: 0, thisMonthSessions: 0, currentStreak: 0, totalMinutes: 0 };
 
-        // Calculate current streak (consecutive days)
-        const completedDates = progress
-          .map(p => new Date(p.completed_at).toDateString())
-          .filter((date, index, self) => self.indexOf(date) === index)
-          .sort();
+      const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+      const startOfMonth = new Date();
+      startOfMonth.setDate(1);
+      startOfMonth.setHours(0, 0, 0, 0);
 
-        let streak = 0;
-        const today = new Date().toDateString();
-        const yesterday = new Date(Date.now() - 86400000).toDateString();
+      const weeklyStreak = progress.filter(p => p.completed_at && new Date(p.completed_at) >= weekAgo).length;
+      const totalSessions = progress.length;
+      const thisMonthSessions = progress.filter(p => p.completed_at && new Date(p.completed_at) >= startOfMonth).length;
 
-        // Check if current streak is active
-        if (completedDates.includes(today) || completedDates.includes(yesterday)) {
-          for (let i = completedDates.length - 1; i >= 0; i--) {
-            const currentDate = new Date(completedDates[i]);
-            const previousDate = i > 0 ? new Date(completedDates[i - 1]) : null;
-            
-            if (previousDate) {
-              const diffDays = Math.floor((currentDate.getTime() - previousDate.getTime()) / (1000 * 60 * 60 * 24));
-              if (diffDays === 1) {
-                streak++;
-              } else {
-                break;
-              }
-            }
+      const completedDates = progress
+        .map(p => new Date(p.completed_at).toDateString())
+        .filter((date, index, self) => self.indexOf(date) === index)
+        .sort();
+
+      let streak = 0;
+      const today = new Date().toDateString();
+      const yesterday = new Date(Date.now() - 86400000).toDateString();
+
+      if (completedDates.includes(today) || completedDates.includes(yesterday)) {
+        for (let i = completedDates.length - 1; i >= 0; i--) {
+          const currentDate = new Date(completedDates[i]);
+          const previousDate = i > 0 ? new Date(completedDates[i - 1]) : null;
+          if (previousDate) {
+            const diffDays = Math.floor((currentDate.getTime() - previousDate.getTime()) / (1000 * 60 * 60 * 24));
+            if (diffDays === 1) { streak++; } else { break; }
           }
-          setCurrentStreak(streak + 1); // +1 for the starting day
         }
-
-        // Calculate total minutes
-        const classIds = progress.map(p => p.class_id);
-        const { data: classesData } = await supabase
-          .from('classes')
-          .select('id, duration_minutes')
-          .in('id', classIds);
-
-        const minutes = classesData?.reduce((sum, cls) => sum + (cls.duration_minutes || 0), 0) || 0;
-        setTotalMinutes(minutes);
       }
+      const currentStreak = streak > 0 ? streak + 1 : 0;
 
-      // Calculate mood trend - show even with limited data
-      const { data: moodLogs, error: moodError } = await supabase
+      const classIds = progress.map(p => p.class_id);
+      const { data: classesData } = await supabase
+        .from('classes')
+        .select('id, duration_minutes')
+        .in('id', classIds);
+      const totalMinutes = classesData?.reduce((sum, cls) => sum + (cls.duration_minutes || 0), 0) || 0;
+
+      return { weeklyStreak, totalSessions, thisMonthSessions, currentStreak, totalMinutes };
+    },
+    enabled: !!user?.id && onboardingComplete,
+  });
+
+  const { data: moodTrend = null } = useQuery<'improving' | 'stable' | 'declining' | null>({
+    queryKey: ['dashboard-mood-trend', user?.id],
+    queryFn: async () => {
+      const { data: moodLogs } = await supabase
         .from("user_mood_logs")
         .select("mood_score, logged_at")
-        .eq("user_id", user.id)
+        .eq("user_id", user!.id)
         .gte("logged_at", new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString())
         .order("logged_at", { ascending: true });
 
-      if (!moodError && moodLogs && moodLogs.length >= 2) {
-        // Calculate average mood for each period
-        const lastMonth = moodLogs.filter(m => {
-          const logDate = new Date(m.logged_at);
-          const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-          return logDate >= thirtyDaysAgo;
-        });
-        
-        const previousMonth = moodLogs.filter(m => {
-          const logDate = new Date(m.logged_at);
-          const sixtyDaysAgo = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000);
-          const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-          return logDate >= sixtyDaysAgo && logDate < thirtyDaysAgo;
-        });
+      if (!moodLogs || moodLogs.length < 2) return null;
 
-        // Show trend if we have data from both periods
-        if (lastMonth.length > 0 && previousMonth.length > 0) {
-          const lastMonthAvg = lastMonth.reduce((sum, m) => sum + m.mood_score, 0) / lastMonth.length;
-          const prevMonthAvg = previousMonth.reduce((sum, m) => sum + m.mood_score, 0) / previousMonth.length;
-          
-          const difference = lastMonthAvg - prevMonthAvg;
-          
-          if (difference > 0.3) {
-            setMoodTrend('improving');
-          } else if (difference < -0.3) {
-            setMoodTrend('declining');
-          } else {
-            setMoodTrend('stable');
-          }
-        } else if (lastMonth.length > 0) {
-          // If we only have recent data, show as stable
-          setMoodTrend('stable');
-        }
-      }
-    } catch (error) {
-      console.error("❌ [MarchDashboard] Error loading dashboard:", error);
-      toast({
-        title: "Error loading dashboard",
-        description: "Please try refreshing the page",
-        variant: "destructive",
+      const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+      const sixtyDaysAgo = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000);
+
+      const lastMonth = moodLogs.filter(m => new Date(m.logged_at) >= thirtyDaysAgo);
+      const previousMonth = moodLogs.filter(m => {
+        const d = new Date(m.logged_at);
+        return d >= sixtyDaysAgo && d < thirtyDaysAgo;
       });
-    } finally {
-      console.log("✅ [MarchDashboard] Loading complete");
-      setIsLoading(false);
-    }
-  };
 
-  const loadTodaySession = async () => {
-    const session = await getTodayRecommendation();
-    if (session) {
-      setTodaySession(session);
-    }
-  };
+      if (lastMonth.length > 0 && previousMonth.length > 0) {
+        const lastAvg = lastMonth.reduce((s, m) => s + m.mood_score, 0) / lastMonth.length;
+        const prevAvg = previousMonth.reduce((s, m) => s + m.mood_score, 0) / previousMonth.length;
+        const diff = lastAvg - prevAvg;
+        if (diff > 0.3) return 'improving';
+        if (diff < -0.3) return 'declining';
+        return 'stable';
+      }
+      if (lastMonth.length > 0) return 'stable';
+      return null;
+    },
+    enabled: !!user?.id && onboardingComplete,
+  });
 
-  const loadUpcomingSessions = async () => {
-    const sessions = await getRecommendedSessions({});
-    setUpcomingSessions(sessions.slice(1, 3)); // Get 2nd and 3rd recommendations
-  };
+  const weeklyStreak = progressStats?.weeklyStreak ?? 0;
+  const totalSessions = progressStats?.totalSessions ?? 0;
+  const thisMonthSessions = progressStats?.thisMonthSessions ?? 0;
+  const currentStreak = progressStats?.currentStreak ?? 0;
+  const totalMinutes = progressStats?.totalMinutes ?? 0;
+  const isLoading = onboardingLoading;
+
+  // Load session recommendations once onboarding is confirmed
+  useEffect(() => {
+    if (!onboardingComplete) return;
+    getTodayRecommendation().then(session => { if (session) setTodaySession(session); });
+    getRecommendedSessions({}).then(sessions => setUpcomingSessions(sessions.slice(1, 3)));
+  }, [onboardingComplete]);
 
   const handleSwapSession = async () => {
     if (!todaySession) return;

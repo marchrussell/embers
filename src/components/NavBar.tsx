@@ -5,8 +5,9 @@ import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
 import { Menu, User, X } from "lucide-react";
-import { memo, Suspense, useCallback, useEffect, useState } from "react";
+import { memo, Suspense, useCallback, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 // Sheet import removed - using custom overlay menu instead
@@ -20,33 +21,20 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
   const isAppRoute = isOnlineRoute || isMyCoursesRoute;
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
-  const [firstName, setFirstName] = useState<string | null>(null);
-  const [profileLoaded, setProfileLoaded] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      if (!user) {
-        setFirstName(null);
-        setProfileLoaded(false);
-        return;
-      }
-
+  const { data: profileData } = useQuery({
+    queryKey: ['profile', user?.id],
+    queryFn: async () => {
       const { data } = await supabase
         .from('profiles')
         .select('full_name')
-        .eq('id', user.id)
+        .eq('id', user!.id)
         .single();
-
-      if (data?.full_name) {
-        const name = data.full_name.split(' ')[0];
-        setFirstName(name);
-      }
-      setProfileLoaded(true);
-    };
-
-    fetchProfile();
-  }, [user]);
+      return data;
+    },
+    enabled: !!user?.id,
+  });
 
   const handleOpenSubscription = useCallback(() => {
     setShowSubscriptionModal(true);
@@ -57,7 +45,8 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
   }, []);
 
 
-  const displayName = profileLoaded ? (firstName || user?.email?.split('@')[0] || 'PROFILE') : null;
+  const firstName = profileData?.full_name?.split(' ')[0] ?? null;
+  const displayName = user ? (firstName || user.email?.split('@')[0] || 'PROFILE') : null;
 
   return (
     <>

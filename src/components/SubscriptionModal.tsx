@@ -6,8 +6,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import { SUBSCRIPTION_PRICES } from "@/lib/stripePrices";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Check, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
+import { useQuery } from "@tanstack/react-query";
 
 interface SubscriptionModalProps {
   open: boolean;
@@ -52,52 +53,28 @@ export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => 
   const [loadingAnnual, setLoadingAnnual] = useState(false);
   const [loadingMonthly, setLoadingMonthly] = useState(false);
   const [couponCode, setCouponCode] = useState("");
-  const [prices, setPrices] = useState<PricesResponse['prices'] | null>(null);
-  const [pricesLoading, setPricesLoading] = useState(false);
-  const [stripeMode, setStripeMode] = useState<'test' | 'live' | null>(null);
 
-  console.log('************** stripeMode', stripeMode)
-
-  // Fetch prices from Stripe when modal opens
-  useEffect(() => {
-    if (open && !prices && !pricesLoading) {
-      fetchPrices();
-    }
-  }, [open]);
-
-  const fetchPrices = async () => {
-    setPricesLoading(true);
-    try {
+  const { data: priceData, isLoading: pricesLoading } = useQuery<PricesResponse>({
+    queryKey: ['stripe-prices'],
+    queryFn: async () => {
       const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
       const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-      
-      console.log("[SubscriptionModal] Fetching prices from Stripe...");
-      
       const response = await fetch(`${SUPABASE_URL}/functions/v1/get-prices`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-        },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
         body: JSON.stringify({ category: 'marchDaily' }),
       });
+      if (!response.ok) throw new Error(`Failed to fetch prices: ${response.status}`);
+      return response.json();
+    },
+    enabled: open,
+    staleTime: 5 * 60 * 1000, // prices are stable, cache for 5 min
+  });
 
-      if (!response.ok) {
-        throw new Error(`Failed to fetch prices: ${response.status}`);
-      }
+  const prices = priceData?.prices ?? null;
+  const stripeMode = priceData?.mode ?? null;
 
-      const data: PricesResponse = await response.json();
-      console.log("[SubscriptionModal] Prices fetched:", data);
-      
-      setPrices(data.prices);
-      setStripeMode(data.mode);
-    } catch (error) {
-      console.error("[SubscriptionModal] Failed to fetch prices, using fallbacks:", error);
-      // Prices will remain null, and we'll use fallbacks in the UI
-    } finally {
-      setPricesLoading(false);
-    }
-  };
+  console.log('************** stripeMode', stripeMode)
 
   // Get display prices (dynamic or fallback)
   const monthlyPrice = prices?.monthly?.unitAmountFormatted || FALLBACK_PRICES.monthly.unitAmountFormatted;

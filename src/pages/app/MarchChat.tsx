@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { NavBar } from "@/components/NavBar";
 import { Footer } from "@/components/Footer";
 import { ChatInput } from "@/components/march/ChatInput";
@@ -22,11 +23,16 @@ export default function MarchChat() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const queryClient = useQueryClient();
   const [messages, setMessages] = useState<Message[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasConsent, setHasConsent] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const WELCOME_MESSAGE: Message = {
+    role: "assistant",
+    content: "Hi there 💛 I'm March. I'm here to help you stay consistent with your wellbeing goals and support you along the way. How are you feeling today?",
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -36,83 +42,63 @@ export default function MarchChat() {
     scrollToBottom();
   }, [messages]);
 
+  // Redirect if not logged in
   useEffect(() => {
-    if (!user) {
-      navigate("/auth");
-      return;
-    }
-    loadChatHistory();
+    if (!user) navigate("/auth");
   }, [user, navigate]);
 
-  const loadChatHistory = async () => {
-    if (!user) return;
-
-    setIsLoading(true);
-
-    try {
-      // Check consent status
-      const { data: profile } = await supabase
+  const { data: hasConsent = false } = useQuery({
+    queryKey: ['march-consent', user?.id],
+    queryFn: async () => {
+      const { data } = await supabase
         .from("profiles")
         .select("has_accepted_march_data_consent")
-        .eq("id", user.id)
+        .eq("id", user!.id)
         .maybeSingle();
+      return data?.has_accepted_march_data_consent ?? false;
+    },
+    enabled: !!user?.id,
+  });
 
-      const consent = profile?.has_accepted_march_data_consent || false;
-      setHasConsent(consent);
-      setShowPrivacyModal(!consent); // Show modal if no consent
+  const { data: messageHistory, isLoading: messagesLoading } = useQuery({
+    queryKey: ['march-messages', user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("march_messages")
+        .select("*")
+        .eq("user_id", user!.id)
+        .order("created_at", { ascending: true })
+        .limit(50);
+      if (error) throw error;
+      return data ?? [];
+    },
+    enabled: !!user?.id && hasConsent,
+  });
 
-      if (consent) {
-        // Load conversation history
-        const { data: messageHistory, error } = await supabase
-          .from("march_messages")
-          .select("*")
-          .eq("user_id", user.id)
-          .order("created_at", { ascending: true })
-          .limit(50); // Last 50 messages for context
-
-        if (error) throw error;
-
-        if (messageHistory && messageHistory.length > 0) {
-          const formattedMessages = messageHistory.map((msg) => ({
-            role: msg.is_from_march ? ("assistant" as const) : ("user" as const),
-            content: msg.message_text,
-          }));
-          setMessages(formattedMessages);
-        } else {
-          // No history, show welcome message
-          setMessages([
-            {
-              role: "assistant",
-              content: "Hi there 💛 I'm March. I'm here to help you stay consistent with your wellbeing goals and support you along the way. How are you feeling today?",
-            },
-          ]);
-        }
-      } else {
-        // No consent, show welcome without loading history
-        setMessages([
-          {
-            role: "assistant",
-            content: "Hi there 💛 I'm March. I'm here to help you stay consistent with your wellbeing goals and support you along the way. How are you feeling today?",
-          },
-        ]);
-      }
-    } catch (error) {
-      console.error("Error loading chat history:", error);
-      // Fallback to welcome message
-      setMessages([
-        {
-          role: "assistant",
-          content: "Hi there 💛 I'm March. I'm here to help you stay consistent with your wellbeing goals and support you along the way. How are you feeling today?",
-        },
-      ]);
-    } finally {
-      setIsLoading(false);
+  // Sync fetched history into local messages state (once, on load)
+  useEffect(() => {
+    if (messagesLoading) return;
+    if (messageHistory && messageHistory.length > 0) {
+      setMessages(messageHistory.map((msg) => ({
+        role: msg.is_from_march ? ("assistant" as const) : ("user" as const),
+        content: msg.message_text,
+      })));
+    } else {
+      setMessages([WELCOME_MESSAGE]);
     }
-  };
+  }, [messageHistory, messagesLoading]);
+
+  // Show privacy modal when consent is confirmed false (not just undefined/loading)
+  useEffect(() => {
+    if (hasConsent === false && user) {
+      setShowPrivacyModal(true);
+      setMessages([WELCOME_MESSAGE]);
+    }
+  }, [hasConsent, user]);
 
   const handleAcceptPrivacy = async () => {
     if (!user) return;
-    
+
     try {
       const { error } = await supabase
         .from("profiles")
@@ -124,9 +110,9 @@ export default function MarchChat() {
 
       if (error) throw error;
 
-      setHasConsent(true);
       setShowPrivacyModal(false);
-      
+      queryClient.invalidateQueries({ queryKey: ['march-consent', user.id] });
+
       toast({
         title: "Thank you!",
         description: "You can now start chatting with March.",

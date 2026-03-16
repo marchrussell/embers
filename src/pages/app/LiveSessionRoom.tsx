@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { getFunctionUrl } from "@/lib/supabaseConfig";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import DailyIframe, { DailyCall } from "@daily-co/daily-js";
 import { AlertCircle, ArrowLeft, Clock, ExternalLink, Loader2 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -36,12 +37,11 @@ const LiveSessionRoom = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const queryClient = useQueryClient();
   
-  const [session, setSession] = useState<SessionData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [isJoining, setIsJoining] = useState(false);
   const [hasJoined, setHasJoined] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [joinError, setJoinError] = useState<string | null>(null);
   const [callFrame, setCallFrame] = useState<DailyCall | null>(null);
   const [inWaitingRoom, setInWaitingRoom] = useState(false);
   const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -49,45 +49,26 @@ const LiveSessionRoom = () => {
   const role = searchParams.get("role");
   const guestToken = searchParams.get("token");
 
-  // Fetch session details
+  const { data: session, isLoading, isError } = useQuery<SessionData | null>({
+    queryKey: ['live-session', sessionId],
+    queryFn: async () => {
+      const { data, error: fetchError } = await supabase
+        .from("live_sessions")
+        .select("*")
+        .eq("id", sessionId!)
+        .maybeSingle();
+      if (fetchError) throw fetchError;
+      return data as SessionData | null;
+    },
+    enabled: !!sessionId,
+  });
+
+  // Initialise waiting room state once session data is available
   useEffect(() => {
-    const fetchSession = async () => {
-      if (!sessionId) {
-        setError("Session not found");
-        setIsLoading(false);
-        return;
-      }
-
-      try {
-        const { data, error: fetchError } = await supabase
-          .from("live_sessions")
-          .select("*")
-          .eq("id", sessionId)
-          .maybeSingle();
-
-        if (fetchError) throw fetchError;
-        if (!data) {
-          setError("Session not found");
-          setIsLoading(false);
-          return;
-        }
-
-        setSession(data);
-        
-        // If session is not live and user is not host, show waiting room
-        if (data.status !== 'live' && role !== 'host') {
-          setInWaitingRoom(true);
-        }
-      } catch (err) {
-        console.error("Error fetching session:", err);
-        setError("Failed to load session");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchSession();
-  }, [sessionId, role]);
+    if (session && session.status !== 'live' && role !== 'host') {
+      setInWaitingRoom(true);
+    }
+  }, [session, role]);
 
   // Poll for session status changes (for waiting room)
   useEffect(() => {
@@ -102,7 +83,9 @@ const LiveSessionRoom = () => {
       
       if (data?.status === 'live') {
         setInWaitingRoom(false);
-        setSession(prev => prev ? { ...prev, status: 'live' } : null);
+        queryClient.setQueryData(['live-session', sessionId], (prev: SessionData | null) =>
+          prev ? { ...prev, status: 'live' } : null
+        );
         toast.success("Session is starting now!");
       }
     };
@@ -122,7 +105,7 @@ const LiveSessionRoom = () => {
     if (!session || !sessionId) return;
 
     setIsJoining(true);
-    setError(null);
+    setJoinError(null);
 
     try {
       // Get auth token if user is logged in
@@ -227,7 +210,7 @@ const LiveSessionRoom = () => {
       setCallFrame(frame);
     } catch (err) {
       console.error("Error joining session:", err);
-      setError(err instanceof Error ? err.message : "Failed to join session");
+      setJoinError(err instanceof Error ? err.message : "Failed to join session");
       setIsJoining(false);
     }
   }, [session, sessionId, user, role, guestToken]);
@@ -294,14 +277,15 @@ const LiveSessionRoom = () => {
     return <FullPageSkeleton variant="minimal" />;
   }
 
-  if (error && !hasJoined && !inWaitingRoom) {
+  if ((isError || (!isLoading && !session)) && !hasJoined && !inWaitingRoom) {
+    const errorMsg = !session ? "Session not found" : "Failed to load session";
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6">
         <div className="max-w-md text-center space-y-6">
           <AlertCircle className="w-16 h-16 text-destructive mx-auto" />
-          <h1 className="text-2xl font-medium text-foreground">{error}</h1>
+          <h1 className="text-2xl font-medium text-foreground">{errorMsg}</h1>
           <p className="text-muted-foreground">
-            {error.includes("membership") 
+            {errorMsg.includes("membership")
               ? "This live session is available for members only."
               : "Please check the link and try again."}
           </p>
@@ -310,7 +294,7 @@ const LiveSessionRoom = () => {
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back
             </Button>
-            {error.includes("membership") && (
+            {errorMsg.includes("membership") && (
               <Button onClick={() => navigate("/explore")}>
                 Become a Member
               </Button>
@@ -447,8 +431,8 @@ const LiveSessionRoom = () => {
                 )}
               </Button>
 
-              {error && (
-                <p className="text-red-400 text-sm">{error}</p>
+              {joinError && (
+                <p className="text-red-400 text-sm">{joinError}</p>
               )}
             </div>
           </div>

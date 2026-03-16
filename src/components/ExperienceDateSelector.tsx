@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import {
   Select,
   SelectContent,
@@ -9,6 +8,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { getUpcomingEventDates, formatTime, ScheduledEventDate, EVENT_CAPACITY_CONFIG } from "@/lib/experienceSchedule2026";
 import { RecurrenceRule } from "@/lib/experienceDateUtils";
+import { useQuery } from "@tanstack/react-query";
 
 interface Props {
   eventId: string;
@@ -25,54 +25,29 @@ interface BookingCount {
 }
 
 export function EventDateSelector({ eventId, eventTitle, recurrence, time, onDateSelect, selectedDate }: Props) {
-  const [availableDates, setAvailableDates] = useState<ScheduledEventDate[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    loadAvailableDates();
-  }, [eventId, recurrence, time]);
-
-  const loadAvailableDates = async () => {
-    try {
-      setLoading(true);
-      
-      // Get event capacity config
+  const { data: availableDates = [], isLoading: loading } = useQuery<ScheduledEventDate[]>({
+    queryKey: ['event-bookings', eventId, recurrence, time],
+    queryFn: async () => {
       const config = EVENT_CAPACITY_CONFIG[eventId] || { isOnline: true, maxCapacity: 9999 };
-      
-      // Generate upcoming dates
       const dates = getUpcomingEventDates(recurrence, time, config.isOnline, 24);
-      
-      // Get booking counts for these dates using raw query
-      const { data: bookings, error } = await supabase
+
+      const { data: bookings } = await supabase
         .from('event_bookings')
         .select('event_date, quantity')
         .eq('event_type', eventId)
         .eq('payment_status', 'paid');
-      
-      // Calculate booked counts per date
+
       const counts: Record<string, number> = {};
-      if (bookings && !error) {
-        (bookings as unknown as BookingCount[]).forEach((booking) => {
-          const dateKey = booking.event_date;
-          if (dateKey) {
-            counts[dateKey] = (counts[dateKey] || 0) + booking.quantity;
-          }
-        });
-      }
-      
-      // Filter out dates that are at capacity
-      const availableDatesWithSpots = dates.map(date => ({
-        ...date,
-        spotsRemaining: date.maxCapacity - (counts[date.date] || 0)
-      })).filter(date => date.spotsRemaining > 0);
-      
-      setAvailableDates(availableDatesWithSpots);
-    } catch (error) {
-      console.error('Error loading available dates:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+      (bookings as unknown as BookingCount[] | null ?? []).forEach((booking) => {
+        if (booking.event_date) counts[booking.event_date] = (counts[booking.event_date] || 0) + booking.quantity;
+      });
+
+      return dates
+        .map(date => ({ ...date, spotsRemaining: date.maxCapacity - (counts[date.date] || 0) }))
+        .filter(date => date.spotsRemaining > 0);
+    },
+    enabled: !!eventId,
+  });
 
   if (loading) {
     return (

@@ -13,6 +13,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { BookOpen, Pencil, Plus, Star, Trash2, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+
 
 interface Class {
   id: string;
@@ -51,13 +53,11 @@ interface Program {
 const AdminClasses = () => {
   const { isAdmin, loading } = useAuth();
   const navigate = useNavigate();
-  const [classes, setClasses] = useState<Class[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingClass, setEditingClass] = useState<Class | null>(null);
   const [uploading, setUploading] = useState(false);
-  const [featuredClassId, setFeaturedClassId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     title: "",
     teacher_name: "",
@@ -83,54 +83,32 @@ const AdminClasses = () => {
     }
   }, [isAdmin, loading, navigate]);
 
-  useEffect(() => {
-    fetchClasses();
-    fetchCategories();
-    fetchFeaturedClass();
-  }, []);
-
-  const fetchFeaturedClass = async () => {
-    const { data, error } = await supabase
-      .from("classes")
-      .select("id")
-      .eq("is_featured", true)
-      .maybeSingle();
-
-    if (error) {
-      console.error("Error fetching featured class:", error);
-    }
-
-    setFeaturedClassId(data?.id || null);
-  };
-
-  const fetchClasses = async () => {
-    const { data, error } = await supabase
-      .from("classes")
-      .select(`
-        *,
-        class_categories(category_id, categories(id, name))
-      `)
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      toast({ title: "Error fetching classes", description: error.message, variant: "destructive" });
-    } else {
-      // Flatten junction data into a `categories` array on each class
-      const normalized = (data || []).map((c: any) => ({
+  const { data: classes = [] } = useQuery<Class[]>({
+    queryKey: ['admin-classes'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("classes")
+        .select(`*, class_categories(category_id, categories(id, name))`)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data || []).map((c: any) => ({
         ...c,
         categories: (c.class_categories || []).map((cc: any) => cc.categories).filter(Boolean),
       }));
-      setClasses(normalized);
-    }
-  };
+    },
+    enabled: !!isAdmin,
+  });
 
-  const fetchCategories = async () => {
-    const { data } = await supabase
-      .from("categories")
-      .select("id, name")
-      .order("name");
-    setCategories(data || []);
-  };
+  const { data: categories = [] } = useQuery<{ id: string; name: string }[]>({
+    queryKey: ['admin-categories'],
+    queryFn: async () => {
+      const { data } = await supabase.from("categories").select("id, name").order("name");
+      return data || [];
+    },
+    enabled: !!isAdmin,
+  });
+
+  const featuredClassId = classes.find((c: Class) => (c as any).is_featured)?.id ?? null;
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -288,7 +266,7 @@ const AdminClasses = () => {
         try {
           await syncCategories(editingClass.id);
           toast({ title: "Class updated successfully" });
-          fetchClasses();
+          queryClient.invalidateQueries({ queryKey: ['admin-classes'] });
           resetForm();
         } catch (err: any) {
           toast({ title: "Class saved but categories failed to sync", description: err.message, variant: "destructive" });
@@ -303,7 +281,7 @@ const AdminClasses = () => {
         try {
           await syncCategories(inserted.id);
           toast({ title: "Class created successfully" });
-          fetchClasses();
+          queryClient.invalidateQueries({ queryKey: ['admin-classes'] });
           resetForm();
         } catch (err: any) {
           toast({ title: "Class saved but categories failed to sync", description: err.message, variant: "destructive" });
@@ -321,7 +299,7 @@ const AdminClasses = () => {
       toast({ title: "Error deleting class", description: error.message, variant: "destructive" });
     } else {
       toast({ title: "Class deleted successfully" });
-      fetchClasses();
+      queryClient.invalidateQueries({ queryKey: ['admin-classes'] });
     }
   };
 
@@ -357,7 +335,7 @@ const AdminClasses = () => {
     if (error) {
       toast({ title: "Error updating class", description: error.message, variant: "destructive" });
     } else {
-      fetchClasses();
+      queryClient.invalidateQueries({ queryKey: ['admin-classes'] });
     }
   };
 
@@ -373,7 +351,6 @@ const AdminClasses = () => {
 
         if (error) throw error;
 
-        setFeaturedClassId(null);
         toast({
           title: "Featured class removed",
           description: `${classItem.title} is no longer featured`,
@@ -395,14 +372,13 @@ const AdminClasses = () => {
 
         if (setError) throw setError;
 
-        setFeaturedClassId(classItem.id);
         toast({
           title: "Featured class updated",
           description: `${classItem.title} is now the featured class`,
         });
       }
 
-      await fetchClasses();
+      await queryClient.invalidateQueries({ queryKey: ['admin-classes'] });
     } catch (error: any) {
       console.error("Error in setAsFeatured:", error);
       toast({
@@ -426,7 +402,7 @@ const AdminClasses = () => {
         title: classItem.is_quick_reset ? "Removed from Quick Resets" : "Added to Quick Resets",
         description: classItem.title,
       });
-      fetchClasses();
+      queryClient.invalidateQueries({ queryKey: ['admin-classes'] });
     }
   };
 
