@@ -10,10 +10,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { BookOpen, Pencil, Plus, Star, Trash2, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 
 interface Class {
@@ -668,14 +668,14 @@ const AdminClasses = () => {
                   />
                   <Label htmlFor="published" className="mb-0">Publish</Label>
                 </div>
-                <div className="flex items-center space-x-2">
+                {/* <div className="flex items-center space-x-2">
                   <Switch
                     id="requires_subscription"
                     checked={formData.requires_subscription}
                     onCheckedChange={(checked) => setFormData({ ...formData, requires_subscription: checked })}
                   />
                   <Label htmlFor="requires_subscription" className="mb-0">Requires Subscription (Lock for non-subscribers)</Label>
-                </div>
+                </div> */}
                 <div className="flex items-center space-x-2">
                   <Switch
                     id="is_quick_reset"
