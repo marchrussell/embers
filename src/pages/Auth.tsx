@@ -51,7 +51,7 @@ const Auth = () => {
 
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
-        redirectTo: `${window.location.origin}/password-reset?type=recovery`,
+        redirectTo: `${import.meta.env.VITE_SITE_URL || window.location.origin}/password-reset?type=recovery`,
       });
 
       if (error) throw error;
