@@ -2,7 +2,6 @@ import { FullPageSkeleton } from "@/components/skeletons/FullPageSkeleton";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { getFunctionUrl } from "@/lib/supabaseConfig";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import DailyIframe, { DailyCall } from "@daily-co/daily-js";
 import { AlertCircle, ArrowLeft, Clock, ExternalLink, Loader2 } from "lucide-react";
@@ -108,37 +107,16 @@ const LiveSessionRoom = () => {
     setJoinError(null);
 
     try {
-      // Get auth token if user is logged in
-      let authHeaders: Record<string, string> = {};
-      if (user) {
-        const { data: sessionData } = await supabase.auth.getSession();
-        if (sessionData?.session?.access_token) {
-          authHeaders["Authorization"] = `Bearer ${sessionData.session.access_token}`;
-        }
-      }
-
       // Request meeting token from backend
-      const response = await fetch(
-        getFunctionUrl('daily-get-token'),
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            ...authHeaders,
-          },
-          body: JSON.stringify({
-            sessionId,
-            role: role || "audience",
-            guestToken: guestToken || undefined,
-          }),
-        }
-      );
+      const { data, error: invokeError } = await supabase.functions.invoke('daily-get-token', {
+        body: {
+          sessionId,
+          role: role || "audience",
+          guestToken: guestToken || undefined,
+        },
+      });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to join session");
-      }
+      if (invokeError) throw invokeError;
 
       // Handle waiting room response
       if (data.waitingRoom) {
@@ -239,32 +217,15 @@ const LiveSessionRoom = () => {
     if (!session?.daily_room_url) return;
     
     try {
-      let authHeaders: Record<string, string> = {};
-      if (user) {
-        const { data: sessionData } = await supabase.auth.getSession();
-        if (sessionData?.session?.access_token) {
-          authHeaders["Authorization"] = `Bearer ${sessionData.session.access_token}`;
-        }
-      }
+      const { data, error: invokeError } = await supabase.functions.invoke('daily-get-token', {
+        body: {
+          sessionId,
+          role: role || "audience",
+          guestToken: guestToken || undefined,
+        },
+      });
 
-      const response = await fetch(
-        getFunctionUrl('daily-get-token'),
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            ...authHeaders,
-          },
-          body: JSON.stringify({
-            sessionId,
-            role: role || "audience",
-            guestToken: guestToken || undefined,
-          }),
-        }
-      );
-
-      const data = await response.json();
-      if (response.ok && data.token) {
+      if (!invokeError && data?.token) {
         window.open(`${data.roomUrl}?t=${data.token}`, "_blank");
       }
     } catch (err) {

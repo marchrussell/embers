@@ -1,13 +1,13 @@
-import { useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { ArrowRight, X, Leaf, Flame, HandHeart } from "lucide-react";
-import { RiseArcApplicationForm } from "./RiseArcApplicationForm";
+import { Flame, HandHeart, Leaf, X } from "lucide-react";
+import { useState } from "react";
 import { ArcProgramModal } from "./ArcProgramModal";
+import { RiseArcApplicationForm } from "./RiseArcApplicationForm";
 
 // Background images
-import arcSelfStudyBg from "@/assets/arc-self-study-bg.jpg";
-import arcGroupMentorshipBg from "@/assets/arc-group-mentorship-bg.jpg";
 import arc11MentorshipBg from "@/assets/arc-1-1-mentorship-bg.jpg";
+import arcGroupMentorshipBg from "@/assets/arc-group-mentorship-bg.jpg";
+import arcSelfStudyBg from "@/assets/arc-self-study-bg.jpg";
 
 interface ArcCardsModalProps {
   open: boolean;
@@ -99,7 +99,7 @@ export function ArcCardsModal({ open, onOpenChange }: ArcCardsModalProps) {
                       onClick={handleSelfStudyClick}
                       className="w-full bg-white/20 backdrop-blur-sm text-white border border-white/40 px-5 py-4 rounded-none text-sm font-normal tracking-wide hover:bg-white/30 hover:border-white/60 transition-all flex items-center justify-center"
                     >
-                      Explore Self-Study
+                      Coming Soon
                     </button>
                   </div>
                 </div>
@@ -149,7 +149,7 @@ export function ArcCardsModal({ open, onOpenChange }: ArcCardsModalProps) {
                       onClick={handleGroupClick}
                       className="w-full bg-white/20 backdrop-blur-sm text-white border border-white/40 px-5 py-4 rounded-none text-sm font-normal tracking-wide hover:bg-white/30 hover:border-white/60 transition-all flex items-center justify-center"
                     >
-                      Explore Group Programme
+                      Coming Soon
                     </button>
                   </div>
                 </div>
@@ -199,7 +199,7 @@ export function ArcCardsModal({ open, onOpenChange }: ArcCardsModalProps) {
                       onClick={handleOneOnOneClick}
                       className="w-full bg-white/20 backdrop-blur-sm text-white border border-white/40 px-5 py-4 rounded-none text-sm font-normal tracking-wide hover:bg-white/30 hover:border-white/60 transition-all flex items-center justify-center"
                     >
-                      Explore 1:1 Programme
+                      Explore
                     </button>
                   </div>
                 </div>

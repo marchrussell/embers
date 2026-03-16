@@ -23,7 +23,6 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { getFunctionUrl } from "@/lib/supabaseConfig";
 import { format } from "date-fns";
 import {
   Copy,
@@ -141,29 +140,17 @@ const AdminLiveSessions = () => {
       if (error) throw error;
 
       // Create Daily room
-      const { data: sessionData } = await supabase.auth.getSession();
-      const response = await fetch(
-        getFunctionUrl('daily-create-room'),
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${sessionData.session?.access_token}`,
-          },
-          body: JSON.stringify({
-            sessionId: newSession.id,
-            title: formData.title,
-            startTime: formData.start_time,
-            endTime: formData.end_time,
-            recordingEnabled: formData.recording_enabled,
-          }),
-        }
-      );
+      const { error: roomError } = await supabase.functions.invoke('daily-create-room', {
+        body: {
+          sessionId: newSession.id,
+          title: formData.title,
+          startTime: formData.start_time,
+          endTime: formData.end_time,
+          recordingEnabled: formData.recording_enabled,
+        },
+      });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to create room");
-      }
+      if (roomError) throw roomError;
 
       toast.success("Session created");
       setShowCreateDialog(false);
@@ -219,21 +206,11 @@ const AdminLiveSessions = () => {
     setActionLoading(session.id);
 
     try {
-      const { data: sessionData } = await supabase.auth.getSession();
-      const response = await fetch(
-        getFunctionUrl('daily-generate-guest-link'),
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${sessionData.session?.access_token}`,
-          },
-          body: JSON.stringify({ sessionId: session.id }),
-        }
-      );
+      const { data, error: linkError } = await supabase.functions.invoke('daily-generate-guest-link', {
+        body: { sessionId: session.id },
+      });
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error);
+      if (linkError) throw linkError;
 
       // Copy to clipboard
       await navigator.clipboard.writeText(data.guestJoinUrl);
