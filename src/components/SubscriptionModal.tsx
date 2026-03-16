@@ -42,7 +42,7 @@ const FALLBACK_PRICES = {
   },
   annual: {
     unitAmountFormatted: '£180',
-    monthlyEquivalent: '£20.75',
+    monthlyEquivalent: '£15',
   },
 };
 
@@ -50,7 +50,7 @@ const BENEFITS = [
   'Unlimited access to exclusive breathwork classes',
   'New content added monthly',
   'Cancel anytime',
-  '7 day free trial, cancel anytime',
+  '7 day free trial',
 ];
 
 export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => {
@@ -60,7 +60,7 @@ export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => 
     queryKey: ['stripe-prices'],
     queryFn: async () => {
       const { data, error } = await supabase.functions.invoke('get-prices', {
-        body: { category: 'marchDaily' },
+        body: { category: 'embers' },
       });
       if (error) throw error;
       return data;
@@ -197,7 +197,7 @@ export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => 
                     onClick={(e) => handleSubscribeClick(annualPriceId, e)}
                     disabled={!!loadingPlan || pricesLoading}
                   >
-                    {loadingPlan === 'annual' ? <ButtonLoadingSpinner /> : "Start 7 Day Free Trial"}
+                    {loadingPlan === 'annual' ? <ButtonLoadingSpinner size="lg"/> : "Start 7 Day Free Trial"}
                   </GlowButton>
                 </div>
 
@@ -222,7 +222,7 @@ export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => 
                     onClick={(e) => handleSubscribeClick(monthlyPriceId, e)}
                     disabled={!!loadingPlan || pricesLoading}
                   >
-                    {loadingPlan === 'monthly' ? <ButtonLoadingSpinner /> : "Start 7 Day Free Trial"}
+                    {loadingPlan === 'monthly' ? <ButtonLoadingSpinner size="lg" /> : "Start 7 Day Free Trial"}
                   </GlowButton>
                 </div>
               </div>

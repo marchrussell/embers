@@ -12,26 +12,16 @@ const corsHeaders = {
 const PRICE_IDS = {
   // Test mode
   test: {
-    marchDaily: {
-      monthly: 'price_1ShXxzGBlPMRpwZ6YwMl04ix',
-      annual: 'price_1ShXyLGBlPMRpwZ6bFwpe7d6',
+    embers: {
+      annual: 'price_1TAr6X2M0UKIRm2M8me1ayrP',
+      monthly: 'price_1TAr6p2M0UKIRm2MPQzZQp0b',
     },
   },
   // Live mode
   live: {
-    marchDaily: {
-      monthly: 'price_1SaMRuGBlPMRpwZ6M3bbM1H8',
-      annual: 'price_1SaMMWGBlPMRpwZ64lDmN0cr',
-    },
-    courses: {
-      emotionalRegulationToolkit: 'price_1Scmc3GBlPMRpwZ6I5x7a4lq',
-      sleepNsdrPack: 'price_1Scmm1GBlPMRpwZ61IAp4cXj',
-      anxietyReset: 'price_1SaMgHGBlPMRpwZ6bgIvIC6t',
-    },
-    riseArc: {
-      selfStudy: 'price_1SaOFKGBlPMRpwZ6nmVMG3sD',
-      groupMentorship: 'price_1SaOGuGBlPMRpwZ6mcWGn1RZ',
-      oneOnOneMentorship: 'price_1SaOKbGBlPMRpwZ6d5nEIfPX',
+    embers: {
+      annual: 'price_1TA9Tr2N5TUgC2sKTHGanZgb',
+      monthly: 'price_1TA9Tr2N5TUgC2sKtnlCgeGj',
     },
   },
 };
@@ -70,7 +60,7 @@ serve(async (req) => {
     });
 
     // Parse request body for optional filtering
-    let category = 'marchDaily'; // Default to subscription prices
+    let category = 'embers'; // Default to subscription prices
     try {
       const body = await req.json();
       if (body.category) {
