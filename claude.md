@@ -31,6 +31,26 @@ supabase/
   functions/    # Edge functions
 ```
 
+## Data Fetching
+
+Use **TanStack Query (`useQuery`)** for all data fetching — not `useEffect` + `useState`.
+
+- Query keys: `['resource', userId]` (e.g. `['profile', user.id]`, `['profile-stats', user.id]`)
+- Gate queries with `enabled: !!user?.id` so they don't run before auth is confirmed
+- Prefer `useQuery` over manual loading state — it handles caching (10min stale, 30min cache), deduplication, and eliminates loading flicker on revisit
+- Only use `useEffect` for side effects that are not data fetching (e.g. redirects, event listeners)
+
+## Mobile Optimisation
+
+This is a **mobile-first** product. Prioritise mobile experience in all UI work:
+
+- Use responsive Tailwind classes in order: base (mobile) → `md:` → `lg:`
+- Touch targets must be at least 44×44px (use `min-h-[44px]` or `py-3`+)
+- Prefer `100dvh` over `100vh` to handle mobile browser chrome correctly
+- Test layout at 375px width first, then scale up
+- Avoid hover-only interactions — ensure tap/touch equivalents exist
+- Font sizes: use `clamp()` or responsive text classes rather than fixed sizes
+
 ## Dev Commands
 
 ```bash
