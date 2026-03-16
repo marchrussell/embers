@@ -46,7 +46,7 @@ const CourseCard = memo(({
       )}
       {locked && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-          <Lock className="w-8 h-8 text-[#E6DBC7]" strokeWidth={1.5} />
+          <Lock className="w-5 h-5 text-[#E6DBC7]" strokeWidth={1.5} />
         </div>
       )}
     </div>
