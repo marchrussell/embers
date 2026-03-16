@@ -50,6 +50,7 @@ const BENEFITS = [
   'Unlimited access to exclusive breathwork classes',
   'New content added monthly',
   'Cancel anytime',
+  '7 day free trial, cancel anytime',
 ];
 
 export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => {
@@ -186,7 +187,7 @@ export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => 
                       )}
                     </div>
                     <p className="text-sm text-white/50 font-light mb-5">
-                      Billed annually
+                      7 day free trial, then {annualPrice}/year
                     </p>
                   </div>
 
@@ -196,7 +197,7 @@ export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => 
                     onClick={(e) => handleSubscribeClick(annualPriceId, e)}
                     disabled={!!loadingPlan || pricesLoading}
                   >
-                    {loadingPlan === 'annual' ? <ButtonLoadingSpinner /> : "Subscribe"}
+                    {loadingPlan === 'annual' ? <ButtonLoadingSpinner /> : "Start 7 Day Free Trial"}
                   </GlowButton>
                 </div>
 
@@ -212,7 +213,7 @@ export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => 
                     <span className="text-sm text-white/60 ml-1">/month</span>
                   </div>
                   <p className="text-sm text-white/50 font-light mb-5">
-                    Billed monthly
+                    7 day free trial, then {monthlyPrice}/month
                   </p>
 
                   <GlowButton
@@ -228,7 +229,7 @@ export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => 
 
               <div className="mt-8">
                 <p className="text-xs sm:text-sm text-white/40 text-center font-light leading-relaxed">
-                  You will be charged immediately upon subscribing. Cancel anytime from your account settings.
+                  You will be automatically charged after your 7-day free trial ends unless you cancel before then. Cancel anytime during the trial at no charge.
                 </p>
               </div>
             </div>
