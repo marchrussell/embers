@@ -5,11 +5,12 @@ import { Footer } from "@/components/Footer";
 import { NavBar } from "@/components/NavBar";
 import OnlineFooter from "@/components/OnlineFooter";
 import OnlineHeader from "@/components/OnlineHeader";
+import { SafetyDisclosureModal } from "@/components/SafetyDisclosureModal";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { formatGuestSessionDate, getNextThirdThursday, useNextGuestTeacher } from "@/hooks/useNextGuestTeacher";
-import { Suspense, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { LiveSessionsData } from "./online/types";
 import HomeTab from "./online/HomeTab";
@@ -21,10 +22,20 @@ import SessionDetailModal from "./SessionDetail";
 const VALID_TABS = ['home', 'library', 'programs', 'live'];
 
 const Online = () => {
-  const { hasSubscription, isAdmin, isTestUser } = useAuth();
+  const { hasSubscription, isAdmin, isTestUser, hasAcceptedSafetyDisclosure, refreshOnboardingStatus, user } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+  const [showSafetyModal, setShowSafetyModal] = useState(false);
+
+  useEffect(() => {
+    setShowSafetyModal(!hasAcceptedSafetyDisclosure);
+  }, [hasAcceptedSafetyDisclosure]);
+
+  const handleSafetyAccept = async () => {
+    setShowSafetyModal(false);
+    await refreshOnboardingStatus();
+  };
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [shouldClearLibraryCategory, setShouldClearLibraryCategory] = useState(false);
 
@@ -138,6 +149,14 @@ const Online = () => {
       <Suspense fallback={null}>
         <SubscriptionModal open={showSubscriptionModal} onClose={() => setShowSubscriptionModal(false)} />
       </Suspense>
+
+      {user && (
+        <SafetyDisclosureModal
+          isOpen={showSafetyModal}
+          onAccept={handleSafetyAccept}
+          userId={user.id}
+        />
+      )}
 
       <SessionDetailModal
         sessionId={selectedSessionId}

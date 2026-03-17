@@ -6,17 +6,14 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Check, Wind } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const Onboarding = () => {
-  const [step, setStep] = useState(1);
   const [safetyAccepted, setSafetyAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { user, hasSubscription, checkSubscription, refreshOnboardingStatus } = useAuth();
+  const { user, hasSubscription, loading: authLoading, checkSubscription, refreshOnboardingStatus } = useAuth();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const successParam = searchParams.get("success");
 
   useEffect(() => {
     if (!user) {
@@ -86,6 +83,14 @@ const Onboarding = () => {
       setLoading(false);
     }
   };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <ButtonLoadingSpinner />
+      </div>
+    );
+  }
 
   // Show subscription page only if explicitly no subscription
   // This page should normally only be reached through direct navigation or if payment flow was incomplete
