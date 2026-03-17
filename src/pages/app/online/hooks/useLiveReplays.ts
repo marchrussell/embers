@@ -1,6 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
+import { PostgrestError } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { LiveReplay } from '../types';
+
+type RawReplayRow = {
+  id: string;
+  title: string;
+  session_type: string | null;
+  start_time: string;
+  end_time: string | null;
+  recording_url: string | null;
+  guest_teachers: { name: string; photo_url: string | null } | { name: string; photo_url: string | null }[] | null;
+};
 
 export const AVAILABILITY_DAYS: Record<LiveReplay['session_type'], number | null> = {
   'weekly-reset': 7,
@@ -25,7 +36,10 @@ export const useLiveReplays = () => {
         `)
         .not('recording_url', 'is', null)
         .not('session_type', 'is', null)
-        .order('start_time', { ascending: false });
+        .order('start_time', { ascending: false }) as unknown as {
+          data: RawReplayRow[] | null;
+          error: PostgrestError | null;
+        };
 
       if (error) throw error;
 
