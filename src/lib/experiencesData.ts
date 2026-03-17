@@ -7,11 +7,11 @@ import { EventSchedule, WEEKDAYS } from './experienceDateUtils';
 export type { EventSchedule };
 
 // Import images
-import instagramLiveSessionBg from "@/assets/instagram-live-session-bg.jpg";
-import heroHandsSession from "@/assets/hero-hands-session.png";
-import heartConnection from "@/assets/heart-connection.jpg";
-import breathworkToDub from "@/assets/breathwork-to-dub.png";
-import weeklyResetEvent from "@/assets/weekly-reset-event.jpg";
+  import breathworkToDub from "@/assets/breathwork-to-dub.png";
+  import heartConnection from "@/assets/heart-connection.jpg";
+  import heroHandsSession from "@/assets/hero-hands-session.png";
+  import instagramLiveSessionBg from "@/assets/instagram-live-session-bg.jpg";
+  import weeklyResetEvent from "@/assets/weekly-reset-event.jpg";
 
 // Venue address
 const AUFI_ADDRESS = "AUFI, 20 Eastcastle St, London W1W 8DB";
@@ -30,7 +30,7 @@ export const experiencesData: EventSchedule[] = [
     duration: '15 mins',
     recurrenceLabel: 'Every Monday',
     cta: 'Join on Instagram',
-    ctaLink: 'https://www.instagram.com/marchrussell/',
+    ctaLink: 'https://www.instagram.com/embers.io',
     image: instagramLiveSessionBg,
     eventType: 'free',
     format: 'Online',
@@ -92,7 +92,7 @@ export const experiencesData: EventSchedule[] = [
     format: 'In-Person',
     location: 'Soho',
     venue: AUFI_ADDRESS,
-    price: '£25',
+    price: '£20',
   },
   {
     id: 'breathwork-to-dub',
@@ -114,6 +114,6 @@ export const experiencesData: EventSchedule[] = [
     format: 'In-Person',
     location: 'Soho',
     venue: AUFI_ADDRESS,
-    price: '£20',
+    price: '£15',
   },
 ];

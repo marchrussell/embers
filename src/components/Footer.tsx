@@ -92,7 +92,7 @@ export const Footer = memo(() => {
                     Contact <ArrowRight className="w-5 h-5" />
                   </button>
                   <a
-                    href="https://instagram.com/embers.io"
+                    href="https://www.instagram.com/embers.io"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-[#1A1A1A] text-[13px] tracking-[0.02em] hover:opacity-60 transition-opacity duration-200 flex items-center gap-2 min-h-[44px]"

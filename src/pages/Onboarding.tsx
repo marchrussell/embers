@@ -69,7 +69,7 @@ const Onboarding = () => {
       // Force refresh the auth context to pick up the new onboarding status
       await refreshOnboardingStatus();
       
-      toast.success("Welcome to The Studio! You're all set.");
+      toast.success("Welcome to Embers Studio! You're all set.");
       
       // Check if there's a redirect intent for nervous system program
       const redirectIntent = localStorage.getItem('postOnboardingRedirect');
@@ -187,7 +187,7 @@ const Onboarding = () => {
             <h3 className="text-lg sm:text-xl md:text-xl font-light text-[#E6DBC7] mb-4">Important Safety Information</h3>
             
             <p className="text-foreground/80 font-light leading-relaxed text-sm sm:text-base md:text-base">
-              March provides specialist breathwork, meditation, and wellness classes designed to support your wellbeing. All content and tools provided through the App are for informational and educational purposes only and do not constitute or replace medical, psychological, or therapeutic advice.
+              Embers Studio provides specialist breathwork, meditation, and wellness classes designed to support your wellbeing. All content and tools provided through the App are for informational and educational purposes only and do not constitute or replace medical, psychological, or therapeutic advice.
             </p>
             
             <p className="text-foreground/80 font-light leading-relaxed text-sm sm:text-base md:text-base">
