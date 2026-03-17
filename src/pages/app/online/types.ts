@@ -29,6 +29,17 @@ export interface LiveSessionsData {
   guestSession: LiveSessionData;
 }
 
+export interface LiveReplay {
+  id: string;
+  title: string;
+  session_type: 'weekly-reset' | 'monthly-presence' | 'guest-session';
+  start_time: string;
+  end_time: string | null;
+  recording_url: string;
+  teacher_name?: string;
+  teacher_photo?: string;
+}
+
 export interface BaseSession {
   id: string;
   title: string;

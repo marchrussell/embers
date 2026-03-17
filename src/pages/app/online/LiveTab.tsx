@@ -13,7 +13,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import LiveProgramCard from "./components/LiveProgramCard";
-import { LiveSessionsData } from "./types";
+import { LiveReplay, LiveSessionsData } from "./types";
+import { AVAILABILITY_DAYS, useLiveReplays } from "./hooks/useLiveReplays";
 
 interface LiveTabProps {
   liveSessionsData: LiveSessionsData;
@@ -22,6 +23,27 @@ interface LiveTabProps {
   isTestUser: boolean;
   onSubscriptionRequired: () => void;
 }
+
+const formatReplayDate = (replay: LiveReplay): string => {
+  const start = new Date(replay.start_time);
+  const dateStr = start.toLocaleDateString('en-GB', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  });
+  if (replay.end_time) {
+    const mins = Math.round(
+      (new Date(replay.end_time).getTime() - start.getTime()) / 60000
+    );
+    return `${dateStr} • ${mins} mins`;
+  }
+  return dateStr;
+};
+
+const formatAvailability = (sessionType: LiveReplay['session_type']): string => {
+  const days = AVAILABILITY_DAYS[sessionType];
+  return days === null ? 'Available forever' : `Available ${days} days`;
+};
 
 const LiveTab = ({
   liveSessionsData,
@@ -32,6 +54,11 @@ const LiveTab = ({
 }: LiveTabProps) => {
   const navigate = useNavigate();
   const [openCalendarId, setOpenCalendarId] = useState<string | null>(null);
+  const { data: replays = [] } = useLiveReplays();
+
+  const latestWeeklyReplay = replays.find((r) => r.session_type === 'weekly-reset');
+  const latestMonthlyReplay = replays.find((r) => r.session_type === 'monthly-presence');
+  const guestReplays = replays.filter((r) => r.session_type === 'guest-session');
 
   const handleCardClick = (path: string) => {
     if (!hasSubscription && !isAdmin && !isTestUser) {
@@ -163,16 +190,18 @@ const LiveTab = ({
             <ReplayBox
               image={weeklyResetEvent}
               alt="Weekly Reset Replay"
-              availability="Available 7 days"
+              availability={formatAvailability('weekly-reset')}
               category="Weekly Reset"
-              date="December 17, 2024 • 30 mins"
+              date={latestWeeklyReplay ? formatReplayDate(latestWeeklyReplay) : null}
+              onClick={latestWeeklyReplay ? () => window.open(latestWeeklyReplay.recording_url, '_blank') : undefined}
             />
             <ReplayBox
               image={heroHandsSession}
               alt="Monthly Presence Replay"
-              availability="Available 30 days"
+              availability={formatAvailability('monthly-presence')}
               category="Monthly Breath & Presence"
-              date="December 8, 2024 • 90 mins"
+              date={latestMonthlyReplay ? formatReplayDate(latestMonthlyReplay) : null}
+              onClick={latestMonthlyReplay ? () => window.open(latestMonthlyReplay.recording_url, '_blank') : undefined}
             />
           </div>
 
@@ -192,39 +221,27 @@ const LiveTab = ({
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="group relative overflow-hidden rounded-2xl border border-[#E6DBC7]/15 bg-black/40 hover:border-[#E6DBC7]/30 transition-colors duration-500 cursor-pointer">
-                <div className="relative h-44 overflow-hidden">
-                  <img
-                    src={guestSessionBg}
-                    alt="Guest Session"
-                    className="absolute inset-0 w-full h-full object-cover object-bottom"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="w-12 h-12 rounded-full bg-[#E6DBC7]/20 backdrop-blur-sm flex items-center justify-center">
-                      <Play className="w-5 h-5 text-[#E6DBC7] ml-0.5" fill="currentColor" />
-                    </div>
+              {guestReplays.length > 0 ? (
+                guestReplays.slice(0, 3).map((replay) => (
+                  <GuestReplayCard key={replay.id} replay={replay} />
+                ))
+              ) : (
+                <GuestReplayComingSoon />
+              )}
+
+              {/* Fill remaining slots with placeholders */}
+              {guestReplays.length > 0 && guestReplays.length < 3 && (
+                Array.from({ length: 3 - Math.min(guestReplays.length, 3) }).map((_, i) => (
+                  <div
+                    key={`placeholder-${i}`}
+                    className="group relative overflow-hidden rounded-2xl border border-dashed border-[#E6DBC7]/15 bg-black/20 flex items-center justify-center min-h-[280px]"
+                  >
+                    <p className="text-sm text-[#E6DBC7]/30 font-light text-center px-6">
+                      More guest sessions coming soon
+                    </p>
                   </div>
-                </div>
-                <div className="p-5">
-                  <p className="text-[10px] text-[#D4A574] font-medium tracking-[0.15em] uppercase mb-2">Coming Soon</p>
-                  <h3 className="text-base font-editorial text-[#E6DBC7] mb-1 leading-tight">Guest Teacher Session</h3>
-                  <p className="text-xs text-[#E6DBC7]/50 font-light">First session coming January 2025</p>
-                </div>
-              </div>
-
-              <div className="group relative overflow-hidden rounded-2xl border border-dashed border-[#E6DBC7]/15 bg-black/20 flex items-center justify-center min-h-[280px]">
-                <p className="text-sm text-[#E6DBC7]/30 font-light text-center px-6">
-                  More guest sessions coming soon
-                </p>
-              </div>
-
-              <div className="group relative overflow-hidden rounded-2xl border border-dashed border-[#E6DBC7]/15 bg-black/20 flex items-center justify-center min-h-[280px]">
-                <p className="text-sm text-[#E6DBC7]/30 font-light text-center px-6">
-                  More guest sessions coming soon
-                </p>
-              </div>
+                ))
+              )}
             </div>
           </div>
         </div>
@@ -238,11 +255,15 @@ interface ReplayBoxProps {
   alt: string;
   availability: string;
   category: string;
-  date: string;
+  date: string | null;
+  onClick?: () => void;
 }
 
-const ReplayBox = ({ image, alt, availability, category, date }: ReplayBoxProps) => (
-  <div className="group relative overflow-hidden rounded-2xl border border-[#E6DBC7]/15 bg-black/40 hover:border-[#E6DBC7]/30 transition-colors duration-500 cursor-pointer">
+const ReplayBox = ({ image, alt, availability, category, date, onClick }: ReplayBoxProps) => (
+  <div
+    className="group relative overflow-hidden rounded-2xl border border-[#E6DBC7]/15 bg-black/40 hover:border-[#E6DBC7]/30 transition-colors duration-500 cursor-pointer"
+    onClick={onClick}
+  >
     <div className="relative h-48 overflow-hidden">
       <img src={image} alt={alt} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
@@ -259,9 +280,82 @@ const ReplayBox = ({ image, alt, availability, category, date }: ReplayBoxProps)
     <div className="p-6">
       <p className="text-xs text-[#D4A574] font-medium tracking-[0.15em] uppercase mb-2">{category}</p>
       <h3 className="text-lg font-editorial text-[#E6DBC7] mb-1">Latest Session Replay</h3>
-      <p className="text-xs text-[#E6DBC7]/50 font-light">{date}</p>
+      {date ? (
+        <p className="text-xs text-[#E6DBC7]/50 font-light">{date}</p>
+      ) : (
+        <p className="text-xs text-[#E6DBC7]/30 font-light italic">No replay available yet</p>
+      )}
     </div>
   </div>
+);
+
+const GuestReplayCard = ({ replay }: { replay: LiveReplay }) => (
+  <div
+    className="group relative overflow-hidden rounded-2xl border border-[#E6DBC7]/15 bg-black/40 hover:border-[#E6DBC7]/30 transition-colors duration-500 cursor-pointer"
+    onClick={() => window.open(replay.recording_url, '_blank')}
+  >
+    <div className="relative h-44 overflow-hidden">
+      <img
+        src={replay.teacher_photo || guestSessionBg}
+        alt={replay.title}
+        className="absolute inset-0 w-full h-full object-cover object-bottom"
+        loading="lazy"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <div className="w-12 h-12 rounded-full bg-[#E6DBC7]/20 backdrop-blur-sm flex items-center justify-center">
+          <Play className="w-5 h-5 text-[#E6DBC7] ml-0.5" fill="currentColor" />
+        </div>
+      </div>
+    </div>
+    <div className="p-5">
+      {replay.teacher_name && (
+        <p className="text-[10px] text-[#D4A574] font-medium tracking-[0.15em] uppercase mb-2">
+          {replay.teacher_name}
+        </p>
+      )}
+      <h3 className="text-base font-editorial text-[#E6DBC7] mb-1 leading-tight">{replay.title}</h3>
+      <p className="text-xs text-[#E6DBC7]/50 font-light">{formatReplayDate(replay)}</p>
+    </div>
+  </div>
+);
+
+const GuestReplayComingSoon = () => (
+  <>
+    <div className="group relative overflow-hidden rounded-2xl border border-[#E6DBC7]/15 bg-black/40 hover:border-[#E6DBC7]/30 transition-colors duration-500 cursor-pointer">
+      <div className="relative h-44 overflow-hidden">
+        <img
+          src={guestSessionBg}
+          alt="Guest Session"
+          className="absolute inset-0 w-full h-full object-cover object-bottom"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="w-12 h-12 rounded-full bg-[#E6DBC7]/20 backdrop-blur-sm flex items-center justify-center">
+            <Play className="w-5 h-5 text-[#E6DBC7] ml-0.5" fill="currentColor" />
+          </div>
+        </div>
+      </div>
+      <div className="p-5">
+        <p className="text-[10px] text-[#D4A574] font-medium tracking-[0.15em] uppercase mb-2">Coming Soon</p>
+        <h3 className="text-base font-editorial text-[#E6DBC7] mb-1 leading-tight">Guest Teacher Session</h3>
+        <p className="text-xs text-[#E6DBC7]/50 font-light">First session coming January 2025</p>
+      </div>
+    </div>
+
+    <div className="group relative overflow-hidden rounded-2xl border border-dashed border-[#E6DBC7]/15 bg-black/20 flex items-center justify-center min-h-[280px]">
+      <p className="text-sm text-[#E6DBC7]/30 font-light text-center px-6">
+        More guest sessions coming soon
+      </p>
+    </div>
+
+    <div className="group relative overflow-hidden rounded-2xl border border-dashed border-[#E6DBC7]/15 bg-black/20 flex items-center justify-center min-h-[280px]">
+      <p className="text-sm text-[#E6DBC7]/30 font-light text-center px-6">
+        More guest sessions coming soon
+      </p>
+    </div>
+  </>
 );
 
 export default LiveTab;
