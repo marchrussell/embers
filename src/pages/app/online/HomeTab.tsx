@@ -8,6 +8,7 @@ import CourseCard from "./components/CourseCard";
 import SessionPlayCard from "./components/SessionPlayCard";
 import StartHereCard from "./components/StartHereCard";
 import { useFeaturedSession } from "./hooks/useFeaturedSession";
+import { useStartHereVisibility } from "./hooks/useStartHereVisibility";
 import { useQuickResets } from "./hooks/useQuickResets";
 import { LiveSessionsData } from "./types";
 
@@ -31,6 +32,7 @@ const HomeTab = ({
   const navigate = useNavigate();
   const { featuredSession } = useFeaturedSession();
   const { quickResets } = useQuickResets();
+  const showStartHere = useStartHereVisibility();
 
   const quickResetsScrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -68,18 +70,20 @@ const HomeTab = ({
   return (
     <div className="space-y-16 pt-8 md:pt-[150px]">
       {/* Start Here — Your First Two Weeks */}
-      <section>
-        <h2 className="text-2xl md:text-3xl font-medium text-[#E6DBC7] tracking-wide mb-2">
-          Start Here — Your First Two Weeks
-        </h2>
-        <p className="text-base md:text-lg font-light text-[#E6DBC7]/60 mb-10">
-          A gentle way to arrive — nothing to keep up with.
-        </p>
-        <StartHereCard
-          locked={!hasSubscription && !isAdmin && !isTestUser}
-          onLockedClick={onSubscriptionRequired}
-        />
-      </section>
+      {showStartHere && (
+        <section>
+          <h2 className="text-2xl md:text-3xl font-medium text-[#E6DBC7] tracking-wide mb-2">
+            Start Here — Your First Two Weeks
+          </h2>
+          <p className="text-base md:text-lg font-light text-[#E6DBC7]/60 mb-10">
+            A gentle way to arrive — nothing to keep up with.
+          </p>
+          <StartHereCard
+            locked={!hasSubscription && !isAdmin && !isTestUser}
+            onLockedClick={onSubscriptionRequired}
+          />
+        </section>
+      )}
 
       {/* Quick Resets */}
       {quickResets.length > 0 && (
