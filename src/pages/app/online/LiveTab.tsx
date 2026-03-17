@@ -259,10 +259,12 @@ interface ReplayBoxProps {
   onClick?: () => void;
 }
 
-const ReplayBox = ({ image, alt, availability, category, date, onClick }: ReplayBoxProps) => (
+const ReplayBox = ({ image, alt, availability, category, date, onClick }: ReplayBoxProps) => {
+  const hasReplay = !!onClick;
+  return (
   <div
-    className="group relative overflow-hidden rounded-2xl border border-[#E6DBC7]/15 bg-black/40 hover:border-[#E6DBC7]/30 transition-colors duration-500 cursor-pointer"
-    onClick={onClick}
+    className={`group relative overflow-hidden rounded-2xl border border-[#E6DBC7]/15 bg-black/40 transition-colors duration-500 ${hasReplay ? 'cursor-pointer hover:border-[#E6DBC7]/30' : 'cursor-default opacity-60'}`}
+    onClick={hasReplay ? onClick : undefined}
   >
     <div className="relative h-48 overflow-hidden">
       <img src={image} alt={alt} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
@@ -272,7 +274,7 @@ const ReplayBox = ({ image, alt, availability, category, date, onClick }: Replay
         <span className="text-xs text-[#E6DBC7] font-medium">{availability}</span>
       </div>
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="w-14 h-14 rounded-full bg-[#E6DBC7]/20 backdrop-blur-sm flex items-center justify-center group-hover:bg-[#E6DBC7]/30 transition-colors duration-300">
+        <div className={`w-14 h-14 rounded-full bg-[#E6DBC7]/20 backdrop-blur-sm flex items-center justify-center ${hasReplay ? 'group-hover:bg-[#E6DBC7]/30' : ''} transition-colors duration-300`}>
           <Play className="w-6 h-6 text-[#E6DBC7] ml-1" fill="currentColor" />
         </div>
       </div>
@@ -287,7 +289,8 @@ const ReplayBox = ({ image, alt, availability, category, date, onClick }: Replay
       )}
     </div>
   </div>
-);
+  );
+};
 
 const GuestReplayCard = ({ replay }: { replay: LiveReplay }) => (
   <div
