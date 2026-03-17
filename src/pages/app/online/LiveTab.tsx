@@ -8,13 +8,13 @@ import {
   getGoogleCalendarUrl,
   getOutlookCalendarUrl,
 } from "@/lib/calendarUtils";
-import { Play, Video, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Play, Video } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import LiveProgramCard from "./components/LiveProgramCard";
-import { LiveReplay, LiveSessionsData } from "./types";
 import { AVAILABILITY_DAYS, useLiveReplays } from "./hooks/useLiveReplays";
+import { LiveReplay, LiveSessionsData } from "./types";
 
 interface LiveTabProps {
   liveSessionsData: LiveSessionsData;
@@ -273,11 +273,13 @@ const ReplayBox = ({ image, alt, availability, category, date, onClick }: Replay
         <Video className="w-3.5 h-3.5 text-[#E6DBC7]" />
         <span className="text-xs text-[#E6DBC7] font-medium">{availability}</span>
       </div>
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className={`w-14 h-14 rounded-full bg-[#E6DBC7]/20 backdrop-blur-sm flex items-center justify-center ${hasReplay ? 'group-hover:bg-[#E6DBC7]/30' : ''} transition-colors duration-300`}>
-          <Play className="w-6 h-6 text-[#E6DBC7] ml-1" fill="currentColor" />
+      {hasReplay && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className={`w-14 h-14 rounded-full bg-[#E6DBC7]/20 backdrop-blur-sm flex items-center justify-center ${hasReplay ? 'group-hover:bg-[#E6DBC7]/30' : ''} transition-colors duration-300`}>
+            <Play className="w-6 h-6 text-[#E6DBC7] ml-1" fill="currentColor" />
+          </div>
         </div>
-      </div>
+      )}
     </div>
     <div className="p-6">
       <p className="text-xs text-[#D4A574] font-medium tracking-[0.15em] uppercase mb-2">{category}</p>
