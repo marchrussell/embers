@@ -9,6 +9,7 @@ export interface LibrarySession {
   created_at?: string;
   technique?: string;
   intensity?: string;
+  order_index?: number | null;
 }
 
 export interface FavouriteSession {

@@ -80,6 +80,7 @@ export const useLibraryData = ({
                   created_at: classItem.created_at,
                   technique: classItem.technique,
                   intensity: classItem.intensity,
+                  order_index: classItem.order_index,
                 });
               }
               return acc;

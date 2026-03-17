@@ -21,8 +21,10 @@ const CategoryView = memo(({
   const now = Date.now();
 
   const sortedSessions = [...category.sessions].sort((a: LibrarySession, b: LibrarySession) => {
-    if (a.locked === b.locked) return 0;
-    return a.locked ? 1 : -1;
+    if (a.locked !== b.locked) return a.locked ? 1 : -1;
+    const ai = a.order_index ?? Infinity;
+    const bi = b.order_index ?? Infinity;
+    return ai - bi;
   });
 
   return (

@@ -75,6 +75,7 @@ const AdminClasses = () => {
     intensity: "",
     start_here_position: "none" as "none" | "1" | "2",
     is_quick_reset: false,
+    order_index: "",
   });
 
   useEffect(() => {
@@ -119,8 +120,8 @@ const AdminClasses = () => {
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      toast({ title: "File too large", description: "Please upload an image smaller than 5MB", variant: "destructive" });
+    if (file.size > 50 * 1024 * 1024) {
+      toast({ title: "File too large", description: "Please upload an image smaller than 50MB", variant: "destructive" });
       return;
     }
 
@@ -162,8 +163,8 @@ const AdminClasses = () => {
       return;
     }
 
-    if (file.size > 50 * 1024 * 1024) {
-      toast({ title: "File too large", description: "Please upload an audio file smaller than 50MB", variant: "destructive" });
+    if (file.size > 2 * 1024 * 1024 * 1024) {
+      toast({ title: "File too large", description: "Please upload an audio file smaller than 2GB", variant: "destructive" });
       return;
     }
 
@@ -230,6 +231,7 @@ const AdminClasses = () => {
       technique: formData.technique || null,
       start_here_position: newStartHerePosition,
       is_quick_reset: formData.is_quick_reset,
+      order_index: formData.order_index ? parseInt(formData.order_index) : null,
     };
 
     // If assigning a start here position, clear it from any other class first
@@ -322,6 +324,7 @@ const AdminClasses = () => {
       intensity: classItem.intensity || "",
       start_here_position: (classItem.start_here_position?.toString() || "none") as "none" | "1" | "2",
       is_quick_reset: classItem.is_quick_reset || false,
+      order_index: classItem.order_index?.toString() || "",
     });
     setIsDialogOpen(true);
   };
@@ -424,6 +427,7 @@ const AdminClasses = () => {
       intensity: "",
       start_here_position: "none",
       is_quick_reset: false,
+      order_index: "",
     });
     setEditingClass(null);
     setIsDialogOpen(false);
@@ -485,7 +489,7 @@ const AdminClasses = () => {
                       onChange={handleImageUpload}
                       disabled={uploading}
                     />
-                    <p className="text-xs text-muted-foreground">Upload an image for this class (max 5MB)</p>
+                    <p className="text-xs text-muted-foreground">Upload an image for this class (max 50MB)</p>
                   </div>
                 </div>
 
@@ -534,7 +538,7 @@ const AdminClasses = () => {
                       onChange={handleAudioUpload}
                       disabled={uploading}
                     />
-                    <p className="text-xs text-muted-foreground">Upload audio file (max 50MB, .wav or .mp3)</p>
+                    <p className="text-xs text-muted-foreground">Upload audio file (max 2GB, .wav or .mp3)</p>
                   </div>
                 </div>
                 <div>
@@ -584,7 +588,19 @@ const AdminClasses = () => {
                     required
                   />
                 </div>
-                
+
+                <div>
+                  <Label htmlFor="order_index">Order Index</Label>
+                  <Input
+                    id="order_index"
+                    type="number"
+                    value={formData.order_index}
+                    onChange={(e) => setFormData({ ...formData, order_index: e.target.value })}
+                    placeholder="e.g. 1, 2, 3…"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">Controls display order within a category (lower = first). Leave blank to sort last.</p>
+                </div>
+
                 <div>
                   <Label htmlFor="technique">Technique (1-2 words)</Label>
                   <Input
