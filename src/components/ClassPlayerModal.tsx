@@ -5,7 +5,7 @@ import { useFavourites } from "@/hooks/useFavourites";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-import { Play, Pause, SkipBack, SkipForward, X, Heart, Share2 } from "lucide-react";
+import { Play, Pause, X, Heart, Share2 } from "lucide-react";
 import { SessionCompletionModal } from "@/components/SessionCompletionModal";
 import { ModalContentSkeleton } from "@/components/skeletons/ModalContentSkeleton";
 import {
@@ -38,12 +38,15 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
   const [userProfile, setUserProfile] = useState<any>(null);
   const [userStats, setUserStats] = useState<any>({});
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const hasShownCompletion = useRef(false);
 
   useEffect(() => {
     if (classId && open) {
       setLoading(true);
+      setClassData(null);
+      setClassCategories([]);
+      setDuration(0);
       setHasStarted(false);
       setIsPlaying(false);
       setCurrentTime(0);
@@ -142,22 +145,70 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
         audioRef.current.pause();
         audioRef.current = null;
       }
+      // Clean up video when modal closes
+      if (videoRef.current) {
+        videoRef.current.pause();
+      }
       // Reset completion flag when modal closes
       hasShownCompletion.current = false;
     };
   }, [classId, open]);
 
+  const isVideoClass = !!(classData?.video_url);
+
+  const getMedia = (): HTMLAudioElement | HTMLVideoElement | null =>
+    isVideoClass ? videoRef.current : audioRef.current;
+
+  // Attach video events once the video element is in the DOM and classData is set
   useEffect(() => {
-    if (audioRef.current) {
+    const video = videoRef.current;
+    if (!video || !classData?.video_url) return;
+
+    video.preload = 'metadata';
+
+    const onLoadedMetadata = () => {
+      setDuration(video.duration);
+      if (!classData.show_safety_reminder || skipSafetyModal) {
+        video.play().catch(() => {});
+      }
+    };
+    const onTimeUpdate = () => {
+      setCurrentTime(video.currentTime);
+      if (!hasShownCompletion.current && video.duration - video.currentTime <= 5 && video.currentTime > 0) {
+        hasShownCompletion.current = true;
+        markSessionComplete();
+      }
+    };
+    const onEnded = () => {
+      setIsPlaying(false);
+      if (!hasShownCompletion.current) {
+        hasShownCompletion.current = true;
+        markSessionComplete();
+      }
+    };
+
+    video.addEventListener('loadedmetadata', onLoadedMetadata);
+    video.addEventListener('timeupdate', onTimeUpdate);
+    video.addEventListener('ended', onEnded);
+
+    return () => {
+      video.removeEventListener('loadedmetadata', onLoadedMetadata);
+      video.removeEventListener('timeupdate', onTimeUpdate);
+      video.removeEventListener('ended', onEnded);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [classData?.video_url]);
+
+  useEffect(() => {
+    const media = isVideoClass ? videoRef.current : audioRef.current;
+    if (media) {
       if (isPlaying && hasStarted) {
-        audioRef.current.play().catch(() => {
-          // Silent failure
-        });
+        media.play().catch(() => {});
       } else {
-        audioRef.current.pause();
+        media.pause();
       }
     }
-  }, [isPlaying, hasStarted]);
+  }, [isPlaying, hasStarted, isVideoClass]);
 
   const handleStart = async () => {
     // Update user's profile to mark they've accepted safety disclosure AND completed onboarding
@@ -177,11 +228,10 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
     setHasStarted(true);
     setIsPlaying(true);
     
-    // Start playing audio immediately for first-time users
-    if (audioRef.current) {
-      audioRef.current.play().catch(() => {
-        // Silent failure
-      });
+    // Start playing immediately for first-time users
+    const media = getMedia();
+    if (media) {
+      media.play().catch(() => {});
     }
   };
 
@@ -190,8 +240,9 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
   };
 
   const handleSliderChange = (value: number[]) => {
-    if (audioRef.current) {
-      audioRef.current.currentTime = value[0];
+    const media = getMedia();
+    if (media) {
+      media.currentTime = value[0];
       setCurrentTime(value[0]);
     }
   };
@@ -203,9 +254,10 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
   };
 
   const handleClose = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
+    const media = getMedia();
+    if (media) {
+      media.pause();
+      media.currentTime = 0;
     }
     setIsPlaying(false);
     setHasStarted(false);
@@ -217,8 +269,6 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
     if (!user?.id) return;
 
     try {
-      console.log('📊 Fetching stats for user:', user.id);
-      
       // Fetch user profile
       const { data: profileData } = await supabase
         .from('profiles')
@@ -227,7 +277,6 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
         .maybeSingle();
 
       if (profileData) {
-        console.log('📊 Profile data:', profileData);
         setUserProfile(profileData);
       }
 
@@ -267,8 +316,6 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
     if (!user?.id || !classId) return;
 
     try {
-      console.log('📊 Marking session complete:', { userId: user.id, classId });
-      
       // Mark session as completed in user_progress
       const { data: existingProgress } = await supabase
         .from('user_progress')
@@ -381,7 +428,7 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
         if (!isOpen) handleClose();
       }}>
         <DialogContent 
-          className="max-w-6xl h-[95vh] md:h-auto p-0 backdrop-blur-xl bg-black/75 border border-white/30 overflow-hidden rounded-xl w-[98%] md:w-[95%]"
+          className="relative max-w-6xl h-[95vh] md:h-auto p-0 backdrop-blur-xl bg-black/75 border border-white/30 overflow-hidden rounded-xl w-[98%] md:w-[95%]"
           hideClose
         >
           <DialogTitle className="sr-only">
@@ -391,16 +438,29 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
             <ModalContentSkeleton variant="player" />
           ) : (
             <>
-              {/* Mobile Layout - Vertical with background image */}
+              {/* Shared video background (video classes only) */}
+              {isVideoClass && (
+                <video
+                  ref={videoRef}
+                  src={classData?.video_url}
+                  className="absolute inset-0 w-full h-full object-cover z-0"
+                  playsInline
+                />
+              )}
+
+              {/* Mobile Layout - Vertical with background image/video */}
               <div className="relative h-[95vh] flex flex-col md:hidden">
-                {/* Background Image */}
-                {classData?.image_url && (
-                  <div 
+                {/* Background Image (audio only) */}
+                {!isVideoClass && classData?.image_url && (
+                  <div
                     className="absolute inset-0 bg-cover bg-center"
                     style={{ backgroundImage: `url(${classData.image_url})` }}
                   >
                     <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/50 to-background/90" />
                   </div>
+                )}
+                {isVideoClass && (
+                  <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-transparent to-background/80 pointer-events-none z-10" />
                 )}
 
                 {/* Top bar with favorite/share on left, close on right */}
@@ -489,16 +549,16 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
 
               {/* Desktop Layout - Horizontal rectangle */}
               <div className="hidden md:grid md:grid-cols-2 md:gap-0 md:h-[600px]">
-                {/* Left side - Image */}
+                {/* Left side - Image (audio) or transparent over shared video */}
                 <div className="relative overflow-hidden">
-                  {classData?.image_url && (
-                    <img 
-                      src={classData.image_url} 
+                  {!isVideoClass && classData?.image_url && (
+                    <img
+                      src={classData.image_url}
                       alt={classData?.title}
                       className="w-full h-full object-cover"
                     />
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent to-background/20" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent to-background/20 pointer-events-none" />
                 </div>
 
                 {/* Right side - Controls and Info */}

@@ -23,6 +23,7 @@ interface Class {
   teacher_name: string | null;
   description: string | null;
   audio_url: string | null;
+  video_url: string | null;
   image_url: string | null;
   duration_minutes: number | null;
   program_id: string | null;
@@ -64,6 +65,7 @@ const AdminClasses = () => {
     description: "",
     short_description: "",
     audio_url: "",
+    video_url: "",
     image_url: "",
     duration_minutes: "",
     category_ids: [] as string[],
@@ -197,10 +199,52 @@ const AdminClasses = () => {
     }
   };
 
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const validExts = ['.mp4', '.mov', '.webm'];
+    if (!validExts.some(ext => file.name.toLowerCase().endsWith(ext))) {
+      toast({ title: "Invalid file type", description: "Please upload a .mp4, .mov, or .webm file", variant: "destructive" });
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024 * 1024) {
+      toast({ title: "File too large", description: "Please upload a video file smaller than 2GB", variant: "destructive" });
+      return;
+    }
+
+    setUploading(true);
+
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+      const filePath = `${fileName}`;
+      toast({ title: "Uploading video...", duration: Infinity });
+
+      const { error: uploadError } = await supabase.storage
+        .from('class-video')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('class-video')
+        .getPublicUrl(filePath);
+
+      setFormData({ ...formData, video_url: publicUrl });
+      toast({ title: "Video uploaded successfully" });
+    } catch (error: any) {
+      toast({ title: "Upload failed", description: error.message, variant: "destructive" });
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.title || !formData.description || !formData.audio_url || !formData.image_url || !formData.duration_minutes || formData.category_ids.length === 0) {
+    if (!formData.title || !formData.description || (!formData.audio_url && !formData.video_url) || !formData.image_url || !formData.duration_minutes || formData.category_ids.length === 0) {
       toast({ title: "Missing required fields", description: "Please fill in all required fields including at least one category", variant: "destructive" });
       return;
     }
@@ -219,7 +263,8 @@ const AdminClasses = () => {
       teacher_name: formData.teacher_name || null,
       description: formData.description || null,
       short_description: formData.short_description || null,
-      audio_url: formData.audio_url,
+      audio_url: formData.audio_url || null,
+      video_url: formData.video_url || null,
       image_url: formData.image_url || null,
       duration_minutes: formData.duration_minutes ? parseInt(formData.duration_minutes) : null,
       category_id: formData.category_ids[0] || null,
@@ -313,6 +358,7 @@ const AdminClasses = () => {
       description: classItem.description || "",
       short_description: classItem.short_description || "",
       audio_url: classItem.audio_url || "",
+      video_url: classItem.video_url || "",
       image_url: classItem.image_url || "",
       duration_minutes: classItem.duration_minutes?.toString() || "",
       category_ids: classItem.categories?.map(c => c.id) || (classItem.category_id ? [classItem.category_id] : []),
@@ -416,6 +462,7 @@ const AdminClasses = () => {
       description: "",
       short_description: "",
       audio_url: "",
+      video_url: "",
       image_url: "",
       duration_minutes: "",
       category_ids: [],
@@ -524,7 +571,7 @@ const AdminClasses = () => {
                 </div>
 
                 <div>
-                  <Label htmlFor="audio">Class Audio (WAV or MP3) *</Label>
+                  <Label htmlFor="audio">Class Audio (WAV or MP3)</Label>
                   <div className="space-y-2">
                     {formData.audio_url && (
                       <audio controls className="w-full" preload="metadata">
@@ -539,6 +586,25 @@ const AdminClasses = () => {
                       disabled={uploading}
                     />
                     <p className="text-xs text-muted-foreground">Upload audio file (max 2GB, .wav or .mp3)</p>
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="video">Class Video (MP4, MOV, or WebM)</Label>
+                  <div className="space-y-2">
+                    {formData.video_url && (
+                      <video controls className="w-full rounded-md" preload="metadata">
+                        <source src={formData.video_url} />
+                      </video>
+                    )}
+                    <Input
+                      id="video"
+                      type="file"
+                      accept=".mp4,.mov,.webm"
+                      onChange={handleVideoUpload}
+                      disabled={uploading}
+                    />
+                    <p className="text-xs text-muted-foreground">Upload video file (max 2GB, .mp4/.mov/.webm). Either audio or video is required.</p>
                   </div>
                 </div>
                 <div>
