@@ -3,15 +3,17 @@
  * Central source of truth for all recurring events
  */
 
+import { CLOUD_IMAGES, getCloudImageUrl } from './cloudImageUrls';
 import { EventSchedule, WEEKDAYS } from './experienceDateUtils';
 export type { EventSchedule };
 
-// Import images
-  import breathworkToDub from "@/assets/breathwork-to-dub.png";
-  import heartConnection from "@/assets/heart-connection.jpg";
-  import heroHandsSession from "@/assets/hero-hands-session.png";
-  import instagramLiveSessionBg from "@/assets/instagram-live-session-bg.jpg";
-  import weeklyResetEvent from "@/assets/weekly-reset-event.jpg";
+
+const moreWaysToPracticeImg = getCloudImageUrl(CLOUD_IMAGES.moreWaysToPractice);
+const breathPresenceOnlineImg = getCloudImageUrl(CLOUD_IMAGES.breathPresence);
+const breathworkToDubImg = getCloudImageUrl(CLOUD_IMAGES.breathWorkToDub);
+const unwindResetImg = getCloudImageUrl(CLOUD_IMAGES.unwindReset);
+const weeklyResetImg = getCloudImageUrl(CLOUD_IMAGES.weeklyReset);
+// monthlyBreath not up
 
 // Venue address
 const AUFI_ADDRESS = "AUFI, 20 Eastcastle St, London W1W 8DB";
@@ -31,7 +33,7 @@ export const experiencesData: EventSchedule[] = [
     recurrenceLabel: 'Every Monday',
     cta: 'Join on Instagram',
     ctaLink: 'https://www.instagram.com/embers.io',
-    image: instagramLiveSessionBg,
+    image: unwindResetImg,
     eventType: 'free',
     format: 'Online',
   },
@@ -49,7 +51,7 @@ export const experiencesData: EventSchedule[] = [
     recurrenceLabel: 'Every Tuesday',
     cta: 'Enter Space',
     ctaLink: '',
-    image: weeklyResetEvent,
+    image: weeklyResetImg,
     eventType: 'studio-member',
     format: 'For Studio Members',
   },
@@ -68,7 +70,7 @@ export const experiencesData: EventSchedule[] = [
     recurrenceLabel: 'Every 2nd Sunday',
     cta: 'Enter Space',
     ctaLink: '',
-    image: heroHandsSession,
+    image: breathPresenceOnlineImg,
     eventType: 'studio-member',
     format: 'For Studio Members',
   },
@@ -87,7 +89,7 @@ export const experiencesData: EventSchedule[] = [
     recurrenceLabel: 'Every 3rd Wednesday',
     cta: 'Book',
     ctaLink: 'https://calendly.com/march-marchrussell/breath-presence-in-person',
-    image: heartConnection,
+    image: moreWaysToPracticeImg,
     eventType: 'paid',
     format: 'In-Person',
     location: 'Soho',
@@ -109,7 +111,7 @@ export const experiencesData: EventSchedule[] = [
     recurrenceLabel: 'Every 1st Saturday',
     cta: 'Book',
     ctaLink: 'https://calendly.com/march-marchrussell/breathwork-to-dub',
-    image: breathworkToDub,
+    image: breathworkToDubImg,
     eventType: 'paid',
     format: 'In-Person',
     location: 'Soho',
