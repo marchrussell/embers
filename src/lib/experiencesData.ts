@@ -8,7 +8,7 @@ import { EventSchedule, WEEKDAYS } from './experienceDateUtils';
 export type { EventSchedule };
 
 
-const moreWaysToPracticeImg = getCloudImageUrl(CLOUD_IMAGES.moreWaysToPractice);
+
 const breathPresenceOnlineImg = getCloudImageUrl(CLOUD_IMAGES.breathPresence);
 const breathworkToDubImg = getCloudImageUrl(CLOUD_IMAGES.breathWorkToDub);
 const monthlyBreathOnlineImg = getCloudImageUrl(CLOUD_IMAGES.month);

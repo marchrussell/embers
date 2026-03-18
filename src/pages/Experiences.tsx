@@ -24,6 +24,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
+
+const moreWaysToPracticeImg = getCloudImageUrl(CLOUD_IMAGES.moreWaysToPractice);
 
 const Experiences = () => {
   const navigate = useNavigate();
@@ -319,7 +322,7 @@ const Experiences = () => {
                 {/* Image Side */}
                 <div className="relative md:w-[45%] h-[240px] md:h-auto shrink-0 overflow-hidden">
                   <img 
-                    src={} 
+                    src={moreWaysToPracticeImg} 
                     alt="Embers Studio"
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]"
                   />
