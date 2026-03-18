@@ -116,7 +116,7 @@ const PaymentSuccess = () => {
   if (isError || !paymentVerified) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black">
-        <Card className="w-full max-w-md bg-black border-white border-2 shadow-[0_0_20px_rgba(255,255,255,0.5)]">
+        <Card className="w-full max-w-md bg-black/75 backdrop-blur-xl border border-white/20 rounded-[28px]">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <p className="text-xl font-light text-white">Payment verification failed</p>
             {isError && sessionId && (
@@ -132,16 +132,16 @@ const PaymentSuccess = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black p-4">
-      <Card className="w-full max-w-md bg-black border-white border-2 shadow-[0_0_20px_rgba(255,255,255,0.5)]">
-        <CardHeader className="text-center">
-          <CheckCircle2 className="h-18 w-18 text-white mx-auto mb-4" />
-          <CardTitle className="text-2xl text-white">Payment Successful!</CardTitle>
+      <Card className="w-full max-w-md bg-black/75 backdrop-blur-xl border border-white/20 rounded-[28px]">
+        <CardHeader className="text-center pb-2 pt-10 px-8">
+          <CheckCircle2 className="h-18 w-18 text-white mx-auto mb-6" />
+          <CardTitle className="text-2xl text-white mb-3">You're all set!</CardTitle>
           <CardDescription className="text-white/70">
             Set your password to complete your account
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSignUp} className="space-y-5">
+        <CardContent className="px-8 pb-10 pt-8">
+          <form onSubmit={handleSignUp} className="space-y-7">
             <div className="space-y-2">
               <Label htmlFor="firstname" className="text-white">First Name</Label>
               <Input
@@ -205,20 +205,22 @@ const PaymentSuccess = () => {
               </label>
             </div>
 
-            <Button
-              type="submit"
-              className="w-full rounded-full py-6 font-light text-base bg-white text-black hover:bg-white/90"
-              disabled={loading}
-            >
-              {loading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <div className="animate-spin-slow rounded-full h-4 w-4 border-t-2 border-b-2 border-black"></div>
-                  Setting up your account...
-                </span>
-              ) : (
-                "Complete Setup"
-              )}
-            </Button>
+            <div className="pt-4">
+              <Button
+                type="submit"
+                className="w-full rounded-full py-6 font-light text-base bg-white text-black hover:bg-white/90"
+                disabled={loading}
+              >
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <div className="animate-spin-slow rounded-full h-4 w-4 border-t-2 border-b-2 border-black"></div>
+                    Setting up your account...
+                  </span>
+                ) : (
+                  "Complete Onboarding"
+                )}
+              </Button>
+            </div>
           </form>
         </CardContent>
       </Card>

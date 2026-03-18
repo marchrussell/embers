@@ -89,7 +89,7 @@ export function PostSessionFeedbackModal({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-md backdrop-blur-xl bg-black/30 border border-white/30">
+      <DialogContent className="max-w-md backdrop-blur-xl bg-black/30 border border-white/20">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-2xl font-editorial text-[#E6DBC7]">
             <Sparkles className="w-6 h-6" />

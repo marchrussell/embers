@@ -35,8 +35,8 @@ export const ChangeEmailDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="backdrop-blur-xl bg-black/50 border border-white/30 p-0 overflow-hidden rounded-xl max-w-md">
-        <div className="p-8 md:p-10">
+      <DialogContent className="backdrop-blur-xl bg-black/50 border border-white/20 p-0 overflow-hidden rounded-xl max-w-md">
+        <div className="p-10 md:p-12">
           <DialogHeader className="mb-8">
             <DialogTitle className="text-white text-xl md:text-2xl font-editorial mb-3">
               Change Email
