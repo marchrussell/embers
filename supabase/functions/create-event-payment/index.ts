@@ -55,7 +55,7 @@ serve(async (req) => {
     const totalAmount = priceInPence * quantity;
     logStep("Total amount calculated", { priceInPence, quantity, totalAmount });
 
-    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
+    const stripe = new Stripe(Deno.env.get("STRIPE_EVENTS_SECRET_KEY") || "", {
       apiVersion: "2025-08-27.basil",
     });
 
