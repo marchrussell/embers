@@ -11,9 +11,9 @@ export type { EventSchedule };
 const moreWaysToPracticeImg = getCloudImageUrl(CLOUD_IMAGES.moreWaysToPractice);
 const breathPresenceOnlineImg = getCloudImageUrl(CLOUD_IMAGES.breathPresence);
 const breathworkToDubImg = getCloudImageUrl(CLOUD_IMAGES.breathWorkToDub);
+const monthlyBreathOnlineImg = getCloudImageUrl(CLOUD_IMAGES.month);
 const unwindResetImg = getCloudImageUrl(CLOUD_IMAGES.unwindReset);
 const weeklyResetImg = getCloudImageUrl(CLOUD_IMAGES.weeklyReset);
-// monthlyBreath not up
 
 // Venue address
 const AUFI_ADDRESS = "AUFI, 20 Eastcastle St, London W1W 8DB";
@@ -70,7 +70,7 @@ export const experiencesData: EventSchedule[] = [
     recurrenceLabel: 'Every 2nd Sunday',
     cta: 'Enter Space',
     ctaLink: '',
-    image: breathPresenceOnlineImg,
+    image: monthlyBreathOnlineImg,
     eventType: 'studio-member',
     format: 'For Studio Members',
   },
@@ -89,7 +89,7 @@ export const experiencesData: EventSchedule[] = [
     recurrenceLabel: 'Every 3rd Wednesday',
     cta: 'Book',
     ctaLink: 'https://calendly.com/march-marchrussell/breath-presence-in-person',
-    image: moreWaysToPracticeImg,
+    image: breathPresenceOnlineImg,
     eventType: 'paid',
     format: 'In-Person',
     location: 'Soho',
