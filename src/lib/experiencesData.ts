@@ -11,7 +11,7 @@ export type { EventSchedule };
 
 const breathPresenceOnlineImg = getCloudImageUrl(CLOUD_IMAGES.breathPresence);
 const breathworkToDubImg = getCloudImageUrl(CLOUD_IMAGES.breathWorkToDub);
-const monthlyBreathOnlineImg = getCloudImageUrl(CLOUD_IMAGES.month);
+const monthlyBreathOnlineImg = getCloudImageUrl(CLOUD_IMAGES.monthlyBreath);
 const unwindResetImg = getCloudImageUrl(CLOUD_IMAGES.unwindReset);
 const weeklyResetImg = getCloudImageUrl(CLOUD_IMAGES.weeklyReset);
 
