@@ -1,7 +1,3 @@
-import categoryEnergy from "@/assets/category-energy.jpg";
-import categoryRelease from "@/assets/category-release.jpg";
-import categoryReset from "@/assets/category-reset.jpg";
-import categorySleep from "@/assets/category-sleep.jpg";
 import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
 import { Heart, Pause, Play, Star } from "lucide-react";
 
@@ -13,19 +9,44 @@ const programHero = getCloudImageUrl(CLOUD_IMAGES.breathPresence, { width: 600, 
 const categoryCalm = getCloudImageUrl(CLOUD_IMAGES.startHereButterfly, { width: 600, quality: 80 });
 const reviewsBg = getCloudImageUrl(CLOUD_IMAGES.exploreTestimonials, { width: 600, quality: 80 });
 
+const session1 = getCloudImageUrl(CLOUD_IMAGES.nsdr, { width: 600, quality: 80 });
+const session2 = getCloudImageUrl(CLOUD_IMAGES.findingSteadyGround, { width: 600, quality: 80 });
+const session3 = getCloudImageUrl(CLOUD_IMAGES.immediateRelief, { width: 600, quality: 80 });
+const session4 = getCloudImageUrl(CLOUD_IMAGES.nervousSystemReset, { width: 600, quality: 80 });
+const session5 = getCloudImageUrl(CLOUD_IMAGES.softeningTension, { width: 600, quality: 80 });
+
+const stabaliseLesson1 = getCloudImageUrl(CLOUD_IMAGES.triangleBreathing, {
+  width: 600,
+  quality: 80,
+});
+const stabaliseLesson2 = getCloudImageUrl(CLOUD_IMAGES.findingSteadyGround, {
+  width: 600,
+  quality: 80,
+});
+const stabaliseLesson3 = getCloudImageUrl(CLOUD_IMAGES.nsdr, { width: 600, quality: 80 });
+const stabaliseLesson4 = getCloudImageUrl(CLOUD_IMAGES.sleepTransition, {
+  width: 600,
+  quality: 80,
+});
+
 const sessions = [
-  { title: "NSDR: Gentle Reset", duration: "11 min", image: categoryCalm },
-  { title: "Finding Steady Ground", duration: "8 min", image: categoryEnergy },
-  { title: "Physiological Sign for Immediate Relief", duration: "4 min", image: categoryReset },
-  { title: "Gentle Nervous System Reset", duration: "8 min", image: categorySleep },
-  { title: "Softening Tension", duration: "7 min", image: categoryRelease },
+  { title: "NSDR: Gentle Reset", duration: "11 min", image: session1 },
+  { title: "Finding Steady Ground", duration: "8 min", image: session2 },
+  { title: "Physiological Sign for Immediate Relief", duration: "4 min", image: session3 },
+  { title: "Gentle Nervous System Reset", duration: "8 min", image: session4 },
+  { title: "Softening Tension", duration: "7 min", image: session5 },
 ];
 
 const stabaliseLessons = [
-  { num: 1, title: "Regulating with Triangle Breathing", duration: "3 mins", image: categoryCalm },
-  { num: 2, title: "Finding Steady Ground", duration: "8 mins", image: categoryCalm },
-  { num: 3, title: "NSDR: Gentle Reset", duration: "12 mins", image: categoryCalm },
-  { num: 4, title: "Sleep Transition", duration: "5 mins", image: categoryCalm },
+  {
+    num: 1,
+    title: "Regulating with Triangle Breathing",
+    duration: "3 mins",
+    image: stabaliseLesson1,
+  },
+  { num: 2, title: "Finding Steady Ground", duration: "8 mins", image: stabaliseLesson2 },
+  { num: 3, title: "NSDR: Gentle Reset", duration: "12 mins", image: stabaliseLesson3 },
+  { num: 4, title: "Sleep Transition", duration: "5 mins", image: stabaliseLesson4 },
 ];
 
 const openLessons = [{ num: 1, title: "Clear The Way", duration: "6 mins", image: categoryCalm }];
@@ -129,7 +150,7 @@ export const PhoneMockups = () => {
               <div>
                 <p className="text-[12px] text-white/60">15 Days - 11 Lessons</p>
               </div>
-              <p className="text-[12px] text-white/60 font-bold">Stablise/Regulate/Restore</p>
+              <p className="text-[12px] font-bold text-white/60">Stablise/Regulate/Restore</p>
               {stabaliseLessons.map((lesson, i) => (
                 <div key={i} className="flex items-center gap-3">
                   <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg">
@@ -150,7 +171,7 @@ export const PhoneMockups = () => {
               ))}
 
               <div>
-                <p className="text-[12px] text-white/60 font-bold">Open</p>
+                <p className="text-[12px] font-bold text-white/60">Open</p>
               </div>
               {openLessons.map((lesson, i) => (
                 <div key={i} className="flex items-center gap-3">

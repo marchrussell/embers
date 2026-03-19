@@ -86,6 +86,15 @@ export const CLOUD_IMAGES = {
   // About/Bio images
   marchBioPhoto: "about/march-bio-photo.webp",
   marchTeacher: "about/march-russell-teacher.webp",
+
+  // Session images
+  nsdr: "class-images/ai1f75cwoar-1772214259322.webp",
+  findingSteadyGround: "class-images/c9pe6gazlz-1772213326416.webp",
+  immediateRelief: "class-images/tb3tn4o4szk-1772458640802.webp",
+  nervousSystemReset: "class-images/wku49napxr-1772474484815.webp",
+  softeningTension: "class-images/9yrw19mqpxn-1772567950813.webp",
+  triangleBreathing: "class-images/s4gtteeras-1773335509049.webp",
+  sleepTransition: "class-images/os2kvez50f8-1772472742856.webp",
 } as const;
 
 /**
