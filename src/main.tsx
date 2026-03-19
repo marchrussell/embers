@@ -1,5 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { PostHogProvider } from "@posthog/react";
 import "./index.css";
 import App from "./App.tsx";
 
@@ -13,8 +14,16 @@ window.addEventListener("unhandledrejection", (event) => {
   }
 });
 
+const POSTHOG_KEY = import.meta.env.VITE_PUBLIC_POSTHOG_KEY as string;
+const POSTHOG_HOST = import.meta.env.VITE_PUBLIC_POSTHOG_HOST as string;
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
+    <PostHogProvider
+      apiKey={POSTHOG_KEY}
+      options={{ api_host: POSTHOG_HOST, person_profiles: "identified_only" }}
+    >
+      <App />
+    </PostHogProvider>
   </StrictMode>
 );

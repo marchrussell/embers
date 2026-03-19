@@ -1,5 +1,5 @@
-import mLogo from "@/assets/m-logo.png";
-import marchLogo from "@/assets/march-logo.png";
+// import mLogo from "@/assets/m-logo.png";
+// import marchLogo from "@/assets/march-logo.png";
 import { AuthSignInModal } from "@/components/AuthSignInModal";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { Button } from "@/components/ui/button";
@@ -67,8 +67,8 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
       <div className="fixed left-0 top-0 z-[60] pb-8 pl-6 pt-14 md:pb-10 md:pl-12 md:pt-20 lg:hidden lg:pt-24">
         {standalone ? (
           <div className="inline-block cursor-default">
-            {/* M Logo with glow */}
-            <div className="relative inline-block">
+            {/* M Logo with glow - placeholder until asset is available */}
+            {/* <div className="relative inline-block">
               <div
                 className="h-20 w-20 will-change-transform md:h-24 md:w-24"
                 style={{
@@ -89,12 +89,12 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                 role="img"
                 aria-label="March logo"
               />
-            </div>
+            </div> */}
           </div>
         ) : (
           <Link to="/" className="inline-block">
-            {/* M Logo with glow */}
-            <div className="relative inline-block">
+            {/* M Logo with glow - placeholder until asset is available */}
+            {/* <div className="relative inline-block">
               <div
                 className="h-20 w-20 will-change-transform md:h-24 md:w-24"
                 style={{
@@ -115,7 +115,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                 role="img"
                 aria-label="March logo"
               />
-            </div>
+            </div> */}
           </Link>
         )}
       </div>
@@ -128,8 +128,8 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
             style={{ height: "140px" }}
           />
           <div className="relative z-10 flex w-full items-center justify-between">
-            {/* M Logo - far left */}
-            <Link to="/" className="flex shrink-0 items-center">
+            {/* M Logo - far left - placeholder until asset is available */}
+            {/* <Link to="/" className="flex shrink-0 items-center">
               <img
                 src={mLogo}
                 alt="M"
@@ -139,7 +139,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                     "brightness(0) saturate(100%) invert(93%) sepia(8%) saturate(558%) hue-rotate(350deg) brightness(94%) contrast(91%) drop-shadow(0 0 12px rgba(230, 219, 199, 0.7))",
                 }}
               />
-            </Link>
+            </Link> */}
 
             {/* Experiences link */}
             <Link
@@ -161,8 +161,8 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
               )}
             </Link>
 
-            {/* MARCH logo - center */}
-            <Link to="/">
+            {/* MARCH logo - center - placeholder until asset is available */}
+            {/* <Link to="/">
               <img
                 src={marchLogo}
                 alt="March"
@@ -172,7 +172,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                     "brightness(0) saturate(100%) invert(93%) sepia(8%) saturate(558%) hue-rotate(350deg) brightness(94%) contrast(91%) drop-shadow(0 0 12px rgba(230, 219, 199, 0.7))",
                 }}
               />
-            </Link>
+            </Link> */}
 
             {/* Online link */}
             <Link
