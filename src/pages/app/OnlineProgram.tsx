@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Play, Lock, ArrowLeft, User } from "lucide-react";
 import { toast } from "sonner";
+import { analytics } from "@/lib/posthog";
 import SessionDetailModal from "./SessionDetail";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { OptimizedImage } from "@/components/OptimizedImage";
@@ -119,7 +120,7 @@ const OnlineProgram = () => {
     if (!hasSubscription && !isAdmin && !isTestUser) {
       setShowSubscriptionModal(true);
     } else {
-      // Navigate to class player or open modal
+      if (course) analytics.courseStarted(course.id, course.title);
       setSelectedSessionId(lessonId);
     }
   };

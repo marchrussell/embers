@@ -9,6 +9,8 @@ import { Check, Wind } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { analytics } from "@/lib/posthog";
+import { SUBSCRIPTION_PRICES } from "@/lib/stripePrices";
 
 const Onboarding = () => {
   const [safetyAccepted, setSafetyAccepted] = useState(false);
@@ -34,6 +36,8 @@ const Onboarding = () => {
 
   const handleSubscribe = async (priceId: string) => {
     setLoading(true);
+    const plan = priceId === SUBSCRIPTION_PRICES.ANNUAL ? "annual" : "monthly";
+    analytics.subscriptionStarted(plan);
     try {
       const { data, error } = await supabase.functions.invoke("create-checkout", {
         body: { priceId },
@@ -69,6 +73,8 @@ const Onboarding = () => {
         .eq("id", user?.id);
 
       if (error) throw error;
+
+      analytics.onboardingCompleted();
 
       // Force refresh the auth context to pick up the new onboarding status
       await refreshOnboardingStatus();

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Play, Pause, X, Heart, Share2 } from "lucide-react";
 import { SessionCompletionModal } from "@/components/SessionCompletionModal";
+import { analytics } from "@/lib/posthog";
 import { ModalContentSkeleton } from "@/components/skeletons/ModalContentSkeleton";
 import {
   Dialog,
@@ -219,6 +220,12 @@ export const ClassPlayerModal = ({
     }
   }, [isPlaying, hasStarted, isVideoClass]);
 
+  useEffect(() => {
+    if (hasStarted && classData && classId) {
+      analytics.sessionStarted(classId, classData.title);
+    }
+  }, [hasStarted]);
+
   const handleStart = async () => {
     // Update user's profile to mark they've accepted safety disclosure AND completed onboarding
     // Always set both flags together to maintain consistency
@@ -359,6 +366,8 @@ export const ClassPlayerModal = ({
           console.error("Error inserting progress:", error);
         }
       }
+
+      analytics.sessionCompleted(classId, classData?.title ?? "", classData?.duration_minutes ?? 0);
 
       // Refresh stats and show completion modal
       await fetchUserStatsAndProfile();

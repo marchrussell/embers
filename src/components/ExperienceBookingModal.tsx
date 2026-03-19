@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Minus, Plus } from "lucide-react";
 import { ButtonLoadingSpinner } from "@/components/skeletons";
+import { analytics } from "@/lib/posthog";
 import { EventDateSelector } from "@/components/ExperienceDateSelector";
 import { ScheduledEventDate, EVENT_CAPACITY_CONFIG } from "@/lib/experienceSchedule2026";
 import { RecurrenceRule } from "@/lib/experienceDateUtils";
@@ -182,6 +183,7 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
       if (error) throw error;
 
       if (data?.url) {
+        analytics.eventBooked(event.id, event.title);
         window.open(data.url, "_blank");
         onClose();
       }

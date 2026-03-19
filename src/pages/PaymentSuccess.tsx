@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { analytics } from "@/lib/posthog";
 import { useQuery } from "@tanstack/react-query";
 import { CheckCircle2 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -96,12 +97,13 @@ const PaymentSuccess = () => {
     try {
       const fullName = `${firstName} ${surname}`.trim();
       const newUser = await signUp(email, password, fullName);
+      analytics.signupCompleted();
 
       if (newUser && marketingConsent) {
         await supabase.from("profiles").update({ marketing_consent: true }).eq("id", newUser.id);
       }
 
-      toast.success("Account created! Redirecting to safety disclosure...");
+      toast.success("Account created!");
       navigate("/onboarding");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to create account");

@@ -7,6 +7,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Check, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { analytics } from "@/lib/posthog";
 
 interface SubscriptionModalProps {
   open: boolean;
@@ -48,6 +49,7 @@ export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => 
 
     const plan = priceId === annualPriceId ? "annual" : "monthly";
     setLoadingPlan(plan);
+    analytics.subscriptionStarted(plan);
 
     try {
       const { data, error } = await supabase.functions.invoke("create-checkout", {
