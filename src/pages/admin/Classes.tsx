@@ -807,7 +807,7 @@ const AdminClasses = () => {
       </div>
 
       {/* Category Tabs */}
-      <div className="mb-6 flex gap-2 flex-wrap">
+      <div className="my-6 flex gap-2 flex-wrap">
         <button
           onClick={() => setSelectedCategory("all")}
           className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
