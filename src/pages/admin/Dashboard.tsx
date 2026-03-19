@@ -38,7 +38,7 @@ const AdminDashboard = () => {
   }
 
   if (!isAdmin) {
-    return null;
+    return <AdminSkeleton />;
   }
 
   const categories: AdminCategory[] = [
