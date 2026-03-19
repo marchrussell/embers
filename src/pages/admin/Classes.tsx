@@ -56,6 +56,7 @@ const AdminClasses = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingClass, setEditingClass] = useState<Class | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -480,9 +481,12 @@ const AdminClasses = () => {
     setIsDialogOpen(false);
   };
 
-  const filteredClasses = classes.filter(c =>
-    c.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredClasses = classes.filter(c => {
+    const matchesSearch = c.title.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === "all" ||
+      c.categories?.some(cc => cc.id === selectedCategory);
+    return matchesSearch && matchesCategory;
+  });
 
   const newClassDialog = (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -491,7 +495,7 @@ const AdminClasses = () => {
           <Plus className="h-5 w-5" /> New Class
         </Button>
       </DialogTrigger>
-      <DialogContent className="backdrop-blur-xl bg-black/60 border border-white/20 max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl" hideClose>
+      <DialogContent onCloseAutoFocus={(e) => e.preventDefault()} className="backdrop-blur-xl bg-black/60 border border-white/20 max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl" hideClose>
         <DialogHeader>
           <DialogTitle className="text-2xl text-[#E6DBC7]">
             {editingClass ? "Edit Class" : "Create New Class"}
@@ -800,6 +804,36 @@ const AdminClasses = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="max-w-sm bg-white/5 border-white/20 text-white placeholder:text-white/40"
         />
+      </div>
+
+      {/* Category Tabs */}
+      <div className="mb-6 flex gap-2 flex-wrap">
+        <button
+          onClick={() => setSelectedCategory("all")}
+          className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+            selectedCategory === "all"
+              ? "bg-[#E6DBC7] text-black"
+              : "bg-white/5 text-white/60 hover:bg-white/10"
+          }`}
+        >
+          All <span className="ml-1 opacity-60">{classes.length}</span>
+        </button>
+        {categories.map((cat) => {
+          const count = classes.filter(c => c.categories?.some(cc => cc.id === cat.id)).length;
+          return (
+            <button
+              key={cat.id}
+              onClick={() => setSelectedCategory(cat.id)}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                selectedCategory === cat.id
+                  ? "bg-[#E6DBC7] text-black"
+                  : "bg-white/5 text-white/60 hover:bg-white/10"
+              }`}
+            >
+              {cat.name} <span className="ml-1 opacity-60">{count}</span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Table */}
