@@ -32,7 +32,7 @@ export const SafetyDisclosureModal = ({ isOpen, onAccept, userId }: SafetyDisclo
     }
 
     setLoading(true);
-    
+
     // Add timeout protection to prevent infinite loading
     const timeoutId = setTimeout(() => {
       setLoading(false);
@@ -60,96 +60,108 @@ export const SafetyDisclosureModal = ({ isOpen, onAccept, userId }: SafetyDisclo
 
   return (
     <Dialog open={isOpen} onOpenChange={() => {}}>
-      <DialogContent 
-        hideClose 
-        className="max-w-4xl w-[92vw] max-h-[90vh] overflow-y-auto backdrop-blur-xl bg-black/75 border border-white/30 p-0 rounded-xl"
+      <DialogContent
+        hideClose
+        className="max-h-[90vh] w-[92vw] max-w-4xl overflow-y-auto rounded-xl border border-white/30 bg-black/75 p-0 backdrop-blur-xl"
       >
-        <ModalCloseButton onClose={() => {}} size="md" className="opacity-0 pointer-events-none" />
-        <div className="pt-12 md:pt-16 pb-10 px-6 md:px-10 lg:px-12">
+        <ModalCloseButton onClose={() => {}} size="md" className="pointer-events-none opacity-0" />
+        <div className="px-6 pb-10 pt-12 md:px-10 md:pt-16 lg:px-12">
           {/* Header with Icon */}
-          <div className="flex items-center justify-center mb-6">
+          <div className="mb-6 flex items-center justify-center">
             <Wind className="h-12 w-12 text-[#E6DBC7]" />
           </div>
-          
-          <h1 
-            className="font-editorial text-[#E6DBC7] text-center mb-4 tracking-[0.01em]"
+
+          <h1
+            className="mb-4 text-center font-editorial tracking-[0.01em] text-[#E6DBC7]"
             style={{
-              fontSize: 'clamp(1.8rem, 2.2vw, 2.4rem)',
+              fontSize: "clamp(1.8rem, 2.2vw, 2.4rem)",
               lineHeight: 1.15,
-              fontWeight: 400
+              fontWeight: 400,
             }}
           >
             Safety First
           </h1>
-          
-          <p className="text-[#E6DBC7]/60 text-center text-sm mb-10">
+
+          <p className="mb-10 text-center text-sm text-[#E6DBC7]/60">
             Please read and accept our safety guidelines before accessing sessions
           </p>
 
-          <div 
-            className="max-w-[46rem] mx-auto space-y-8"
-            style={{ 
-              fontSize: 'clamp(0.9rem, 1vw, 1rem)',
+          <div
+            className="mx-auto max-w-[46rem] space-y-8"
+            style={{
+              fontSize: "clamp(0.9rem, 1vw, 1rem)",
               lineHeight: 1.7,
-              color: 'rgba(230, 219, 199, 0.9)'
+              color: "rgba(230, 219, 199, 0.9)",
             }}
           >
             {/* Warning Banner */}
-            <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-5">
+            <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-5">
               <div className="flex items-start gap-3">
-                <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
-                <p className="text-[#E6DBC7]/90 font-light">
-                  Important: You must accept this disclosure to access any breathwork sessions or programs.
+                <AlertTriangle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-400" />
+                <p className="font-light text-[#E6DBC7]/90">
+                  Important: You must accept this disclosure to access any breathwork sessions or
+                  programs.
                 </p>
               </div>
             </div>
 
             {/* Main Content Section */}
             <section className="space-y-6">
-              <h2 className="font-editorial text-[#E6DBC7] text-xl font-medium">
+              <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
                 Important Safety Information
               </h2>
-              
+
               <p>
-                The Studio provides specialist breathwork, meditation, and wellness classes designed to support your wellbeing. All content and tools provided through the App are for informational and educational purposes only and do not constitute or replace medical, psychological, or therapeutic advice.
+                The Studio provides specialist breathwork, meditation, and wellness classes designed
+                to support your wellbeing. All content and tools provided through the App are for
+                informational and educational purposes only and do not constitute or replace
+                medical, psychological, or therapeutic advice.
               </p>
-              
+
               <p>
-                Breathwork can have powerful effects on the body and mind, so please practice gently, safely, and within your own window of capacity. It is important and advisable to read and understand the Safety Information before continuing.
+                Breathwork can have powerful effects on the body and mind, so please practice
+                gently, safely, and within your own window of capacity. It is important and
+                advisable to read and understand the Safety Information before continuing.
               </p>
-              
+
               <p>
-                Please consult a medical professional if you have any medical history, conditions, or concerns, and reach out to March at{" "}
-                <a 
-                  href="mailto:support@embersstudio.io" 
-                  className="text-[#E6DBC7] hover:text-[#E6DBC7]/80 underline transition-colors"
+                Please consult a medical professional if you have any medical history, conditions,
+                or concerns, and reach out to March at{" "}
+                <a
+                  href="mailto:support@embersstudio.io"
+                  className="text-[#E6DBC7] underline transition-colors hover:text-[#E6DBC7]/80"
                 >
                   support@embersstudio.io
-                </a>
-                {" "}if you have any questions.
+                </a>{" "}
+                if you have any questions.
               </p>
             </section>
 
             {/* Confirmation Note */}
-            <div className="bg-[#E6DBC7]/5 border border-[#E6DBC7]/20 rounded-lg p-5">
+            <div className="rounded-lg border border-[#E6DBC7]/20 bg-[#E6DBC7]/5 p-5">
               <p className="text-[#E6DBC7]/90">
-                <span className="font-medium text-[#E6DBC7]">By accepting, you confirm</span> that you have read and understood our safety guidelines, and that you take full responsibility for your own health and wellbeing while using this service.
+                <span className="font-medium text-[#E6DBC7]">By accepting, you confirm</span> that
+                you have read and understood our safety guidelines, and that you take full
+                responsibility for your own health and wellbeing while using this service.
               </p>
             </div>
 
             {/* Checkbox Agreement */}
-            <div className="flex items-start gap-4 p-5 bg-background/20 rounded-lg border border-[#E6DBC7]/10">
+            <div className="flex items-start gap-4 rounded-lg border border-[#E6DBC7]/10 bg-background/20 p-5">
               <Checkbox
                 id="safety-accept"
                 checked={accepted}
                 onCheckedChange={(checked) => setAccepted(checked as boolean)}
-                className="h-5 w-5 flex-shrink-0 mt-0.5"
+                className="mt-0.5 h-5 w-5 flex-shrink-0"
               />
               <label
                 htmlFor="safety-accept"
-                className="text-sm text-[#E6DBC7]/80 font-light leading-relaxed cursor-pointer"
+                className="cursor-pointer text-sm font-light leading-relaxed text-[#E6DBC7]/80"
               >
-                I have read and understood the safety guidelines. I confirm that I take full responsibility for my own health and wellbeing while using The Studio, and I understand that this service does not replace medical, psychological, or therapeutic advice.
+                I have read and understood the safety guidelines. I confirm that I take full
+                responsibility for my own health and wellbeing while using The Studio, and I
+                understand that this service does not replace medical, psychological, or therapeutic
+                advice.
               </label>
             </div>
 
@@ -157,7 +169,7 @@ export const SafetyDisclosureModal = ({ isOpen, onAccept, userId }: SafetyDisclo
             <Button
               onClick={handleAccept}
               disabled={!accepted || loading}
-              className="w-full py-6 text-base bg-[#E6DBC7] text-[#1A1F2C] hover:bg-[#E6DBC7]/90 font-light"
+              className="w-full bg-[#E6DBC7] py-6 text-base font-light text-[#1A1F2C] hover:bg-[#E6DBC7]/90"
             >
               {loading ? <ButtonLoadingSpinner /> : "Accept & Continue"}
             </Button>

@@ -71,13 +71,13 @@ const NewsletterUnsubscribe = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="flex min-h-screen flex-col bg-background">
       <NavBar />
-      
-      <div className="flex-1 flex items-center justify-center px-4 py-16 md:py-24">
+
+      <div className="flex flex-1 items-center justify-center px-4 py-16 md:py-24">
         <div className="w-full max-w-lg">
-          <Card className="bg-card/50 backdrop-blur-xl border-border/40 shadow-2xl">
-            <CardHeader className="text-center space-y-6 pb-8">
+          <Card className="border-border/40 bg-card/50 shadow-2xl backdrop-blur-xl">
+            <CardHeader className="space-y-6 pb-8 text-center">
               {isUnsubscribed ? (
                 <div className="flex justify-center">
                   <div className="rounded-full bg-green-500/10 p-6">
@@ -92,10 +92,10 @@ const NewsletterUnsubscribe = () => {
                 </div>
               )}
               <div className="space-y-2">
-                <CardTitle className="text-3xl md:text-4xl font-editorial text-foreground">
+                <CardTitle className="font-editorial text-3xl text-foreground md:text-4xl">
                   {isUnsubscribed ? "You're Unsubscribed" : "Unsubscribe from Newsletter"}
                 </CardTitle>
-                <CardDescription className="text-base text-muted-foreground max-w-md mx-auto">
+                <CardDescription className="mx-auto max-w-md text-base text-muted-foreground">
                   {isUnsubscribed
                     ? "You've been removed from our mailing list and won't receive any more newsletters from us."
                     : "We're sorry to see you go. Enter your email below to unsubscribe from our newsletter."}
@@ -104,7 +104,7 @@ const NewsletterUnsubscribe = () => {
             </CardHeader>
 
             {!isUnsubscribed && (
-              <CardContent className="space-y-6 px-6 md:px-8 pb-8">
+              <CardContent className="space-y-6 px-6 pb-8 md:px-8">
                 <form onSubmit={handleUnsubscribe} className="space-y-4">
                   <div className="space-y-2">
                     <Input
@@ -112,33 +112,33 @@ const NewsletterUnsubscribe = () => {
                       placeholder="your@email.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="h-12 bg-background/60 border-border/60 focus:border-primary text-base"
+                      className="h-12 border-border/60 bg-background/60 text-base focus:border-primary"
                       disabled={isLoading}
                       required
                     />
                   </div>
                   <Button
                     type="submit"
-                    className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-base"
+                    className="h-12 w-full bg-primary text-base font-medium text-primary-foreground hover:bg-primary/90"
                     disabled={isLoading}
                   >
                     {isLoading ? "Unsubscribing..." : "Unsubscribe"}
                   </Button>
                 </form>
-                <p className="text-sm text-center text-muted-foreground/80 pt-2">
+                <p className="pt-2 text-center text-sm text-muted-foreground/80">
                   You can resubscribe anytime from our website. We'd love to have you back.
                 </p>
               </CardContent>
             )}
 
             {isUnsubscribed && (
-              <CardContent className="text-center space-y-6 px-6 md:px-8 pb-8">
+              <CardContent className="space-y-6 px-6 pb-8 text-center md:px-8">
                 <p className="text-sm text-muted-foreground">
                   Thank you for being part of our community. If you change your mind, we'll be here.
                 </p>
                 <Button
-                  onClick={() => window.location.href = "/"}
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground h-12 px-8"
+                  onClick={() => (window.location.href = "/")}
+                  className="h-12 bg-primary px-8 text-primary-foreground hover:bg-primary/90"
                 >
                   Return to Home
                 </Button>

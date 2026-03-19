@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from "react";
 
 interface LazyYouTubeProps {
   videoId: string;
@@ -11,7 +11,11 @@ interface LazyYouTubeProps {
  * Saves ~1.2MB and 590ms of blocking time on initial page load
  * Performance improvement: Mobile LCP reduced significantly
  */
-export const LazyYouTube = ({ videoId, title = 'YouTube video player', className = '' }: LazyYouTubeProps) => {
+export const LazyYouTube = ({
+  videoId,
+  title = "YouTube video player",
+  className = "",
+}: LazyYouTubeProps) => {
   const [isIntersecting, setIsIntersecting] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -30,7 +34,7 @@ export const LazyYouTube = ({ videoId, title = 'YouTube video player', className
         });
       },
       {
-        rootMargin: '200px', // Start loading 200px before it enters viewport
+        rootMargin: "200px", // Start loading 200px before it enters viewport
         threshold: 0.01,
       }
     );
@@ -57,24 +61,20 @@ export const LazyYouTube = ({ videoId, title = 'YouTube video player', className
         // Show lightweight thumbnail before loading iframe
         <button
           onClick={() => setIsClicked(true)}
-          className="absolute inset-0 w-full h-full cursor-pointer group"
+          className="group absolute inset-0 h-full w-full cursor-pointer"
           aria-label="Load YouTube video"
         >
           <img
             src={thumbnailUrl}
             alt={title}
-            className="w-full h-full object-cover"
+            className="h-full w-full object-cover"
             loading="lazy"
           />
-          <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
+          <div className="absolute inset-0 bg-black/20 transition-colors group-hover:bg-black/10" />
           {/* YouTube play button */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="bg-red-600 hover:bg-red-700 rounded-full p-5 group-hover:scale-110 transition-all duration-200">
-              <svg
-                className="w-8 h-8 text-white"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
+            <div className="rounded-full bg-red-600 p-5 transition-all duration-200 hover:bg-red-700 group-hover:scale-110">
+              <svg className="h-8 w-8 text-white" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M8 5v14l11-7z" />
               </svg>
             </div>
@@ -83,7 +83,7 @@ export const LazyYouTube = ({ videoId, title = 'YouTube video player', className
       ) : (
         // Load actual iframe when in viewport or clicked
         <iframe
-          className="w-full h-full"
+          className="h-full w-full"
           src={`https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&controls=1&autoplay=${isClicked ? 1 : 0}`}
           title={title}
           frameBorder="0"

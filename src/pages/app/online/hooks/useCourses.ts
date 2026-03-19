@@ -13,10 +13,10 @@ export const useCourses = () => {
       try {
         setIsLoading(true);
         const { data } = await supabase
-          .from('courses')
-          .select('*')
-          .eq('is_published', true)
-          .order('order_index')
+          .from("courses")
+          .select("*")
+          .eq("is_published", true)
+          .order("order_index")
           .abortSignal(controller.signal);
 
         if (!controller.signal.aborted && data) {
@@ -24,7 +24,7 @@ export const useCourses = () => {
         }
       } catch (error) {
         if (!controller.signal.aborted) {
-          console.error('useCourses: Error fetching courses:', error);
+          console.error("useCourses: Error fetching courses:", error);
         }
       } finally {
         if (!controller.signal.aborted) {

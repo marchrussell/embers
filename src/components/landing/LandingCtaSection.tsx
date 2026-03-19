@@ -14,11 +14,11 @@ export const LandingCtaSection = ({
   className,
 }: LandingCtaSectionProps) => {
   return (
-    <section className={cn("px-6 md:px-12 lg:px-24 py-32 border-t border-white/10", className)}>
-      <div className="max-w-2xl mx-auto text-center">
+    <section className={cn("border-t border-white/10 px-6 py-32 md:px-12 lg:px-24", className)}>
+      <div className="mx-auto max-w-2xl text-center">
         <button
           onClick={onCtaClick}
-          className="bg-transparent text-white border border-white rounded-full inline-flex items-center hover:bg-white/10 transition-colors mb-8"
+          className="mb-8 inline-flex items-center rounded-full border border-white bg-transparent text-white transition-colors hover:bg-white/10"
           style={{
             fontSize: "clamp(1rem, 1.1vw, 1.15rem)",
             fontWeight: 400,

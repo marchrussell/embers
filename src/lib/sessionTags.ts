@@ -3,7 +3,7 @@
 
 export const goalTags = {
   stuck: "stuck",
-  structure: "structure", 
+  structure: "structure",
   accountability: "accountability",
   stress: "stress",
   habit: "habit",
@@ -23,9 +23,9 @@ export const focusTags = {
 } as const;
 
 export const timeTags = {
-  short: "short",   // 5 mins
+  short: "short", // 5 mins
   medium: "medium", // 10 mins
-  long: "long",     // 15+ mins
+  long: "long", // 15+ mins
 } as const;
 
 // Sample session tagging templates

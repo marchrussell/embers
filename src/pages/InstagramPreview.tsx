@@ -15,8 +15,8 @@ const InstagramPreview = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-background py-8 px-4">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-background px-4 py-8">
+      <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -29,18 +29,14 @@ const InstagramPreview = () => {
               <ArrowLeft className="h-6 w-6" />
             </Button>
             <div>
-              <h1 className="text-3xl font-editorial text-foreground">
-                Instagram Story Previews
-              </h1>
-              <p className="text-muted-foreground mt-1">
-                Compare all story card variations
-              </p>
+              <h1 className="font-editorial text-3xl text-foreground">Instagram Story Previews</h1>
+              <p className="mt-1 text-muted-foreground">Compare all story card variations</p>
             </div>
           </div>
         </div>
 
         {/* Grid of Story Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {/* Card 1 - Original */}
           <div className="space-y-4">
             <div className="text-center">
@@ -124,8 +120,8 @@ const InstagramPreview = () => {
         </div>
 
         {/* Tips Section */}
-        <div className="mt-12 bg-accent/50 rounded-lg p-6 border border-border">
-          <h3 className="text-lg font-semibold text-foreground mb-3">Tips for Instagram</h3>
+        <div className="mt-12 rounded-lg border border-border bg-accent/50 p-6">
+          <h3 className="mb-3 text-lg font-semibold text-foreground">Tips for Instagram</h3>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li>• Optimal size: 1080 x 1920 pixels (9:16 aspect ratio)</li>
             <li>• Use screenshot tools to capture these cards at the right resolution</li>

@@ -79,9 +79,9 @@ const NewsletterSubscribers = () => {
 
     // Filter by active status
     if (activeFilter === "active") {
-      filtered = filtered.filter(sub => sub.active);
+      filtered = filtered.filter((sub) => sub.active);
     } else if (activeFilter === "inactive") {
-      filtered = filtered.filter(sub => !sub.active);
+      filtered = filtered.filter((sub) => !sub.active);
     }
 
     // Filter by search query
@@ -142,55 +142,54 @@ const NewsletterSubscribers = () => {
 
   const exportToCSV = () => {
     if (filteredSubscribers.length === 0) return;
-    
-    const csvData = filteredSubscribers.map(sub => ({
+
+    const csvData = filteredSubscribers.map((sub) => ({
       Email: sub.email,
       Name: sub.name || "",
       "Subscribed Date": new Date(sub.subscribed_at).toLocaleDateString(),
-      Status: sub.active ? "Active" : "Inactive"
+      Status: sub.active ? "Active" : "Inactive",
     }));
 
     const headers = Object.keys(csvData[0]);
     const csvContent = [
       headers.join(","),
-      ...csvData.map(row => 
-        headers.map(header => `"${row[header as keyof typeof row]}"`).join(",")
-      )
+      ...csvData.map((row) =>
+        headers.map((header) => `"${row[header as keyof typeof row]}"`).join(",")
+      ),
     ].join("\n");
 
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
     link.setAttribute("href", url);
-    link.setAttribute("download", `newsletter_subscribers_${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute(
+      "download",
+      `newsletter_subscribers_${new Date().toISOString().split("T")[0]}.csv`
+    );
     link.style.visibility = "hidden";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    
+
     toast.success("Subscribers exported to CSV");
   };
 
-  const activeCount = subscribers.filter(s => s.active).length;
-  const inactiveCount = subscribers.filter(s => !s.active).length;
+  const activeCount = subscribers.filter((s) => s.active).length;
+  const inactiveCount = subscribers.filter((s) => !s.active).length;
 
   return (
     <AdminLayout
       title="Newsletter Subscribers"
       description="Manage your newsletter subscriber list"
       actions={
-        <Button 
-          onClick={exportToCSV} 
-          disabled={filteredSubscribers.length === 0}
-          className="gap-2"
-        >
+        <Button onClick={exportToCSV} disabled={filteredSubscribers.length === 0} className="gap-2">
           <Download className="h-5 w-5" />
           Export CSV
         </Button>
       }
     >
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <AdminStatsCard
           title="Total Subscribers"
           value={subscribers.length}
@@ -222,24 +221,43 @@ const NewsletterSubscribers = () => {
       </div>
 
       {/* Search and Filter */}
-      <Card className="bg-background/40 backdrop-blur-xl border-[#E6DBC7]/20 mb-6">
+      <Card className="mb-6 border-[#E6DBC7]/20 bg-background/40 backdrop-blur-xl">
         <CardHeader className="pb-4">
-          <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-            <div className="relative flex-1 w-full">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40 h-5 w-5" />
+          <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
+            <div className="relative w-full flex-1">
+              <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 transform text-white/40" />
               <Input
                 type="text"
                 placeholder="Search by email or name..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 w-full bg-white/5 border-white/20 text-white placeholder:text-white/40"
+                className="w-full border-white/20 bg-white/5 pl-10 text-white placeholder:text-white/40"
               />
             </div>
-            <Tabs value={activeFilter} onValueChange={(value) => setActiveFilter(value as typeof activeFilter)} className="w-full md:w-auto">
-              <TabsList className="bg-white/5 border border-white/10 grid w-full md:w-auto grid-cols-3">
-                <TabsTrigger value="all" className="data-[state=active]:bg-white/10 text-white/70 data-[state=active]:text-white">All</TabsTrigger>
-                <TabsTrigger value="active" className="data-[state=active]:bg-white/10 text-white/70 data-[state=active]:text-white">Active</TabsTrigger>
-                <TabsTrigger value="inactive" className="data-[state=active]:bg-white/10 text-white/70 data-[state=active]:text-white">Inactive</TabsTrigger>
+            <Tabs
+              value={activeFilter}
+              onValueChange={(value) => setActiveFilter(value as typeof activeFilter)}
+              className="w-full md:w-auto"
+            >
+              <TabsList className="grid w-full grid-cols-3 border border-white/10 bg-white/5 md:w-auto">
+                <TabsTrigger
+                  value="all"
+                  className="text-white/70 data-[state=active]:bg-white/10 data-[state=active]:text-white"
+                >
+                  All
+                </TabsTrigger>
+                <TabsTrigger
+                  value="active"
+                  className="text-white/70 data-[state=active]:bg-white/10 data-[state=active]:text-white"
+                >
+                  Active
+                </TabsTrigger>
+                <TabsTrigger
+                  value="inactive"
+                  className="text-white/70 data-[state=active]:bg-white/10 data-[state=active]:text-white"
+                >
+                  Inactive
+                </TabsTrigger>
               </TabsList>
             </Tabs>
           </div>
@@ -271,9 +289,9 @@ const NewsletterSubscribers = () => {
             </TableCell>
             <TableCell className={adminTableCellClass}>
               {subscriber.active ? (
-                <Badge className="bg-green-500/20 text-green-400 border-0">Active</Badge>
+                <Badge className="border-0 bg-green-500/20 text-green-400">Active</Badge>
               ) : (
-                <Badge className="bg-orange-500/20 text-orange-400 border-0">Inactive</Badge>
+                <Badge className="border-0 bg-orange-500/20 text-orange-400">Inactive</Badge>
               )}
             </TableCell>
             <TableCell className={cn(adminTableCellClass, "text-right")}>
@@ -282,7 +300,7 @@ const NewsletterSubscribers = () => {
                   variant="ghost"
                   size="sm"
                   onClick={() => handleDeactivate(subscriber)}
-                  className="text-white/70 hover:text-white hover:bg-white/10"
+                  className="text-white/70 hover:bg-white/10 hover:text-white"
                 >
                   Deactivate
                 </Button>
@@ -291,7 +309,7 @@ const NewsletterSubscribers = () => {
                   variant="ghost"
                   size="sm"
                   onClick={() => handleReactivate(subscriber)}
-                  className="text-white/70 hover:text-white hover:bg-white/10"
+                  className="text-white/70 hover:bg-white/10 hover:text-white"
                 >
                   Reactivate
                 </Button>
@@ -303,16 +321,22 @@ const NewsletterSubscribers = () => {
 
       {/* Deactivate Dialog */}
       <AlertDialog open={deactivateDialogOpen} onOpenChange={setDeactivateDialogOpen}>
-        <AlertDialogContent className="bg-background border-[#E6DBC7]/20">
+        <AlertDialogContent className="border-[#E6DBC7]/20 bg-background">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-[#E6DBC7]">Deactivate Subscriber</AlertDialogTitle>
             <AlertDialogDescription className="text-white/60">
-              Are you sure you want to deactivate {selectedSubscriber?.email}? They will stop receiving newsletter emails.
+              Are you sure you want to deactivate {selectedSubscriber?.email}? They will stop
+              receiving newsletter emails.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="border-white/20 text-white hover:bg-white/10">Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDeactivate} className="bg-red-500/20 text-red-400 hover:bg-red-500/30">
+            <AlertDialogCancel className="border-white/20 text-white hover:bg-white/10">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDeactivate}
+              className="bg-red-500/20 text-red-400 hover:bg-red-500/30"
+            >
               Deactivate
             </AlertDialogAction>
           </AlertDialogFooter>

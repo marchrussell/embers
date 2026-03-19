@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface GuestTeacher {
   id: string;
@@ -26,11 +26,11 @@ export function useNextGuestTeacher() {
         const now = new Date().toISOString();
 
         const { data, error: fetchError } = await supabase
-          .from('guest_teachers')
-          .select('*')
-          .eq('is_active', true)
-          .gte('session_date', now)
-          .order('session_date', { ascending: true })
+          .from("guest_teachers")
+          .select("*")
+          .eq("is_active", true)
+          .gte("session_date", now)
+          .order("session_date", { ascending: true })
           .limit(1)
           .abortSignal(controller.signal)
           .maybeSingle();
@@ -39,8 +39,8 @@ export function useNextGuestTeacher() {
         if (!controller.signal.aborted) setTeacher(data);
       } catch (err) {
         if (controller.signal.aborted) return;
-        console.error('Error fetching next guest teacher:', err);
-        setError(err instanceof Error ? err : new Error('Unknown error'));
+        console.error("Error fetching next guest teacher:", err);
+        setError(err instanceof Error ? err : new Error("Unknown error"));
       } finally {
         if (!controller.signal.aborted) setLoading(false);
       }
@@ -58,10 +58,10 @@ export function getNextThirdThursday(): Date {
   const now = new Date();
   let year = now.getFullYear();
   let month = now.getMonth();
-  
+
   // Find 3rd Thursday of current month
   let thirdThursday = getThirdThursdayOfMonth(year, month);
-  
+
   // If it's past, get next month's
   if (thirdThursday < now) {
     month++;
@@ -71,31 +71,31 @@ export function getNextThirdThursday(): Date {
     }
     thirdThursday = getThirdThursdayOfMonth(year, month);
   }
-  
+
   // Set time to 7:30 PM GMT
   thirdThursday.setUTCHours(19, 30, 0, 0);
-  
+
   return thirdThursday;
 }
 
 function getThirdThursdayOfMonth(year: number, month: number): Date {
   const firstDay = new Date(year, month, 1);
   const dayOfWeek = firstDay.getDay();
-  
+
   // Days until first Thursday (Thursday = 4)
   let daysUntilThursday = (4 - dayOfWeek + 7) % 7;
-  
+
   // Third Thursday is 14 days after first Thursday
   const thirdThursday = new Date(year, month, 1 + daysUntilThursday + 14);
-  
+
   return thirdThursday;
 }
 
 // Format the session date for display
 export function formatGuestSessionDate(date: Date): string {
-  return date.toLocaleDateString('en-GB', {
-    weekday: 'long',
-    month: 'long',
-    day: 'numeric',
+  return date.toLocaleDateString("en-GB", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
   });
 }

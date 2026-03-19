@@ -4,38 +4,32 @@ import { InstagramStoryCardBase, INSTAGRAM_FILTERS } from "./InstagramStoryCardB
 
 export const InstagramStoryCardLiveSession = () => {
   return (
-    <InstagramStoryCardBase
-      backgroundImage={liveSessionBg}
-      overlay="dark"
-      showBorder={false}
-    >
+    <InstagramStoryCardBase backgroundImage={liveSessionBg} overlay="dark" showBorder={false}>
       {/* Content */}
-      <div className="relative h-full flex flex-col px-8 py-12">
+      <div className="relative flex h-full flex-col px-8 py-12">
         {/* Event Details at Top */}
-        <div className="text-center mb-auto mt-8">
-          <p className="text-sm md:text-base uppercase tracking-wider text-primary font-bold">
+        <div className="mb-auto mt-8 text-center">
+          <p className="text-sm font-bold uppercase tracking-wider text-primary md:text-base">
             INSTAGRAM LIVE • SUNDAY 9PM
           </p>
         </div>
 
         {/* Center Content */}
-        <div className="flex flex-col items-center justify-center flex-1">
+        <div className="flex flex-1 flex-col items-center justify-center">
           {/* Animated M Logo */}
-          <div className="w-32 h-32 flex items-center justify-center mb-8">
+          <div className="mb-8 flex h-32 w-32 items-center justify-center">
             <img
               src={mLogo}
               alt="M Logo"
-              className="w-full h-full object-contain animate-breathe"
+              className="h-full w-full animate-breathe object-contain"
               style={{ filter: INSTAGRAM_FILTERS.glow }}
             />
           </div>
 
           {/* Text Content */}
-          <div className="text-center space-y-4">
-            <h2 className="text-4xl md:text-5xl font-editorial italic text-white">
-              Unwind & Rest
-            </h2>
-            <p className="text-base md:text-lg text-white">
+          <div className="space-y-4 text-center">
+            <h2 className="font-editorial text-4xl italic text-white md:text-5xl">Unwind & Rest</h2>
+            <p className="text-base text-white md:text-lg">
               A warm, restorative breathwork session
               <br />
               to quieten your racing mind and

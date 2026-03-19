@@ -9,10 +9,7 @@ interface ImageSkeletonProps {
  * Skeleton placeholder for images while they're loading.
  * Shows a smooth shimmer animation with proper aspect ratio.
  */
-export const ImageSkeleton = ({ 
-  className, 
-  aspectRatio = "video" 
-}: ImageSkeletonProps) => {
+export const ImageSkeleton = ({ className, aspectRatio = "video" }: ImageSkeletonProps) => {
   const aspectRatioStyles: Record<string, string> = {
     square: "aspect-square",
     video: "aspect-video",
@@ -23,17 +20,9 @@ export const ImageSkeleton = ({
   const aspectClass = aspectRatioStyles[aspectRatio] || aspectRatio;
 
   return (
-    <div 
-      className={cn(
-        "relative bg-muted/40 rounded-lg overflow-hidden",
-        aspectClass,
-        className
-      )}
-    >
+    <div className={cn("relative overflow-hidden rounded-lg bg-muted/40", aspectClass, className)}>
       {/* Smooth shimmer effect overlay */}
-      <div 
-        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.08] to-transparent animate-shimmer"
-      />
+      <div className="absolute inset-0 animate-shimmer bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
     </div>
   );
 };

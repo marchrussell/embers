@@ -25,7 +25,7 @@ const ManualActivation = () => {
 
     try {
       console.log("[ManualActivation] Verifying session:", stripeSessionId);
-      
+
       const { data, error } = await supabase.functions.invoke("verify-payment-session", {
         body: { sessionId: stripeSessionId },
       });
@@ -35,7 +35,7 @@ const ManualActivation = () => {
       }
 
       setVerificationResult(data);
-      
+
       if (data?.verified) {
         toast.success(`Payment verified for ${data.customer_email}!`);
       } else {
@@ -52,56 +52,68 @@ const ManualActivation = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-8 py-24 max-w-3xl">
+      <div className="container mx-auto max-w-3xl px-8 py-24">
         <div className="mb-8">
-          <Link to="/admin" className="inline-flex items-center text-[#E6DBC7]/70 hover:text-[#E6DBC7] transition-colors gap-2 text-base md:text-lg">
+          <Link
+            to="/admin"
+            className="inline-flex items-center gap-2 text-base text-[#E6DBC7]/70 transition-colors hover:text-[#E6DBC7] md:text-lg"
+          >
             <ArrowLeft className="h-5 w-5" />
             Back to Dashboard
           </Link>
         </div>
 
         <div className="mb-12">
-          <h1 className="font-editorial text-5xl md:text-6xl text-[#E6DBC7] mb-3 font-light">Manual Activation</h1>
-          <p className="text-base text-foreground/70">Verify and activate accounts when automatic verification fails</p>
+          <h1 className="mb-3 font-editorial text-5xl font-light text-[#E6DBC7] md:text-6xl">
+            Manual Activation
+          </h1>
+          <p className="text-base text-foreground/70">
+            Verify and activate accounts when automatic verification fails
+          </p>
         </div>
 
-        <Card className="bg-background/40 backdrop-blur-xl border border-[#E6DBC7]/20 rounded-xl">
+        <Card className="rounded-xl border border-[#E6DBC7]/20 bg-background/40 backdrop-blur-xl">
           <CardHeader className="pb-6">
-            <CardTitle className="text-[#E6DBC7] text-xl flex items-center gap-3 font-normal">
-              <div className="w-10 h-10 rounded-xl bg-[#E6DBC7]/10 flex items-center justify-center">
-                <ShieldCheck className="w-5 h-5 text-[#E6DBC7]" />
+            <CardTitle className="flex items-center gap-3 text-xl font-normal text-[#E6DBC7]">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#E6DBC7]/10">
+                <ShieldCheck className="h-5 w-5 text-[#E6DBC7]" />
               </div>
               Payment Verification
             </CardTitle>
-            <CardDescription className="text-foreground/60 mt-2">
+            <CardDescription className="mt-2 text-foreground/60">
               Verify and activate customer accounts when automatic verification fails
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="space-y-3">
-              <Label htmlFor="sessionId" className="text-[#E6DBC7] font-normal">Stripe Checkout Session ID</Label>
+              <Label htmlFor="sessionId" className="font-normal text-[#E6DBC7]">
+                Stripe Checkout Session ID
+              </Label>
               <Input
                 id="sessionId"
                 placeholder="cs_live_..."
                 value={stripeSessionId}
                 onChange={(e) => setStripeSessionId(e.target.value)}
-                className="bg-white/5 border-[#E6DBC7]/20 text-white placeholder:text-white/40 h-12 text-base"
+                className="h-12 border-[#E6DBC7]/20 bg-white/5 text-base text-white placeholder:text-white/40"
               />
               <p className="text-sm text-foreground/50">
                 Get this from the customer's error message or Stripe dashboard
               </p>
             </div>
 
-            <Button onClick={handleVerify} disabled={loading} className="w-full gap-2 h-12">
-              <ShieldCheck className="w-5 h-5" />
+            <Button onClick={handleVerify} disabled={loading} className="h-12 w-full gap-2">
+              <ShieldCheck className="h-5 w-5" />
               {loading ? "Verifying..." : "Verify Payment"}
             </Button>
 
             {verificationResult && (
-              <Alert className={verificationResult.verified 
-                ? "border-green-500/50 bg-green-500/10" 
-                : "border-red-500/50 bg-red-500/10"
-              }>
+              <Alert
+                className={
+                  verificationResult.verified
+                    ? "border-green-500/50 bg-green-500/10"
+                    : "border-red-500/50 bg-red-500/10"
+                }
+              >
                 {verificationResult.verified ? (
                   <CheckCircle2 className="h-5 w-5 text-green-400" />
                 ) : (
@@ -116,16 +128,25 @@ const ManualActivation = () => {
                   ) : verificationResult.verified ? (
                     <div className="space-y-2 text-white">
                       <p className="font-semibold text-green-400">Payment Verified!</p>
-                      <p><strong>Email:</strong> {verificationResult.customer_email}</p>
-                      <p><strong>Customer ID:</strong> {verificationResult.customer_id}</p>
+                      <p>
+                        <strong>Email:</strong> {verificationResult.customer_email}
+                      </p>
+                      <p>
+                        <strong>Customer ID:</strong> {verificationResult.customer_id}
+                      </p>
                       {verificationResult.subscription_id && (
                         <>
-                          <p><strong>Subscription ID:</strong> {verificationResult.subscription_id}</p>
-                          <p><strong>Status:</strong> {verificationResult.subscription_status}</p>
+                          <p>
+                            <strong>Subscription ID:</strong> {verificationResult.subscription_id}
+                          </p>
+                          <p>
+                            <strong>Status:</strong> {verificationResult.subscription_status}
+                          </p>
                         </>
                       )}
-                      <p className="text-sm text-white/60 mt-2">
-                        The subscription has been saved to the database. The customer can now create their account.
+                      <p className="mt-2 text-sm text-white/60">
+                        The subscription has been saved to the database. The customer can now create
+                        their account.
                       </p>
                     </div>
                   ) : (
@@ -135,9 +156,9 @@ const ManualActivation = () => {
               </Alert>
             )}
 
-            <div className="mt-8 p-6 bg-[#E6DBC7]/5 rounded-xl border border-[#E6DBC7]/10">
-              <h3 className="font-normal mb-4 text-[#E6DBC7]">How to use this tool:</h3>
-              <ol className="list-decimal list-inside space-y-3 text-sm text-foreground/70">
+            <div className="mt-8 rounded-xl border border-[#E6DBC7]/10 bg-[#E6DBC7]/5 p-6">
+              <h3 className="mb-4 font-normal text-[#E6DBC7]">How to use this tool:</h3>
+              <ol className="list-inside list-decimal space-y-3 text-sm text-foreground/70">
                 <li>Customer reports verification timeout with session ID</li>
                 <li>Enter the session ID above and click "Verify Payment"</li>
                 <li>If verified, the subscription is automatically saved</li>

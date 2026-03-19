@@ -73,7 +73,12 @@ const AdminLiveSessions = () => {
   });
 
   // Check if form has any data filled in
-  const isFormDirty = formData.title || formData.description || formData.start_time || formData.end_time || formData.recording_enabled;
+  const isFormDirty =
+    formData.title ||
+    formData.description ||
+    formData.start_time ||
+    formData.end_time ||
+    formData.recording_enabled;
 
   // Handle attempt to close dialog with unsaved data
   const handleCloseAttempt = (e: Event) => {
@@ -140,7 +145,7 @@ const AdminLiveSessions = () => {
       if (error) throw error;
 
       // Create Daily room
-      const { error: roomError } = await supabase.functions.invoke('daily-create-room', {
+      const { error: roomError } = await supabase.functions.invoke("daily-create-room", {
         body: {
           sessionId: newSession.id,
           title: formData.title,
@@ -206,9 +211,12 @@ const AdminLiveSessions = () => {
     setActionLoading(session.id);
 
     try {
-      const { data, error: linkError } = await supabase.functions.invoke('daily-generate-guest-link', {
-        body: { sessionId: session.id },
-      });
+      const { data, error: linkError } = await supabase.functions.invoke(
+        "daily-generate-guest-link",
+        {
+          body: { sessionId: session.id },
+        }
+      );
 
       if (linkError) throw linkError;
 
@@ -242,10 +250,7 @@ const AdminLiveSessions = () => {
     if (!confirm("Are you sure you want to delete this session?")) return;
 
     try {
-      const { error } = await supabase
-        .from("live_sessions")
-        .delete()
-        .eq("id", session.id);
+      const { error } = await supabase.from("live_sessions").delete().eq("id", session.id);
 
       if (error) throw error;
 
@@ -260,7 +265,7 @@ const AdminLiveSessions = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "live":
-        return <Badge className="bg-red-500 text-white animate-pulse">Live</Badge>;
+        return <Badge className="animate-pulse bg-red-500 text-white">Live</Badge>;
       case "ended":
         return <Badge variant="secondary">Ended</Badge>;
       default:
@@ -276,7 +281,7 @@ const AdminLiveSessions = () => {
           New Session
         </Button>
       </DialogTrigger>
-      <DialogContent 
+      <DialogContent
         className="sm:max-w-md"
         onInteractOutside={handleCloseAttempt}
         onEscapeKeyDown={handleCloseAttempt}
@@ -290,9 +295,7 @@ const AdminLiveSessions = () => {
             <Input
               id="title"
               value={formData.title}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, title: e.target.value }))
-              }
+              onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
               placeholder="Weekly Reset"
             />
           </div>
@@ -301,9 +304,7 @@ const AdminLiveSessions = () => {
             <Textarea
               id="description"
               value={formData.description}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, description: e.target.value }))
-              }
+              onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
               placeholder="A calming breathwork session..."
             />
           </div>
@@ -313,9 +314,7 @@ const AdminLiveSessions = () => {
               id="start_time"
               type="datetime-local"
               value={formData.start_time}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, start_time: e.target.value }))
-              }
+              onChange={(e) => setFormData((prev) => ({ ...prev, start_time: e.target.value }))}
             />
           </div>
           <div className="space-y-2">
@@ -324,9 +323,7 @@ const AdminLiveSessions = () => {
               id="end_time"
               type="datetime-local"
               value={formData.end_time}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, end_time: e.target.value }))
-              }
+              onChange={(e) => setFormData((prev) => ({ ...prev, end_time: e.target.value }))}
             />
           </div>
           <div className="flex items-center space-x-2">
@@ -339,14 +336,10 @@ const AdminLiveSessions = () => {
             />
             <Label htmlFor="recording">Enable Recording</Label>
           </div>
-          <Button
-            onClick={handleCreate}
-            disabled={isCreating}
-            className="w-full"
-          >
+          <Button onClick={handleCreate} disabled={isCreating} className="w-full">
             {isCreating ? (
               <>
-                <Loader2 className="w-6 h-6 mr-2 animate-spin" />
+                <Loader2 className="mr-2 h-6 w-6 animate-spin" />
                 Creating...
               </>
             ) : (
@@ -368,11 +361,11 @@ const AdminLiveSessions = () => {
       {isLoading ? (
         <AdminContentSkeleton showStats={false} variant="table" />
       ) : sessions.length === 0 ? (
-        <div className="text-center py-12 text-muted-foreground">
+        <div className="py-12 text-center text-muted-foreground">
           No live sessions yet. Create your first one!
         </div>
       ) : (
-        <div className="border border-[#E6DBC7]/20 rounded-lg overflow-hidden">
+        <div className="overflow-hidden rounded-lg border border-[#E6DBC7]/20">
           <Table>
             <TableHeader>
               <TableRow>
@@ -392,7 +385,7 @@ const AdminLiveSessions = () => {
                     <div>
                       <p className="font-medium">{session.title}</p>
                       {session.description && (
-                        <p className="text-sm text-muted-foreground truncate max-w-xs">
+                        <p className="max-w-xs truncate text-sm text-muted-foreground">
                           {session.description}
                         </p>
                       )}
@@ -404,7 +397,7 @@ const AdminLiveSessions = () => {
                   </TableCell>
                   <TableCell>
                     <span className="flex items-center gap-1">
-                      <Users className="w-6 h-6" />
+                      <Users className="h-6 w-6" />
                       {session.attendee_count}
                     </span>
                   </TableCell>
@@ -414,9 +407,7 @@ const AdminLiveSessions = () => {
                         {session.daily_room_name}
                       </Badge>
                     ) : (
-                      <span className="text-muted-foreground text-sm">
-                        Not created
-                      </span>
+                      <span className="text-sm text-muted-foreground">Not created</span>
                     )}
                   </TableCell>
                   <TableCell>
@@ -431,7 +422,7 @@ const AdminLiveSessions = () => {
                           onClick={() => handleGenerateGuestLink(session)}
                           disabled={actionLoading === session.id}
                         >
-                          <RefreshCw className="w-6 h-6" />
+                          <RefreshCw className="h-6 w-6" />
                         </Button>
                       </div>
                     ) : (
@@ -441,7 +432,7 @@ const AdminLiveSessions = () => {
                         onClick={() => handleGenerateGuestLink(session)}
                         disabled={actionLoading === session.id}
                       >
-                        <Link2 className="w-6 h-6 mr-1" />
+                        <Link2 className="mr-1 h-6 w-6" />
                         Generate
                       </Button>
                     )}
@@ -457,7 +448,7 @@ const AdminLiveSessions = () => {
                           disabled={actionLoading === session.id}
                           title="Start session - participants can join once live"
                         >
-                          <Play className="w-6 h-6 mr-1" />
+                          <Play className="mr-1 h-6 w-6" />
                           Go Live
                         </Button>
                       )}
@@ -468,26 +459,26 @@ const AdminLiveSessions = () => {
                           onClick={() => handleStatusChange(session, "ended")}
                           disabled={actionLoading === session.id}
                         >
-                          <Square className="w-6 h-6 mr-1" />
+                          <Square className="mr-1 h-6 w-6" />
                           End
                         </Button>
                       )}
-                      
+
                       {/* Join as Host - can test privately before going live */}
                       <Button
                         variant="outline"
                         size="default"
-                        onClick={() =>
-                          window.open(`/live/${session.id}?role=host`, "_blank")
+                        onClick={() => window.open(`/live/${session.id}?role=host`, "_blank")}
+                        title={
+                          session.status === "scheduled"
+                            ? "Test your setup privately (participants cannot see you)"
+                            : "Join live session as host"
                         }
-                        title={session.status === "scheduled" 
-                          ? "Test your setup privately (participants cannot see you)" 
-                          : "Join live session as host"}
                       >
-                        <Video className="w-6 h-6 mr-1" />
+                        <Video className="mr-1 h-6 w-6" />
                         {session.status === "scheduled" ? "Test" : "Join"}
                       </Button>
-                      
+
                       {/* Copy host link */}
                       <Button
                         variant="ghost"
@@ -495,9 +486,9 @@ const AdminLiveSessions = () => {
                         onClick={() => handleCopyHostLink(session)}
                         title="Copy host link"
                       >
-                        <Copy className="w-4 h-4" />
+                        <Copy className="h-4 w-4" />
                       </Button>
-                      
+
                       {/* Delete */}
                       <Button
                         variant="ghost"
@@ -506,7 +497,7 @@ const AdminLiveSessions = () => {
                         className="text-destructive hover:text-destructive"
                         title="Delete session"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
                   </TableCell>

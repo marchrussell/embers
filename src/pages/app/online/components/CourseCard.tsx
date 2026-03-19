@@ -14,57 +14,57 @@ interface CourseCardProps {
   imagePosition?: string;
 }
 
-const CourseCard = memo(({
-  title,
-  subtitle,
-  description,
-  image,
-  onClick,
-  badge,
-  locked = false,
-  imagePosition = 'center',
-}: CourseCardProps) => (
-  <div
-    onClick={onClick}
-    className="relative overflow-hidden cursor-pointer group rounded-2xl border border-[#E6DBC7]/15 bg-black/20 backdrop-blur-sm hover:border-[#E6DBC7]/30 transition-colors duration-500 shadow-[0_0_40px_rgba(230,219,199,0.15)]"
-  >
-    <div className="relative h-48 overflow-hidden">
-      <OptimizedImage
-        src={image}
-        alt={title}
-        className="absolute inset-0 w-full h-full object-cover"
-        style={{ objectPosition: imagePosition }}
-        optimizationOptions={IMAGE_PRESETS.card}
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-      {badge && (
-        <div className="absolute top-4 left-4">
-          <span className="px-3 py-1 bg-[#D4A574]/90 text-white text-xs font-medium rounded-full uppercase tracking-wider">
-            {badge}
-          </span>
-        </div>
-      )}
-      {locked && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-          <Lock className="w-5 h-5 text-[#E6DBC7]" strokeWidth={1.5} />
-        </div>
-      )}
-    </div>
-    <div className="p-6">
-      {subtitle && (
-        <p className="text-xs text-[#D4A574] font-medium tracking-[0.15em] uppercase mb-2">
-          {subtitle}
+const CourseCard = memo(
+  ({
+    title,
+    subtitle,
+    description,
+    image,
+    onClick,
+    badge,
+    locked = false,
+    imagePosition = "center",
+  }: CourseCardProps) => (
+    <div
+      onClick={onClick}
+      className="group relative cursor-pointer overflow-hidden rounded-2xl border border-[#E6DBC7]/15 bg-black/20 shadow-[0_0_40px_rgba(230,219,199,0.15)] backdrop-blur-sm transition-colors duration-500 hover:border-[#E6DBC7]/30"
+    >
+      <div className="relative h-48 overflow-hidden">
+        <OptimizedImage
+          src={image}
+          alt={title}
+          className="absolute inset-0 h-full w-full object-cover"
+          style={{ objectPosition: imagePosition }}
+          optimizationOptions={IMAGE_PRESETS.card}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+        {badge && (
+          <div className="absolute left-4 top-4">
+            <span className="rounded-full bg-[#D4A574]/90 px-3 py-1 text-xs font-medium uppercase tracking-wider text-white">
+              {badge}
+            </span>
+          </div>
+        )}
+        {locked && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+            <Lock className="h-5 w-5 text-[#E6DBC7]" strokeWidth={1.5} />
+          </div>
+        )}
+      </div>
+      <div className="p-6">
+        {subtitle && (
+          <p className="mb-2 text-xs font-medium uppercase tracking-[0.15em] text-[#D4A574]">
+            {subtitle}
+          </p>
+        )}
+        <h3 className="mb-2 font-editorial text-xl leading-tight text-[#E6DBC7]">{title}</h3>
+        <p className="line-clamp-2 text-sm font-light leading-relaxed text-[#E6DBC7]/70">
+          {description}
         </p>
-      )}
-      <h3 className="text-xl font-editorial text-[#E6DBC7] mb-2 leading-tight">
-        {title}
-      </h3>
-      <p className="text-sm text-[#E6DBC7]/70 font-light leading-relaxed line-clamp-2">
-        {description}
-      </p>
+      </div>
     </div>
-  </div>
-));
+  )
+);
 
-CourseCard.displayName = 'CourseCard';
+CourseCard.displayName = "CourseCard";
 export default CourseCard;

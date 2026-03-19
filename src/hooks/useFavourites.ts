@@ -29,16 +29,16 @@ export function useFavourites(): UseFavouritesReturn {
 
       try {
         const { data, error } = await supabase
-          .from('user_favourites')
-          .select('session_id')
-          .eq('user_id', user.id)
+          .from("user_favourites")
+          .select("session_id")
+          .eq("user_id", user.id)
           .abortSignal(controller.signal);
 
         if (error) throw error;
-        setFavouriteIds(data?.map(f => f.session_id) || []);
+        setFavouriteIds(data?.map((f) => f.session_id) || []);
       } catch (error) {
         if (controller.signal.aborted) return;
-        console.error('Error fetching favourites:', error);
+        console.error("Error fetching favourites:", error);
         setFavouriteIds([]);
       } finally {
         if (!controller.signal.aborted) {
@@ -67,21 +67,21 @@ export function useFavourites(): UseFavouritesReturn {
 
       if (isCurrentlyFavourited) {
         const { error } = await supabase
-          .from('user_favourites')
+          .from("user_favourites")
           .delete()
-          .eq('user_id', user.id)
-          .eq('session_id', sessionId);
+          .eq("user_id", user.id)
+          .eq("session_id", sessionId);
 
         if (error) {
           toast.error("Failed to remove from favourites");
           return;
         }
 
-        setFavouriteIds(prev => prev.filter(id => id !== sessionId));
+        setFavouriteIds((prev) => prev.filter((id) => id !== sessionId));
         toast.success("Removed from favourites");
       } else {
         const { error } = await supabase
-          .from('user_favourites')
+          .from("user_favourites")
           .insert({ user_id: user.id, session_id: sessionId });
 
         if (error) {
@@ -89,7 +89,7 @@ export function useFavourites(): UseFavouritesReturn {
           return;
         }
 
-        setFavouriteIds(prev => [...prev, sessionId]);
+        setFavouriteIds((prev) => [...prev, sessionId]);
         toast.success("Added to favourites");
       }
     },
@@ -104,17 +104,17 @@ export function useFavourites(): UseFavouritesReturn {
       }
 
       const { error } = await supabase
-        .from('user_favourites')
+        .from("user_favourites")
         .delete()
-        .eq('user_id', user.id)
-        .eq('session_id', sessionId);
+        .eq("user_id", user.id)
+        .eq("session_id", sessionId);
 
       if (error) {
         toast.error("Failed to remove from favourites");
         return;
       }
 
-      setFavouriteIds(prev => prev.filter(id => id !== sessionId));
+      setFavouriteIds((prev) => prev.filter((id) => id !== sessionId));
       toast.success("Removed from favourites");
     },
     [user?.id]

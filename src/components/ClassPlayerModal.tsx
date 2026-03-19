@@ -23,7 +23,12 @@ interface ClassPlayerModalProps {
   skipSafetyModal?: boolean;
 }
 
-export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = false }: ClassPlayerModalProps) => {
+export const ClassPlayerModal = ({
+  classId,
+  open,
+  onClose,
+  skipSafetyModal = false,
+}: ClassPlayerModalProps) => {
   const { user } = useAuth();
   const { isFavourite, toggleFavourite } = useFavourites();
   const [classData, setClassData] = useState<any>(null);
@@ -53,27 +58,23 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
 
       const fetchClass = async () => {
         // Fetch the class data first
-        const { data } = await supabase
-          .from("classes")
-          .select("*")
-          .eq("id", classId)
-          .single();
+        const { data } = await supabase.from("classes").select("*").eq("id", classId).single();
 
         if (data) {
           setClassData(data);
-          
+
           // Only show safety disclosure if:
           // 1. This specific class has show_safety_reminder enabled AND
           // 2. We haven't already shown the safety modal (skipSafetyModal is false)
           const shouldShowSafety = !skipSafetyModal && (data.show_safety_reminder || false);
           setShowSafetyDisclosure(shouldShowSafety);
-          
+
           // If no safety reminder needed, automatically start the session
           if (!shouldShowSafety) {
             setHasStarted(true);
             setIsPlaying(true);
           }
-          
+
           // Fetch all categories via junction table
           const { data: junctionData } = await supabase
             .from("class_categories")
@@ -91,17 +92,17 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
               .single();
             if (fallbackCat) setClassCategories([fallbackCat]);
           }
-          
+
           // Create audio element with lazy loading
           if (data.audio_url && !audioRef.current) {
             const audio = new Audio();
             // Optimize loading: only load metadata initially
-            audio.preload = 'metadata';
+            audio.preload = "metadata";
             audio.src = data.audio_url;
-            
-            audio.addEventListener('loadedmetadata', () => {
+
+            audio.addEventListener("loadedmetadata", () => {
               setDuration(audio.duration);
-              
+
               // Auto-play if no safety reminder needed OR if we're skipping the safety modal
               if (!data.show_safety_reminder || skipSafetyModal) {
                 audio.play().catch(() => {
@@ -109,16 +110,20 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
                 });
               }
             });
-            audio.addEventListener('timeupdate', () => {
+            audio.addEventListener("timeupdate", () => {
               setCurrentTime(audio.currentTime);
-              
+
               // Check if session is complete (within 5 seconds of end)
-              if (!hasShownCompletion.current && audio.duration - audio.currentTime <= 5 && audio.currentTime > 0) {
+              if (
+                !hasShownCompletion.current &&
+                audio.duration - audio.currentTime <= 5 &&
+                audio.currentTime > 0
+              ) {
                 hasShownCompletion.current = true;
                 markSessionComplete();
               }
             });
-            audio.addEventListener('ended', () => {
+            audio.addEventListener("ended", () => {
               setIsPlaying(false);
               if (!hasShownCompletion.current) {
                 hasShownCompletion.current = true;
@@ -127,7 +132,7 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
             });
             audioRef.current = audio;
           }
-          
+
           // Fetch user profile and stats
           if (user?.id) {
             fetchUserStatsAndProfile();
@@ -138,7 +143,7 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
 
       fetchClass();
     }
-    
+
     return () => {
       // Clean up audio when modal closes
       if (audioRef.current) {
@@ -154,7 +159,7 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
     };
   }, [classId, open]);
 
-  const isVideoClass = !!(classData?.video_url);
+  const isVideoClass = !!classData?.video_url;
 
   const getMedia = (): HTMLAudioElement | HTMLVideoElement | null =>
     isVideoClass ? videoRef.current : audioRef.current;
@@ -164,7 +169,7 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
     const video = videoRef.current;
     if (!video || !classData?.video_url) return;
 
-    video.preload = 'metadata';
+    video.preload = "metadata";
 
     const onLoadedMetadata = () => {
       setDuration(video.duration);
@@ -174,7 +179,11 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
     };
     const onTimeUpdate = () => {
       setCurrentTime(video.currentTime);
-      if (!hasShownCompletion.current && video.duration - video.currentTime <= 5 && video.currentTime > 0) {
+      if (
+        !hasShownCompletion.current &&
+        video.duration - video.currentTime <= 5 &&
+        video.currentTime > 0
+      ) {
         hasShownCompletion.current = true;
         markSessionComplete();
       }
@@ -187,16 +196,16 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
       }
     };
 
-    video.addEventListener('loadedmetadata', onLoadedMetadata);
-    video.addEventListener('timeupdate', onTimeUpdate);
-    video.addEventListener('ended', onEnded);
+    video.addEventListener("loadedmetadata", onLoadedMetadata);
+    video.addEventListener("timeupdate", onTimeUpdate);
+    video.addEventListener("ended", onEnded);
 
     return () => {
-      video.removeEventListener('loadedmetadata', onLoadedMetadata);
-      video.removeEventListener('timeupdate', onTimeUpdate);
-      video.removeEventListener('ended', onEnded);
+      video.removeEventListener("loadedmetadata", onLoadedMetadata);
+      video.removeEventListener("timeupdate", onTimeUpdate);
+      video.removeEventListener("ended", onEnded);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [classData?.video_url]);
 
   useEffect(() => {
@@ -215,19 +224,18 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
     // Always set both flags together to maintain consistency
     if (user?.id && showSafetyDisclosure) {
       await supabase
-        .from('profiles')
-        .update({ 
+        .from("profiles")
+        .update({
           has_accepted_safety_disclosure: true,
-          has_completed_onboarding: true 
+          has_completed_onboarding: true,
         })
-        .eq('id', user.id);
+        .eq("id", user.id);
     }
-    
-    
+
     setShowSafetyDisclosure(false);
     setHasStarted(true);
     setIsPlaying(true);
-    
+
     // Start playing immediately for first-time users
     const media = getMedia();
     if (media) {
@@ -271,9 +279,9 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
     try {
       // Fetch user profile
       const { data: profileData } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
         .maybeSingle();
 
       if (profileData) {
@@ -282,33 +290,34 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
 
       // Fetch user stats from progress table
       const { data: progressData } = await supabase
-        .from('user_progress')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('completed', true);
+        .from("user_progress")
+        .select("*")
+        .eq("user_id", user.id)
+        .eq("completed", true);
 
       const totalSessions = progressData?.length || 0;
-      
+
       // Calculate total minutes from completed sessions
-      const sessionIds = progressData?.map(p => p.class_id) || [];
+      const sessionIds = progressData?.map((p) => p.class_id) || [];
       if (sessionIds.length > 0) {
         const { data: classesData } = await supabase
-          .from('classes')
-          .select('duration_minutes')
-          .in('id', sessionIds);
-        
-        const totalMinutes = classesData?.reduce((sum, c) => sum + (c.duration_minutes || 0), 0) || 0;
-        
+          .from("classes")
+          .select("duration_minutes")
+          .in("id", sessionIds);
+
+        const totalMinutes =
+          classesData?.reduce((sum, c) => sum + (c.duration_minutes || 0), 0) || 0;
+
         setUserStats({
           totalSessions,
           totalMinutes,
-          currentStreak: 1 // Could calculate actual streak based on dates
+          currentStreak: 1, // Could calculate actual streak based on dates
         });
       } else {
         setUserStats({ totalSessions: 0, totalMinutes: 0, currentStreak: 0 });
       }
     } catch (error) {
-      console.error('📊 Error fetching user stats:', error);
+      console.error("📊 Error fetching user stats:", error);
     }
   };
 
@@ -318,38 +327,36 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
     try {
       // Mark session as completed in user_progress
       const { data: existingProgress } = await supabase
-        .from('user_progress')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('class_id', classId)
+        .from("user_progress")
+        .select("*")
+        .eq("user_id", user.id)
+        .eq("class_id", classId)
         .maybeSingle();
 
       if (existingProgress) {
         const { error } = await supabase
-          .from('user_progress')
+          .from("user_progress")
           .update({
             completed: true,
             completed_at: new Date().toISOString(),
-            last_position_seconds: 0
+            last_position_seconds: 0,
           })
-          .eq('id', existingProgress.id);
-        
+          .eq("id", existingProgress.id);
+
         if (error) {
-          console.error('Error updating progress:', error);
+          console.error("Error updating progress:", error);
         }
       } else {
-        const { error } = await supabase
-          .from('user_progress')
-          .insert({
-            user_id: user.id,
-            class_id: classId,
-            completed: true,
-            completed_at: new Date().toISOString(),
-            last_position_seconds: 0
-          });
-        
+        const { error } = await supabase.from("user_progress").insert({
+          user_id: user.id,
+          class_id: classId,
+          completed: true,
+          completed_at: new Date().toISOString(),
+          last_position_seconds: 0,
+        });
+
         if (error) {
-          console.error('Error inserting progress:', error);
+          console.error("Error inserting progress:", error);
         }
       }
 
@@ -357,7 +364,7 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
       await fetchUserStatsAndProfile();
       setShowCompletionModal(true);
     } catch (error) {
-      console.error('Error marking session complete:', error);
+      console.error("Error marking session complete:", error);
     }
   };
 
@@ -383,7 +390,7 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
         });
         toast.success("Shared successfully");
       } catch (err) {
-        if (err instanceof Error && err.name !== 'AbortError') {
+        if (err instanceof Error && err.name !== "AbortError") {
           await navigator.clipboard.writeText(shareUrl);
           toast.success("Link copied to clipboard");
         }
@@ -399,23 +406,31 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
   return (
     <>
       {/* Safety Disclosure Dialog */}
-      <Dialog open={showSafetyDisclosure && open} onOpenChange={(isOpen) => {
-        if (!isOpen) handleClose();
-      }}>
-        <DialogContent className="max-w-2xl backdrop-blur-xl bg-black/75 border border-white/30 rounded-xl">
+      <Dialog
+        open={showSafetyDisclosure && open}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) handleClose();
+        }}
+      >
+        <DialogContent className="max-w-2xl rounded-xl border border-white/30 bg-black/75 backdrop-blur-xl">
           <DialogHeader>
-            <DialogTitle className="text-4xl font-editorial text-[#E6DBC7]">Breathwork Safety</DialogTitle>
-            <DialogDescription className="text-[#E6DBC7]/70 font-light text-base md:text-lg">
-              Please read this important safety information before starting your breathwork practice.
+            <DialogTitle className="font-editorial text-4xl text-[#E6DBC7]">
+              Breathwork Safety
+            </DialogTitle>
+            <DialogDescription className="text-base font-light text-[#E6DBC7]/70 md:text-lg">
+              Please read this important safety information before starting your breathwork
+              practice.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-6">
-            <p className="text-base md:text-lg text-[#E6DBC7]/90 font-light leading-relaxed">
-              Never practice while in water, at heights or while operating a vehicle. Before doing breathwork, please consult a doctor if any of these apply to you. Remember, you are safe and in control of your own experience.
+            <p className="text-base font-light leading-relaxed text-[#E6DBC7]/90 md:text-lg">
+              Never practice while in water, at heights or while operating a vehicle. Before doing
+              breathwork, please consult a doctor if any of these apply to you. Remember, you are
+              safe and in control of your own experience.
             </p>
-            <Button 
-              onClick={handleStart} 
-              className="w-full bg-[#E6DBC7] text-background hover:bg-[#E6DBC7]/90 py-6 text-base font-light tracking-wide rounded-full"
+            <Button
+              onClick={handleStart}
+              className="w-full rounded-full bg-[#E6DBC7] py-6 text-base font-light tracking-wide text-background hover:bg-[#E6DBC7]/90"
             >
               I Understand, Begin Class
             </Button>
@@ -424,16 +439,17 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
       </Dialog>
 
       {/* Main Player Modal */}
-      <Dialog open={!showSafetyDisclosure && open && hasStarted} onOpenChange={(isOpen) => {
-        if (!isOpen) handleClose();
-      }}>
-        <DialogContent 
-          className="relative max-w-6xl h-[95vh] md:h-auto p-0 backdrop-blur-xl bg-black/75 border border-white/30 overflow-hidden rounded-xl w-[98%] md:w-[95%]"
+      <Dialog
+        open={!showSafetyDisclosure && open && hasStarted}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) handleClose();
+        }}
+      >
+        <DialogContent
+          className="relative h-[95vh] w-[98%] max-w-6xl overflow-hidden rounded-xl border border-white/30 bg-black/75 p-0 backdrop-blur-xl md:h-auto md:w-[95%]"
           hideClose
         >
-          <DialogTitle className="sr-only">
-            {classData?.title || "Audio Player"}
-          </DialogTitle>
+          <DialogTitle className="sr-only">{classData?.title || "Audio Player"}</DialogTitle>
           {loading ? (
             <ModalContentSkeleton variant="player" />
           ) : (
@@ -443,13 +459,13 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
                 <video
                   ref={videoRef}
                   src={classData?.video_url}
-                  className="absolute inset-0 w-full h-full object-cover z-0"
+                  className="absolute inset-0 z-0 h-full w-full object-cover"
                   playsInline
                 />
               )}
 
               {/* Mobile Layout - Vertical with background image/video */}
-              <div className="relative h-[95vh] flex flex-col md:hidden">
+              <div className="relative flex h-[95vh] flex-col md:hidden">
                 {/* Background Image (audio only) */}
                 {!isVideoClass && classData?.image_url && (
                   <div
@@ -460,22 +476,24 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
                   </div>
                 )}
                 {isVideoClass && (
-                  <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-transparent to-background/80 pointer-events-none z-10" />
+                  <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-background/60 via-transparent to-background/80" />
                 )}
 
                 {/* Top bar with favorite/share on left, close on right */}
-                <div className="relative z-10 p-3 flex justify-between items-start">
+                <div className="relative z-10 flex items-start justify-between p-3">
                   <div className="flex items-center gap-1.5">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         handleFavourite();
                       }}
-                      className="transition-all p-2 rounded-lg hover:bg-[#E6DBC7]/10"
+                      className="rounded-lg p-2 transition-all hover:bg-[#E6DBC7]/10"
                     >
                       <Heart
-                        className={`w-5 h-5 ${
-                          classId && isFavourite(classId) ? "fill-[#E6DBC7] text-[#E6DBC7]" : "text-[#E6DBC7]"
+                        className={`h-5 w-5 ${
+                          classId && isFavourite(classId)
+                            ? "fill-[#E6DBC7] text-[#E6DBC7]"
+                            : "text-[#E6DBC7]"
                         }`}
                         strokeWidth={1.5}
                       />
@@ -485,16 +503,16 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
                         e.stopPropagation();
                         handleShare();
                       }}
-                      className="transition-all p-2 rounded-lg hover:bg-[#E6DBC7]/10"
+                      className="rounded-lg p-2 transition-all hover:bg-[#E6DBC7]/10"
                     >
-                      <Share2 className="w-5 h-5 text-[#E6DBC7]" strokeWidth={1.5} />
+                      <Share2 className="h-5 w-5 text-[#E6DBC7]" strokeWidth={1.5} />
                     </button>
                   </div>
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={handleClose}
-                    className="text-[#E6DBC7] hover:bg-[#E6DBC7]/10 rounded-lg p-2"
+                    className="rounded-lg p-2 text-[#E6DBC7] hover:bg-[#E6DBC7]/10"
                   >
                     <X className="h-5 w-5" />
                   </Button>
@@ -502,29 +520,32 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
 
                 {/* Title and Info */}
                 <div className="relative z-10 px-4 pt-2">
-                  <h2 className="text-3xl font-editorial text-[#E6DBC7] mb-2 leading-tight">{classData?.title}</h2>
-                  <p className="text-[#E6DBC7]/70 text-base font-light">
-                    {classData?.teacher_name || "March Russell"} • {classData?.duration_minutes || 0} min
+                  <h2 className="mb-2 font-editorial text-3xl leading-tight text-[#E6DBC7]">
+                    {classData?.title}
+                  </h2>
+                  <p className="text-base font-light text-[#E6DBC7]/70">
+                    {classData?.teacher_name || "March Russell"} •{" "}
+                    {classData?.duration_minutes || 0} min
                   </p>
                   {classCategories.length > 0 && (
-                    <p className="text-[#EC9037] text-sm mt-2 font-light tracking-[0.15em] uppercase">
+                    <p className="mt-2 text-sm font-light uppercase tracking-[0.15em] text-[#EC9037]">
                       {classCategories.map((c: any) => c.name).join(" · ")}
                     </p>
                   )}
                 </div>
 
                 {/* Main Content - Play/Pause Button in Center */}
-                <div className="relative z-10 flex-1 flex items-center justify-center py-8">
+                <div className="relative z-10 flex flex-1 items-center justify-center py-8">
                   <Button
                     onClick={handlePlayPause}
                     variant="outline"
                     size="lg"
-                    className="bg-[#E6DBC7]/5 backdrop-blur-xl border-2 border-[#E6DBC7] text-[#E6DBC7] hover:bg-[#E6DBC7]/10 rounded-full h-28 w-28 p-0 transition-colors duration-300"
+                    className="h-28 w-28 rounded-full border-2 border-[#E6DBC7] bg-[#E6DBC7]/5 p-0 text-[#E6DBC7] backdrop-blur-xl transition-colors duration-300 hover:bg-[#E6DBC7]/10"
                   >
                     {isPlaying ? (
                       <Pause className="h-10 w-10" strokeWidth={1.5} fill="none" />
                     ) : (
-                      <Play className="h-10 w-10 ml-1" strokeWidth={1.5} fill="none" />
+                      <Play className="ml-1 h-10 w-10" strokeWidth={1.5} fill="none" />
                     )}
                   </Button>
                 </div>
@@ -539,7 +560,7 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
                       onValueChange={handleSliderChange}
                       className="cursor-pointer touch-none"
                     />
-                    <div className="flex justify-between text-xs text-[#E6DBC7]/70 font-light">
+                    <div className="flex justify-between text-xs font-light text-[#E6DBC7]/70">
                       <span>{formatTime(currentTime)}</span>
                       <span>{formatTime(duration)}</span>
                     </div>
@@ -548,28 +569,28 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
               </div>
 
               {/* Desktop Layout - Horizontal rectangle */}
-              <div className="hidden md:grid md:grid-cols-2 md:gap-0 md:h-[600px]">
+              <div className="hidden md:grid md:h-[600px] md:grid-cols-2 md:gap-0">
                 {/* Left side - Image (audio) or transparent over shared video */}
                 <div className="relative overflow-hidden">
                   {!isVideoClass && classData?.image_url && (
                     <img
                       src={classData.image_url}
                       alt={classData?.title}
-                      className="w-full h-full object-cover"
+                      className="h-full w-full object-cover"
                     />
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent to-background/20 pointer-events-none" />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent to-background/20" />
                 </div>
 
                 {/* Right side - Controls and Info */}
-                <div className="relative bg-background/60 backdrop-blur-xl flex flex-col p-8 lg:p-12">
+                <div className="relative flex flex-col bg-background/60 p-8 backdrop-blur-xl lg:p-12">
                   {/* Close button - top right */}
-                  <div className="absolute top-6 right-6">
+                  <div className="absolute right-6 top-6">
                     <Button
                       variant="ghost"
                       size="icon"
                       onClick={handleClose}
-                      className="text-[#E6DBC7] hover:bg-[#E6DBC7]/10 rounded-lg"
+                      className="rounded-lg text-[#E6DBC7] hover:bg-[#E6DBC7]/10"
                     >
                       <X className="h-6 w-6" />
                     </Button>
@@ -578,12 +599,15 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
                   {/* Top section - Title and actions */}
                   <div className="space-y-4">
                     <div>
-                      <h2 className="text-4xl lg:text-5xl font-editorial text-[#E6DBC7] mb-3 leading-tight pr-12">{classData?.title}</h2>
-                      <p className="text-[#E6DBC7]/70 text-lg font-light">
-                        {classData?.teacher_name || "March Russell"} • {classData?.duration_minutes || 0} min
+                      <h2 className="mb-3 pr-12 font-editorial text-4xl leading-tight text-[#E6DBC7] lg:text-5xl">
+                        {classData?.title}
+                      </h2>
+                      <p className="text-lg font-light text-[#E6DBC7]/70">
+                        {classData?.teacher_name || "March Russell"} •{" "}
+                        {classData?.duration_minutes || 0} min
                       </p>
                       {classCategories.length > 0 && (
-                        <p className="text-[#EC9037] text-base mt-3 font-light tracking-[0.15em] uppercase">
+                        <p className="mt-3 text-base font-light uppercase tracking-[0.15em] text-[#EC9037]">
                           {classCategories.map((c: any) => c.name).join(" · ")}
                         </p>
                       )}
@@ -596,11 +620,13 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
                           e.stopPropagation();
                           handleFavourite();
                         }}
-                        className="transition-all p-2.5 rounded-lg hover:bg-[#E6DBC7]/10 border border-[#E6DBC7]/20"
+                        className="rounded-lg border border-[#E6DBC7]/20 p-2.5 transition-all hover:bg-[#E6DBC7]/10"
                       >
                         <Heart
-                          className={`w-5 h-5 ${
-                            classId && isFavourite(classId) ? "fill-[#E6DBC7] text-[#E6DBC7]" : "text-[#E6DBC7]"
+                          className={`h-5 w-5 ${
+                            classId && isFavourite(classId)
+                              ? "fill-[#E6DBC7] text-[#E6DBC7]"
+                              : "text-[#E6DBC7]"
                           }`}
                           strokeWidth={1.5}
                         />
@@ -610,25 +636,33 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
                           e.stopPropagation();
                           handleShare();
                         }}
-                        className="transition-all p-2.5 rounded-lg hover:bg-[#E6DBC7]/10 border border-[#E6DBC7]/20"
+                        className="rounded-lg border border-[#E6DBC7]/20 p-2.5 transition-all hover:bg-[#E6DBC7]/10"
                       >
-                        <Share2 className="w-5 h-5 text-[#E6DBC7]" strokeWidth={1.5} />
+                        <Share2 className="h-5 w-5 text-[#E6DBC7]" strokeWidth={1.5} />
                       </button>
                     </div>
                   </div>
 
                   {/* Middle section - Play button */}
-                  <div className="flex-1 flex items-center justify-center py-12">
+                  <div className="flex flex-1 items-center justify-center py-12">
                     <Button
                       onClick={handlePlayPause}
                       variant="outline"
                       size="lg"
-                      className="bg-[#E6DBC7]/5 backdrop-blur-xl border-2 border-[#E6DBC7] text-[#E6DBC7] hover:bg-[#E6DBC7]/10 rounded-full h-32 w-32 lg:h-40 lg:w-40 p-0 transition-colors duration-300"
+                      className="h-32 w-32 rounded-full border-2 border-[#E6DBC7] bg-[#E6DBC7]/5 p-0 text-[#E6DBC7] backdrop-blur-xl transition-colors duration-300 hover:bg-[#E6DBC7]/10 lg:h-40 lg:w-40"
                     >
                       {isPlaying ? (
-                        <Pause className="h-12 w-12 lg:h-16 lg:w-16" strokeWidth={1.5} fill="none" />
+                        <Pause
+                          className="h-12 w-12 lg:h-16 lg:w-16"
+                          strokeWidth={1.5}
+                          fill="none"
+                        />
                       ) : (
-                        <Play className="h-12 w-12 lg:h-16 lg:w-16 ml-1" strokeWidth={1.5} fill="none" />
+                        <Play
+                          className="ml-1 h-12 w-12 lg:h-16 lg:w-16"
+                          strokeWidth={1.5}
+                          fill="none"
+                        />
                       )}
                     </Button>
                   </div>
@@ -661,7 +695,12 @@ export const ClassPlayerModal = ({ classId, open, onClose, skipSafetyModal = fal
           setShowCompletionModal(false);
           handleClose();
         }}
-        userName={userProfile?.full_name?.split(' ')[0] || userProfile?.first_name || user?.user_metadata?.full_name?.split(' ')[0] || 'there'}
+        userName={
+          userProfile?.full_name?.split(" ")[0] ||
+          userProfile?.first_name ||
+          user?.user_metadata?.full_name?.split(" ")[0] ||
+          "there"
+        }
         sessionId={classId || undefined}
         sessionTitle={classData?.title}
         userId={user?.id}

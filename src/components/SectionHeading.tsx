@@ -7,14 +7,14 @@ interface SectionHeadingProps {
   style?: React.CSSProperties;
 }
 
-export const SectionHeading = ({ 
-  children, 
-  variant = "h2", 
+export const SectionHeading = ({
+  children,
+  variant = "h2",
   className,
-  style
+  style,
 }: SectionHeadingProps) => {
   const baseStyles = "font-editorial text-[#E6DBC7]";
-  
+
   const variantStyles = {
     h1: "text-4xl md:text-5xl lg:text-7xl",
     h2: "text-2xl md:text-3xl lg:text-4xl",

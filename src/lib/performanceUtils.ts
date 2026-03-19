@@ -51,15 +51,13 @@ export const lazyWithRetry = <T extends React.ComponentType<any>>(
       } catch (error) {
         retries++;
         if (retries >= maxRetries) throw error;
-        
+
         // Exponential backoff
-        await new Promise(resolve => 
-          setTimeout(resolve, Math.pow(2, retries) * 1000)
-        );
+        await new Promise((resolve) => setTimeout(resolve, Math.pow(2, retries) * 1000));
       }
     }
 
-    throw new Error('Failed to load component after retries');
+    throw new Error("Failed to load component after retries");
   });
 };
 
@@ -97,4 +95,4 @@ export const observeElement = (
   return observer;
 };
 
-import React from 'react';
+import React from "react";

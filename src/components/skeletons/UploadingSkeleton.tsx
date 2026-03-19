@@ -10,14 +10,13 @@ interface UploadingSkeletonProps {
  * A skeleton component for file upload states.
  * Shows a spinner with optional text to indicate upload progress.
  */
-export const UploadingSkeleton = ({ 
+export const UploadingSkeleton = ({
   className,
-  text = "Uploading file..."
+  text = "Uploading file...",
 }: UploadingSkeletonProps) => (
-  <div className={cn(
-    "flex items-center gap-2 text-sm text-muted-foreground animate-pulse",
-    className
-  )}>
+  <div
+    className={cn("flex animate-pulse items-center gap-2 text-sm text-muted-foreground", className)}
+  >
     <Loader2 className="h-4 w-4 animate-spin" />
     <span>{text}</span>
   </div>

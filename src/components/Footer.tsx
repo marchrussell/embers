@@ -32,15 +32,15 @@ export const Footer = memo(() => {
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
-    
+
     setIsSubmitting(true);
     try {
       const { error } = await supabase
-        .from('newsletter_subscribers')
+        .from("newsletter_subscribers")
         .insert({ email, active: true });
-      
+
       if (error) {
-        if (error.code === '23505') {
+        if (error.code === "23505") {
           toast.success("You're already subscribed!");
         } else {
           throw error;
@@ -56,7 +56,7 @@ export const Footer = memo(() => {
     }
   };
 
-    return (
+  return (
     <>
       <Suspense fallback={null}>
         <ContactFormModal open={showContactModal} onOpenChange={handleContactModalChange} />
@@ -66,65 +66,65 @@ export const Footer = memo(() => {
       <RefundModal open={showRefundModal} onOpenChange={handleRefundModalChange} />
 
       <footer
-        className="relative bg-[#E6E0D4] pt-6 pb-4 md:pt-8 md:pb-10 lg:pt-10 lg:pb-12 font-unica md:min-h-[240px] lg:min-h-[280px] flex flex-col"
-        style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom, 1rem))' }}
+        className="relative flex flex-col bg-[#E6E0D4] pb-4 pt-6 font-unica md:min-h-[240px] md:pb-10 md:pt-8 lg:min-h-[280px] lg:pb-12 lg:pt-10"
+        style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom, 1rem))" }}
       >
         {/* Extend cream background below footer to cover overscroll on mobile */}
         <div
-          className="absolute left-0 right-0 bottom-0 h-[100px] bg-[#E6E0D4] translate-y-full pointer-events-none md:hidden"
+          className="pointer-events-none absolute bottom-0 left-0 right-0 h-[100px] translate-y-full bg-[#E6E0D4] md:hidden"
           aria-hidden="true"
         />
-        <div className="px-5 md:px-14 lg:px-20 flex flex-col justify-between flex-1">
+        <div className="flex flex-1 flex-col justify-between px-5 md:px-14 lg:px-20">
           {/* Mobile: Categorized footer layout */}
-          <div className="md:hidden flex flex-col">
+          <div className="flex flex-col md:hidden">
             {/* Connect & Legal Sections - Side by Side */}
             <div className="grid grid-cols-2 gap-x-6 py-4">
               {/* Connect Section */}
               <div className="flex flex-col gap-5">
-                <span className="text-[#1A1A1A]/60 text-[11px] uppercase tracking-[0.08em] font-medium">
+                <span className="text-[11px] font-medium uppercase tracking-[0.08em] text-[#1A1A1A]/60">
                   Connect
                 </span>
                 <div className="flex flex-col gap-3">
                   <button
                     onClick={() => setShowContactModal(true)}
-                    className="text-[#1A1A1A] text-[13px] tracking-[0.02em] hover:opacity-60 transition-opacity duration-200 flex items-center gap-2 min-h-[44px]"
+                    className="flex min-h-[44px] items-center gap-2 text-[13px] tracking-[0.02em] text-[#1A1A1A] transition-opacity duration-200 hover:opacity-60"
                   >
-                    Contact <ArrowRight className="w-5 h-5" />
+                    Contact <ArrowRight className="h-5 w-5" />
                   </button>
                   <a
                     href="https://www.instagram.com/embers.io"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[#1A1A1A] text-[13px] tracking-[0.02em] hover:opacity-60 transition-opacity duration-200 flex items-center gap-2 min-h-[44px]"
+                    className="flex min-h-[44px] items-center gap-2 text-[13px] tracking-[0.02em] text-[#1A1A1A] transition-opacity duration-200 hover:opacity-60"
                   >
-                    Instagram <ArrowRight className="w-5 h-5" />
+                    Instagram <ArrowRight className="h-5 w-5" />
                   </a>
                 </div>
               </div>
 
               {/* Legal Section */}
               <div className="flex flex-col gap-5">
-                <span className="text-[#1A1A1A]/60 text-[11px] uppercase tracking-[0.08em] font-medium">
+                <span className="text-[11px] font-medium uppercase tracking-[0.08em] text-[#1A1A1A]/60">
                   Legal
                 </span>
                 <div className="flex flex-col gap-3">
                   <button
                     onClick={() => setShowPrivacyModal(true)}
-                    className="text-[#1A1A1A] text-[13px] tracking-[0.02em] hover:opacity-60 transition-opacity duration-200 flex items-center gap-2 min-h-[44px]"
+                    className="flex min-h-[44px] items-center gap-2 text-[13px] tracking-[0.02em] text-[#1A1A1A] transition-opacity duration-200 hover:opacity-60"
                   >
-                    Privacy <ArrowRight className="w-5 h-5" />
+                    Privacy <ArrowRight className="h-5 w-5" />
                   </button>
                   <button
                     onClick={() => setShowTermsModal(true)}
-                    className="text-[#1A1A1A] text-[13px] tracking-[0.02em] hover:opacity-60 transition-opacity duration-200 flex items-center gap-2 min-h-[44px]"
+                    className="flex min-h-[44px] items-center gap-2 text-[13px] tracking-[0.02em] text-[#1A1A1A] transition-opacity duration-200 hover:opacity-60"
                   >
-                    Terms <ArrowRight className="w-5 h-5" />
+                    Terms <ArrowRight className="h-5 w-5" />
                   </button>
                   <button
                     onClick={() => setShowRefundModal(true)}
-                    className="text-[#1A1A1A] text-[13px] tracking-[0.02em] hover:opacity-60 transition-opacity duration-200 flex items-center gap-2 min-h-[44px]"
+                    className="flex min-h-[44px] items-center gap-2 text-[13px] tracking-[0.02em] text-[#1A1A1A] transition-opacity duration-200 hover:opacity-60"
                   >
-                    Refunds <ArrowRight className="w-5 h-5" />
+                    Refunds <ArrowRight className="h-5 w-5" />
                   </button>
                 </div>
               </div>
@@ -133,21 +133,21 @@ export const Footer = memo(() => {
             {/* Newsletter Section */}
             <div className="pt-4">
               <form onSubmit={handleNewsletterSubmit} className="flex-1">
-                <div className="flex items-center border border-[#1A1A1A]/80 rounded-full overflow-hidden w-full bg-transparent">
+                <div className="flex w-full items-center overflow-hidden rounded-full border border-[#1A1A1A]/80 bg-transparent">
                   <input
                     type="email"
                     placeholder="Email address"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="bg-transparent text-[#1A1A1A] text-[13px] tracking-[0.02em] placeholder:text-[#1A1A1A]/50 px-5 py-3 outline-none flex-1 min-w-0 min-h-[44px]"
+                    className="min-h-[44px] min-w-0 flex-1 bg-transparent px-5 py-3 text-[13px] tracking-[0.02em] text-[#1A1A1A] outline-none placeholder:text-[#1A1A1A]/50"
                     required
                   />
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="text-[#1A1A1A] text-[11px] uppercase tracking-[0.06em] font-medium pr-5 pl-3 flex items-center gap-2 hover:text-[#1A1A1A]/70 transition-colors duration-200 disabled:opacity-40 min-h-[44px]"
+                    className="flex min-h-[44px] items-center gap-2 pl-3 pr-5 text-[11px] font-medium uppercase tracking-[0.06em] text-[#1A1A1A] transition-colors duration-200 hover:text-[#1A1A1A]/70 disabled:opacity-40"
                   >
-                    Join <ArrowRight className="w-5 h-5" />
+                    Join <ArrowRight className="h-5 w-5" />
                   </button>
                 </div>
               </form>
@@ -155,37 +155,37 @@ export const Footer = memo(() => {
           </div>
 
           {/* Tablet+: Original horizontal layout */}
-          <div className="hidden md:flex md:flex-wrap md:items-center md:gap-x-10 lg:gap-x-12 md:justify-start">
+          <div className="hidden md:flex md:flex-wrap md:items-center md:justify-start md:gap-x-10 lg:gap-x-12">
             <a
               href="https://www.marchrussell.com/explore"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#1A1A1A] text-[11px] uppercase tracking-[0.06em] font-medium hover:opacity-60 transition-opacity duration-200 flex items-center gap-2"
+              className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.06em] text-[#1A1A1A] transition-opacity duration-200 hover:opacity-60"
             >
-              Explore <ArrowRight className="w-5 h-5" />
+              Explore <ArrowRight className="h-5 w-5" />
             </a>
             <button
               onClick={() => setShowContactModal(true)}
-              className="text-[#1A1A1A] text-[11px] uppercase tracking-[0.06em] font-medium hover:opacity-60 transition-opacity duration-200 flex items-center gap-2"
+              className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.06em] text-[#1A1A1A] transition-opacity duration-200 hover:opacity-60"
             >
-              Contact <ArrowRight className="w-5 h-5" />
+              Contact <ArrowRight className="h-5 w-5" />
             </button>
             <a
               href="https://instagram.com/embers.io"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#1A1A1A] text-[11px] uppercase tracking-[0.06em] font-medium hover:opacity-60 transition-opacity duration-200 flex items-center gap-2"
+              className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.06em] text-[#1A1A1A] transition-opacity duration-200 hover:opacity-60"
             >
-              Instagram <ArrowRight className="w-5 h-5" />
+              Instagram <ArrowRight className="h-5 w-5" />
             </a>
           </div>
 
           {/* Tablet+: Bottom Section - Newsletter and Legal Links */}
-          <div className="hidden md:flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mt-auto">
+          <div className="mt-auto hidden flex-col gap-6 md:flex lg:flex-row lg:items-center lg:justify-between">
             {/* Newsletter Signup */}
-            <form onSubmit={handleNewsletterSubmit} className="flex items-center w-full lg:w-auto">
-              <div className="flex items-center border border-[#1A1A1A]/80 rounded-full overflow-hidden w-full max-w-[480px] bg-transparent hover:border-[#1A1A1A] transition-colors duration-300">
-                <span className="text-[#1A1A1A] text-[11px] md:text-[12px] uppercase tracking-[0.08em] font-medium pl-7 pr-5 whitespace-nowrap border-r border-[#1A1A1A]/60">
+            <form onSubmit={handleNewsletterSubmit} className="flex w-full items-center lg:w-auto">
+              <div className="flex w-full max-w-[480px] items-center overflow-hidden rounded-full border border-[#1A1A1A]/80 bg-transparent transition-colors duration-300 hover:border-[#1A1A1A]">
+                <span className="whitespace-nowrap border-r border-[#1A1A1A]/60 pl-7 pr-5 text-[11px] font-medium uppercase tracking-[0.08em] text-[#1A1A1A] md:text-[12px]">
                   Get Updates
                 </span>
                 <input
@@ -193,38 +193,38 @@ export const Footer = memo(() => {
                   placeholder="Email Address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="bg-transparent text-[#1A1A1A] text-[11px] md:text-[12px] tracking-[0.02em] placeholder:text-[#1A1A1A]/40 px-5 py-3.5 outline-none flex-1 min-w-0"
+                  className="min-w-0 flex-1 bg-transparent px-5 py-3.5 text-[11px] tracking-[0.02em] text-[#1A1A1A] outline-none placeholder:text-[#1A1A1A]/40 md:text-[12px]"
                   required
                 />
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="text-[#1A1A1A] text-[11px] md:text-[12px] uppercase tracking-[0.08em] font-medium pr-7 pl-4 flex items-center gap-3 hover:text-[#1A1A1A]/70 transition-colors duration-200 disabled:opacity-40 whitespace-nowrap"
+                  className="flex items-center gap-3 whitespace-nowrap pl-4 pr-7 text-[11px] font-medium uppercase tracking-[0.08em] text-[#1A1A1A] transition-colors duration-200 hover:text-[#1A1A1A]/70 disabled:opacity-40 md:text-[12px]"
                 >
-                  Join Us <ArrowRight className="w-5 h-5" />
+                  Join Us <ArrowRight className="h-5 w-5" />
                 </button>
               </div>
             </form>
 
             {/* Legal Links */}
-            <div className="flex flex-wrap justify-end items-center gap-x-10">
+            <div className="flex flex-wrap items-center justify-end gap-x-10">
               <button
                 onClick={() => setShowPrivacyModal(true)}
-                className="text-[#1A1A1A] text-[11px] uppercase tracking-[0.06em] font-medium hover:opacity-60 transition-opacity duration-200 flex items-center gap-2"
+                className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.06em] text-[#1A1A1A] transition-opacity duration-200 hover:opacity-60"
               >
-                Privacy Policy <ArrowRight className="w-5 h-5" />
+                Privacy Policy <ArrowRight className="h-5 w-5" />
               </button>
               <button
                 onClick={() => setShowTermsModal(true)}
-                className="text-[#1A1A1A] text-[11px] uppercase tracking-[0.06em] font-medium hover:opacity-60 transition-opacity duration-200 flex items-center gap-2"
+                className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.06em] text-[#1A1A1A] transition-opacity duration-200 hover:opacity-60"
               >
-                Terms of Service <ArrowRight className="w-5 h-5" />
+                Terms of Service <ArrowRight className="h-5 w-5" />
               </button>
               <button
                 onClick={() => setShowRefundModal(true)}
-                className="text-[#1A1A1A] text-[11px] uppercase tracking-[0.06em] font-medium hover:opacity-60 transition-opacity duration-200 flex items-center gap-2"
+                className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.06em] text-[#1A1A1A] transition-opacity duration-200 hover:opacity-60"
               >
-                Refund Policy <ArrowRight className="w-5 h-5" />
+                Refund Policy <ArrowRight className="h-5 w-5" />
               </button>
             </div>
           </div>
@@ -234,6 +234,6 @@ export const Footer = memo(() => {
   );
 });
 
-Footer.displayName = 'Footer';
+Footer.displayName = "Footer";
 
 export default Footer;

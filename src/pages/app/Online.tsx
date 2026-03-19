@@ -9,7 +9,11 @@ import { SafetyDisclosureModal } from "@/components/SafetyDisclosureModal";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
-import { formatGuestSessionDate, getNextThirdThursday, useNextGuestTeacher } from "@/hooks/useNextGuestTeacher";
+import {
+  formatGuestSessionDate,
+  getNextThirdThursday,
+  useNextGuestTeacher,
+} from "@/hooks/useNextGuestTeacher";
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { LiveSessionsData } from "./online/types";
@@ -19,10 +23,17 @@ import LiveTab from "./online/LiveTab";
 import Library from "./Library";
 import SessionDetailModal from "./SessionDetail";
 
-const VALID_TABS = ['home', 'library', 'programs', 'live'];
+const VALID_TABS = ["home", "library", "programs", "live"];
 
 const Online = () => {
-  const { hasSubscription, isAdmin, isTestUser, hasAcceptedSafetyDisclosure, refreshOnboardingStatus, user } = useAuth();
+  const {
+    hasSubscription,
+    isAdmin,
+    isTestUser,
+    hasAcceptedSafetyDisclosure,
+    refreshOnboardingStatus,
+    user,
+  } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
@@ -42,54 +53,59 @@ const Online = () => {
   const { teacher: nextGuestTeacher } = useNextGuestTeacher();
 
   // Derive active tab from URL — URL is the single source of truth
-  const tabParam = searchParams.get('tab');
-  const activeTab = tabParam && VALID_TABS.includes(tabParam) ? tabParam : 'home';
+  const tabParam = searchParams.get("tab");
+  const activeTab = tabParam && VALID_TABS.includes(tabParam) ? tabParam : "home";
 
-  const liveSessionsData: LiveSessionsData = useMemo(() => ({
-    weeklyReset: {
-      title: "Weekly Reset",
-      subtitle: "Live every Sunday • 7:00 PM GMT • 30 mins",
-      description: "A live space to pause, settle your system, and realign mid-week.",
-      image: weeklyResetEvent,
-      nextDate: "Sunday, December 22",
-      isLive: false,
-      hasReplay: true,
-      replayDate: "December 15, 2024",
-    },
-    monthlyPresence: {
-      title: "Monthly Breath & Presence",
-      subtitle: "First Saturday of each month • 10:00 AM GMT • 90 mins",
-      description: "A longer, spacious session to soften tension and reconnect with yourself.",
-      image: heroHandsSession,
-      nextDate: "Saturday, January 4",
-      isLive: false,
-      hasReplay: true,
-      replayDate: "December 7, 2024",
-    },
-    guestSession: nextGuestTeacher
-      ? {
-          title: nextGuestTeacher.session_title,
-          subtitle: "3rd Thursday of every month • 7:30 PM GMT • 1 hour",
-          description: nextGuestTeacher.short_description || `A unique session featuring ${nextGuestTeacher.name} with fresh perspectives.`,
-          image: nextGuestTeacher.photo_url || guestSessionBg,
-          nextDate: formatGuestSessionDate(new Date(nextGuestTeacher.session_date)),
-          isLive: false,
-          hasReplay: false,
-          teacherName: nextGuestTeacher.name,
-          teacherTitle: nextGuestTeacher.title,
-        }
-      : {
-          title: "Guest Session",
-          subtitle: "3rd Thursday of every month • 7:30 PM GMT • 1 hour",
-          description: "A unique session featuring a guest teacher with fresh perspectives.",
-          image: guestSessionBg,
-          nextDate: formatGuestSessionDate(getNextThirdThursday()),
-          isLive: false,
-          hasReplay: false,
-          teacherName: "Guest Teacher",
-          teacherTitle: "",
-        },
-  }), [nextGuestTeacher]);
+  const liveSessionsData: LiveSessionsData = useMemo(
+    () => ({
+      weeklyReset: {
+        title: "Weekly Reset",
+        subtitle: "Live every Sunday • 7:00 PM GMT • 30 mins",
+        description: "A live space to pause, settle your system, and realign mid-week.",
+        image: weeklyResetEvent,
+        nextDate: "Sunday, December 22",
+        isLive: false,
+        hasReplay: true,
+        replayDate: "December 15, 2024",
+      },
+      monthlyPresence: {
+        title: "Monthly Breath & Presence",
+        subtitle: "First Saturday of each month • 10:00 AM GMT • 90 mins",
+        description: "A longer, spacious session to soften tension and reconnect with yourself.",
+        image: heroHandsSession,
+        nextDate: "Saturday, January 4",
+        isLive: false,
+        hasReplay: true,
+        replayDate: "December 7, 2024",
+      },
+      guestSession: nextGuestTeacher
+        ? {
+            title: nextGuestTeacher.session_title,
+            subtitle: "3rd Thursday of every month • 7:30 PM GMT • 1 hour",
+            description:
+              nextGuestTeacher.short_description ||
+              `A unique session featuring ${nextGuestTeacher.name} with fresh perspectives.`,
+            image: nextGuestTeacher.photo_url || guestSessionBg,
+            nextDate: formatGuestSessionDate(new Date(nextGuestTeacher.session_date)),
+            isLive: false,
+            hasReplay: false,
+            teacherName: nextGuestTeacher.name,
+            teacherTitle: nextGuestTeacher.title,
+          }
+        : {
+            title: "Guest Session",
+            subtitle: "3rd Thursday of every month • 7:30 PM GMT • 1 hour",
+            description: "A unique session featuring a guest teacher with fresh perspectives.",
+            image: guestSessionBg,
+            nextDate: formatGuestSessionDate(getNextThirdThursday()),
+            isLive: false,
+            hasReplay: false,
+            teacherName: "Guest Teacher",
+            teacherTitle: "",
+          },
+    }),
+    [nextGuestTeacher]
+  );
 
   const handleTabChange = (tab: string) => {
     navigate(`/online?tab=${tab}`, { replace: true });
@@ -101,7 +117,7 @@ const Online = () => {
       <NavBar />
       <OnlineHeader activeTab={activeTab} onTabChange={handleTabChange} />
 
-      <div className="pt-44 md:pt-72 lg:pt-88 px-6 md:px-10 lg:px-12 pb-24 md:pb-0">
+      <div className="lg:pt-88 px-6 pb-24 pt-44 md:px-10 md:pb-0 md:pt-72 lg:px-12">
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
           <TabsContent value="home" className="mt-0 pb-24">
             <HomeTab
@@ -147,7 +163,10 @@ const Online = () => {
       </div>
 
       <Suspense fallback={null}>
-        <SubscriptionModal open={showSubscriptionModal} onClose={() => setShowSubscriptionModal(false)} />
+        <SubscriptionModal
+          open={showSubscriptionModal}
+          onClose={() => setShowSubscriptionModal(false)}
+        />
       </Suspense>
 
       {user && (

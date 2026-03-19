@@ -59,8 +59,7 @@ const glowButtonVariants = cva(
 );
 
 export interface GlowButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof glowButtonVariants> {}
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof glowButtonVariants> {}
 
 const GlowButton = React.forwardRef<HTMLButtonElement, GlowButtonProps>(
   ({ className, variant, size, ...props }, ref) => {

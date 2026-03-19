@@ -25,9 +25,12 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     // User authenticated but hasn't completed onboarding
     // Redirect to onboarding page (but not if already there or on payment success to avoid loops)
     // Admins bypass the onboarding requirement
-    if (!isAdmin && !hasCompletedOnboarding &&
-        !location.pathname.startsWith("/onboarding") &&
-        !location.pathname.startsWith("/payment-success")) {
+    if (
+      !isAdmin &&
+      !hasCompletedOnboarding &&
+      !location.pathname.startsWith("/onboarding") &&
+      !location.pathname.startsWith("/payment-success")
+    ) {
       navigate("/onboarding", { replace: true });
       return;
     }
@@ -45,9 +48,12 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
 
   // Authenticated but incomplete onboarding (and not on onboarding or payment success page)
   // Admins bypass the onboarding requirement
-  if (!isAdmin && !hasCompletedOnboarding &&
-      !location.pathname.startsWith("/onboarding") &&
-      !location.pathname.startsWith("/payment-success")) {
+  if (
+    !isAdmin &&
+    !hasCompletedOnboarding &&
+    !location.pathname.startsWith("/onboarding") &&
+    !location.pathname.startsWith("/payment-success")
+  ) {
     return null;
   }
 

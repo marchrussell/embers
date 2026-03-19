@@ -56,12 +56,12 @@ const AdminFeedback = () => {
   const fetchFeedback = async () => {
     try {
       setLoadingFeedback(true);
-      
+
       // Fetch feedback
       const { data: feedbackData, error: feedbackError } = await supabase
-        .from('feedback')
-        .select('id, user_id, message, created_at, actioned, actioned_at, actioned_by')
-        .order('created_at', { ascending: false });
+        .from("feedback")
+        .select("id, user_id, message, created_at, actioned, actioned_at, actioned_by")
+        .order("created_at", { ascending: false });
 
       if (feedbackError) throw feedbackError;
 
@@ -71,25 +71,23 @@ const AdminFeedback = () => {
       }
 
       // Get unique user IDs
-      const userIds = [...new Set(feedbackData.map(item => item.user_id))];
+      const userIds = [...new Set(feedbackData.map((item) => item.user_id))];
 
       // Fetch profiles for these users
       const { data: profilesData, error: profilesError } = await supabase
-        .from('profiles')
-        .select('id, email, full_name, first_name, last_name')
-        .in('id', userIds);
+        .from("profiles")
+        .select("id, email, full_name, first_name, last_name")
+        .in("id", userIds);
 
       if (profilesError) {
-        console.error('Error fetching profiles:', profilesError);
+        console.error("Error fetching profiles:", profilesError);
       }
 
       // Create a map of user profiles
-      const profilesMap = new Map(
-        profilesData?.map(profile => [profile.id, profile]) || []
-      );
+      const profilesMap = new Map(profilesData?.map((profile) => [profile.id, profile]) || []);
 
       // Merge feedback with profile data
-      const formattedFeedback = feedbackData.map(item => {
+      const formattedFeedback = feedbackData.map((item) => {
         const profile = profilesMap.get(item.user_id);
         return {
           id: item.id,
@@ -97,20 +95,21 @@ const AdminFeedback = () => {
           message: item.message,
           created_at: item.created_at,
           user_email: profile?.email || null,
-          user_name: profile?.full_name || 
-                     (profile?.first_name && profile?.last_name 
-                       ? `${profile.first_name} ${profile.last_name}` 
-                       : null),
+          user_name:
+            profile?.full_name ||
+            (profile?.first_name && profile?.last_name
+              ? `${profile.first_name} ${profile.last_name}`
+              : null),
           actioned: item.actioned || false,
           actioned_at: item.actioned_at,
-          actioned_by: item.actioned_by
+          actioned_by: item.actioned_by,
         };
       });
 
       setFeedback(formattedFeedback);
     } catch (error: any) {
-      console.error('Error fetching feedback:', error);
-      toast.error('Failed to load feedback');
+      console.error("Error fetching feedback:", error);
+      toast.error("Failed to load feedback");
     } finally {
       setLoadingFeedback(false);
     }
@@ -119,31 +118,33 @@ const AdminFeedback = () => {
   const handleToggleActioned = async (feedbackId: string, currentStatus: boolean) => {
     try {
       const { error } = await supabase
-        .from('feedback')
-        .update({ 
+        .from("feedback")
+        .update({
           actioned: !currentStatus,
           actioned_at: !currentStatus ? new Date().toISOString() : null,
-          actioned_by: !currentStatus ? user?.id : null
+          actioned_by: !currentStatus ? user?.id : null,
         })
-        .eq('id', feedbackId);
+        .eq("id", feedbackId);
 
       if (error) throw error;
 
-      setFeedback(prev => prev.map(item => 
-        item.id === feedbackId 
-          ? { 
-              ...item, 
-              actioned: !currentStatus,
-              actioned_at: !currentStatus ? new Date().toISOString() : null,
-              actioned_by: !currentStatus ? user?.id || null : null
-            }
-          : item
-      ));
+      setFeedback((prev) =>
+        prev.map((item) =>
+          item.id === feedbackId
+            ? {
+                ...item,
+                actioned: !currentStatus,
+                actioned_at: !currentStatus ? new Date().toISOString() : null,
+                actioned_by: !currentStatus ? user?.id || null : null,
+              }
+            : item
+        )
+      );
 
-      toast.success(!currentStatus ? 'Feedback marked as actioned' : 'Feedback marked as pending');
+      toast.success(!currentStatus ? "Feedback marked as actioned" : "Feedback marked as pending");
     } catch (error) {
-      console.error('Error updating feedback:', error);
-      toast.error('Failed to update feedback status');
+      console.error("Error updating feedback:", error);
+      toast.error("Failed to update feedback status");
     }
   };
 
@@ -151,43 +152,41 @@ const AdminFeedback = () => {
     if (!selectedFeedback) return;
 
     try {
-      const { error } = await supabase
-        .from('feedback')
-        .delete()
-        .eq('id', selectedFeedback.id);
+      const { error } = await supabase.from("feedback").delete().eq("id", selectedFeedback.id);
 
       if (error) throw error;
 
-      setFeedback(prev => prev.filter(item => item.id !== selectedFeedback.id));
-      toast.success('Feedback deleted');
+      setFeedback((prev) => prev.filter((item) => item.id !== selectedFeedback.id));
+      toast.success("Feedback deleted");
       setDeleteDialogOpen(false);
       setSelectedFeedback(null);
     } catch (error) {
-      console.error('Error deleting feedback:', error);
-      toast.error('Failed to delete feedback');
+      console.error("Error deleting feedback:", error);
+      toast.error("Failed to delete feedback");
     }
   };
 
-  const pendingFeedback = feedback.filter(f => !f.actioned);
-  const actionedFeedback = feedback.filter(f => f.actioned);
+  const pendingFeedback = feedback.filter((f) => !f.actioned);
+  const actionedFeedback = feedback.filter((f) => f.actioned);
 
-  const renderFeedbackList = (items: FeedbackItem[]) => (
+  const renderFeedbackList = (items: FeedbackItem[]) =>
     items.length === 0 ? (
-      <Card className="bg-background/40 backdrop-blur-xl border-[#E6DBC7]/20">
+      <Card className="border-[#E6DBC7]/20 bg-background/40 backdrop-blur-xl">
         <CardContent className="flex flex-col items-center justify-center py-12">
-          <MessageSquare className="h-12 w-12 text-[#E6DBC7]/40 mb-4" />
-          <p className="text-foreground/60 text-center">
-            No feedback here.
-          </p>
+          <MessageSquare className="mb-4 h-12 w-12 text-[#E6DBC7]/40" />
+          <p className="text-center text-foreground/60">No feedback here.</p>
         </CardContent>
       </Card>
     ) : (
       <div className="grid gap-6">
         {items.map((item) => (
-          <Card key={item.id} className="bg-background/40 backdrop-blur-xl border-[#E6DBC7]/20 hover:border-[#E6DBC7]/40 transition-all">
+          <Card
+            key={item.id}
+            className="border-[#E6DBC7]/20 bg-background/40 backdrop-blur-xl transition-all hover:border-[#E6DBC7]/40"
+          >
             <CardHeader>
               <div className="flex items-start justify-between">
-                <div className="space-y-2 flex-1">
+                <div className="flex-1 space-y-2">
                   <div className="flex items-center gap-3 text-sm">
                     {item.user_name && (
                       <div className="flex items-center gap-1.5">
@@ -203,11 +202,11 @@ const AdminFeedback = () => {
                     )}
                   </div>
                   <p className="text-xs text-foreground/60">
-                    {format(new Date(item.created_at), 'PPpp')}
+                    {format(new Date(item.created_at), "PPpp")}
                   </p>
                   {item.actioned && item.actioned_at && (
                     <p className="text-xs text-green-400">
-                      ✓ Actioned on {format(new Date(item.actioned_at), 'PP')}
+                      ✓ Actioned on {format(new Date(item.actioned_at), "PP")}
                     </p>
                   )}
                 </div>
@@ -216,9 +215,10 @@ const AdminFeedback = () => {
                     variant={item.actioned ? "outline" : "default"}
                     size="sm"
                     onClick={() => handleToggleActioned(item.id, item.actioned)}
-                    className={item.actioned 
-                      ? "gap-2 bg-background/60 border-[#E6DBC7]/20 text-white hover:bg-background/80 hover:border-[#E6DBC7]/40" 
-                      : "gap-2 bg-white/5 border-2 border-white text-white hover:bg-white/10"
+                    className={
+                      item.actioned
+                        ? "gap-2 border-[#E6DBC7]/20 bg-background/60 text-white hover:border-[#E6DBC7]/40 hover:bg-background/80"
+                        : "gap-2 border-2 border-white bg-white/5 text-white hover:bg-white/10"
                     }
                   >
                     {item.actioned ? (
@@ -240,7 +240,7 @@ const AdminFeedback = () => {
                       setSelectedFeedback(item);
                       setDeleteDialogOpen(true);
                     }}
-                    className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
+                    className="text-red-400 hover:bg-red-400/10 hover:text-red-300"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -248,38 +248,30 @@ const AdminFeedback = () => {
               </div>
             </CardHeader>
             <CardContent>
-              <p className="text-sm leading-relaxed whitespace-pre-wrap text-foreground/90">
+              <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground/90">
                 {item.message}
               </p>
             </CardContent>
           </Card>
         ))}
       </div>
-    )
-  );
-  
+    );
+
   return (
-    <AdminLayout
-      title="User Feedback"
-      description="Review user feedback and suggestions"
-    >
+    <AdminLayout title="User Feedback" description="Review user feedback and suggestions">
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-        <AdminStatsCard 
-          title="Total Feedback" 
-          value={feedback.length} 
-          icon={MessageSquare}
-        />
-        <AdminStatsCard 
-          title="Pending" 
-          value={pendingFeedback.length} 
+      <div className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-3">
+        <AdminStatsCard title="Total Feedback" value={feedback.length} icon={MessageSquare} />
+        <AdminStatsCard
+          title="Pending"
+          value={pendingFeedback.length}
           icon={Circle}
           iconColor="#facc15"
           iconBgColor="rgba(250, 204, 21, 0.1)"
         />
-        <AdminStatsCard 
-          title="Completed" 
-          value={actionedFeedback.length} 
+        <AdminStatsCard
+          title="Completed"
+          value={actionedFeedback.length}
           icon={CheckCircle}
           iconColor="#4ade80"
           iconBgColor="rgba(74, 222, 128, 0.1)"
@@ -289,36 +281,26 @@ const AdminFeedback = () => {
       {loadingFeedback ? (
         <AdminContentSkeleton showStats={false} variant="list" />
       ) : feedback.length === 0 ? (
-        <Card className="bg-background/40 backdrop-blur-xl border-[#E6DBC7]/20">
+        <Card className="border-[#E6DBC7]/20 bg-background/40 backdrop-blur-xl">
           <CardContent className="flex flex-col items-center justify-center py-12">
-            <MessageSquare className="h-12 w-12 text-[#E6DBC7]/40 mb-4" />
-            <p className="text-foreground/60 text-center">
-              No feedback submissions yet.
-            </p>
+            <MessageSquare className="mb-4 h-12 w-12 text-[#E6DBC7]/40" />
+            <p className="text-center text-foreground/60">No feedback submissions yet.</p>
           </CardContent>
         </Card>
       ) : (
         <Tabs defaultValue="pending" className="w-full">
-          <TabsList className="grid w-full max-w-md grid-cols-2 mb-8">
-            <TabsTrigger value="pending">
-              Pending ({pendingFeedback.length})
-            </TabsTrigger>
-            <TabsTrigger value="completed">
-              Completed ({actionedFeedback.length})
-            </TabsTrigger>
+          <TabsList className="mb-8 grid w-full max-w-md grid-cols-2">
+            <TabsTrigger value="pending">Pending ({pendingFeedback.length})</TabsTrigger>
+            <TabsTrigger value="completed">Completed ({actionedFeedback.length})</TabsTrigger>
           </TabsList>
-          <TabsContent value="pending">
-            {renderFeedbackList(pendingFeedback)}
-          </TabsContent>
-          <TabsContent value="completed">
-            {renderFeedbackList(actionedFeedback)}
-          </TabsContent>
+          <TabsContent value="pending">{renderFeedbackList(pendingFeedback)}</TabsContent>
+          <TabsContent value="completed">{renderFeedbackList(actionedFeedback)}</TabsContent>
         </Tabs>
       )}
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent className="bg-black/80 border border-white/20">
+        <AlertDialogContent className="border border-white/20 bg-black/80">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-white">Delete Feedback</AlertDialogTitle>
             <AlertDialogDescription className="text-white/70">
@@ -327,7 +309,7 @@ const AdminFeedback = () => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel onClick={() => setSelectedFeedback(null)}>Cancel</AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogAction
               onClick={handleDeleteFeedback}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >

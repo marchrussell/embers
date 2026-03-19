@@ -2,33 +2,33 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export const ExploreSkeleton = () => {
   return (
-    <main className="flex-1 animate-in fade-in duration-500">
+    <main className="flex-1 duration-500 animate-in fade-in">
       {/* Hero Section Skeleton - Full viewport height like actual */}
-      <section className="relative min-h-screen flex items-end bg-black">
+      <section className="relative flex min-h-screen items-end bg-black">
         {/* Background gradient placeholder */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#1a1410] via-[#0d0a08] to-black" />
-        
+
         {/* Bottom text area */}
-        <div className="absolute bottom-6 sm:bottom-8 md:bottom-10 left-8 sm:left-12 md:left-16 right-4 sm:right-6 md:right-8 z-10">
-          <Skeleton className="h-10 sm:h-12 md:h-14 w-[90%] md:w-[70%] mb-4 bg-[#E6DBC7]/10" />
-          <Skeleton className="h-5 sm:h-6 w-[80%] md:w-[50%] bg-[#E6DBC7]/8" />
+        <div className="absolute bottom-6 left-8 right-4 z-10 sm:bottom-8 sm:left-12 sm:right-6 md:bottom-10 md:left-16 md:right-8">
+          <Skeleton className="mb-4 h-10 w-[90%] bg-[#E6DBC7]/10 sm:h-12 md:h-14 md:w-[70%]" />
+          <Skeleton className="bg-[#E6DBC7]/8 h-5 w-[80%] sm:h-6 md:w-[50%]" />
         </div>
       </section>
 
       {/* The Studio Section Skeleton */}
-      <section className="pt-20 md:pt-28 lg:pt-36 pb-16 md:pb-24 bg-black">
-        <div className="mx-auto px-6 md:px-12 lg:px-20 w-full">
+      <section className="bg-black pb-16 pt-20 md:pb-24 md:pt-28 lg:pt-36">
+        <div className="mx-auto w-full px-6 md:px-12 lg:px-20">
           {/* Header - Centered */}
-          <div className="mb-12 md:mb-20 text-center max-w-[52rem] mx-auto">
-            <Skeleton className="h-12 md:h-16 w-48 md:w-64 mx-auto mb-4 bg-[#E6DBC7]/10" />
-            <Skeleton className="h-6 md:h-8 w-full max-w-lg mx-auto mb-8 bg-[#E6DBC7]/8" />
-            
+          <div className="mx-auto mb-12 max-w-[52rem] text-center md:mb-20">
+            <Skeleton className="mx-auto mb-4 h-12 w-48 bg-[#E6DBC7]/10 md:h-16 md:w-64" />
+            <Skeleton className="bg-[#E6DBC7]/8 mx-auto mb-8 h-6 w-full max-w-lg md:h-8" />
+
             {/* Bullet points */}
-            <div className="flex flex-col items-center gap-3 md:gap-4 mb-12">
+            <div className="mb-12 flex flex-col items-center gap-3 md:gap-4">
               {[1, 2, 3].map((i) => (
-                <Skeleton 
-                  key={i} 
-                  className="h-4 w-64 md:w-80 bg-[#E6DBC7]/8"
+                <Skeleton
+                  key={i}
+                  className="bg-[#E6DBC7]/8 h-4 w-64 md:w-80"
                   style={{ animationDelay: `${i * 100}ms` }}
                 />
               ))}
@@ -36,45 +36,45 @@ export const ExploreSkeleton = () => {
           </div>
 
           {/* Phone Mockups placeholder */}
-          <div className="flex justify-center gap-4 md:gap-6 mb-16">
-            <Skeleton className="h-[300px] md:h-[400px] w-[140px] md:w-[180px] rounded-2xl bg-[#E6DBC7]/8" />
-            <Skeleton className="hidden md:block h-[350px] md:h-[450px] w-[180px] md:w-[200px] rounded-2xl bg-[#E6DBC7]/8" />
-            <Skeleton className="hidden lg:block h-[300px] md:h-[400px] w-[140px] md:w-[180px] rounded-2xl bg-[#E6DBC7]/8" />
+          <div className="mb-16 flex justify-center gap-4 md:gap-6">
+            <Skeleton className="bg-[#E6DBC7]/8 h-[300px] w-[140px] rounded-2xl md:h-[400px] md:w-[180px]" />
+            <Skeleton className="bg-[#E6DBC7]/8 hidden h-[350px] w-[180px] rounded-2xl md:block md:h-[450px] md:w-[200px]" />
+            <Skeleton className="bg-[#E6DBC7]/8 hidden h-[300px] w-[140px] rounded-2xl md:h-[400px] md:w-[180px] lg:block" />
           </div>
 
           {/* CTA */}
           <div className="text-center">
-            <Skeleton className="h-14 w-48 md:w-56 mx-auto rounded-full bg-[#E6DBC7]/10" />
+            <Skeleton className="mx-auto h-14 w-48 rounded-full bg-[#E6DBC7]/10 md:w-56" />
           </div>
         </div>
       </section>
 
       {/* Divider */}
-      <div className="py-20 md:py-28 bg-black px-6 md:px-10 lg:px-12">
-        <div className="h-[1px] w-full max-w-[1600px] mx-auto bg-[#E6DBC7]/20" />
+      <div className="bg-black px-6 py-20 md:px-10 md:py-28 lg:px-12">
+        <div className="mx-auto h-[1px] w-full max-w-[1600px] bg-[#E6DBC7]/20" />
       </div>
 
       {/* Short Courses Section Skeleton */}
-      <section className="pb-20 md:pb-28 bg-black">
-        <div className="mx-auto px-6 md:px-8 lg:px-10 max-w-[1600px]">
-          <div className="mb-12 md:mb-16 text-center">
-            <Skeleton className="h-12 md:h-16 w-48 md:w-64 mx-auto mb-4 bg-[#E6DBC7]/10" />
-            <Skeleton className="h-6 w-full max-w-xl mx-auto bg-[#E6DBC7]/8" />
+      <section className="bg-black pb-20 md:pb-28">
+        <div className="mx-auto max-w-[1600px] px-6 md:px-8 lg:px-10">
+          <div className="mb-12 text-center md:mb-16">
+            <Skeleton className="mx-auto mb-4 h-12 w-48 bg-[#E6DBC7]/10 md:h-16 md:w-64" />
+            <Skeleton className="bg-[#E6DBC7]/8 mx-auto h-6 w-full max-w-xl" />
           </div>
 
           {/* Course Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-5 max-w-[1200px] mx-auto">
+          <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-4 md:grid-cols-3 lg:gap-5">
             {[1, 2, 3].map((i) => (
-              <div 
-                key={i} 
-                className="rounded-xl border border-white/[0.08] overflow-hidden bg-black/40"
+              <div
+                key={i}
+                className="overflow-hidden rounded-xl border border-white/[0.08] bg-black/40"
                 style={{ animationDelay: `${i * 100}ms` }}
               >
-                <Skeleton className="aspect-[4/3] w-full bg-[#E6DBC7]/8" />
-                <div className="p-4 lg:p-5 space-y-3">
+                <Skeleton className="bg-[#E6DBC7]/8 aspect-[4/3] w-full" />
+                <div className="space-y-3 p-4 lg:p-5">
                   <Skeleton className="h-5 w-3/4 bg-[#E6DBC7]/10" />
-                  <Skeleton className="h-4 w-1/3 bg-[#E6DBC7]/8" />
-                  <Skeleton className="h-4 w-1/2 bg-[#E6DBC7]/8" />
+                  <Skeleton className="bg-[#E6DBC7]/8 h-4 w-1/3" />
+                  <Skeleton className="bg-[#E6DBC7]/8 h-4 w-1/2" />
                 </div>
               </div>
             ))}
@@ -83,25 +83,25 @@ export const ExploreSkeleton = () => {
       </section>
 
       {/* Rise ARC Hero placeholder */}
-      <section className="relative w-full h-[40vh] md:h-[50vh] bg-black">
+      <section className="relative h-[40vh] w-full bg-black md:h-[50vh]">
         <div className="absolute inset-0 bg-gradient-to-b from-[#1a1410] to-black" />
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
-            <Skeleton className="h-4 w-32 mx-auto mb-4 bg-[#E6DBC7]/10" />
-            <Skeleton className="h-12 md:h-16 w-64 md:w-96 mx-auto mb-3 bg-[#E6DBC7]/10" />
-            <Skeleton className="h-6 w-40 mx-auto bg-[#E6DBC7]/8" />
+            <Skeleton className="mx-auto mb-4 h-4 w-32 bg-[#E6DBC7]/10" />
+            <Skeleton className="mx-auto mb-3 h-12 w-64 bg-[#E6DBC7]/10 md:h-16 md:w-96" />
+            <Skeleton className="bg-[#E6DBC7]/8 mx-auto h-6 w-40" />
           </div>
         </div>
       </section>
 
       {/* ARC Program Cards */}
-      <section className="py-12 md:py-16 bg-black">
-        <div className="mx-auto px-4 md:px-6 lg:px-8 max-w-[1200px]">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-5">
+      <section className="bg-black py-12 md:py-16">
+        <div className="mx-auto max-w-[1200px] px-4 md:px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-5">
             {[1, 2, 3].map((i) => (
-              <Skeleton 
-                key={i} 
-                className="h-[320px] md:h-[380px] rounded-sm bg-[#E6DBC7]/8"
+              <Skeleton
+                key={i}
+                className="bg-[#E6DBC7]/8 h-[320px] rounded-sm md:h-[380px]"
                 style={{ animationDelay: `${i * 100}ms` }}
               />
             ))}

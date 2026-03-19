@@ -32,7 +32,7 @@ export interface LiveSessionsData {
 export interface LiveReplay {
   id: string;
   title: string;
-  session_type: 'weekly-reset' | 'monthly-presence' | 'guest-session';
+  session_type: "weekly-reset" | "monthly-presence" | "guest-session";
   start_time: string;
   end_time: string | null;
   recording_url: string;

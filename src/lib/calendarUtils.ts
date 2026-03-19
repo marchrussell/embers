@@ -14,7 +14,10 @@ export interface CalendarEvent {
  * Always converts to UTC for consistency
  */
 const formatICalDate = (date: Date): string => {
-  return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  return date
+    .toISOString()
+    .replace(/[-:]/g, "")
+    .replace(/\.\d{3}/, "");
 };
 
 /**
@@ -30,10 +33,10 @@ const formatGoogleDate = (date: Date): string => {
  */
 const escapeICalText = (text: string): string => {
   return text
-    .replace(/\\/g, '\\\\')
-    .replace(/;/g, '\\;')
-    .replace(/,/g, '\\,')
-    .replace(/\n/g, '\\n');
+    .replace(/\\/g, "\\\\")
+    .replace(/;/g, "\\;")
+    .replace(/,/g, "\\,")
+    .replace(/\n/g, "\\n");
 };
 
 /**
@@ -42,7 +45,7 @@ const escapeICalText = (text: string): string => {
  */
 const truncateForUrl = (text: string, maxLength: number = 500): string => {
   if (text.length <= maxLength) return text;
-  return text.substring(0, maxLength - 3) + '...';
+  return text.substring(0, maxLength - 3) + "...";
 };
 
 /**
@@ -50,7 +53,7 @@ const truncateForUrl = (text: string, maxLength: number = 500): string => {
  */
 export const getGoogleCalendarUrl = (event: CalendarEvent): string => {
   const params = new URLSearchParams({
-    action: 'TEMPLATE',
+    action: "TEMPLATE",
     text: event.title,
     dates: `${formatGoogleDate(event.startDate)}/${formatGoogleDate(event.endDate)}`,
     details: truncateForUrl(event.description),
@@ -80,12 +83,12 @@ export const getOutlookCalendarUrl = (event: CalendarEvent): string => {
  */
 export const generateICalContent = (event: CalendarEvent, uid: string): string => {
   const lines = [
-    'BEGIN:VCALENDAR',
-    'VERSION:2.0',
-    'CALSCALE:GREGORIAN',
-    'METHOD:PUBLISH',
-    'PRODID:-//March Russell//Studio//EN',
-    'BEGIN:VEVENT',
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+    "PRODID:-//March Russell//Studio//EN",
+    "BEGIN:VEVENT",
     `UID:${uid}`,
     `DTSTAMP:${formatICalDate(new Date())}`,
     `DTSTART:${formatICalDate(event.startDate)}`,
@@ -99,9 +102,9 @@ export const generateICalContent = (event: CalendarEvent, uid: string): string =
     lines.push(`URL:${event.url}`);
   }
 
-  lines.push('END:VEVENT', 'END:VCALENDAR');
+  lines.push("END:VEVENT", "END:VCALENDAR");
 
-  return lines.join('\r\n');
+  return lines.join("\r\n");
 };
 
 /**
@@ -111,11 +114,11 @@ export const downloadICalFile = (event: CalendarEvent, filename: string): void =
   const uid = `${filename}-${event.startDate.getTime()}@marchrussell.com`;
   const icsContent = generateICalContent(event, uid);
 
-  const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+  const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
   const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
+  const link = document.createElement("a");
   link.href = url;
-  link.setAttribute('download', `${filename}.ics`);
+  link.setAttribute("download", `${filename}.ics`);
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -128,12 +131,12 @@ export const downloadICalFile = (event: CalendarEvent, filename: string): void =
  * Opens Google Calendar in a new tab
  */
 export const openGoogleCalendar = (event: CalendarEvent): void => {
-  window.open(getGoogleCalendarUrl(event), '_blank');
+  window.open(getGoogleCalendarUrl(event), "_blank");
 };
 
 /**
  * Opens Outlook Web Calendar in a new tab
  */
 export const openOutlookCalendar = (event: CalendarEvent): void => {
-  window.open(getOutlookCalendarUrl(event), '_blank');
+  window.open(getOutlookCalendarUrl(event), "_blank");
 };

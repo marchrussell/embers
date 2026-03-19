@@ -3,14 +3,17 @@ import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useMemo, useState } from "react";
 import { LibraryCategory, LibrarySession } from "../types";
 
-const CATEGORY_ORDER = ['CALM', 'ENERGY', 'TRANSFORM', 'SLEEP', 'RESILIENCE & CAPACITY'];
+const CATEGORY_ORDER = ["CALM", "ENERGY", "TRANSFORM", "SLEEP", "RESILIENCE & CAPACITY"];
 
 const CATEGORY_DESCRIPTIONS: Record<string, string> = {
-  'CALM': "Find Your Center. Organize your nervous system and restore a sense of peace.",
-  'ENERGY': "Activate your body's natural currents and feel life move through you.",
-  'SLEEP': "Train your nervous system to downregulate naturally. Start here when you're tired but wired and need real restoration.",
-  'TRANSFORM': "Transform your state. Reset your nervous system in minutes. Short practices effective for stress relief and overwhelm.",
-  'RESILIENCE & CAPACITY': "Build lasting resilience and expand your capacity. Guided practices to deepen your practice and strengthen your inner resources.",
+  CALM: "Find Your Center. Organize your nervous system and restore a sense of peace.",
+  ENERGY: "Activate your body's natural currents and feel life move through you.",
+  SLEEP:
+    "Train your nervous system to downregulate naturally. Start here when you're tired but wired and need real restoration.",
+  TRANSFORM:
+    "Transform your state. Reset your nervous system in minutes. Short practices effective for stress relief and overwhelm.",
+  "RESILIENCE & CAPACITY":
+    "Build lasting resilience and expand your capacity. Guided practices to deepen your practice and strengthen your inner resources.",
 };
 
 interface UseLibraryDataParams {
@@ -45,9 +48,9 @@ export const useLibraryData = ({
         setIsLoading(true);
         // Fetch categories
         const { data: categoriesData } = await supabase
-          .from('categories')
-          .select('*')
-          .order('name');
+          .from("categories")
+          .select("*")
+          .order("name");
 
         if (!isMounted) return;
 
@@ -56,41 +59,48 @@ export const useLibraryData = ({
 
           // Fetch classes for each category
           const { data: classesData } = await supabase
-            .from('classes')
-            .select('*, requires_subscription, created_at')
-            .eq('is_published', true)
-            .order('order_index');
+            .from("classes")
+            .select("*, requires_subscription, created_at")
+            .eq("is_published", true)
+            .order("order_index");
 
           if (!isMounted) return;
 
           if (classesData) {
-            const grouped = classesData.reduce((acc: Record<string, LibrarySession[]>, classItem) => {
-              if (classItem.category_id) {
-                if (!acc[classItem.category_id]) {
-                  acc[classItem.category_id] = [];
+            const grouped = classesData.reduce(
+              (acc: Record<string, LibrarySession[]>, classItem) => {
+                if (classItem.category_id) {
+                  if (!acc[classItem.category_id]) {
+                    acc[classItem.category_id] = [];
+                  }
+                  acc[classItem.category_id].push({
+                    id: classItem.id,
+                    title: classItem.title,
+                    description: classItem.description || classItem.short_description,
+                    duration: classItem.duration_minutes,
+                    teacher: classItem.teacher_name,
+                    image: classItem.image_url,
+                    locked:
+                      classItem.requires_subscription &&
+                      !hasSubscription &&
+                      !isAdmin &&
+                      !isTestUser,
+                    created_at: classItem.created_at,
+                    technique: classItem.technique,
+                    intensity: classItem.intensity,
+                    order_index: classItem.order_index,
+                  });
                 }
-                acc[classItem.category_id].push({
-                  id: classItem.id,
-                  title: classItem.title,
-                  description: classItem.description || classItem.short_description,
-                  duration: classItem.duration_minutes,
-                  teacher: classItem.teacher_name,
-                  image: classItem.image_url,
-                  locked: classItem.requires_subscription && !hasSubscription && !isAdmin && !isTestUser,
-                  created_at: classItem.created_at,
-                  technique: classItem.technique,
-                  intensity: classItem.intensity,
-                  order_index: classItem.order_index,
-                });
-              }
-              return acc;
-            }, {});
+                return acc;
+              },
+              {}
+            );
 
             setClassesByCategory(grouped);
           }
         }
       } catch (error) {
-        console.error('Library: Error fetching data:', error);
+        console.error("Library: Error fetching data:", error);
       } finally {
         if (isMounted) {
           setIsLoading(false);
@@ -114,9 +124,7 @@ export const useLibraryData = ({
 
     return sorted.map((cat) => {
       const description = CATEGORY_DESCRIPTIONS[cat.name] ?? cat.description;
-      const image = cat.name === 'ENERGY'
-        ? energyCategoryImage
-        : (cat.image_url);
+      const image = cat.name === "ENERGY" ? energyCategoryImage : cat.image_url;
 
       return {
         id: cat.id,

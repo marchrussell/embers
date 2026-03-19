@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setHasMentorshipGuided(false);
         return false;
       }
-      
+
       const roles = new Set(data.map((r: any) => r.role));
       setIsAdmin(roles.has("admin"));
       setIsTestUser(roles.has("test_user"));
@@ -77,16 +77,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         .select("has_completed_onboarding, has_accepted_safety_disclosure")
         .eq("id", userId)
         .single();
-      
+
       if (error || !data) {
         setHasCompletedOnboarding(false);
         setHasAcceptedSafetyDisclosure(false);
         return false;
       }
-      
+
       setHasCompletedOnboarding(data.has_completed_onboarding || false);
       setHasAcceptedSafetyDisclosure(data.has_accepted_safety_disclosure || false);
-      
+
       return data.has_completed_onboarding || false;
     } catch (err) {
       setHasCompletedOnboarding(false);
@@ -135,7 +135,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const token = accessToken ?? (await supabase.auth.getSession()).data.session?.access_token;
       if (token) {
         const { data } = await supabase.functions.invoke("check-subscription", {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         });
         setHasSubscription(data?.subscribed || false);
       } else {
@@ -158,63 +158,26 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, 3000);
 
     // Set up auth state listener FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        // Skip if this is the initial load
-        if (initialLoadRef.current) return;
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      // Skip if this is the initial load
+      if (initialLoadRef.current) return;
 
-        // On token refresh, just update session/user — no need to re-run DB checks
-        if (event === "TOKEN_REFRESHED") {
-          setSession(session);
-          setUser(session?.user ?? null);
-          return;
-        }
-
+      // On token refresh, just update session/user — no need to re-run DB checks
+      if (event === "TOKEN_REFRESHED") {
         setSession(session);
         setUser(session?.user ?? null);
-
-        if (session?.user) {
-          authCheckedRef.current = true;
-          setLoading(true);
-          
-          // Identify user in PostHog (dynamic import to defer analytics bundle)
-          import("@/lib/posthog").then(({ identifyUser }) =>
-            identifyUser(session.user.id, {
-              email: session.user.email,
-              created_at: session.user.created_at,
-            })
-          );
-          
-          // Run checks in parallel
-          await Promise.all([
-            checkAdminRole(session.user.id),
-            checkSubscription(session.user.id, session.access_token),
-            checkOnboardingStatus(session.user.id)
-          ]).catch(() => {});
-          
-          setLoading(false);
-        } else {
-          authCheckedRef.current = false;
-          setIsAdmin(false);
-          setIsTestUser(false);
-          setHasSubscription(false);
-          setHasMentorshipDiy(false);
-          setHasMentorshipGuided(false);
-          setHasCompletedOnboarding(false);
-          setLoading(false);
-        }
+        return;
       }
-    );
 
-    // THEN check for existing session
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      initialLoadRef.current = false;
-      
-      if (session?.user && !authCheckedRef.current) {
+
+      if (session?.user) {
         authCheckedRef.current = true;
-        
+        setLoading(true);
+
         // Identify user in PostHog (dynamic import to defer analytics bundle)
         import("@/lib/posthog").then(({ identifyUser }) =>
           identifyUser(session.user.id, {
@@ -222,31 +185,71 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             created_at: session.user.created_at,
           })
         );
-        
-        // Run all checks in parallel with individual error handling
-        try {
-          await Promise.all([
-            checkAdminRole(session.user.id).catch(() => {}),
-            checkSubscription(session.user.id, session.access_token).catch(() => {}),
-            checkOnboardingStatus(session.user.id).catch(() => {})
-          ]);
-        } catch (err) {
-          // Ignore errors - individual checks handle their own state
-        }
-      } else if (!session?.user) {
+
+        // Run checks in parallel
+        await Promise.all([
+          checkAdminRole(session.user.id),
+          checkSubscription(session.user.id, session.access_token),
+          checkOnboardingStatus(session.user.id),
+        ]).catch(() => {});
+
+        setLoading(false);
+      } else {
+        authCheckedRef.current = false;
         setIsAdmin(false);
         setIsTestUser(false);
         setHasSubscription(false);
         setHasMentorshipDiy(false);
         setHasMentorshipGuided(false);
         setHasCompletedOnboarding(false);
+        setLoading(false);
       }
-      
-      // ALWAYS set loading to false
-      setLoading(false);
-    }).catch(() => {
-      setLoading(false);
     });
+
+    // THEN check for existing session
+    supabase.auth
+      .getSession()
+      .then(async ({ data: { session } }) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        initialLoadRef.current = false;
+
+        if (session?.user && !authCheckedRef.current) {
+          authCheckedRef.current = true;
+
+          // Identify user in PostHog (dynamic import to defer analytics bundle)
+          import("@/lib/posthog").then(({ identifyUser }) =>
+            identifyUser(session.user.id, {
+              email: session.user.email,
+              created_at: session.user.created_at,
+            })
+          );
+
+          // Run all checks in parallel with individual error handling
+          try {
+            await Promise.all([
+              checkAdminRole(session.user.id).catch(() => {}),
+              checkSubscription(session.user.id, session.access_token).catch(() => {}),
+              checkOnboardingStatus(session.user.id).catch(() => {}),
+            ]);
+          } catch (err) {
+            // Ignore errors - individual checks handle their own state
+          }
+        } else if (!session?.user) {
+          setIsAdmin(false);
+          setIsTestUser(false);
+          setHasSubscription(false);
+          setHasMentorshipDiy(false);
+          setHasMentorshipGuided(false);
+          setHasCompletedOnboarding(false);
+        }
+
+        // ALWAYS set loading to false
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
 
     return () => {
       clearTimeout(safetyTimeout);
@@ -282,7 +285,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const signUp = async (email: string, password: string, fullName: string): Promise<User | null> => {
+  const signUp = async (
+    email: string,
+    password: string,
+    fullName: string
+  ): Promise<User | null> => {
     const redirectUrl = `${window.location.origin}/`;
 
     const { data, error } = await supabase.auth.signUp({
@@ -303,15 +310,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signOut = async () => {
     try {
       const { error } = await supabase.auth.signOut();
-      
+
       // Ignore session errors - may already be expired
       if (error && !error.message?.toLowerCase().includes("session")) {
         throw error;
       }
-      
+
       // Reset PostHog user
       import("@/lib/posthog").then(({ resetUser }) => resetUser());
-      
+
       // Always clear local state
       setIsAdmin(false);
       setIsTestUser(false);
@@ -324,7 +331,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } catch (error) {
       // Reset PostHog user even on error
       import("@/lib/posthog").then(({ resetUser }) => resetUser());
-      
+
       // Clear state even on error
       setIsAdmin(false);
       setIsTestUser(false);
@@ -346,9 +353,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     try {
       const { data, error } = await supabase.functions.invoke("customer-portal");
-      
+
       if (error) throw error;
-      
+
       if (data?.url) {
         window.open(data.url, "_blank");
       }

@@ -1,10 +1,4 @@
-import {
-  Table,
-  TableBody,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
 import { TableRowSkeleton } from "@/components/skeletons/TableRowSkeleton";
@@ -23,18 +17,13 @@ interface AdminTableProps {
   isLoading?: boolean;
 }
 
-export const AdminTable = ({ 
-  children, 
-  headers, 
-  emptyState,
-  isLoading 
-}: AdminTableProps) => {
+export const AdminTable = ({ children, headers, emptyState, isLoading }: AdminTableProps) => {
   const normalizedHeaders: AdminTableHeader[] = headers.map((header) =>
     typeof header === "string" ? { label: header } : header
   );
 
   return (
-    <div className="bg-background/40 backdrop-blur-xl border border-[#E6DBC7]/20 rounded-xl overflow-hidden">
+    <div className="overflow-hidden rounded-xl border border-[#E6DBC7]/20 bg-background/40 backdrop-blur-xl">
       <Table>
         <TableHeader>
           <TableRow className="border-b border-[#E6DBC7]/10 hover:bg-transparent">
@@ -42,7 +31,7 @@ export const AdminTable = ({
               <TableHead
                 key={index}
                 className={cn(
-                  "text-[#E6DBC7] font-normal text-sm py-4",
+                  "py-4 text-sm font-normal text-[#E6DBC7]",
                   header.align === "right" && "text-right",
                   header.align === "center" && "text-center",
                   header.width,
@@ -60,10 +49,7 @@ export const AdminTable = ({
             <TableRowSkeleton columns={headers.length} rows={5} />
           ) : emptyState ? (
             <TableRow>
-              <td 
-                colSpan={headers.length} 
-                className="py-12 text-center text-foreground/60"
-              >
+              <td colSpan={headers.length} className="py-12 text-center text-foreground/60">
                 {emptyState}
               </td>
             </TableRow>
@@ -81,4 +67,3 @@ export const adminTableRowClass = "border-b border-[#E6DBC7]/10 hover:bg-white/5
 export const adminTableCellClass = "py-4";
 
 export default AdminTable;
-

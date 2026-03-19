@@ -1,45 +1,36 @@
 /**
  * Cloud Storage Image URLs with CDN Optimization
- * 
+ *
  * This module provides URLs for images stored in Supabase Storage
  * with automatic CDN transformation for responsive, optimized delivery.
  */
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const BUCKET_NAME = 'site-images';
+const BUCKET_NAME = "site-images";
 
 export interface CloudImageOptions {
   width?: number;
   height?: number;
   quality?: number; // 1-100, default 80
-  format?: 'webp' | 'avif' | 'origin';
-  resize?: 'cover' | 'contain' | 'fill';
+  format?: "webp" | "avif" | "origin";
+  resize?: "cover" | "contain" | "fill";
 }
 
 /**
  * Generate a CDN-optimized URL for a Cloud Storage image
  */
-export const getCloudImageUrl = (
-  imagePath: string,
-  options: CloudImageOptions = {}
-): string => {
-  const {
-    width,
-    height,
-    quality = 80,
-    format = 'webp',
-    resize = 'cover'
-  } = options;
+export const getCloudImageUrl = (imagePath: string, options: CloudImageOptions = {}): string => {
+  const { width, height, quality = 80, format = "webp", resize = "cover" } = options;
 
   const baseUrl = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/${imagePath}`;
-  
+
   // Build transformation parameters
   const params = new URLSearchParams();
-  if (width) params.append('width', width.toString());
-  if (height) params.append('height', height.toString());
-  params.append('quality', quality.toString());
-  params.append('format', format);
-  params.append('resize', resize);
+  if (width) params.append("width", width.toString());
+  if (height) params.append("height", height.toString());
+  params.append("quality", quality.toString());
+  params.append("format", format);
+  params.append("resize", resize);
 
   return `${baseUrl}?${params.toString()}`;
 };
@@ -47,18 +38,15 @@ export const getCloudImageUrl = (
 /**
  * Generate responsive srcset for Cloud Storage images
  */
-export const getCloudImageSrcSet = (
-  imagePath: string,
-  options: CloudImageOptions = {}
-): string => {
+export const getCloudImageSrcSet = (imagePath: string, options: CloudImageOptions = {}): string => {
   const widths = [320, 640, 768, 1024, 1440, 1920];
-  
+
   return widths
-    .map(width => {
+    .map((width) => {
       const url = getCloudImageUrl(imagePath, { ...options, width });
       return `${url} ${width}w`;
     })
-    .join(', ');
+    .join(", ");
 };
 
 /**
@@ -79,26 +67,25 @@ export const CLOUD_IMAGE_PRESETS = {
  */
 export const CLOUD_IMAGES = {
   // Home images
-  heroBreathworkWide: 'home/breathwork-wide.webp',
-  threeWaysMushroom: 'home/three-ways-mushroom.webp',
-  exploreAudioPlayer: 'home/explore-studio-audio-player.webp',
-  exploreTestimonials: 'home/explore-studio-testimonials.webp',
+  heroBreathworkWide: "home/breathwork-wide.webp",
+  threeWaysMushroom: "home/three-ways-mushroom.webp",
+  exploreAudioPlayer: "home/explore-studio-audio-player.webp",
+  exploreTestimonials: "home/explore-studio-testimonials.webp",
 
   // Experiences images
-  breathPresence: 'experiences/breath-presence-heart-connection-in-person.webp',
-  breathWorkToDub: 'experiences/breathwork-to-dub-in-person.webp',
-  monthlyBreath: 'experiences/monthly-breath-presence-online.webp',
-  moreWaysToPractice: 'experiences/more-ways-to-practice.jpg',
-  unwindReset: 'experiences/unwind-reset.webp',
-  weeklyReset: 'experiences/weekly-reset.webp',
+  breathPresence: "experiences/breath-presence-heart-connection-in-person.webp",
+  breathWorkToDub: "experiences/breathwork-to-dub-in-person.webp",
+  monthlyBreath: "experiences/monthly-breath-presence-online.webp",
+  moreWaysToPractice: "experiences/more-ways-to-practice.jpg",
+  unwindReset: "experiences/unwind-reset.webp",
+  weeklyReset: "experiences/weekly-reset.webp",
 
   // Online images
-  startHereButterfly: 'online/start-here-butterfly.webp',
-  
+  startHereButterfly: "online/start-here-butterfly.webp",
+
   // About/Bio images
-  marchBioPhoto: 'about/march-bio-photo.webp',
-  marchTeacher: 'about/march-russell-teacher.webp',
-  
+  marchBioPhoto: "about/march-bio-photo.webp",
+  marchTeacher: "about/march-russell-teacher.webp",
 } as const;
 
 /**
@@ -113,9 +100,9 @@ export const useCloudImage = (
   // Always try Cloud first (images should be uploaded)
   const cloudUrl = getCloudImageUrl(cloudPath, options);
   const srcSet = getCloudImageSrcSet(cloudPath, options);
-  
+
   return {
     src: cloudUrl,
-    srcSet
+    srcSet,
   };
 };

@@ -6,7 +6,8 @@
 export const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
 
 // Extract project ID from URL (e.g., "qnqbmxjlqufzrqxptqsd" from "https://qnqbmxjlqufzrqxptqsd.supabase.co")
-export const SUPABASE_PROJECT_ID = SUPABASE_URL?.match(/https:\/\/([^.]+)\.supabase\.co/)?.[1] ?? '';
+export const SUPABASE_PROJECT_ID =
+  SUPABASE_URL?.match(/https:\/\/([^.]+)\.supabase\.co/)?.[1] ?? "";
 
 /**
  * Build a public storage URL for a file in a Supabase bucket
@@ -24,4 +25,3 @@ export const getStorageUrl = (bucket: string, path: string): string =>
  */
 export const getFunctionUrl = (functionName: string): string =>
   `${SUPABASE_URL}/functions/v1/${functionName}`;
-

@@ -9,19 +9,19 @@ interface AdminStatsCardProps {
   iconBgColor?: string;
 }
 
-export const AdminStatsCard = ({ 
-  title, 
-  value, 
-  icon: Icon, 
+export const AdminStatsCard = ({
+  title,
+  value,
+  icon: Icon,
   iconColor = "#E6DBC7",
-  iconBgColor = "rgba(230, 219, 199, 0.1)"
+  iconBgColor = "rgba(230, 219, 199, 0.1)",
 }: AdminStatsCardProps) => {
   return (
-    <Card className="bg-background/40 backdrop-blur-xl border-[#E6DBC7]/20">
+    <Card className="border-[#E6DBC7]/20 bg-background/40 backdrop-blur-xl">
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm text-foreground/60 flex items-center gap-3">
-          <div 
-            className="w-10 h-10 rounded-xl flex items-center justify-center"
+        <CardTitle className="flex items-center gap-3 text-sm text-foreground/60">
+          <div
+            className="flex h-10 w-10 items-center justify-center rounded-xl"
             style={{ backgroundColor: iconBgColor }}
           >
             <Icon className="h-5 w-5" style={{ color: iconColor }} />
@@ -37,4 +37,3 @@ export const AdminStatsCard = ({
 };
 
 export default AdminStatsCard;
-

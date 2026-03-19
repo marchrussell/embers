@@ -16,7 +16,7 @@ const DarkTextarea = React.forwardRef<HTMLTextAreaElement, DarkTextareaProps>(
     return (
       <textarea
         className={cn(
-          "flex min-h-[80px] w-full rounded-xl border px-5 py-4 text-base ring-offset-background transition-colors resize-none",
+          "flex min-h-[80px] w-full resize-none rounded-xl border px-5 py-4 text-base ring-offset-background transition-colors",
           "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
           "disabled:cursor-not-allowed disabled:opacity-50",
           variantClasses[variant],

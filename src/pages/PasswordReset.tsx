@@ -71,11 +71,11 @@ const PasswordReset = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="flex min-h-screen flex-col bg-background">
       <NavBar />
-      
-      <main className="flex-1 flex items-center justify-center px-6 py-24">
-        <Card className="w-full max-w-md bg-card border-border">
+
+      <main className="flex flex-1 items-center justify-center px-6 py-24">
+        <Card className="w-full max-w-md border-border bg-card">
           <CardHeader>
             <CardTitle className="font-editorial text-3xl">
               {isResetMode ? "Set New Password" : "Reset Password"}

@@ -16,7 +16,7 @@ const aspectRatioClasses = {
 export const SkeletonBox = ({ className, aspectRatio = "auto" }: SkeletonBoxProps) => (
   <div
     className={cn(
-      "bg-background/10 rounded animate-pulse",
+      "animate-pulse rounded bg-background/10",
       aspectRatioClasses[aspectRatio],
       className
     )}
@@ -62,7 +62,7 @@ export const SkeletonLine = ({
 }: SkeletonLineProps) => (
   <div
     className={cn(
-      "rounded animate-pulse",
+      "animate-pulse rounded",
       widthClasses[width],
       heightClasses[height],
       variantClasses[variant],
@@ -87,7 +87,7 @@ const circleSizeClasses = {
 export const SkeletonCircle = ({ size = "md", className }: SkeletonCircleProps) => (
   <div
     className={cn(
-      "rounded-full bg-background/10 animate-pulse",
+      "animate-pulse rounded-full bg-background/10",
       circleSizeClasses[size],
       className
     )}
@@ -103,7 +103,7 @@ interface SkeletonButtonProps {
 export const SkeletonButton = ({ variant = "default", className }: SkeletonButtonProps) => (
   <div
     className={cn(
-      "h-10 bg-background/10 rounded-full animate-pulse",
+      "h-10 animate-pulse rounded-full bg-background/10",
       variant === "full" ? "w-full" : "w-32",
       className
     )}
@@ -123,13 +123,7 @@ const iconSizeClasses = {
 };
 
 export const SkeletonIcon = ({ size = "md", className }: SkeletonIconProps) => (
-  <div
-    className={cn(
-      "rounded bg-background/10 animate-pulse",
-      iconSizeClasses[size],
-      className
-    )}
-  />
+  <div className={cn("animate-pulse rounded bg-background/10", iconSizeClasses[size], className)} />
 );
 
 // Composable card skeleton
@@ -154,10 +148,13 @@ export const CardSkeleton = ({
 }: CardSkeletonProps) => {
   if (variant === "horizontal") {
     return (
-      <div className={cn("flex items-center gap-4 p-4 bg-background/5 rounded-lg animate-pulse", className)}>
-        {showThumbnail && (
-          <div className="w-20 h-20 bg-background/10 rounded flex-shrink-0" />
+      <div
+        className={cn(
+          "flex animate-pulse items-center gap-4 rounded-lg bg-background/5 p-4",
+          className
         )}
+      >
+        {showThumbnail && <div className="h-20 w-20 flex-shrink-0 rounded bg-background/10" />}
         <div className="flex-1 space-y-2">
           <SkeletonLine width="3/4" height="5" variant="title" />
           {showMeta && <SkeletonLine width="1/2" height="3" />}
@@ -168,9 +165,14 @@ export const CardSkeleton = ({
   }
 
   return (
-    <div className={cn("group relative overflow-hidden rounded-lg bg-background/5 animate-pulse", className)}>
+    <div
+      className={cn(
+        "group relative animate-pulse overflow-hidden rounded-lg bg-background/5",
+        className
+      )}
+    >
       {showThumbnail && <SkeletonBox aspectRatio={thumbnailAspect} />}
-      <div className="p-5 space-y-3">
+      <div className="space-y-3 p-5">
         {Array.from({ length: lines }).map((_, i) => (
           <SkeletonLine
             key={i}

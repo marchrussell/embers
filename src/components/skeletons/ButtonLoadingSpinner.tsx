@@ -16,15 +16,6 @@ const sizeClasses = {
  * A spinner component designed for use inside buttons during loading states.
  * Provides consistent loading feedback across the application.
  */
-export const ButtonLoadingSpinner = ({ 
-  className, 
-  size = "md" 
-}: ButtonLoadingSpinnerProps) => (
-  <Loader2 
-    className={cn(
-      "animate-spin",
-      sizeClasses[size],
-      className
-    )} 
-  />
+export const ButtonLoadingSpinner = ({ className, size = "md" }: ButtonLoadingSpinnerProps) => (
+  <Loader2 className={cn("animate-spin", sizeClasses[size], className)} />
 );

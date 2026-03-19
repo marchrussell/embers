@@ -53,7 +53,11 @@ const PaymentSuccess = () => {
     }
   }, [sessionId, user, navigate, checkSubscription]);
 
-  const { data: verificationData, isLoading: verifying, isError } = useQuery({
+  const {
+    data: verificationData,
+    isLoading: verifying,
+    isError,
+  } = useQuery({
     queryKey: ["verify-payment", sessionId],
     queryFn: async () => {
       const { data, error } = await supabase.functions.invoke("verify-payment-session", {
@@ -94,10 +98,7 @@ const PaymentSuccess = () => {
       const newUser = await signUp(email, password, fullName);
 
       if (newUser && marketingConsent) {
-        await supabase
-          .from("profiles")
-          .update({ marketing_consent: true })
-          .eq("id", newUser.id);
+        await supabase.from("profiles").update({ marketing_consent: true }).eq("id", newUser.id);
       }
 
       toast.success("Account created! Redirecting to safety disclosure...");
@@ -115,13 +116,14 @@ const PaymentSuccess = () => {
 
   if (isError || !paymentVerified) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
-        <Card className="w-full max-w-md bg-black/75 backdrop-blur-xl border border-white/20 rounded-[28px]">
+      <div className="flex min-h-screen items-center justify-center bg-black">
+        <Card className="w-full max-w-md rounded-[28px] border border-white/20 bg-black/75 backdrop-blur-xl">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <p className="text-xl font-light text-white">Payment verification failed</p>
             {isError && sessionId && (
-              <p className="text-sm font-light text-white/60 mt-3 text-center px-4">
-                Your payment was successful — please contact support@embersstudio.io with session ID: {sessionId.slice(-8)}
+              <p className="mt-3 px-4 text-center text-sm font-light text-white/60">
+                Your payment was successful — please contact support@embersstudio.io with session
+                ID: {sessionId.slice(-8)}
               </p>
             )}
           </CardContent>
@@ -131,11 +133,11 @@ const PaymentSuccess = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black p-4">
-      <Card className="w-full max-w-md bg-black/75 backdrop-blur-xl border border-white/20 rounded-[28px]">
-        <CardHeader className="text-center pb-2 pt-10 px-8">
-          <CheckCircle2 className="h-18 w-18 text-white mx-auto mb-6" />
-          <CardTitle className="text-2xl text-white mb-3">You're all set!</CardTitle>
+    <div className="flex min-h-screen items-center justify-center bg-black p-4">
+      <Card className="w-full max-w-md rounded-[28px] border border-white/20 bg-black/75 backdrop-blur-xl">
+        <CardHeader className="px-8 pb-2 pt-10 text-center">
+          <CheckCircle2 className="h-18 w-18 mx-auto mb-6 text-white" />
+          <CardTitle className="mb-3 text-2xl text-white">You're all set!</CardTitle>
           <CardDescription className="text-white/70">
             Set your password to complete your account
           </CardDescription>
@@ -143,7 +145,9 @@ const PaymentSuccess = () => {
         <CardContent className="px-8 pb-10 pt-8">
           <form onSubmit={handleSignUp} className="space-y-7">
             <div className="space-y-2">
-              <Label htmlFor="firstname" className="text-white">First Name</Label>
+              <Label htmlFor="firstname" className="text-white">
+                First Name
+              </Label>
               <Input
                 id="firstname"
                 type="text"
@@ -151,11 +155,13 @@ const PaymentSuccess = () => {
                 onChange={(e) => setFirstName(e.target.value)}
                 required
                 placeholder="John"
-                className="bg-white/10 text-white border-white/20 placeholder:text-white/50"
+                className="border-white/20 bg-white/10 text-white placeholder:text-white/50"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="surname" className="text-white">Surname</Label>
+              <Label htmlFor="surname" className="text-white">
+                Surname
+              </Label>
               <Input
                 id="surname"
                 type="text"
@@ -163,21 +169,25 @@ const PaymentSuccess = () => {
                 onChange={(e) => setSurname(e.target.value)}
                 required
                 placeholder="Doe"
-                className="bg-white/10 text-white border-white/20 placeholder:text-white/50"
+                className="border-white/20 bg-white/10 text-white placeholder:text-white/50"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-white">Email</Label>
+              <Label htmlFor="email" className="text-white">
+                Email
+              </Label>
               <Input
                 id="email"
                 type="email"
                 value={email}
                 readOnly
-                className="bg-white/5 text-white/70 border-white/20 cursor-not-allowed"
+                className="cursor-not-allowed border-white/20 bg-white/5 text-white/70"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-white">Create Password</Label>
+              <Label htmlFor="password" className="text-white">
+                Create Password
+              </Label>
               <Input
                 id="password"
                 type="password"
@@ -186,7 +196,7 @@ const PaymentSuccess = () => {
                 required
                 minLength={6}
                 placeholder="At least 6 characters"
-                className="bg-white/10 text-white border-white/20 placeholder:text-white/50"
+                className="border-white/20 bg-white/10 text-white placeholder:text-white/50"
               />
             </div>
 
@@ -195,11 +205,11 @@ const PaymentSuccess = () => {
                 id="marketing"
                 checked={marketingConsent}
                 onCheckedChange={(checked) => setMarketingConsent(checked as boolean)}
-                className="border-white h-5 w-5"
+                className="h-5 w-5 border-white"
               />
               <label
                 htmlFor="marketing"
-                className="text-sm text-white/80 leading-tight cursor-pointer"
+                className="cursor-pointer text-sm leading-tight text-white/80"
               >
                 I'd like to receive updates, tips, and exclusive offers via email
               </label>
@@ -208,12 +218,12 @@ const PaymentSuccess = () => {
             <div className="pt-4">
               <Button
                 type="submit"
-                className="w-full rounded-full py-6 font-light text-base bg-white text-black hover:bg-white/90"
+                className="w-full rounded-full bg-white py-6 text-base font-light text-black hover:bg-white/90"
                 disabled={loading}
               >
                 {loading ? (
                   <span className="flex items-center justify-center gap-2">
-                    <div className="animate-spin-slow rounded-full h-4 w-4 border-t-2 border-b-2 border-black"></div>
+                    <div className="h-4 w-4 animate-spin-slow rounded-full border-b-2 border-t-2 border-black"></div>
                     Setting up your account...
                   </span>
                 ) : (

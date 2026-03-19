@@ -18,10 +18,10 @@ export const LandingProblemSection = ({
   hideSubheadline = false,
 }: LandingProblemSectionProps) => {
   return (
-    <section className={cn("px-6 md:px-12 lg:px-24 py-24 border-t border-white/10", className)}>
-      <div className="max-w-3xl mx-auto">
+    <section className={cn("border-t border-white/10 px-6 py-24 md:px-12 lg:px-24", className)}>
+      <div className="mx-auto max-w-3xl">
         <h2
-          className="font-editorial text-white text-center mb-12"
+          className="mb-12 text-center font-editorial text-white"
           style={{
             fontSize: "clamp(1.8rem, 2.5vw, 2.4rem)",
             lineHeight: 1.15,
@@ -33,7 +33,7 @@ export const LandingProblemSection = ({
 
         {!hideSubheadline && subheadline && (
           <p
-            className="text-white/60 text-center mb-10 uppercase tracking-[0.12em]"
+            className="mb-10 text-center uppercase tracking-[0.12em] text-white/60"
             style={{
               fontSize: "clamp(0.7rem, 0.8vw, 0.85rem)",
             }}
@@ -43,21 +43,21 @@ export const LandingProblemSection = ({
         )}
 
         <ul
-          className="space-y-4 mb-12 max-w-xl mx-auto"
+          className="mx-auto mb-12 max-w-xl space-y-4"
           style={{
             fontSize: "clamp(0.95rem, 1.05vw, 1.1rem)",
             lineHeight: 1.6,
           }}
         >
           {problems.map((problem, index) => (
-            <li key={index} className="text-white/80 pl-6 border-l-2 border-white/20">
+            <li key={index} className="border-l-2 border-white/20 pl-6 text-white/80">
               {problem}
             </li>
           ))}
         </ul>
 
         <div
-          className="text-white/70 text-center italic"
+          className="text-center italic text-white/70"
           style={{
             fontSize: "clamp(1rem, 1.1vw, 1.15rem)",
             lineHeight: 1.6,

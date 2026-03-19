@@ -1,12 +1,31 @@
 import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
 import { UploadingSkeleton } from "@/components/skeletons";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
@@ -72,7 +91,7 @@ const AdminCourseLessons = () => {
       .select("id, title, slug")
       .eq("id", courseId)
       .single();
-    
+
     if (error) {
       toast({ title: "Error fetching course", description: error.message, variant: "destructive" });
     } else {
@@ -86,9 +105,13 @@ const AdminCourseLessons = () => {
       .select("*")
       .eq("course_id", courseId)
       .order("order_index", { ascending: true });
-    
+
     if (error) {
-      toast({ title: "Error fetching lessons", description: error.message, variant: "destructive" });
+      toast({
+        title: "Error fetching lessons",
+        description: error.message,
+        variant: "destructive",
+      });
     } else {
       setLessons(data || []);
     }
@@ -98,16 +121,24 @@ const AdminCourseLessons = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const isVideo = file.type.startsWith('video/');
-    const isAudio = file.type.startsWith('audio/');
-    
+    const isVideo = file.type.startsWith("video/");
+    const isAudio = file.type.startsWith("audio/");
+
     if (!isVideo && !isAudio) {
-      toast({ title: "Invalid file type", description: "Please upload a video or audio file", variant: "destructive" });
+      toast({
+        title: "Invalid file type",
+        description: "Please upload a video or audio file",
+        variant: "destructive",
+      });
       return;
     }
 
     if (file.size > 500 * 1024 * 1024) {
-      toast({ title: "File too large", description: "Please upload a file smaller than 500MB", variant: "destructive" });
+      toast({
+        title: "File too large",
+        description: "Please upload a file smaller than 500MB",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -115,24 +146,22 @@ const AdminCourseLessons = () => {
     toast({ title: "Uploading media...", duration: Infinity });
 
     try {
-      const fileExt = file.name.split('.').pop();
+      const fileExt = file.name.split(".").pop();
       const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
-      const bucket = isVideo ? 'videos' : 'class-audio';
+      const bucket = isVideo ? "videos" : "class-audio";
 
-      const { error: uploadError } = await supabase.storage
-        .from(bucket)
-        .upload(fileName, file);
+      const { error: uploadError } = await supabase.storage.from(bucket).upload(fileName, file);
 
       if (uploadError) throw uploadError;
 
-      const { data: { publicUrl } } = supabase.storage
-        .from(bucket)
-        .getPublicUrl(fileName);
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from(bucket).getPublicUrl(fileName);
 
-      setFormData({ 
-        ...formData, 
+      setFormData({
+        ...formData,
         media_url: publicUrl,
-        content_type: isVideo ? 'video' : 'audio'
+        content_type: isVideo ? "video" : "audio",
       });
       toast({ title: "Media uploaded successfully" });
     } catch (error: any) {
@@ -144,9 +173,13 @@ const AdminCourseLessons = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.title || !formData.media_url) {
-      toast({ title: "Missing required fields", description: "Please fill in title and media URL", variant: "destructive" });
+      toast({
+        title: "Missing required fields",
+        description: "Please fill in title and media URL",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -166,9 +199,13 @@ const AdminCourseLessons = () => {
         .from("course_lessons")
         .update(lessonData)
         .eq("id", editingLesson.id);
-      
+
       if (error) {
-        toast({ title: "Error updating lesson", description: error.message, variant: "destructive" });
+        toast({
+          title: "Error updating lesson",
+          description: error.message,
+          variant: "destructive",
+        });
       } else {
         toast({ title: "Lesson updated successfully" });
         fetchLessons();
@@ -176,9 +213,13 @@ const AdminCourseLessons = () => {
       }
     } else {
       const { error } = await supabase.from("course_lessons").insert(lessonData);
-      
+
       if (error) {
-        toast({ title: "Error creating lesson", description: error.message, variant: "destructive" });
+        toast({
+          title: "Error creating lesson",
+          description: error.message,
+          variant: "destructive",
+        });
       } else {
         toast({ title: "Lesson created successfully" });
         fetchLessons();
@@ -189,9 +230,9 @@ const AdminCourseLessons = () => {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this lesson?")) return;
-    
+
     const { error } = await supabase.from("course_lessons").delete().eq("id", id);
-    
+
     if (error) {
       toast({ title: "Error deleting lesson", description: error.message, variant: "destructive" });
     } else {
@@ -219,7 +260,7 @@ const AdminCourseLessons = () => {
       .from("course_lessons")
       .update({ is_published: !lesson.is_published })
       .eq("id", lesson.id);
-    
+
     if (error) {
       toast({ title: "Error updating lesson", description: error.message, variant: "destructive" });
     } else {
@@ -246,18 +287,18 @@ const AdminCourseLessons = () => {
 
   return (
     <div className="min-h-screen bg-background p-8">
-      <div className="max-w-7xl mx-auto">
+      <div className="mx-auto max-w-7xl">
         <div className="mb-6">
           <Button variant="ghost" onClick={() => navigate("/admin/courses")} className="gap-2">
             <ArrowLeft className="h-5 w-5" />
             Back to Courses
           </Button>
         </div>
-        
-        <div className="flex justify-between items-center mb-8">
+
+        <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-4xl font-bold">Manage Lessons</h1>
-            {course && <p className="text-muted-foreground mt-2">{course.title}</p>}
+            {course && <p className="mt-2 text-muted-foreground">{course.title}</p>}
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
@@ -265,7 +306,10 @@ const AdminCourseLessons = () => {
                 <Plus className="mr-2 h-4 w-4" /> Add Lesson
               </Button>
             </DialogTrigger>
-            <DialogContent className="backdrop-blur-xl bg-black/30 border border-white/30 max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl" hideClose>
+            <DialogContent
+              className="max-h-[90vh] max-w-2xl overflow-y-auto rounded-xl border border-white/30 bg-black/30 backdrop-blur-xl"
+              hideClose
+            >
               <DialogHeader>
                 <DialogTitle>{editingLesson ? "Edit Lesson" : "Add New Lesson"}</DialogTitle>
               </DialogHeader>
@@ -313,7 +357,9 @@ const AdminCourseLessons = () => {
                       id="duration_minutes"
                       type="number"
                       value={formData.duration_minutes}
-                      onChange={(e) => setFormData({ ...formData, duration_minutes: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, duration_minutes: e.target.value })
+                      }
                     />
                   </div>
                 </div>
@@ -354,14 +400,20 @@ const AdminCourseLessons = () => {
                   <Switch
                     id="is_published"
                     checked={formData.is_published}
-                    onCheckedChange={(checked) => setFormData({ ...formData, is_published: checked })}
+                    onCheckedChange={(checked) =>
+                      setFormData({ ...formData, is_published: checked })
+                    }
                   />
                   <Label htmlFor="is_published">Published</Label>
                 </div>
 
-                <div className="flex gap-2 justify-end">
-                  <Button type="button" variant="outline" onClick={resetForm}>Cancel</Button>
-                  <Button type="submit" disabled={uploading}>{editingLesson ? "Update" : "Add"}</Button>
+                <div className="flex justify-end gap-2">
+                  <Button type="button" variant="outline" onClick={resetForm}>
+                    Cancel
+                  </Button>
+                  <Button type="submit" disabled={uploading}>
+                    {editingLesson ? "Update" : "Add"}
+                  </Button>
                 </div>
               </form>
             </DialogContent>
@@ -369,7 +421,7 @@ const AdminCourseLessons = () => {
         </div>
 
         {lessons.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground">
+          <div className="py-12 text-center text-muted-foreground">
             <p>No lessons yet. Add your first lesson to get started.</p>
           </div>
         ) : (
@@ -390,7 +442,9 @@ const AdminCourseLessons = () => {
                   <TableCell className="text-muted-foreground">{index + 1}</TableCell>
                   <TableCell className="font-medium">{lesson.title}</TableCell>
                   <TableCell className="capitalize">{lesson.content_type}</TableCell>
-                  <TableCell>{lesson.duration_minutes ? `${lesson.duration_minutes} min` : '-'}</TableCell>
+                  <TableCell>
+                    {lesson.duration_minutes ? `${lesson.duration_minutes} min` : "-"}
+                  </TableCell>
                   <TableCell>
                     <Switch
                       checked={lesson.is_published}

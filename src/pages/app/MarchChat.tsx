@@ -31,7 +31,8 @@ export default function MarchChat() {
 
   const WELCOME_MESSAGE: Message = {
     role: "assistant",
-    content: "Hi there 💛 I'm March. I'm here to help you stay consistent with your wellbeing goals and support you along the way. How are you feeling today?",
+    content:
+      "Hi there 💛 I'm March. I'm here to help you stay consistent with your wellbeing goals and support you along the way. How are you feeling today?",
   };
 
   const scrollToBottom = () => {
@@ -48,7 +49,7 @@ export default function MarchChat() {
   }, [user, navigate]);
 
   const { data: hasConsent = false } = useQuery({
-    queryKey: ['march-consent', user?.id],
+    queryKey: ["march-consent", user?.id],
     queryFn: async () => {
       const { data } = await supabase
         .from("profiles")
@@ -61,7 +62,7 @@ export default function MarchChat() {
   });
 
   const { data: messageHistory, isLoading: messagesLoading } = useQuery({
-    queryKey: ['march-messages', user?.id],
+    queryKey: ["march-messages", user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("march_messages")
@@ -79,10 +80,12 @@ export default function MarchChat() {
   useEffect(() => {
     if (messagesLoading) return;
     if (messageHistory && messageHistory.length > 0) {
-      setMessages(messageHistory.map((msg) => ({
-        role: msg.is_from_march ? ("assistant" as const) : ("user" as const),
-        content: msg.message_text,
-      })));
+      setMessages(
+        messageHistory.map((msg) => ({
+          role: msg.is_from_march ? ("assistant" as const) : ("user" as const),
+          content: msg.message_text,
+        }))
+      );
     } else {
       setMessages([WELCOME_MESSAGE]);
     }
@@ -111,7 +114,7 @@ export default function MarchChat() {
       if (error) throw error;
 
       setShowPrivacyModal(false);
-      queryClient.invalidateQueries({ queryKey: ['march-consent', user.id] });
+      queryClient.invalidateQueries({ queryKey: ["march-consent", user.id] });
 
       toast({
         title: "Thank you!",
@@ -158,17 +161,14 @@ export default function MarchChat() {
     let assistantMessageContent = "";
 
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/march-chat`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-          },
-          body: JSON.stringify({ messages: newMessages }),
-        }
-      );
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/march-chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({ messages: newMessages }),
+      });
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -206,7 +206,7 @@ export default function MarchChat() {
           try {
             const parsed = JSON.parse(jsonStr);
             const content = parsed.choices?.[0]?.delta?.content;
-            
+
             if (content) {
               assistantMessage += content;
               assistantMessageContent = assistantMessage;
@@ -251,7 +251,7 @@ export default function MarchChat() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-background via-[hsl(var(--warm-amber))]/5 to-background">
+    <div className="flex min-h-screen flex-col bg-gradient-to-b from-background via-[hsl(var(--warm-amber))]/5 to-background">
       <NavBar />
 
       <MarchPrivacyModal
@@ -260,10 +260,10 @@ export default function MarchChat() {
         onReadFullPolicy={handleReadFullPolicy}
       />
 
-      <main className="flex-1 container max-w-4xl mx-auto px-4 py-8 flex flex-col">
+      <main className="container mx-auto flex max-w-4xl flex-1 flex-col px-4 py-8">
         {/* Header */}
-        <div className="mb-8 animate-in fade-in slide-in-from-top-4 duration-500">
-          <div className="flex items-center gap-4 mb-4">
+        <div className="mb-8 duration-500 animate-in fade-in slide-in-from-top-4">
+          <div className="mb-4 flex items-center gap-4">
             <Button
               variant="ghost"
               size="icon"
@@ -273,27 +273,28 @@ export default function MarchChat() {
               <ArrowLeft className="h-6 w-6" />
             </Button>
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[hsl(var(--warm-amber))] to-[hsl(var(--warm-peach))] flex items-center justify-center shadow-[0_0_20px_rgba(var(--warm-amber),0.4)]">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-[hsl(var(--warm-amber))] to-[hsl(var(--warm-peach))] shadow-[0_0_20px_rgba(var(--warm-amber),0.4)]">
                 <Sparkles className="h-6 w-6 text-background" />
               </div>
               <div>
-                <h1 className="text-3xl font-editorial text-[#E6DBC7]">Chat with March</h1>
+                <h1 className="font-editorial text-3xl text-[#E6DBC7]">Chat with March</h1>
                 <p className="text-xs text-muted-foreground">Here to help you find your rhythm</p>
               </div>
             </div>
           </div>
-          
+
           {/* Disclaimer */}
-          <div className="bg-gradient-to-r from-[hsl(var(--warm-amber))]/10 via-[hsl(var(--warm-peach))]/10 to-[hsl(var(--soft-rose))]/10 border border-[hsl(var(--warm-amber))]/20 rounded-2xl p-4 backdrop-blur-xl">
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              💛 I'm here to help you with practical guidance and finding the right sessions—but I'm not a therapist. 
-              If you need mental health support, please reach out to a professional.
+          <div className="rounded-2xl border border-[hsl(var(--warm-amber))]/20 bg-gradient-to-r from-[hsl(var(--warm-amber))]/10 via-[hsl(var(--warm-peach))]/10 to-[hsl(var(--soft-rose))]/10 p-4 backdrop-blur-xl">
+            <p className="text-xs leading-relaxed text-muted-foreground">
+              💛 I'm here to help you with practical guidance and finding the right sessions—but I'm
+              not a therapist. If you need mental health support, please reach out to a
+              professional.
             </p>
           </div>
         </div>
 
         {/* Messages */}
-        <Card className="flex-1 mb-6 p-6 overflow-y-auto max-h-[600px] space-y-6 bg-gradient-to-br from-background/60 to-background/40 backdrop-blur-xl border-[#E6DBC7]/20 shadow-[0_0_30px_rgba(230,219,199,0.05)]">
+        <Card className="mb-6 max-h-[600px] flex-1 space-y-6 overflow-y-auto border-[#E6DBC7]/20 bg-gradient-to-br from-background/60 to-background/40 p-6 shadow-[0_0_30px_rgba(230,219,199,0.05)] backdrop-blur-xl">
           {messages.map((message, index) => (
             <ChatMessage
               key={index}
@@ -306,11 +307,15 @@ export default function MarchChat() {
         </Card>
 
         {/* Input */}
-        <div className="sticky bottom-0 bg-background/95 backdrop-blur-xl pt-4 pb-2 rounded-t-2xl border-t border-[hsl(var(--warm-amber))]/20 shadow-[0_-10px_30px_rgba(var(--warm-amber),0.1)]">
+        <div className="sticky bottom-0 rounded-t-2xl border-t border-[hsl(var(--warm-amber))]/20 bg-background/95 pb-2 pt-4 shadow-[0_-10px_30px_rgba(var(--warm-amber),0.1)] backdrop-blur-xl">
           <ChatInput
             onSend={streamChat}
             disabled={isLoading || !hasConsent}
-            placeholder={hasConsent ? "Share how you're feeling or when you have time to practice..." : "Please accept the privacy terms to start chatting..."}
+            placeholder={
+              hasConsent
+                ? "Share how you're feeling or when you have time to practice..."
+                : "Please accept the privacy terms to start chatting..."
+            }
           />
         </div>
       </main>

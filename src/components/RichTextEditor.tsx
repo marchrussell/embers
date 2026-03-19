@@ -9,7 +9,12 @@ interface RichTextEditorProps {
   minHeight?: string;
 }
 
-export const RichTextEditor = ({ value, onChange, placeholder = "Enter text...", minHeight = "120px" }: RichTextEditorProps) => {
+export const RichTextEditor = ({
+  value,
+  onChange,
+  placeholder = "Enter text...",
+  minHeight = "120px",
+}: RichTextEditorProps) => {
   const editorRef = useRef<HTMLDivElement>(null);
   const [isFocused, setIsFocused] = useState(false);
 
@@ -21,31 +26,31 @@ export const RichTextEditor = ({ value, onChange, placeholder = "Enter text...",
 
   const formatTextToHTML = (text: string): string => {
     if (!text) return "";
-    
+
     // Convert markdown-style formatting to HTML
     let formatted = text
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // **bold**
-      .replace(/\*(.*?)\*/g, '<em>$1</em>') // *italic*
-      .replace(/\n/g, '<br>'); // line breaks
-    
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // **bold**
+      .replace(/\*(.*?)\*/g, "<em>$1</em>") // *italic*
+      .replace(/\n/g, "<br>"); // line breaks
+
     return formatted;
   };
 
   const formatHTMLToText = (html: string): string => {
     if (!html) return "";
-    
+
     // Convert HTML back to markdown-style
     let text = html
-      .replace(/<strong>(.*?)<\/strong>/g, '**$1**')
-      .replace(/<b>(.*?)<\/b>/g, '**$1**')
-      .replace(/<em>(.*?)<\/em>/g, '*$1*')
-      .replace(/<i>(.*?)<\/i>/g, '*$1*')
-      .replace(/<br\s*\/?>/g, '\n')
-      .replace(/<div>/g, '\n')
-      .replace(/<\/div>/g, '')
-      .replace(/<p>/g, '')
-      .replace(/<\/p>/g, '\n');
-    
+      .replace(/<strong>(.*?)<\/strong>/g, "**$1**")
+      .replace(/<b>(.*?)<\/b>/g, "**$1**")
+      .replace(/<em>(.*?)<\/em>/g, "*$1*")
+      .replace(/<i>(.*?)<\/i>/g, "*$1*")
+      .replace(/<br\s*\/?>/g, "\n")
+      .replace(/<div>/g, "\n")
+      .replace(/<\/div>/g, "")
+      .replace(/<p>/g, "")
+      .replace(/<\/p>/g, "\n");
+
     return text.trim();
   };
 
@@ -57,19 +62,19 @@ export const RichTextEditor = ({ value, onChange, placeholder = "Enter text...",
     }
   };
 
-  const applyFormat = (format: 'bold' | 'italic') => {
-    document.execCommand(format === 'bold' ? 'bold' : 'italic', false);
+  const applyFormat = (format: "bold" | "italic") => {
+    document.execCommand(format === "bold" ? "bold" : "italic", false);
     handleInput();
   };
 
   return (
-    <div className="border border-[#E6DBC7]/20 rounded-md overflow-hidden bg-background/40 backdrop-blur-xl">
-      <div className="flex gap-1 p-2 border-b border-[#E6DBC7]/20 bg-background/60">
+    <div className="overflow-hidden rounded-md border border-[#E6DBC7]/20 bg-background/40 backdrop-blur-xl">
+      <div className="flex gap-1 border-b border-[#E6DBC7]/20 bg-background/60 p-2">
         <Button
           type="button"
           variant="ghost"
           size="sm"
-          onClick={() => applyFormat('bold')}
+          onClick={() => applyFormat("bold")}
           className="h-8 w-8 p-0 hover:bg-white/10"
         >
           <Bold className="h-4 w-4 text-[#E6DBC7]" />
@@ -78,7 +83,7 @@ export const RichTextEditor = ({ value, onChange, placeholder = "Enter text...",
           type="button"
           variant="ghost"
           size="sm"
-          onClick={() => applyFormat('italic')}
+          onClick={() => applyFormat("italic")}
           className="h-8 w-8 p-0 hover:bg-white/10"
         >
           <Italic className="h-4 w-4 text-[#E6DBC7]" />
@@ -90,7 +95,7 @@ export const RichTextEditor = ({ value, onChange, placeholder = "Enter text...",
         onInput={handleInput}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        className="p-3 outline-none text-[#E6DBC7] overflow-y-auto"
+        className="overflow-y-auto p-3 text-[#E6DBC7] outline-none"
         style={{ minHeight }}
         data-placeholder={placeholder}
       />
@@ -105,18 +110,18 @@ export const RichTextEditor = ({ value, onChange, placeholder = "Enter text...",
 };
 
 export const RichTextDisplay = ({ content }: { content: string | null }) => {
-  if (!content) return <span className="text-[#E6DBC7]/40 italic">No notes yet</span>;
+  if (!content) return <span className="italic text-[#E6DBC7]/40">No notes yet</span>;
 
   const formatTextToHTML = (text: string): string => {
     return text
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-      .replace(/\n/g, '<br>');
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+      .replace(/\*(.*?)\*/g, "<em>$1</em>")
+      .replace(/\n/g, "<br>");
   };
 
   return (
-    <div 
-      className="text-[#E6DBC7]/80 text-sm leading-relaxed"
+    <div
+      className="text-sm leading-relaxed text-[#E6DBC7]/80"
       dangerouslySetInnerHTML={{ __html: formatTextToHTML(content) }}
     />
   );

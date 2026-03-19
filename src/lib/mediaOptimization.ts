@@ -10,9 +10,9 @@ import { supabase } from "@/integrations/supabase/client";
  */
 export const getOptimizedVideoUrl = (publicUrl: string): string => {
   // For Supabase storage URLs, ensure proper content-type headers
-  if (publicUrl && publicUrl.includes('supabase.co/storage')) {
+  if (publicUrl && publicUrl.includes("supabase.co/storage")) {
     // Add download parameter to ensure proper streaming headers
-    const separator = publicUrl.includes('?') ? '&' : '?';
+    const separator = publicUrl.includes("?") ? "&" : "?";
     return `${publicUrl}${separator}download=true`;
   }
   return publicUrl;
@@ -22,11 +22,11 @@ export const getOptimizedVideoUrl = (publicUrl: string): string => {
  * Preload video metadata for faster playback
  */
 export const preloadVideoMetadata = (videoUrl: string) => {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
 
-  const link = document.createElement('link');
-  link.rel = 'preload';
-  link.as = 'video';
+  const link = document.createElement("link");
+  link.rel = "preload";
+  link.as = "video";
   link.href = videoUrl;
   document.head.appendChild(link);
 };
@@ -37,31 +37,35 @@ export const preloadVideoMetadata = (videoUrl: string) => {
  */
 export const generateVideoPoster = async (videoFile: File): Promise<string> => {
   return new Promise((resolve, reject) => {
-    const video = document.createElement('video');
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+    const video = document.createElement("video");
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
 
-    video.preload = 'metadata';
-    video.addEventListener('loadeddata', () => {
+    video.preload = "metadata";
+    video.addEventListener("loadeddata", () => {
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       video.currentTime = 0;
     });
 
-    video.addEventListener('seeked', () => {
+    video.addEventListener("seeked", () => {
       if (ctx) {
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        canvas.toBlob((blob) => {
-          if (blob) {
-            resolve(URL.createObjectURL(blob));
-          } else {
-            reject(new Error('Failed to generate poster'));
-          }
-        }, 'image/jpeg', 0.8);
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              resolve(URL.createObjectURL(blob));
+            } else {
+              reject(new Error("Failed to generate poster"));
+            }
+          },
+          "image/jpeg",
+          0.8
+        );
       }
     });
 
-    video.addEventListener('error', reject);
+    video.addEventListener("error", reject);
     video.src = URL.createObjectURL(videoFile);
   });
 };
@@ -70,11 +74,11 @@ export const generateVideoPoster = async (videoFile: File): Promise<string> => {
  * Check if browser supports modern video formats
  */
 export const getVideoFormatSupport = () => {
-  const video = document.createElement('video');
+  const video = document.createElement("video");
   return {
-    webm: video.canPlayType('video/webm') !== '',
-    mp4: video.canPlayType('video/mp4') !== '',
-    hls: video.canPlayType('application/vnd.apple.mpegurl') !== '',
+    webm: video.canPlayType("video/webm") !== "",
+    mp4: video.canPlayType("video/mp4") !== "",
+    hls: video.canPlayType("application/vnd.apple.mpegurl") !== "",
   };
 };
 
@@ -84,9 +88,9 @@ export const getVideoFormatSupport = () => {
 export const lazyLoadAudio = (audioUrl: string): Promise<void> => {
   return new Promise((resolve, reject) => {
     const audio = new Audio();
-    audio.preload = 'metadata';
-    audio.addEventListener('loadedmetadata', () => resolve());
-    audio.addEventListener('error', reject);
+    audio.preload = "metadata";
+    audio.addEventListener("loadedmetadata", () => resolve());
+    audio.addEventListener("error", reject);
     audio.src = audioUrl;
   });
 };
@@ -99,7 +103,7 @@ export const uploadMediaFile = async (
   bucket: string,
   onProgress?: (progress: number) => void
 ): Promise<string> => {
-  const fileExt = file.name.split('.').pop();
+  const fileExt = file.name.split(".").pop();
   const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
   const filePath = `${fileName}`;
 
@@ -109,9 +113,7 @@ export const uploadMediaFile = async (
     onProgress(0);
   }
 
-  const { error: uploadError } = await supabase.storage
-    .from(bucket)
-    .upload(filePath, file);
+  const { error: uploadError } = await supabase.storage.from(bucket).upload(filePath, file);
 
   if (uploadError) throw uploadError;
 
@@ -119,9 +121,9 @@ export const uploadMediaFile = async (
     onProgress(100);
   }
 
-  const { data: { publicUrl } } = supabase.storage
-    .from(bucket)
-    .getPublicUrl(filePath);
+  const {
+    data: { publicUrl },
+  } = supabase.storage.from(bucket).getPublicUrl(filePath);
 
   return publicUrl;
 };
@@ -136,8 +138,8 @@ export const compressImage = async (
 ): Promise<Blob> => {
   return new Promise((resolve, reject) => {
     const img = new Image();
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
 
     img.onload = () => {
       let { width, height } = img;
@@ -156,9 +158,9 @@ export const compressImage = async (
         canvas.toBlob(
           (blob) => {
             if (blob) resolve(blob);
-            else reject(new Error('Compression failed'));
+            else reject(new Error("Compression failed"));
           },
-          'image/jpeg',
+          "image/jpeg",
           quality
         );
       }

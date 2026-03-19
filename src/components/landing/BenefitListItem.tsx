@@ -10,27 +10,19 @@ interface BenefitListItemProps {
 }
 
 const icons: Record<IconType, React.ReactNode> = {
-  check: <Check className="w-5 h-5 text-[#EC9037] mt-0.5 flex-shrink-0" />,
-  sparkle: <span className="text-[#EC9037] flex-shrink-0">✨</span>,
-  checkmark: <span className="text-[#EC9037] flex-shrink-0">✔️</span>,
+  check: <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-[#EC9037]" />,
+  sparkle: <span className="flex-shrink-0 text-[#EC9037]">✨</span>,
+  checkmark: <span className="flex-shrink-0 text-[#EC9037]">✔️</span>,
   bullet: null,
 };
 
-export const BenefitListItem = ({
-  icon = "check",
-  children,
-  className,
-}: BenefitListItemProps) => {
+export const BenefitListItem = ({ icon = "check", children, className }: BenefitListItemProps) => {
   if (icon === "bullet") {
-    return (
-      <li className={cn("text-white/90 list-disc ml-5", className)}>
-        {children}
-      </li>
-    );
+    return <li className={cn("ml-5 list-disc text-white/90", className)}>{children}</li>;
   }
 
   return (
-    <li className={cn("text-white/90 flex items-start gap-3", className)}>
+    <li className={cn("flex items-start gap-3 text-white/90", className)}>
       {icons[icon]}
       <span>{children}</span>
     </li>
@@ -45,8 +37,6 @@ interface ProblemListItemProps {
 
 export const ProblemListItem = ({ children, className }: ProblemListItemProps) => {
   return (
-    <li className={cn("text-white/80 pl-6 border-l-2 border-white/20", className)}>
-      {children}
-    </li>
+    <li className={cn("border-l-2 border-white/20 pl-6 text-white/80", className)}>{children}</li>
   );
 };

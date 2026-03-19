@@ -8,21 +8,21 @@ interface ChatOptionsProps {
   selectedOptions?: string[];
 }
 
-export const ChatOptions = ({ 
-  options, 
-  onSelect, 
+export const ChatOptions = ({
+  options,
+  onSelect,
   multiSelect = false,
-  selectedOptions = []
+  selectedOptions = [],
 }: ChatOptionsProps) => {
   return (
-    <div className="flex flex-col gap-2 w-full mb-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
+    <div className="mb-4 flex w-full flex-col gap-2 duration-500 animate-in fade-in slide-in-from-bottom-2">
       {options.map((option, index) => (
         <Button
           key={index}
           onClick={() => onSelect(option)}
           variant={selectedOptions.includes(option) ? "default" : "outline"}
           className={cn(
-            "w-full justify-start text-left h-auto py-3 px-4 transition-all",
+            "h-auto w-full justify-start px-4 py-3 text-left transition-all",
             "hover:scale-[1.02] active:scale-[0.98]"
           )}
         >

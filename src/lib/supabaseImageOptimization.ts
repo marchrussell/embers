@@ -7,8 +7,8 @@ export interface ImageTransformOptions {
   width?: number;
   height?: number;
   quality?: number; // 1-100
-  format?: 'webp' | 'avif' | 'origin';
-  resize?: 'cover' | 'contain' | 'fill';
+  format?: "webp" | "avif" | "origin";
+  resize?: "cover" | "contain" | "fill";
 }
 
 /**
@@ -20,29 +20,23 @@ export const getOptimizedImageUrl = (
   options: ImageTransformOptions = {}
 ): string => {
   // If not a Supabase storage URL, return as-is
-  if (!publicUrl || !publicUrl.includes('supabase.co/storage')) {
+  if (!publicUrl || !publicUrl.includes("supabase.co/storage")) {
     return publicUrl;
   }
 
-  const {
-    width,
-    height,
-    quality = 80,
-    format = 'webp',
-    resize = 'cover'
-  } = options;
+  const { width, height, quality = 80, format = "webp", resize = "cover" } = options;
 
   // Build transformation parameters
   const params = new URLSearchParams();
-  
-  if (width) params.append('width', width.toString());
-  if (height) params.append('height', height.toString());
-  params.append('quality', quality.toString());
-  params.append('format', format);
-  params.append('resize', resize);
+
+  if (width) params.append("width", width.toString());
+  if (height) params.append("height", height.toString());
+  params.append("quality", quality.toString());
+  params.append("format", format);
+  params.append("resize", resize);
 
   // Add transformation parameters to URL
-  const separator = publicUrl.includes('?') ? '&' : '?';
+  const separator = publicUrl.includes("?") ? "&" : "?";
   return `${publicUrl}${separator}${params.toString()}`;
 };
 
@@ -54,23 +48,23 @@ export const generateResponsiveSrcSet = (
   publicUrl: string,
   baseOptions: ImageTransformOptions = {}
 ): string => {
-  if (!publicUrl || !publicUrl.includes('supabase.co/storage')) {
+  if (!publicUrl || !publicUrl.includes("supabase.co/storage")) {
     // For local assets, return empty - Vite will handle optimization
-    return '';
+    return "";
   }
 
   // Mobile-optimized widths: smaller sizes first for better mobile performance
   const widths = [320, 640, 768, 1024, 1440, 1920];
-  
+
   return widths
-    .map(width => {
+    .map((width) => {
       const url = getOptimizedImageUrl(publicUrl, {
         ...baseOptions,
         width,
       });
       return `${url} ${width}w`;
     })
-    .join(', ');
+    .join(", ");
 };
 
 /**
@@ -84,10 +78,10 @@ export const getResponsiveSizes = (breakpoints?: {
   xl?: string;
 }): string => {
   const defaults = {
-    sm: '100vw',     // Mobile: full viewport width
-    md: '100vw',     // Tablets: full viewport width  
-    lg: '80vw',      // Small desktop: 80% viewport
-    xl: '60vw',      // Large desktop: 60% viewport
+    sm: "100vw", // Mobile: full viewport width
+    md: "100vw", // Tablets: full viewport width
+    lg: "80vw", // Small desktop: 80% viewport
+    xl: "60vw", // Large desktop: 60% viewport
   };
 
   const sizes = { ...defaults, ...breakpoints };
@@ -103,19 +97,16 @@ export const getResponsiveSizes = (breakpoints?: {
 /**
  * Preload critical images for LCP optimization
  */
-export const preloadCriticalImage = (
-  publicUrl: string,
-  options: ImageTransformOptions = {}
-) => {
-  if (typeof window === 'undefined') return;
+export const preloadCriticalImage = (publicUrl: string, options: ImageTransformOptions = {}) => {
+  if (typeof window === "undefined") return;
 
   const optimizedUrl = getOptimizedImageUrl(publicUrl, options);
-  const link = document.createElement('link');
-  link.rel = 'preload';
-  link.as = 'image';
+  const link = document.createElement("link");
+  link.rel = "preload";
+  link.as = "image";
   link.href = optimizedUrl;
-  link.setAttribute('fetchpriority', 'high');
-  
+  link.setAttribute("fetchpriority", "high");
+
   // Add to head
   document.head.appendChild(link);
 };

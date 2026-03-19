@@ -1,17 +1,17 @@
 export const LessonCardSkeleton = () => {
   return (
-    <div className="flex items-center gap-4 p-4 bg-background/5 rounded-lg animate-pulse">
+    <div className="flex animate-pulse items-center gap-4 rounded-lg bg-background/5 p-4">
       {/* Thumbnail */}
-      <div className="w-20 h-20 bg-background/10 rounded flex-shrink-0" />
-      
+      <div className="h-20 w-20 flex-shrink-0 rounded bg-background/10" />
+
       {/* Content */}
       <div className="flex-1 space-y-2">
-        <div className="h-5 w-3/4 bg-background/15 rounded" />
-        <div className="h-3 w-32 bg-background/10 rounded" />
+        <div className="h-5 w-3/4 rounded bg-background/15" />
+        <div className="h-3 w-32 rounded bg-background/10" />
       </div>
-      
+
       {/* Icon */}
-      <div className="w-8 h-8 bg-background/10 rounded-full flex-shrink-0" />
+      <div className="h-8 w-8 flex-shrink-0 rounded-full bg-background/10" />
     </div>
   );
 };

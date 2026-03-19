@@ -10,105 +10,112 @@ interface ProgramViewProps {
   onSubscriptionRequired: () => void;
 }
 
-const ProgramView = memo(({
-  program,
-  hasSubscription,
-  onSessionClick,
-  onSubscriptionRequired,
-}: ProgramViewProps) => {
-  return (
-    <div className="min-h-screen bg-background pb-24">
-      {/* Spacer for navbar and header */}
-      <div className="h-[284px] bg-background" />
+const ProgramView = memo(
+  ({ program, hasSubscription, onSessionClick, onSubscriptionRequired }: ProgramViewProps) => {
+    return (
+      <div className="min-h-screen bg-background pb-24">
+        {/* Spacer for navbar and header */}
+        <div className="h-[284px] bg-background" />
 
-      {/* Program Hero Header */}
-      <div className="relative h-[280px] z-10">
-        <div
-          className="absolute inset-0 bg-cover bg-center transition-transform duration-700"
-          style={{ backgroundImage: `url('${getOptimizedImageUrl(program.image, IMAGE_PRESETS.hero)}')` }}
-        />
-        <div className="absolute inset-0 bg-black/20" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
+        {/* Program Hero Header */}
+        <div className="relative z-10 h-[280px]">
+          <div
+            className="absolute inset-0 bg-cover bg-center transition-transform duration-700"
+            style={{
+              backgroundImage: `url('${getOptimizedImageUrl(program.image, IMAGE_PRESETS.hero)}')`,
+            }}
+          />
+          <div className="absolute inset-0 bg-black/20" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
 
-        <div className="relative h-full flex items-end px-6 pb-8">
-          <div className="w-full">
-            <h1 className="text-5xl md:text-6xl font-editorial text-[#E6DBC7] mb-4">
-              {program.title}
-            </h1>
-            <p className="text-base md:text-lg text-[#E6DBC7]/80 font-light mb-3 leading-relaxed max-w-2xl">
-              {program.description}
-            </p>
-            <p className="text-sm md:text-base text-[#EC9037] font-light tracking-[0.15em] uppercase">
-              {program.classCount} Classes
-            </p>
+          <div className="relative flex h-full items-end px-6 pb-8">
+            <div className="w-full">
+              <h1 className="mb-4 font-editorial text-5xl text-[#E6DBC7] md:text-6xl">
+                {program.title}
+              </h1>
+              <p className="mb-3 max-w-2xl text-base font-light leading-relaxed text-[#E6DBC7]/80 md:text-lg">
+                {program.description}
+              </p>
+              <p className="text-sm font-light uppercase tracking-[0.15em] text-[#EC9037] md:text-base">
+                {program.classCount} Classes
+              </p>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="px-6 pt-12">
-        <div className="grid gap-4">
-          {program.sessions.map((session: LibrarySession) => (
-            <div
-              key={session.id}
-              onClick={() => {
-                if (session.locked && !hasSubscription) {
-                  onSubscriptionRequired();
-                } else {
-                  onSessionClick(session.id);
-                }
-              }}
-              className="relative overflow-hidden cursor-pointer group rounded-lg transition-all hover:shadow-[0_8px_30px_rgba(230,219,199,0.15)]"
-            >
-              <div className="flex items-center gap-4 p-4 bg-transparent hover:bg-[#E6DBC7]/5 transition-all border border-[#E6DBC7]/10 hover:border-[#E6DBC7]/20 rounded-lg">
-                {/* Thumbnail */}
-                <div
-                  className="relative w-20 h-20 bg-cover bg-center flex-shrink-0 rounded overflow-hidden"
-                  style={{ backgroundImage: `url('${getOptimizedImageUrl(session.image, IMAGE_PRESETS.thumbnail)}')` }}
-                >
-                  <div className="absolute inset-0 bg-black/15" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent group-hover:from-background/20 transition-all" />
-                  {session.locked && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-background/60">
-                      <Lock className="w-5 h-5 text-[#E6DBC7]" strokeWidth={1.5} />
+        <div className="px-6 pt-12">
+          <div className="grid gap-4">
+            {program.sessions.map((session: LibrarySession) => (
+              <div
+                key={session.id}
+                onClick={() => {
+                  if (session.locked && !hasSubscription) {
+                    onSubscriptionRequired();
+                  } else {
+                    onSessionClick(session.id);
+                  }
+                }}
+                className="group relative cursor-pointer overflow-hidden rounded-lg transition-all hover:shadow-[0_8px_30px_rgba(230,219,199,0.15)]"
+              >
+                <div className="flex items-center gap-4 rounded-lg border border-[#E6DBC7]/10 bg-transparent p-4 transition-all hover:border-[#E6DBC7]/20 hover:bg-[#E6DBC7]/5">
+                  {/* Thumbnail */}
+                  <div
+                    className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded bg-cover bg-center"
+                    style={{
+                      backgroundImage: `url('${getOptimizedImageUrl(session.image, IMAGE_PRESETS.thumbnail)}')`,
+                    }}
+                  >
+                    <div className="absolute inset-0 bg-black/15" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent transition-all group-hover:from-background/20" />
+                    {session.locked && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-background/60">
+                        <Lock className="h-5 w-5 text-[#E6DBC7]" strokeWidth={1.5} />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Info */}
+                  <div className="min-w-0 flex-1">
+                    <h3 className="mb-1 truncate font-editorial text-lg text-[#E6DBC7] md:text-xl">
+                      {session.title}
+                    </h3>
+                    <p className="text-sm font-light text-[#E6DBC7]/60">
+                      {session.teacher} • {session.duration} min
+                      {session.technique ? ` • ${session.technique}` : ""}
+                      {session.intensity ? ` • ${session.intensity}` : ""}
+                    </p>
+                  </div>
+
+                  {/* Play Button */}
+                  {!session.locked && (
+                    <div className="flex items-center gap-2 pr-4">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onSessionClick(session.id);
+                        }}
+                        className="rounded-full p-2 transition-all hover:bg-[#E6DBC7]/5"
+                      >
+                        <svg
+                          className="h-5 w-5 text-[#E6DBC7] transition-all"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                      </button>
                     </div>
                   )}
                 </div>
-
-                {/* Info */}
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-lg md:text-xl font-editorial text-[#E6DBC7] mb-1 truncate">
-                    {session.title}
-                  </h3>
-                  <p className="text-sm text-[#E6DBC7]/60 font-light">
-                    {session.teacher} • {session.duration} min{session.technique ? ` • ${session.technique}` : ''}{session.intensity ? ` • ${session.intensity}` : ''}
-                  </p>
-                </div>
-
-                {/* Play Button */}
-                {!session.locked && (
-                  <div className="flex items-center gap-2 pr-4">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onSessionClick(session.id);
-                      }}
-                      className="p-2 rounded-full hover:bg-[#E6DBC7]/5 transition-all"
-                    >
-                      <svg className="w-5 h-5 text-[#E6DBC7] transition-all" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                    </button>
-                  </div>
-                )}
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
-    </div>
-  );
-});
+    );
+  }
+);
 
-ProgramView.displayName = 'ProgramView';
+ProgramView.displayName = "ProgramView";
 
 export default ProgramView;

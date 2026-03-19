@@ -3,11 +3,7 @@ import { MessageSquare, Send, X } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
@@ -30,12 +26,10 @@ export const FeedbackSection = () => {
 
     setIsSubmitting(true);
     try {
-      const { error } = await supabase
-        .from("feedback")
-        .insert({
-          user_id: user.id,
-          message: feedback.trim(),
-        });
+      const { error } = await supabase.from("feedback").insert({
+        user_id: user.id,
+        message: feedback.trim(),
+      });
 
       if (error) throw error;
 
@@ -54,65 +48,66 @@ export const FeedbackSection = () => {
     <>
       <div className="mb-28">
         {/* Reassuring Message */}
-        <p className="text-center text-[#E6DBC7]/70 font-editorial italic text-lg mb-48">
-          If you drift away for weeks or months, this remains a place you can return to without guilt.
+        <p className="mb-48 text-center font-editorial text-lg italic text-[#E6DBC7]/70">
+          If you drift away for weeks or months, this remains a place you can return to without
+          guilt.
         </p>
-        
+
         <button
           onClick={() => setOpen(true)}
-          className="group w-full bg-transparent border border-white/20 hover:border-white/40 hover:bg-white/5 rounded-2xl py-6 px-8 transition-colors duration-300"
+          className="group w-full rounded-2xl border border-white/20 bg-transparent px-8 py-6 transition-colors duration-300 hover:border-white/40 hover:bg-white/5"
         >
           <div className="flex items-center justify-between">
-            <div className="text-left pl-2">
-              <h3 className="text-[#E6DBC7] text-2xl md:text-3xl font-editorial">
+            <div className="pl-2 text-left">
+              <h3 className="font-editorial text-2xl text-[#E6DBC7] md:text-3xl">
                 Give Feedback / Make A Suggestion
               </h3>
-              <p className="text-[#E6DBC7]/60 text-base font-light mt-1">
+              <p className="mt-1 text-base font-light text-[#E6DBC7]/60">
                 Help us improve your experience
               </p>
             </div>
-            <Send className="w-5 h-5 text-[#E6DBC7]/60 group-hover:text-[#E6DBC7] transition-colors mr-6" />
+            <Send className="mr-6 h-5 w-5 text-[#E6DBC7]/60 transition-colors group-hover:text-[#E6DBC7]" />
           </div>
         </button>
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent 
-          hideClose 
-          className="w-[96vw] max-w-[640px] backdrop-blur-xl bg-black/80 border border-white/15 rounded-[28px] p-0 overflow-hidden"
+        <DialogContent
+          hideClose
+          className="w-[96vw] max-w-[640px] overflow-hidden rounded-[28px] border border-white/15 bg-black/80 p-0 backdrop-blur-xl"
         >
           <DialogTitle className="sr-only">Share Your Thoughts</DialogTitle>
-          
+
           {/* Close Button */}
-          <button 
-            onClick={() => setOpen(false)} 
-            className="absolute right-6 top-6 z-50 text-white/60 hover:text-white transition-colors"
+          <button
+            onClick={() => setOpen(false)}
+            className="absolute right-6 top-6 z-50 text-white/60 transition-colors hover:text-white"
           >
-            <X className="w-6 h-6" />
+            <X className="h-6 w-6" />
           </button>
 
           <div className="px-10 py-12 md:px-14 md:py-16">
             {/* Header */}
             <div className="mb-10">
-              <h2 className="text-[#E6DBC7] text-3xl md:text-4xl font-editorial mb-4">
+              <h2 className="mb-4 font-editorial text-3xl text-[#E6DBC7] md:text-4xl">
                 Share Your Thoughts
               </h2>
-              <p className="text-white/60 text-base md:text-lg font-light leading-relaxed">
+              <p className="text-base font-light leading-relaxed text-white/60 md:text-lg">
                 We value your feedback. Let us know what you think or suggest improvements.
               </p>
             </div>
-            
+
             {/* Textarea */}
             <div className="mb-10">
               <Textarea
                 value={feedback}
                 onChange={(e) => setFeedback(e.target.value)}
                 placeholder="Type your feedback or suggestion here..."
-                className="min-h-[200px] bg-white/5 border-white/15 text-white placeholder:text-white/40 resize-none focus:border-white/30 focus:ring-0 font-light text-base rounded-xl p-5"
+                className="min-h-[200px] resize-none rounded-xl border-white/15 bg-white/5 p-5 text-base font-light text-white placeholder:text-white/40 focus:border-white/30 focus:ring-0"
                 disabled={isSubmitting}
               />
             </div>
-            
+
             {/* Buttons */}
             <div className="flex gap-4">
               <Button
@@ -121,21 +116,21 @@ export const FeedbackSection = () => {
                   setOpen(false);
                   setFeedback("");
                 }}
-                className="flex-1 h-14 border-white/20 bg-transparent text-white hover:bg-white/5 hover:text-white rounded-full text-base font-light"
+                className="h-14 flex-1 rounded-full border-white/20 bg-transparent text-base font-light text-white hover:bg-white/5 hover:text-white"
                 disabled={isSubmitting}
               >
                 Cancel
               </Button>
               <Button
                 onClick={handleSubmit}
-                className="flex-1 h-14 bg-[#E6DBC7] hover:bg-[#F0E8DA] text-[#1A1A1A] rounded-full text-base font-medium"
+                className="h-14 flex-1 rounded-full bg-[#E6DBC7] text-base font-medium text-[#1A1A1A] hover:bg-[#F0E8DA]"
                 disabled={isSubmitting || !feedback.trim()}
               >
                 {isSubmitting ? (
                   <>Sending...</>
                 ) : (
                   <>
-                    <Send className="w-4 h-4 mr-2" />
+                    <Send className="mr-2 h-4 w-4" />
                     Submit Feedback
                   </>
                 )}

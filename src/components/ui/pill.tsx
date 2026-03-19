@@ -10,10 +10,10 @@ export const Pill = ({ children, variant = "light", className }: PillProps) => {
   return (
     <span
       className={cn(
-        "px-7 py-3 rounded-full text-[clamp(0.88rem,0.95vw,0.98rem)] font-medium",
+        "rounded-full px-7 py-3 text-[clamp(0.88rem,0.95vw,0.98rem)] font-medium",
         variant === "light"
-          ? "bg-[#E6DBC7] text-[#1A1A1A] border border-white/30"
-          : "bg-black/40 text-white/90 border border-white/20 backdrop-blur-sm",
+          ? "border border-white/30 bg-[#E6DBC7] text-[#1A1A1A]"
+          : "border border-white/20 bg-black/40 text-white/90 backdrop-blur-sm",
         className
       )}
     >

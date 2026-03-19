@@ -28,25 +28,27 @@ export const useFavouriteSessions = ({
 
       try {
         const { data: sessionsData } = await supabase
-          .from('classes')
-          .select('*')
-          .in('id', favouriteIds)
-          .eq('is_published', true)
+          .from("classes")
+          .select("*")
+          .in("id", favouriteIds)
+          .eq("is_published", true)
           .abortSignal(controller.signal);
 
         if (sessionsData) {
-          setFavouriteSessions(sessionsData.map(s => ({
-            id: s.id,
-            title: s.title,
-            duration: s.duration_minutes,
-            teacher: s.teacher_name,
-            image: s.image_url,
-            locked: s.requires_subscription && !hasSubscription && !isAdmin && !isTestUser
-          })));
+          setFavouriteSessions(
+            sessionsData.map((s) => ({
+              id: s.id,
+              title: s.title,
+              duration: s.duration_minutes,
+              teacher: s.teacher_name,
+              image: s.image_url,
+              locked: s.requires_subscription && !hasSubscription && !isAdmin && !isTestUser,
+            }))
+          );
         }
       } catch (error) {
         if (controller.signal.aborted) return;
-        console.error('useFavouriteSessions: Error fetching sessions:', error);
+        console.error("useFavouriteSessions: Error fetching sessions:", error);
       }
     };
 

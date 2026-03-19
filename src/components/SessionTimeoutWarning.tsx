@@ -61,14 +61,12 @@ export const SessionTimeoutWarning = () => {
         <AlertDialogHeader>
           <AlertDialogTitle>Session Expiring Soon</AlertDialogTitle>
           <AlertDialogDescription>
-            Your session will expire in approximately {timeLeft} minute{timeLeft !== 1 ? 's' : ''}. 
+            Your session will expire in approximately {timeLeft} minute{timeLeft !== 1 ? "s" : ""}.
             Would you like to extend your session?
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogAction onClick={handleExtendSession}>
-            Extend Session
-          </AlertDialogAction>
+          <AlertDialogAction onClick={handleExtendSession}>Extend Session</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

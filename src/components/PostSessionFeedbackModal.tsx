@@ -62,16 +62,14 @@ export function PostSessionFeedbackModal({
         timestamp: new Date().toISOString(),
       };
 
-      await supabase
-        .from("user_preferences")
-        .upsert({
-          user_id: userId,
-          engagement_patterns: {
-            ...patterns,
-            session_ratings: sessionRatings,
-            last_feedback_date: new Date().toISOString(),
-          },
-        });
+      await supabase.from("user_preferences").upsert({
+        user_id: userId,
+        engagement_patterns: {
+          ...patterns,
+          session_ratings: sessionRatings,
+          last_feedback_date: new Date().toISOString(),
+        },
+      });
 
       toast.success("Thank you for your feedback! 💛");
       onClose();
@@ -89,10 +87,10 @@ export function PostSessionFeedbackModal({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-md backdrop-blur-xl bg-black/30 border border-white/20">
+      <DialogContent className="max-w-md border border-white/20 bg-black/30 backdrop-blur-xl">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-2xl font-editorial text-[#E6DBC7]">
-            <Sparkles className="w-6 h-6" />
+          <DialogTitle className="flex items-center gap-2 font-editorial text-2xl text-[#E6DBC7]">
+            <Sparkles className="h-6 w-6" />
             How was that session?
           </DialogTitle>
         </DialogHeader>
@@ -100,10 +98,10 @@ export function PostSessionFeedbackModal({
         <div className="space-y-6 py-4">
           {/* Rating */}
           <div>
-            <p className="text-sm text-muted-foreground mb-3">
+            <p className="mb-3 text-sm text-muted-foreground">
               Rate your experience with "{sessionTitle}"
             </p>
-            <div className="flex gap-2 justify-center">
+            <div className="flex justify-center gap-2">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
                   key={star}
@@ -111,7 +109,7 @@ export function PostSessionFeedbackModal({
                   className="transition-transform hover:scale-110"
                 >
                   <Star
-                    className={`w-10 h-10 ${
+                    className={`h-10 w-10 ${
                       rating && star <= rating
                         ? "fill-[#E6DBC7] text-[#E6DBC7]"
                         : "text-muted-foreground/30"
@@ -124,7 +122,7 @@ export function PostSessionFeedbackModal({
 
           {/* Goal achievement */}
           <div>
-            <p className="text-sm text-muted-foreground mb-3">
+            <p className="mb-3 text-sm text-muted-foreground">
               Did this help with what you needed?
             </p>
             <div className="flex gap-3">
@@ -147,7 +145,7 @@ export function PostSessionFeedbackModal({
 
           {/* Optional text feedback */}
           <div>
-            <p className="text-sm text-muted-foreground mb-2">
+            <p className="mb-2 text-sm text-muted-foreground">
               Anything else you'd like to share? (optional)
             </p>
             <Textarea
@@ -160,12 +158,7 @@ export function PostSessionFeedbackModal({
 
           {/* Actions */}
           <div className="flex gap-3 pt-2">
-            <Button
-              variant="ghost"
-              onClick={handleSkip}
-              className="flex-1"
-              disabled={isSubmitting}
-            >
+            <Button variant="ghost" onClick={handleSkip} className="flex-1" disabled={isSubmitting}>
               Skip
             </Button>
             <Button

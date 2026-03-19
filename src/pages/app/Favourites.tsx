@@ -38,27 +38,28 @@ const Favourites = () => {
 
       try {
         const { data: classesData, error: classError } = await supabase
-          .from('classes')
-          .select('*, categories:categories!classes_category_id_fkey(name)')
-          .in('id', favouriteIds)
-          .eq('is_published', true);
+          .from("classes")
+          .select("*, categories:categories!classes_category_id_fkey(name)")
+          .in("id", favouriteIds)
+          .eq("is_published", true);
 
         if (classError) throw classError;
 
-        const transformedFavourites = classesData?.map(cls => ({
-          id: cls.id,
-          title: cls.title,
-          description: cls.description || cls.short_description,
-          duration: cls.duration_minutes,
-          locked: cls.requires_subscription && !user,
-          category: cls.categories?.name || '',
-          teacher: cls.teacher_name,
-          image: cls.image_url
-        })) || [];
+        const transformedFavourites =
+          classesData?.map((cls) => ({
+            id: cls.id,
+            title: cls.title,
+            description: cls.description || cls.short_description,
+            duration: cls.duration_minutes,
+            locked: cls.requires_subscription && !user,
+            category: cls.categories?.name || "",
+            teacher: cls.teacher_name,
+            image: cls.image_url,
+          })) || [];
 
         setFavourites(transformedFavourites);
       } catch (error) {
-        console.error('Error fetching favourites:', error);
+        console.error("Error fetching favourites:", error);
         setFavourites([]);
       }
 
@@ -107,25 +108,25 @@ const Favourites = () => {
           setSelectedClassId(null);
         }}
       />
-      
+
       <div className="min-h-screen bg-background pb-24">
         {/* Hero Header - matches StartHere layout */}
-        <div className="relative h-[420px] z-10 mt-[340px] md:mt-[380px]">
-          <div 
+        <div className="relative z-10 mt-[340px] h-[420px] md:mt-[380px]">
+          <div
             className="absolute inset-0 bg-cover bg-center transition-transform duration-700"
-            style={{ 
-              backgroundImage: `url(${favouritesHeroImage})`
+            style={{
+              backgroundImage: `url(${favouritesHeroImage})`,
             }}
           />
           <div className="absolute inset-0 bg-black/30" />
           <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
-          
-          <div className="relative h-full flex items-end px-6 md:px-10 lg:px-12 pb-14">
+
+          <div className="relative flex h-full items-end px-6 pb-14 md:px-10 lg:px-12">
             <div className="w-full">
-              <p className="text-[#D4A574] text-sm tracking-[0.15em] uppercase font-light mb-3">
+              <p className="mb-3 text-sm font-light uppercase tracking-[0.15em] text-[#D4A574]">
                 {favourites.length} Sessions Saved
               </p>
-              <h1 className="text-5xl md:text-6xl font-editorial text-[#E6DBC7]">
+              <h1 className="font-editorial text-5xl text-[#E6DBC7] md:text-6xl">
                 Your Favourites
               </h1>
             </div>
@@ -133,7 +134,7 @@ const Favourites = () => {
         </div>
 
         {/* Main Content - matches StartHere layout */}
-        <div className="px-6 md:px-10 lg:px-12 pt-16">
+        <div className="px-6 pt-16 md:px-10 lg:px-12">
           {loading ? (
             <div className="space-y-3 md:space-y-4">
               {[1, 2, 3, 4, 5].map((i) => (
@@ -141,47 +142,55 @@ const Favourites = () => {
               ))}
             </div>
           ) : favourites.length === 0 ? (
-            <p className="text-sm md:text-base text-white/60 leading-relaxed">You haven't added any favourites yet. Browse the library and tap the heart icon to save your favorite sessions.</p>
+            <p className="text-sm leading-relaxed text-white/60 md:text-base">
+              You haven't added any favourites yet. Browse the library and tap the heart icon to
+              save your favorite sessions.
+            </p>
           ) : (
             <div className="space-y-3 md:space-y-4">
               {favourites.map((session) => (
                 <div
                   key={session.id}
                   onClick={() => handleSessionClick(session.id, session.locked)}
-                  className="relative overflow-hidden cursor-pointer group flex items-center gap-3 md:gap-4 py-2"
+                  className="group relative flex cursor-pointer items-center gap-3 overflow-hidden py-2 md:gap-4"
                 >
                   {/* Thumbnail */}
-                  <div 
-                    className="relative w-16 h-16 md:w-24 md:h-24 bg-cover bg-center flex-shrink-0 rounded"
-                    style={{ backgroundImage: `url('${getOptimizedImageUrl(session.image, IMAGE_PRESETS.thumbnail)}')` }}
+                  <div
+                    className="relative h-16 w-16 flex-shrink-0 rounded bg-cover bg-center md:h-24 md:w-24"
+                    style={{
+                      backgroundImage: `url('${getOptimizedImageUrl(session.image, IMAGE_PRESETS.thumbnail)}')`,
+                    }}
                   />
-                  
+
                   {/* Info */}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs md:text-sm text-[#EC9037] font-medium tracking-widest uppercase mb-0.5 md:mb-1">
+                  <div className="min-w-0 flex-1">
+                    <p className="mb-0.5 text-xs font-medium uppercase tracking-widest text-[#EC9037] md:mb-1 md:text-sm">
                       {session.category}
                     </p>
-                    <h3 className="text-base md:text-xl font-normal text-white mb-0.5 truncate">
+                    <h3 className="mb-0.5 truncate text-base font-normal text-white md:text-xl">
                       {session.title}
                     </h3>
-                    <p className="text-sm md:text-base text-white/60 font-light">
+                    <p className="text-sm font-light text-white/60 md:text-base">
                       {session.teacher}
                     </p>
-                    <p className="text-sm md:text-base text-white/50 font-light">
+                    <p className="text-sm font-light text-white/50 md:text-base">
                       {session.duration} min
                     </p>
                   </div>
-                  
+
                   {/* Action Buttons */}
-                  <div className="flex items-center gap-1 md:gap-2 pr-2 md:pr-4">
+                  <div className="flex items-center gap-1 pr-2 md:gap-2 md:pr-4">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         handleRemoveFavourite(session.id);
                       }}
-                      className="p-1.5 md:p-2 transition-all"
+                      className="p-1.5 transition-all md:p-2"
                     >
-                      <Heart className="w-5 h-5 text-white fill-white transition-all" strokeWidth={1.5} />
+                      <Heart
+                        className="h-5 w-5 fill-white text-white transition-all"
+                        strokeWidth={1.5}
+                      />
                     </button>
 
                     <button
@@ -189,9 +198,9 @@ const Favourites = () => {
                         e.stopPropagation();
                         handleShare(session);
                       }}
-                      className="p-1.5 md:p-2 transition-all"
+                      className="p-1.5 transition-all md:p-2"
                     >
-                      <Share2 className="w-5 h-5 text-white transition-all" strokeWidth={1.5} />
+                      <Share2 className="h-5 w-5 text-white transition-all" strokeWidth={1.5} />
                     </button>
 
                     <button
@@ -199,9 +208,13 @@ const Favourites = () => {
                         e.stopPropagation();
                         handleSessionClick(session.id, session.locked);
                       }}
-                      className="p-1.5 md:p-2 transition-all"
+                      className="p-1.5 transition-all md:p-2"
                     >
-                      <Play className="w-5 h-5 text-white transition-all" strokeWidth={1.5} fill="none" />
+                      <Play
+                        className="h-5 w-5 text-white transition-all"
+                        strokeWidth={1.5}
+                        fill="none"
+                      />
                     </button>
                   </div>
                 </div>

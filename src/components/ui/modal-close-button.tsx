@@ -30,7 +30,7 @@ export const ModalCloseButton = ({
     <button
       onClick={onClose}
       className={cn(
-        "absolute z-50 opacity-70 hover:opacity-100 transition-opacity",
+        "absolute z-50 opacity-70 transition-opacity hover:opacity-100",
         positionClasses[position],
         className
       )}

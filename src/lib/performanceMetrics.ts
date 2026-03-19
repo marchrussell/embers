@@ -17,21 +17,21 @@ class PerformanceMonitor {
   private observers: PerformanceObserver[] = [];
 
   constructor() {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
     this.initializeObservers();
   }
 
   private initializeObservers() {
     // Largest Contentful Paint (LCP)
-    if ('PerformanceObserver' in window) {
+    if ("PerformanceObserver" in window) {
       try {
         const lcpObserver = new PerformanceObserver((list) => {
           const entries = list.getEntries();
           const lastEntry = entries[entries.length - 1] as any;
           this.metrics.lcp = lastEntry.startTime;
-          this.reportMetric('LCP', lastEntry.startTime);
+          this.reportMetric("LCP", lastEntry.startTime);
         });
-        lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+        lcpObserver.observe({ entryTypes: ["largest-contentful-paint"] });
         this.observers.push(lcpObserver);
       } catch (e) {
         // Browser doesn't support LCP
@@ -44,10 +44,10 @@ class PerformanceMonitor {
           entries.forEach((entry: any) => {
             const fid = entry.processingStart - entry.startTime;
             this.metrics.fid = fid;
-            this.reportMetric('FID', fid);
+            this.reportMetric("FID", fid);
           });
         });
-        fidObserver.observe({ entryTypes: ['first-input'] });
+        fidObserver.observe({ entryTypes: ["first-input"] });
         this.observers.push(fidObserver);
       } catch (e) {
         // Browser doesn't support FID
@@ -63,9 +63,9 @@ class PerformanceMonitor {
               this.metrics.cls = clsScore;
             }
           });
-          this.reportMetric('CLS', clsScore);
+          this.reportMetric("CLS", clsScore);
         });
-        clsObserver.observe({ entryTypes: ['layout-shift'] });
+        clsObserver.observe({ entryTypes: ["layout-shift"] });
         this.observers.push(clsObserver);
       } catch (e) {
         // Browser doesn't support CLS
@@ -73,18 +73,20 @@ class PerformanceMonitor {
     }
 
     // Navigation Timing metrics
-    window.addEventListener('load', () => {
+    window.addEventListener("load", () => {
       setTimeout(() => {
-        const perfData = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
-        
+        const perfData = performance.getEntriesByType(
+          "navigation"
+        )[0] as PerformanceNavigationTiming;
+
         if (perfData) {
           this.metrics.fcp = perfData.responseStart - perfData.requestStart;
           this.metrics.ttfb = perfData.responseStart - perfData.requestStart;
           this.metrics.tti = perfData.domInteractive - perfData.requestStart;
 
-          this.reportMetric('FCP', this.metrics.fcp);
-          this.reportMetric('TTFB', this.metrics.ttfb);
-          this.reportMetric('TTI', this.metrics.tti);
+          this.reportMetric("FCP", this.metrics.fcp);
+          this.reportMetric("TTFB", this.metrics.ttfb);
+          this.reportMetric("TTI", this.metrics.tti);
         }
       }, 0);
     });
@@ -111,11 +113,11 @@ class PerformanceMonitor {
     };
 
     const threshold = thresholds[name];
-    if (!threshold) return 'unknown';
+    if (!threshold) return "unknown";
 
-    if (value <= threshold.good) return '✅ Good';
-    if (value <= threshold.needsImprovement) return '⚠️  Needs Improvement';
-    return '❌ Poor';
+    if (value <= threshold.good) return "✅ Good";
+    if (value <= threshold.needsImprovement) return "⚠️  Needs Improvement";
+    return "❌ Poor";
   }
 
   public getMetrics(): PerformanceMetrics {
@@ -123,7 +125,7 @@ class PerformanceMonitor {
   }
 
   public disconnect() {
-    this.observers.forEach(observer => observer.disconnect());
+    this.observers.forEach((observer) => observer.disconnect());
   }
 }
 
@@ -134,7 +136,7 @@ export const performanceMonitor = new PerformanceMonitor();
  * Measure custom performance marks
  */
 export const measurePerformance = (name: string) => {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
 
   return {
     start: () => performance.mark(`${name}-start`),
@@ -154,26 +156,31 @@ export const measurePerformance = (name: string) => {
  * Monitor resource loading performance
  */
 export const monitorResourceLoading = () => {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
 
-  window.addEventListener('load', () => {
-    const resources = performance.getEntriesByType('resource') as PerformanceResourceTiming[];
-    
-    const imageResources = resources.filter(r => r.initiatorType === 'img');
-    const scriptResources = resources.filter(r => r.initiatorType === 'script');
-    const styleResources = resources.filter(r => r.initiatorType === 'css' || r.initiatorType === 'link');
+  window.addEventListener("load", () => {
+    const resources = performance.getEntriesByType("resource") as PerformanceResourceTiming[];
+
+    const imageResources = resources.filter((r) => r.initiatorType === "img");
+    const scriptResources = resources.filter((r) => r.initiatorType === "script");
+    const styleResources = resources.filter(
+      (r) => r.initiatorType === "css" || r.initiatorType === "link"
+    );
 
     if (import.meta.env.DEV) {
-      console.log('🖼️  Images loaded:', imageResources.length);
-      console.log('📜 Scripts loaded:', scriptResources.length);
-      console.log('🎨 Stylesheets loaded:', styleResources.length);
+      console.log("🖼️  Images loaded:", imageResources.length);
+      console.log("📜 Scripts loaded:", scriptResources.length);
+      console.log("🎨 Stylesheets loaded:", styleResources.length);
 
-      const slowImages = imageResources.filter(r => r.duration > 1000);
+      const slowImages = imageResources.filter((r) => r.duration > 1000);
       if (slowImages.length > 0) {
-        console.warn('⚠️  Slow loading images:', slowImages.map(r => ({
-          name: r.name,
-          duration: Math.round(r.duration),
-        })));
+        console.warn(
+          "⚠️  Slow loading images:",
+          slowImages.map((r) => ({
+            name: r.name,
+            duration: Math.round(r.duration),
+          }))
+        );
       }
     }
   });

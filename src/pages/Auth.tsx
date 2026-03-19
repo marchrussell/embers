@@ -25,15 +25,15 @@ const Auth = () => {
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
       await signIn(email, password);
       toast.success("Welcome back!");
-      navigate('/online');
+      navigate("/online");
     } catch (error: any) {
       console.error("Sign in error:", error);
       const errorMessage = error.message || "Failed to sign in";
-      
+
       if (errorMessage.includes("Invalid login credentials")) {
         toast.error("Invalid email or password");
       } else if (errorMessage.includes("Email not confirmed")) {
@@ -84,24 +84,26 @@ const Auth = () => {
       </Suspense>
       <Dialog open={true} onOpenChange={handleClose}>
         <DialogPortal>
-          <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 transition-opacity duration-300" />
-          <DialogPrimitive.Content className="fixed left-[50%] top-[50%] z-50 w-[92%] max-w-[440px] translate-x-[-50%] translate-y-[-50%] backdrop-blur-xl bg-black/65 border border-white/15 rounded-[24px] overflow-hidden duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95">
-            <div className="sr-only" role="heading" aria-level={2}>Sign In to MARCH</div>
+          <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md transition-opacity duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+          <DialogPrimitive.Content className="fixed left-[50%] top-[50%] z-50 w-[92%] max-w-[440px] translate-x-[-50%] translate-y-[-50%] overflow-hidden rounded-[24px] border border-white/15 bg-black/65 backdrop-blur-xl duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95">
+            <div className="sr-only" role="heading" aria-level={2}>
+              Sign In to MARCH
+            </div>
             <div className="sr-only">Sign in to access your breathwork library</div>
-            
+
             {/* Close button */}
             <ModalCloseButton onClose={handleClose} size="md" position="default" />
-            
+
             <div className="p-8 md:p-10">
               {/* Logo */}
-              <div className="text-center mb-8">
-                <img 
-                  src={marchLogoModal} 
-                  alt="MARCH" 
-                  className="h-20 mx-auto mb-6 object-contain"
-                  style={{ filter: 'brightness(0) invert(1)' }}
+              <div className="mb-8 text-center">
+                <img
+                  src={marchLogoModal}
+                  alt="MARCH"
+                  className="mx-auto mb-6 h-20 object-contain"
+                  style={{ filter: "brightness(0) invert(1)" }}
                 />
-                <h2 className="font-editorial text-[clamp(1.5rem,2vw,1.75rem)] text-white font-light">
+                <h2 className="font-editorial text-[clamp(1.5rem,2vw,1.75rem)] font-light text-white">
                   {showForgotPassword ? "Reset Password" : "Welcome back"}
                 </h2>
               </div>
@@ -120,22 +122,22 @@ const Auth = () => {
                       onChange={(e) => setResetEmail(e.target.value)}
                       required
                       placeholder="your@email.com"
-                      className="h-12 bg-white border-white/15 text-black placeholder:text-black/40 rounded-xl focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none focus:border-white/30 text-[15px]"
+                      className="h-12 rounded-xl border-white/15 bg-white text-[15px] text-black placeholder:text-black/40 focus:border-white/30 focus:ring-0 focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
                     />
                   </div>
-                  
-                  <button 
-                    type="submit" 
-                    className="w-full h-12 bg-white text-black rounded-full text-[15px] font-medium tracking-wide hover:bg-white/90 transition-all disabled:opacity-50 mt-2" 
+
+                  <button
+                    type="submit"
+                    className="mt-2 h-12 w-full rounded-full bg-white text-[15px] font-medium tracking-wide text-black transition-all hover:bg-white/90 disabled:opacity-50"
                     disabled={resetLoading}
                   >
                     {resetLoading ? "Sending..." : "Send Reset Link"}
                   </button>
 
-                  <button 
+                  <button
                     type="button"
                     onClick={() => setShowForgotPassword(false)}
-                    className="w-full text-[14px] text-white/60 hover:text-white transition-colors pt-2"
+                    className="w-full pt-2 text-[14px] text-white/60 transition-colors hover:text-white"
                   >
                     Back to Sign In
                   </button>
@@ -153,7 +155,7 @@ const Auth = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
-                      className="h-12 bg-white border-white/15 text-black placeholder:text-black/40 rounded-xl focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none focus:border-white/30 text-[15px]"
+                      className="h-12 rounded-xl border-white/15 bg-white text-[15px] text-black placeholder:text-black/40 focus:border-white/30 focus:ring-0 focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
                     />
                   </div>
                   <div className="space-y-2">
@@ -167,24 +169,24 @@ const Auth = () => {
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       minLength={6}
-                      className="h-12 bg-white border-white/15 text-black placeholder:text-black/40 rounded-xl focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none focus:border-white/30 text-[15px]"
+                      className="h-12 rounded-xl border-white/15 bg-white text-[15px] text-black placeholder:text-black/40 focus:border-white/30 focus:ring-0 focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
                     />
                   </div>
 
                   {/* Forgot Password Link */}
                   <div className="text-right">
-                    <button 
+                    <button
                       type="button"
                       onClick={() => setShowForgotPassword(true)}
-                      className="text-[13px] text-white/50 hover:text-white transition-colors"
+                      className="text-[13px] text-white/50 transition-colors hover:text-white"
                     >
                       Forgot password?
                     </button>
                   </div>
-                  
-                  <button 
-                    type="submit" 
-                    className="w-full h-12 bg-white text-black rounded-full text-[15px] font-medium tracking-wide hover:bg-white/90 transition-all disabled:opacity-50" 
+
+                  <button
+                    type="submit"
+                    className="h-12 w-full rounded-full bg-white text-[15px] font-medium tracking-wide text-black transition-all hover:bg-white/90 disabled:opacity-50"
                     disabled={loading}
                   >
                     {loading ? "Signing in..." : "Sign In"}
@@ -193,12 +195,12 @@ const Auth = () => {
               )}
 
               {!showForgotPassword && (
-                <div className="mt-8 pt-6 border-t border-white/10 text-center">
-                  <p className="text-[14px] text-white/60 font-light">
+                <div className="mt-8 border-t border-white/10 pt-6 text-center">
+                  <p className="text-[14px] font-light text-white/60">
                     Don't have an account?{" "}
-                    <button 
+                    <button
                       onClick={handleStartTrial}
-                      className="text-white hover:text-white/80 underline"
+                      className="text-white underline hover:text-white/80"
                     >
                       Sign up now
                     </button>

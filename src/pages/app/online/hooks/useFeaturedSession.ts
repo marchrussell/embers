@@ -13,10 +13,10 @@ export const useFeaturedSession = () => {
       try {
         setIsLoading(true);
         const { data } = await supabase
-          .from('classes')
-          .select('*')
-          .eq('is_featured', true)
-          .eq('is_published', true)
+          .from("classes")
+          .select("*")
+          .eq("is_featured", true)
+          .eq("is_published", true)
           .abortSignal(controller.signal)
           .maybeSingle();
 
@@ -25,7 +25,7 @@ export const useFeaturedSession = () => {
         }
       } catch (error) {
         if (!controller.signal.aborted) {
-          console.error('useFeaturedSession: Error fetching featured session:', error);
+          console.error("useFeaturedSession: Error fetching featured session:", error);
         }
       } finally {
         if (!controller.signal.aborted) {

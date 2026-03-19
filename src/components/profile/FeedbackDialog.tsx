@@ -33,13 +33,13 @@ export const FeedbackDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="backdrop-blur-xl bg-black/50 border border-white/20 p-0 overflow-hidden rounded-xl max-w-md">
+      <DialogContent className="max-w-md overflow-hidden rounded-xl border border-white/20 bg-black/50 p-0 backdrop-blur-xl">
         <div className="p-10 md:p-12">
           <DialogHeader className="mb-8">
-            <DialogTitle className="text-white text-xl md:text-2xl font-editorial mb-3">
+            <DialogTitle className="mb-3 font-editorial text-xl text-white md:text-2xl">
               Share Your Thoughts
             </DialogTitle>
-            <DialogDescription className="text-white/60 font-light text-sm">
+            <DialogDescription className="text-sm font-light text-white/60">
               We value your feedback. Let us know what you think or suggest improvements.
             </DialogDescription>
           </DialogHeader>
@@ -48,29 +48,29 @@ export const FeedbackDialog = ({
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
               placeholder="Type your feedback or suggestion here..."
-              className="min-h-[180px] bg-white/5 border-white/20 text-white placeholder:text-white/40 resize-none focus:border-white/40 font-light"
+              className="min-h-[180px] resize-none border-white/20 bg-white/5 font-light text-white placeholder:text-white/40 focus:border-white/40"
               disabled={isSubmitting}
             />
-            
+
             <div className="flex gap-3 pt-2">
               <Button
                 variant="outline"
                 onClick={handleClose}
-                className="flex-1 border-2 border-white/20 bg-transparent text-white hover:bg-white/10 hover:border-white/40 h-12 font-light"
+                className="h-12 flex-1 border-2 border-white/20 bg-transparent font-light text-white hover:border-white/40 hover:bg-white/10"
                 disabled={isSubmitting}
               >
                 Cancel
               </Button>
               <Button
                 onClick={onSubmit}
-                className="flex-1 border-2 border-white text-white bg-transparent hover:bg-white/10 h-12 font-light"
+                className="h-12 flex-1 border-2 border-white bg-transparent font-light text-white hover:bg-white/10"
                 disabled={isSubmitting || !feedback.trim()}
               >
                 {isSubmitting ? (
                   <>Sending...</>
                 ) : (
                   <>
-                    <Send className="w-4 h-4 mr-2" />
+                    <Send className="mr-2 h-4 w-4" />
                     Submit
                   </>
                 )}

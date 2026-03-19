@@ -14,13 +14,13 @@ export const getResponsiveImageProps = (baseUrl: string) => {
 /**
  * Preload critical images for LCP optimization
  */
-export const preloadImage = (src: string, priority: 'high' | 'low' = 'high') => {
-  const link = document.createElement('link');
-  link.rel = 'preload';
-  link.as = 'image';
+export const preloadImage = (src: string, priority: "high" | "low" = "high") => {
+  const link = document.createElement("link");
+  link.rel = "preload";
+  link.as = "image";
   link.href = src;
-  if (priority === 'high') {
-    link.setAttribute('fetchpriority', 'high');
+  if (priority === "high") {
+    link.setAttribute("fetchpriority", "high");
   }
   document.head.appendChild(link);
 };
@@ -29,22 +29,25 @@ export const preloadImage = (src: string, priority: 'high' | 'low' = 'high') => 
  * Lazy load images when they enter viewport
  */
 export const setupIntersectionObserver = () => {
-  if ('IntersectionObserver' in window) {
-    const imageObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const img = entry.target as HTMLImageElement;
-          const src = img.dataset.src;
-          if (src) {
-            img.src = src;
-            img.removeAttribute('data-src');
-            imageObserver.unobserve(img);
+  if ("IntersectionObserver" in window) {
+    const imageObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const img = entry.target as HTMLImageElement;
+            const src = img.dataset.src;
+            if (src) {
+              img.src = src;
+              img.removeAttribute("data-src");
+              imageObserver.unobserve(img);
+            }
           }
-        }
-      });
-    }, {
-      rootMargin: '50px', // Start loading 50px before entering viewport
-    });
+        });
+      },
+      {
+        rootMargin: "50px", // Start loading 50px before entering viewport
+      }
+    );
 
     return imageObserver;
   }

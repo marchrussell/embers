@@ -23,7 +23,13 @@ const SendNewsletter = () => {
     const html = `
       <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;">
         <h1 style="font-size: 24px; color: #1a1a1a; margin-bottom: 24px;">${subject || "Your Subject Here"}</h1>
-        ${content.split('\n').map(p => `<p style="font-size: 16px; line-height: 1.6; color: #4a4a4a; margin-bottom: 16px;">${p}</p>`).join('')}
+        ${content
+          .split("\n")
+          .map(
+            (p) =>
+              `<p style="font-size: 16px; line-height: 1.6; color: #4a4a4a; margin-bottom: 16px;">${p}</p>`
+          )
+          .join("")}
         <p style="margin-top: 32px; font-size: 16px; color: #4a4a4a;">Kind regards,<br/><strong>March</strong></p>
         <div style="margin-top: 48px; padding-top: 24px; border-top: 1px solid #e5e5e5;">
           <p style="font-size: 12px; color: #999; text-align: center;">
@@ -96,7 +102,7 @@ const SendNewsletter = () => {
       if (error) throw error;
 
       toast.success(data.message || "Newsletter sent successfully!");
-      
+
       setSubject("");
       setPreheader("");
       setContent("");
@@ -110,52 +116,65 @@ const SendNewsletter = () => {
   };
 
   return (
-    <AdminLayout
-      title="Send Newsletter"
-      description="Compose and send newsletters to subscribers"
-    >
-      <Alert className="mb-8 bg-white/5 border-white/20">
+    <AdminLayout title="Send Newsletter" description="Compose and send newsletters to subscribers">
+      <Alert className="mb-8 border-white/20 bg-white/5">
         <Mail className="h-5 w-5 text-[#E6DBC7]" />
         <AlertDescription className="text-white/70">
-          All newsletters automatically include an unsubscribe link at the bottom.
-          Test your email before sending to all subscribers.
+          All newsletters automatically include an unsubscribe link at the bottom. Test your email
+          before sending to all subscribers.
         </AlertDescription>
       </Alert>
 
       <Tabs defaultValue="compose" className="space-y-6">
-        <TabsList className="bg-white/5 border border-white/10">
-          <TabsTrigger value="compose" className="data-[state=active]:bg-white/10 text-white/70 data-[state=active]:text-white">Compose</TabsTrigger>
-          <TabsTrigger value="preview" onClick={generatePreview} className="data-[state=active]:bg-white/10 text-white/70 data-[state=active]:text-white">Preview</TabsTrigger>
+        <TabsList className="border border-white/10 bg-white/5">
+          <TabsTrigger
+            value="compose"
+            className="text-white/70 data-[state=active]:bg-white/10 data-[state=active]:text-white"
+          >
+            Compose
+          </TabsTrigger>
+          <TabsTrigger
+            value="preview"
+            onClick={generatePreview}
+            className="text-white/70 data-[state=active]:bg-white/10 data-[state=active]:text-white"
+          >
+            Preview
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="compose" className="space-y-6">
-          <Card className="bg-background/40 backdrop-blur-xl border-[#E6DBC7]/20">
+          <Card className="border-[#E6DBC7]/20 bg-background/40 backdrop-blur-xl">
             <CardHeader>
-              <CardTitle className="text-[#E6DBC7] text-xl">Newsletter Content</CardTitle>
+              <CardTitle className="text-xl text-[#E6DBC7]">Newsletter Content</CardTitle>
               <CardDescription className="text-white/60">
-                Write your newsletter content in plain text. Paragraphs will be formatted automatically.
+                Write your newsletter content in plain text. Paragraphs will be formatted
+                automatically.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="subject" className="text-white/80">Subject Line *</Label>
+                <Label htmlFor="subject" className="text-white/80">
+                  Subject Line *
+                </Label>
                 <Input
                   id="subject"
                   placeholder="Your newsletter subject..."
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
-                  className="bg-white/5 border-white/20 text-white placeholder:text-white/40 text-base"
+                  className="border-white/20 bg-white/5 text-base text-white placeholder:text-white/40"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="preheader" className="text-white/80">Preheader Text (Optional)</Label>
+                <Label htmlFor="preheader" className="text-white/80">
+                  Preheader Text (Optional)
+                </Label>
                 <Input
                   id="preheader"
                   placeholder="Brief preview text that appears in inbox..."
                   value={preheader}
                   onChange={(e) => setPreheader(e.target.value)}
-                  className="bg-white/5 border-white/20 text-white placeholder:text-white/40 text-base"
+                  className="border-white/20 bg-white/5 text-base text-white placeholder:text-white/40"
                 />
                 <p className="text-xs text-white/50">
                   This text appears next to the subject line in email clients
@@ -163,19 +182,23 @@ const SendNewsletter = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="content" className="text-white/80">Newsletter Content *</Label>
+                <Label htmlFor="content" className="text-white/80">
+                  Newsletter Content *
+                </Label>
                 <Textarea
                   id="content"
                   placeholder="Write your newsletter content here... Each paragraph should be on a new line."
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  className="min-h-[300px] bg-white/5 border-white/20 text-white placeholder:text-white/40 text-base"
+                  className="min-h-[300px] border-white/20 bg-white/5 text-base text-white placeholder:text-white/40"
                 />
               </div>
 
-              <div className="border-t border-white/10 pt-6 space-y-4">
+              <div className="space-y-4 border-t border-white/10 pt-6">
                 <div className="space-y-2">
-                  <Label htmlFor="testEmail" className="text-white/80">Test Email Address</Label>
+                  <Label htmlFor="testEmail" className="text-white/80">
+                    Test Email Address
+                  </Label>
                   <div className="flex gap-3">
                     <Input
                       id="testEmail"
@@ -183,13 +206,13 @@ const SendNewsletter = () => {
                       placeholder="your@email.com"
                       value={testEmail}
                       onChange={(e) => setTestEmail(e.target.value)}
-                      className="bg-white/5 border-white/20 text-white placeholder:text-white/40 text-base"
+                      className="border-white/20 bg-white/5 text-base text-white placeholder:text-white/40"
                     />
                     <Button
                       onClick={handleSendTest}
                       disabled={isLoading}
                       variant="outline"
-                      className="whitespace-nowrap gap-2 border-white/20 text-white hover:bg-white/10"
+                      className="gap-2 whitespace-nowrap border-white/20 text-white hover:bg-white/10"
                     >
                       <TestTube className="h-5 w-5" />
                       Send Test
@@ -212,21 +235,21 @@ const SendNewsletter = () => {
         </TabsContent>
 
         <TabsContent value="preview">
-          <Card className="bg-background/40 backdrop-blur-xl border-[#E6DBC7]/20">
+          <Card className="border-[#E6DBC7]/20 bg-background/40 backdrop-blur-xl">
             <CardHeader>
-              <CardTitle className="text-[#E6DBC7] text-xl">Email Preview</CardTitle>
+              <CardTitle className="text-xl text-[#E6DBC7]">Email Preview</CardTitle>
               <CardDescription className="text-white/60">
                 This is an approximate preview. Send a test email for the exact rendering.
               </CardDescription>
             </CardHeader>
             <CardContent>
               {previewHtml ? (
-                <div 
-                  className="border border-white/20 rounded-lg p-4 bg-white"
+                <div
+                  className="rounded-lg border border-white/20 bg-white p-4"
                   dangerouslySetInnerHTML={{ __html: previewHtml }}
                 />
               ) : (
-                <p className="text-white/60 text-center py-12">
+                <p className="py-12 text-center text-white/60">
                   Fill in the content and click "Preview" to see how your email will look
                 </p>
               )}

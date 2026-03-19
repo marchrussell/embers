@@ -81,23 +81,23 @@ const Signup = () => {
       // Mark invitation as used
       const { error: inviteError } = await supabase
         .from("mentorship_invitations")
-        .update({ 
-          used: true, 
-          used_at: new Date().toISOString() 
+        .update({
+          used: true,
+          used_at: new Date().toISOString(),
         })
         .eq("invite_token", inviteToken);
 
       if (inviteError) throw inviteError;
 
       toast.success("Account created successfully! Redirecting to complete setup...");
-      
+
       // Redirect to onboarding to complete safety disclosure
       setTimeout(() => {
         navigate("/onboarding");
       }, 1500);
     } catch (error: any) {
       console.error("Signup error:", error);
-      
+
       if (error.message?.includes("already registered")) {
         toast.error("This email is already registered. Please sign in instead.");
       } else {
@@ -110,9 +110,11 @@ const Signup = () => {
   if (validatingInvite) {
     return (
       <Dialog open={true}>
-        <DialogContent className="max-w-md bg-black border-[1px] border-white p-8">
+        <DialogContent className="max-w-md border-[1px] border-white bg-black p-8">
           <DialogTitle className="sr-only">Validating Invitation</DialogTitle>
-          <DialogDescription className="sr-only">Please wait while we validate your invitation</DialogDescription>
+          <DialogDescription className="sr-only">
+            Please wait while we validate your invitation
+          </DialogDescription>
           <div className="text-center text-white">
             <p>Validating invitation...</p>
           </div>
@@ -123,54 +125,64 @@ const Signup = () => {
 
   return (
     <Dialog open={true} onOpenChange={() => navigate("/")}>
-      <DialogContent className="max-w-md sm:max-w-lg max-h-[90vh] bg-black border-[1px] border-white p-0 overflow-y-auto rounded-none backdrop-blur-none">
+      <DialogContent className="max-h-[90vh] max-w-md overflow-y-auto rounded-none border-[1px] border-white bg-black p-0 backdrop-blur-none sm:max-w-lg">
         <DialogTitle className="sr-only">Join MARCH Mentorship</DialogTitle>
-        <DialogDescription className="sr-only">Create your account to access the mentorship program</DialogDescription>
-        
+        <DialogDescription className="sr-only">
+          Create your account to access the mentorship program
+        </DialogDescription>
+
         <style>{`
           [data-state="open"] > div[data-radix-dialog-overlay] {
             background-color: rgba(0, 0, 0, 0.8) !important;
             backdrop-filter: blur(8px) !important;
           }
         `}</style>
-        
-        <div className="p-4 sm:p-8 pt-12 sm:pt-16 bg-black">
-          <div className="text-center mb-6 sm:mb-8">
-            <img 
-              src={marchLogoModal} 
-              alt="MARCH" 
-              className="hidden h-12 sm:h-16 mx-auto mb-4 sm:mb-6 object-contain"
-              style={{ filter: 'brightness(0) invert(1)' }}
+
+        <div className="bg-black p-4 pt-12 sm:p-8 sm:pt-16">
+          <div className="mb-6 text-center sm:mb-8">
+            <img
+              src={marchLogoModal}
+              alt="MARCH"
+              className="mx-auto mb-4 hidden h-12 object-contain sm:mb-6 sm:h-16"
+              style={{ filter: "brightness(0) invert(1)" }}
             />
-            <p className="text-xs sm:text-sm text-white/70">
-              {inviteData?.program_type === "guided" ? "5-Month Guided Mentorship" : "5-Month DIY Journey"}
+            <p className="text-xs text-white/70 sm:text-sm">
+              {inviteData?.program_type === "guided"
+                ? "5-Month Guided Mentorship"
+                : "5-Month DIY Journey"}
             </p>
           </div>
 
           <form onSubmit={handleSignup} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="fullName" className="text-sm font-light text-white">Full Name</Label>
+              <Label htmlFor="fullName" className="text-sm font-light text-white">
+                Full Name
+              </Label>
               <Input
                 id="fullName"
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
-                className="bg-white/10 border-white/20 text-white focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none focus:border-white/40"
+                className="border-white/20 bg-white/10 text-white focus:border-white/40 focus:ring-0 focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-light text-white">Email</Label>
+              <Label htmlFor="email" className="text-sm font-light text-white">
+                Email
+              </Label>
               <Input
                 id="email"
                 type="email"
                 value={email}
                 disabled
-                className="bg-white/5 border-white/10 text-white/50 cursor-not-allowed"
+                className="cursor-not-allowed border-white/10 bg-white/5 text-white/50"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-sm font-light text-white">Password</Label>
+              <Label htmlFor="password" className="text-sm font-light text-white">
+                Password
+              </Label>
               <Input
                 id="password"
                 type="password"
@@ -178,40 +190,48 @@ const Signup = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength={6}
-                className="bg-white/10 border-white/20 text-white focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none focus:border-white/40"
+                className="border-white/20 bg-white/10 text-white focus:border-white/40 focus:ring-0 focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
               />
-              <p className="text-xs text-white/50 mt-1">Minimum 6 characters</p>
+              <p className="mt-1 text-xs text-white/50">Minimum 6 characters</p>
             </div>
 
-            <button 
-              type="submit" 
-              className="w-full bg-black text-white border border-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-light tracking-wide hover:bg-[#1a1a1a] transition-all disabled:opacity-50 disabled:cursor-not-allowed" 
+            <button
+              type="submit"
+              className="w-full rounded-full border border-white bg-black px-6 py-2.5 text-xs font-light tracking-wide text-white transition-all hover:bg-[#1a1a1a] disabled:cursor-not-allowed disabled:opacity-50 sm:px-8 sm:py-3 sm:text-sm"
               disabled={loading}
             >
               {loading ? "Creating account..." : "Create Account"}
             </button>
-            <p className="text-[10px] sm:text-xs text-white/60 text-center -mt-1 sm:-mt-2 italic">
+            <p className="-mt-1 text-center text-[10px] italic text-white/60 sm:-mt-2 sm:text-xs">
               After creating your account, please check your email to verify your address
             </p>
           </form>
 
-          <div className="mt-4 sm:mt-6 text-center space-y-3">
-            <p className="text-xs sm:text-sm text-white/70 font-light">
+          <div className="mt-4 space-y-3 text-center sm:mt-6">
+            <p className="text-xs font-light text-white/70 sm:text-sm">
               Already have an account?{" "}
-              <button 
+              <button
                 onClick={() => navigate("/auth")}
-                className="text-white hover:text-white/80 underline"
+                className="text-white underline hover:text-white/80"
               >
                 Sign in
               </button>
             </p>
-            <p className="text-[10px] sm:text-xs text-white/50 font-light">
+            <p className="text-[10px] font-light text-white/50 sm:text-xs">
               By creating an account, you agree to our{" "}
-              <a href="/privacy-policy" target="_blank" className="text-white/70 hover:text-white underline">
+              <a
+                href="/privacy-policy"
+                target="_blank"
+                className="text-white/70 underline hover:text-white"
+              >
                 Privacy Policy
-              </a>
-              {" "}and{" "}
-              <a href="/terms-of-service" target="_blank" className="text-white/70 hover:text-white underline">
+              </a>{" "}
+              and{" "}
+              <a
+                href="/terms-of-service"
+                target="_blank"
+                className="text-white/70 underline hover:text-white"
+              >
                 Terms of Service
               </a>
             </p>

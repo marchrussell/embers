@@ -107,7 +107,7 @@ function AppContent() {
     <>
       <ScrollToTop />
       <Suspense fallback={<PageSkeleton />}>
-        <div className="animate-in fade-in duration-300">
+        <div className="duration-300 animate-in fade-in">
           <Routes>
             {/* Public routes */}
             <Route path="/" element={<Index />} />
@@ -123,38 +123,94 @@ function AppContent() {
             <Route path="/refund-policy" element={<RefundPolicy />} />
             <Route path="/newsletter/unsubscribe" element={<NewsletterUnsubscribe />} />
             <Route path="/library" element={<Library />} />
-        
+
             {/* Payment Success & Onboarding */}
             <Route path="/payment-success" element={<PaymentSuccess />} />
-            <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
-            <Route path="/onboarding/march" element={<ProtectedRoute><MarchOnboarding /></ProtectedRoute>} />
-            <Route path="/online/march-dashboard" element={<ProtectedRoute><MarchDashboard /></ProtectedRoute>} />
-            <Route path="/online/march-chat" element={<ProtectedRoute><MarchChat /></ProtectedRoute>} />
-            
+            <Route
+              path="/onboarding"
+              element={
+                <ProtectedRoute>
+                  <Onboarding />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/onboarding/march"
+              element={
+                <ProtectedRoute>
+                  <MarchOnboarding />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/online/march-dashboard"
+              element={
+                <ProtectedRoute>
+                  <MarchDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/online/march-chat"
+              element={
+                <ProtectedRoute>
+                  <MarchChat />
+                </ProtectedRoute>
+              }
+            />
+
             {/* Online routes - Library and About are public, others protected */}
             <Route path="/online" element={<OnlinePage />} />
             <Route path="/online/start-here" element={<StartHere />} />
             <Route path="/online/program/:slug" element={<OnlineProgram />} />
             <Route path="/online/about" element={<AppAbout />} />
-            <Route path="/online/favourites" element={<ProtectedRoute><Favourites /></ProtectedRoute>} />
-            <Route path="/online/class/:id" element={<ProtectedRoute><ClassPlayer /></ProtectedRoute>} />
-            <Route path="/online/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-            <Route path="/online/live/:sessionId" element={<ProtectedRoute><LiveSession /></ProtectedRoute>} />
-            
+            <Route
+              path="/online/favourites"
+              element={
+                <ProtectedRoute>
+                  <Favourites />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/online/class/:id"
+              element={
+                <ProtectedRoute>
+                  <ClassPlayer />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/online/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/online/live/:sessionId"
+              element={
+                <ProtectedRoute>
+                  <LiveSession />
+                </ProtectedRoute>
+              }
+            />
+
             {/* Live Session Room - supports guest access via token */}
             <Route path="/live/:sessionId" element={<LiveSessionRoom />} />
-            
+
             {/* Admin routes */}
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/classes" element={<AdminClasses />} />
             <Route path="/admin/programs" element={<AdminPrograms />} />
             <Route path="/admin/categories" element={<AdminCategories />} />
             <Route path="/admin/live-sessions" element={<AdminLiveSessions />} />
-            
+
             <Route path="/admin/users" element={<AdminUsers />} />
             <Route path="/admin/guest-teachers" element={<AdminGuestTeachers />} />
             <Route path="/admin/event-bookings" element={<AdminExperienceBookings />} />
-            
+
             {/* 404 */}
             <Route path="*" element={<NotFound />} />
           </Routes>

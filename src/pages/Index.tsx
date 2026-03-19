@@ -1,5 +1,14 @@
 import { Footer } from "@/components/Footer";
-import { ClassPlayerModal, ContactFormModal, ContactTeamsModal, NewsletterModal, RiseArcIntroModal, SubscriptionModal, TestimonialsModal, VaseBreathModal } from "@/components/modals/LazyModals";
+import {
+  ClassPlayerModal,
+  ContactFormModal,
+  ContactTeamsModal,
+  NewsletterModal,
+  RiseArcIntroModal,
+  SubscriptionModal,
+  TestimonialsModal,
+  VaseBreathModal,
+} from "@/components/modals/LazyModals";
 import { NavBar } from "@/components/NavBar";
 import { OptimizedImage } from "@/components/OptimizedImage";
 import { PhoneMockups } from "@/components/PhoneMockups";
@@ -13,7 +22,10 @@ import { ArrowRight } from "lucide-react";
 import { Suspense, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-const nervousSystemImg = getCloudImageUrl(CLOUD_IMAGES.moreWaysToPractice, { width: 960, quality: 85 });
+const nervousSystemImg = getCloudImageUrl(CLOUD_IMAGES.moreWaysToPractice, {
+  width: 960,
+  quality: 85,
+});
 
 const Index = () => {
   const location = useLocation();
@@ -33,10 +45,14 @@ const Index = () => {
     }
   }, [location.state]);
 
-  return <div className="min-h-screen bg-background">
+  return (
+    <div className="min-h-screen bg-background">
       <NavBar />
       <Suspense fallback={null}>
-        <SubscriptionModal open={showSubscriptionModal} onClose={() => setShowSubscriptionModal(false)} />
+        <SubscriptionModal
+          open={showSubscriptionModal}
+          onClose={() => setShowSubscriptionModal(false)}
+        />
 
         <TestimonialsModal open={showTestimonialsModal} onOpenChange={setShowTestimonialsModal} />
 
@@ -46,95 +62,117 @@ const Index = () => {
 
         <RiseArcIntroModal open={showArcIntroModal} onOpenChange={setShowArcIntroModal} />
 
-        <VaseBreathModal open={showVaseBreathModal} onOpenChange={setShowVaseBreathModal} onOpenSubscription={() => setShowSubscriptionModal(true)} />
+        <VaseBreathModal
+          open={showVaseBreathModal}
+          onOpenChange={setShowVaseBreathModal}
+          onOpenSubscription={() => setShowSubscriptionModal(true)}
+        />
       </Suspense>
 
       <main>
         {/* Hero Section with Optimized Background */}
-        <section className="relative h-[100dvh] overflow-hidden flex flex-col justify-center items-center">
-          <div className="absolute inset-0 w-full h-full" style={{
-            backgroundImage: `url("${getCloudImageUrl(CLOUD_IMAGES.threeWaysMushroom, { width: 1920, quality: 85 })}")`,
-            backgroundSize: 'cover',
-            backgroundPosition: '30% 40%',
-          }} />
+        <section className="relative flex h-[100dvh] flex-col items-center justify-center overflow-hidden">
+          <div
+            className="absolute inset-0 h-full w-full"
+            style={{
+              backgroundImage: `url("${getCloudImageUrl(CLOUD_IMAGES.threeWaysMushroom, { width: 1920, quality: 85 })}")`,
+              backgroundSize: "cover",
+              backgroundPosition: "30% 40%",
+            }}
+          />
 
           {/* Subtle dark overlay to reduce glare */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/5 to-black/10" />
 
           {/* Bottom Text - Full Width, 3 Lines */}
-          <div className="absolute bottom-8 sm:bottom-10 md:bottom-12 left-5 sm:left-8 md:left-16 right-5 sm:right-6 md:right-8 z-10">
-          <p className="font-editorial text-white leading-[1.15] drop-shadow-[0_4px_8px_rgba(0,0,0,0.7)]" style={{
-            textShadow: '0 2px 12px rgba(0,0,0,0.5)',
-            fontSize: 'clamp(2.4rem, 3.5vw, 3.5rem)',
-            fontWeight: 300
-          }}>Where your nervous system resets - and your senses awaken.
-</p>
-
-          {/* Step Inside CTA */}
-          <div className="mt-5 md:mt-6">
-            <Link
-              to='/online'
-              className="inline-flex items-center gap-2 px-9 py-3 rounded-full border border-white/30 bg-black/40 backdrop-blur-sm text-white/90 hover:bg-white/10 transition-all duration-300"
+          <div className="absolute bottom-8 left-5 right-5 z-10 sm:bottom-10 sm:left-8 sm:right-6 md:bottom-12 md:left-16 md:right-8">
+            <p
+              className="font-editorial leading-[1.15] text-white drop-shadow-[0_4px_8px_rgba(0,0,0,0.7)]"
               style={{
-                fontSize: 'clamp(0.95rem, 1.1vw, 1.1rem)',
-                fontWeight: 400,
-                letterSpacing: '0.04em',
+                textShadow: "0 2px 12px rgba(0,0,0,0.5)",
+                fontSize: "clamp(2.4rem, 3.5vw, 3.5rem)",
+                fontWeight: 300,
               }}
             >
-              Step inside
-              <ArrowRight className="w-5 h-5" />
-            </Link>
+              Where your nervous system resets - and your senses awaken.
+              <Link
+                to="/online"
+                className="inline-flex items-baseline gap-2"
+                style={{
+                  fontSize: "clamp(0.95rem, 1.1vw, 1.1rem)",
+                  fontWeight: 400,
+                  letterSpacing: "0.04em",
+                }}
+              >
+                <span className="inline-flex items-center justify-center rounded-full px-9 py-3 transition-all duration-300 hover:bg-white/10">
+                  <ArrowRight className="h-10 w-10" />
+                </span>
+              </Link>
+            </p>
           </div>
-          </div>
-
         </section>
 
         {/* Second Screen - Embers Studio */}
-        <section className="relative min-h-[100dvh] overflow-hidden flex flex-col justify-between"
+        <section
+          className="relative flex min-h-[100dvh] flex-col justify-between overflow-hidden"
           style={{
             backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.6)), url("${getCloudImageUrl(CLOUD_IMAGES.heroBreathworkWide, { width: 1920, quality: 80 })}")`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
+            backgroundSize: "cover",
+            backgroundPosition: "center",
           }}
         >
           {/* Top Text */}
-          <div className="px-5 sm:px-8 md:px-16 pt-16 sm:pt-20 md:pt-28 lg:pt-32 max-w-[900px]">
-            <p className="font-editorial text-white leading-[1.35]" style={{
-              fontSize: 'clamp(2rem, 3vw, 3rem)',
-              fontWeight: 300,
-              textShadow: '0 2px 12px rgba(0,0,0,0.5)',
-            }}>
+          <div className="max-w-[900px] px-5 pt-16 sm:px-8 sm:pt-20 md:px-16 md:pt-28 lg:pt-32">
+            <p
+              className="font-editorial leading-[1.35] text-white"
+              style={{
+                fontSize: "clamp(2rem, 3vw, 3rem)",
+                fontWeight: 300,
+                textShadow: "0 2px 12px rgba(0,0,0,0.5)",
+              }}
+            >
               Embers Studio is a place to come back to the body.
-              <br className="hidden md:block" />{' '}
-              Through breath, movement, and sensory practice, it creates space for the nervous system to settle, perception to soften, and experience to open.
+              <br className="hidden md:block" /> Through breath, movement, and sensory practice, it
+              creates space for the nervous system to settle, perception to soften, and experience
+              to open.
             </p>
           </div>
 
           {/* Bottom Pills */}
-          <div className="px-5 sm:px-8 md:px-16 pb-8 sm:pb-10 md:pb-12">
+          <div className="px-5 pb-8 sm:px-8 sm:pb-10 md:px-16 md:pb-12">
             <div className="flex flex-wrap gap-2 md:gap-3">
-              {["Calm the Nervous System", "Sharpen Attention", "Restore Energy", "Sleep More Deeply"].map((label) => (
-                <Pill key={label} variant="dark">{label}</Pill>
+              {[
+                "Calm the Nervous System",
+                "Sharpen Attention",
+                "Restore Energy",
+                "Sleep More Deeply",
+              ].map((label) => (
+                <Pill key={label} variant="dark">
+                  {label}
+                </Pill>
               ))}
             </div>
           </div>
         </section>
 
         {/* Glowing orange divider line */}
-        <div className="w-full" style={{
+        {/* <div className="w-full" style={{
         height: '4px',
         backgroundColor: '#E64C20',
         boxShadow: '0 0 80px rgba(230, 76, 32, 1), 0 0 140px rgba(230, 76, 32, 1), 0 0 200px rgba(230, 76, 32, 0.9)'
-      }}></div>
+      }}></div> */}
 
         {/* Phone Mockups Section */}
-        <section className="pt-24 pb-16 md:pt-32 md:pb-24 lg:pt-48 lg:pb-32 bg-background">
-          <div className="mx-auto px-5 md:px-12 lg:px-20 w-full">
+        <section className="bg-background pb-16 pt-24 md:pb-24 md:pt-32 lg:pb-32 lg:pt-48">
+          <div className="mx-auto w-full px-5 md:px-12 lg:px-20">
             <div>
               {/* Micro-heading above mockups - centered */}
-              <p className="text-center text-white/50 uppercase tracking-[0.12em] font-medium mb-10 md:mb-12" style={{
-                fontSize: 'clamp(0.7rem, 0.8vw, 0.8rem)'
-              }}>
+              <p
+                className="mb-10 text-center font-medium uppercase tracking-[0.12em] text-white/50 md:mb-12"
+                style={{
+                  fontSize: "clamp(0.7rem, 0.8vw, 0.8rem)",
+                }}
+              >
                 A look inside your new practice home
               </p>
 
@@ -142,170 +180,224 @@ const Index = () => {
               <PhoneMockups />
 
               {/* Closing Line - moved here under mockups */}
-              <p className="text-center text-white/75 mt-12 md:mt-16 max-w-[800px] mx-auto leading-[1.7] italic" style={{
-                fontSize: 'clamp(0.95rem, 1.1vw, 1.1rem)'
-              }}>Your nervous system becomes your anchor — not your obstacle.</p>
+              <p
+                className="mx-auto mt-12 max-w-[800px] text-center italic leading-[1.7] text-white/75 md:mt-16"
+                style={{
+                  fontSize: "clamp(0.95rem, 1.1vw, 1.1rem)",
+                }}
+              >
+                Your nervous system becomes your anchor — not your obstacle.
+              </p>
             </div>
             {/* Light pills below mockups */}
-            <div className="flex flex-col items-center gap-4 md:gap-5 mt-12 md:mt-16">
+            <div className="mt-12 flex flex-col items-center gap-4 md:mt-16 md:gap-5">
               <div className="flex flex-wrap justify-center gap-4 md:gap-6">
                 {["Daily Resets", "Sleep Stories", "Courses"].map((label) => (
-                  <Pill key={label} variant="light">{label}</Pill>
+                  <Pill key={label} variant="light">
+                    {label}
+                  </Pill>
                 ))}
               </div>
               <div className="flex flex-wrap justify-center gap-4 md:gap-6">
                 {["Workshops + Guest Experts", "Live Gathering"].map((label) => (
-                  <Pill key={label} variant="light">{label}</Pill>
+                  <Pill key={label} variant="light">
+                    {label}
+                  </Pill>
                 ))}
               </div>
             </div>
           </div>
         </section>
 
-
         {/* Nervous System Program Card - White-lined curved box */}
-        <section className="w-full px-6 md:px-8 lg:px-12 py-12 md:py-16 lg:py-20 bg-background">
-          <div className="rounded-2xl border border-white/50 overflow-hidden max-w-[1400px] mx-auto shadow-[0_0_60px_rgba(230,219,199,0.4)]">
-            <div className="grid md:grid-cols-2 min-h-[280px] sm:min-h-[320px] md:min-h-[380px]">
+        <section className="w-full bg-background px-6 py-12 md:px-8 md:py-16 lg:px-12 lg:py-20">
+          <div className="mx-auto max-w-[1400px] overflow-hidden rounded-2xl border border-white/50 shadow-[0_0_60px_rgba(230,219,199,0.4)]">
+            <div className="grid min-h-[280px] sm:min-h-[320px] md:min-h-[380px] md:grid-cols-2">
               {/* Left: Image */}
               <div className="relative min-h-[160px] sm:min-h-[180px] md:min-h-[380px]">
-                <OptimizedImage src={nervousSystemImg} alt="Nervous system program" className="absolute inset-0 w-full h-full object-cover" style={{
-                objectPosition: 'center 65%'
-              }} optimizationOptions={{
-                quality: 85,
-                format: 'webp',
-                width: 960,
-                height: 500
-              }} priority={true} />
+                <OptimizedImage
+                  src={nervousSystemImg}
+                  alt="Nervous system program"
+                  className="absolute inset-0 h-full w-full object-cover"
+                  style={{
+                    objectPosition: "center 65%",
+                  }}
+                  optimizationOptions={{
+                    quality: 85,
+                    format: "webp",
+                    width: 960,
+                    height: 500,
+                  }}
+                  priority={true}
+                />
               </div>
 
               {/* Right: Content */}
-              <div className="bg-black flex flex-col justify-center px-6 sm:px-8 md:px-10 lg:px-12 py-6 sm:py-8 md:py-10">
-                <h3 className="font-editorial text-white mb-5 sm:mb-6" style={{
-                fontSize: 'clamp(1.8rem, 2.2vw, 2.4rem)',
-                lineHeight: 1.15,
-                fontWeight: 400
-              }}>
+              <div className="flex flex-col justify-center bg-black px-6 py-6 sm:px-8 sm:py-8 md:px-10 md:py-10 lg:px-12">
+                <h3
+                  className="mb-5 font-editorial text-white sm:mb-6"
+                  style={{
+                    fontSize: "clamp(1.8rem, 2.2vw, 2.4rem)",
+                    lineHeight: 1.15,
+                    fontWeight: 400,
+                  }}
+                >
                   14-Day Course
                 </h3>
-                <p className="text-[#EC9037] font-light tracking-[0.1em] mb-5 sm:mb-6 uppercase" style={{
-                fontSize: 'clamp(0.7rem, 0.8vw, 0.85rem)'
-              }}>Nervous System Reset</p>
-                <p className="text-white/90 mb-5 sm:mb-6" style={{
-                fontSize: 'clamp(0.85rem, 0.92vw, 0.95rem)',
-                lineHeight: 1.65
-              }}>
-                  A guided 14-day reset designed to calm responses, soften emotional reactivity, and support your nervous system back toward balance.
+                <p
+                  className="mb-5 font-light uppercase tracking-[0.1em] text-[#EC9037] sm:mb-6"
+                  style={{
+                    fontSize: "clamp(0.7rem, 0.8vw, 0.85rem)",
+                  }}
+                >
+                  Nervous System Reset
+                </p>
+                <p
+                  className="mb-5 text-white/90 sm:mb-6"
+                  style={{
+                    fontSize: "clamp(0.85rem, 0.92vw, 0.95rem)",
+                    lineHeight: 1.65,
+                  }}
+                >
+                  A guided 14-day reset designed to calm responses, soften emotional reactivity, and
+                  support your nervous system back toward balance.
                 </p>
 
-                <Button onClick={() => {
-                  window.open('https://marchrussell.com/courses', '_blank');
-              }} className="bg-transparent text-white border border-white hover:bg-white/10 transition-all rounded-full inline-flex items-center justify-center w-fit" style={{
-                fontSize: 'clamp(0.85rem, 0.9vw, 0.95rem)',
-                fontWeight: 400,
-                letterSpacing: '0.02em',
-                padding: '0.6rem 1.4rem'
-              }}>
-                Start the 14-Day Course
-              </Button>
+                <Button
+                  onClick={() => {
+                    window.open("https://marchrussell.com/courses", "_blank");
+                  }}
+                  className="inline-flex w-fit items-center justify-center rounded-full border border-white bg-transparent text-white transition-all hover:bg-white/10"
+                  style={{
+                    fontSize: "clamp(0.85rem, 0.9vw, 0.95rem)",
+                    fontWeight: 400,
+                    letterSpacing: "0.02em",
+                    padding: "0.6rem 1.4rem",
+                  }}
+                >
+                  Start the 14-Day Course
+                </Button>
               </div>
             </div>
           </div>
         </section>
 
         {/* ========== EXPERIENCES ========== */}
-        <section className="pb-16 md:pb-28 lg:pb-48 relative overflow-hidden bg-background">
-          <div className="mx-auto px-6 md:px-10 lg:px-12 max-w-[1400px] relative z-10">
+        <section className="relative overflow-hidden bg-background pb-16 md:pb-28 lg:pb-48">
+          <div className="relative z-10 mx-auto max-w-[1400px] px-6 md:px-10 lg:px-12">
             {/* Section Header - Centered */}
-            <div className="mb-10 md:mb-14 text-center">
-              <h2 className="font-editorial text-white mb-3 leading-[1.15]" style={{
-                fontSize: 'clamp(2rem, 3.5vw, 3.5rem)',
-                fontWeight: 300
-              }}>
+            <div className="mb-10 text-center md:mb-14">
+              <h2
+                className="mb-3 font-editorial leading-[1.15] text-white"
+                style={{
+                  fontSize: "clamp(2rem, 3.5vw, 3.5rem)",
+                  fontWeight: 300,
+                }}
+              >
                 Experiences
               </h2>
-              <p className="text-white/65 max-w-lg mx-auto leading-[1.6] px-2 md:px-0" style={{
-                fontSize: 'clamp(0.95rem, 1.1vw, 1.1rem)'
-              }}>
+              <p
+                className="mx-auto max-w-lg px-2 leading-[1.6] text-white/65 md:px-0"
+                style={{
+                  fontSize: "clamp(0.95rem, 1.1vw, 1.1rem)",
+                }}
+              >
                 Live sessions, workshops, and gatherings — online and in-person
               </p>
             </div>
 
             {/* Vertical Event Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-[1200px] mx-auto">
+            <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-6 md:grid-cols-3">
               {experiencesData
-                .filter(event => event.id !== 'breath-presence-inperson' && event.id !== 'breathwork-to-dub')
+                .filter(
+                  (event) =>
+                    event.id !== "breath-presence-inperson" && event.id !== "breathwork-to-dub"
+                )
                 .map((event) => {
-                const nextDate = getNextEventDate(event.recurrence, event.time);
-                const formattedDate = formatEventDate(nextDate, event.time);
-                const isOnline = event.format === 'Online' || event.format === 'Studio Membership Only';
+                  const nextDate = getNextEventDate(event.recurrence, event.time);
+                  const formattedDate = formatEventDate(nextDate, event.time);
+                  const isOnline =
+                    event.format === "Online" || event.format === "Studio Membership Only";
 
-                return (
-                  <Link
-                    key={event.id}
-                    to="/experiences"
-                    className="group relative flex flex-col overflow-hidden rounded-xl border border-white/[0.12] hover:border-white/25 transition-colors duration-500 bg-black/40 shadow-lg md:shadow-[0_0_60px_rgba(230,219,199,0.25)]"
-                  >
-                    {/* Image */}
-                    <div className="relative aspect-[4/3] overflow-hidden">
-                      <img
-                        src={event.image}
-                        alt={event.title}
-                        className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                      />
-                      <div className="absolute inset-0" style={{
-                        background: 'linear-gradient(to bottom, transparent 30%, rgba(0,0,0,0.9) 100%)'
-                      }} />
+                  return (
+                    <Link
+                      key={event.id}
+                      to="/experiences"
+                      className="group relative flex flex-col overflow-hidden rounded-xl border border-white/[0.12] bg-black/40 shadow-lg transition-colors duration-500 hover:border-white/25 md:shadow-[0_0_60px_rgba(230,219,199,0.25)]"
+                    >
+                      {/* Image */}
+                      <div className="relative aspect-[4/3] overflow-hidden">
+                        <img
+                          src={event.image}
+                          alt={event.title}
+                          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                        <div
+                          className="absolute inset-0"
+                          style={{
+                            background:
+                              "linear-gradient(to bottom, transparent 30%, rgba(0,0,0,0.9) 100%)",
+                          }}
+                        />
 
-                      {/* Format Badge */}
-                      <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] uppercase tracking-[0.12em] font-medium bg-black/60 backdrop-blur-sm"
-                        style={{ color: isOnline ? '#4ade80' : '#D4A574' }}>
-                        <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: isOnline ? '#4ade80' : '#D4A574' }} />
-                        {isOnline ? 'Online' : 'In-Person'}
-                      </span>
+                        {/* Format Badge */}
+                        <span
+                          className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-black/60 px-2.5 py-1 text-[9px] font-medium uppercase tracking-[0.12em] backdrop-blur-sm"
+                          style={{ color: isOnline ? "#4ade80" : "#D4A574" }}
+                        >
+                          <span
+                            className="h-1.5 w-1.5 rounded-full"
+                            style={{ backgroundColor: isOnline ? "#4ade80" : "#D4A574" }}
+                          />
+                          {isOnline ? "Online" : "In-Person"}
+                        </span>
 
-                      {/* Content overlaid on image bottom */}
-                      <div className="absolute bottom-0 left-0 right-0 p-5">
-                        <h3 className="font-editorial text-[clamp(1.1rem,1.4vw,1.3rem)] text-white font-light leading-[1.25] mb-2 tracking-[-0.01em]">
-                          {event.title}
-                        </h3>
-                        <p className="text-[12px] text-white/70 leading-[1.5] mb-3 line-clamp-2">
-                          {event.subtitle}
-                        </p>
-                        <p className="text-[11px] text-white/50 font-medium tracking-wide">
-                          {event.recurrenceLabel} · {formattedDate}
-                        </p>
+                        {/* Content overlaid on image bottom */}
+                        <div className="absolute bottom-0 left-0 right-0 p-5">
+                          <h3 className="mb-2 font-editorial text-[clamp(1.1rem,1.4vw,1.3rem)] font-light leading-[1.25] tracking-[-0.01em] text-white">
+                            {event.title}
+                          </h3>
+                          <p className="mb-3 line-clamp-2 text-[12px] leading-[1.5] text-white/70">
+                            {event.subtitle}
+                          </p>
+                          <p className="text-[11px] font-medium tracking-wide text-white/50">
+                            {event.recurrenceLabel} · {formattedDate}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                );
-              })}
+                    </Link>
+                  );
+                })}
             </div>
 
             {/* View All Experiences CTA */}
-            <div className="text-center mt-12">
+            <div className="mt-12 text-center">
               <Link
                 to="/experiences"
-                className="inline-flex items-center gap-2 text-white/80 text-[13px] tracking-wide font-light hover:text-white transition-colors duration-300 min-h-[44px]"
+                className="inline-flex min-h-[44px] items-center gap-2 text-[13px] font-light tracking-wide text-white/80 transition-colors duration-300 hover:text-white"
               >
                 View All Experiences
-                <ArrowRight className="w-5 h-5" />
+                <ArrowRight className="h-5 w-5" />
               </Link>
             </div>
           </div>
         </section>
 
         {/* Spacer after Contact Section */}
-        <div className="h-12 md:h-16 lg:h-20 bg-background" />
+        <div className="h-12 bg-background md:h-16 lg:h-20" />
 
         <NewsletterModal open={showNewsletterModal} onOpenChange={setShowNewsletterModal} />
 
-        <ClassPlayerModal classId={selectedClassId} open={showClassPlayer} onClose={() => setShowClassPlayer(false)} />
-
+        <ClassPlayerModal
+          classId={selectedClassId}
+          open={showClassPlayer}
+          onClose={() => setShowClassPlayer(false)}
+        />
       </main>
 
       <TermsMicrocopy />
       <Footer />
-    </div>;
+    </div>
+  );
 };
 export default Index;

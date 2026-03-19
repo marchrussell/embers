@@ -13,11 +13,13 @@ export const useQuickResets = () => {
       try {
         setIsLoading(true);
         const { data } = await supabase
-          .from('classes')
-          .select('id, title, short_description, image_url, teacher_name, duration_minutes, requires_subscription, intensity, technique')
-          .eq('is_quick_reset', true)
-          .eq('is_published', true)
-          .order('order_index')
+          .from("classes")
+          .select(
+            "id, title, short_description, image_url, teacher_name, duration_minutes, requires_subscription, intensity, technique"
+          )
+          .eq("is_quick_reset", true)
+          .eq("is_published", true)
+          .order("order_index")
           .abortSignal(controller.signal);
 
         if (!controller.signal.aborted && data) {
@@ -25,7 +27,7 @@ export const useQuickResets = () => {
         }
       } catch (error) {
         if (!controller.signal.aborted) {
-          console.error('useQuickResets: Error fetching quick resets:', error);
+          console.error("useQuickResets: Error fetching quick resets:", error);
         }
       } finally {
         if (!controller.signal.aborted) {

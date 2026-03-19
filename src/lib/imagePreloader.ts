@@ -30,10 +30,10 @@ export const preloadImages = (sources: string[]): Promise<void[]> => {
  */
 export const preloadRouteImages = (route: string) => {
   const routeImageMap: Record<string, string[]> = {
-    '/explore': [
+    "/explore": [
       // Add critical explore page images here
     ],
-    '/experiences': [
+    "/experiences": [
       // Add critical experiences page images here
     ],
     // Add more routes as needed

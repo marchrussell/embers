@@ -23,10 +23,12 @@ const StartHere = () => {
   useEffect(() => {
     const fetchSessions = async () => {
       const { data } = await supabase
-        .from('classes')
-        .select('id, title, duration_minutes, image_url, short_description, description, teacher_name, intensity, technique')
-        .not('start_here_position', 'is', null)
-        .order('start_here_position');
+        .from("classes")
+        .select(
+          "id, title, duration_minutes, image_url, short_description, description, teacher_name, intensity, technique"
+        )
+        .not("start_here_position", "is", null)
+        .order("start_here_position");
 
       setSessions(data || []);
     };
@@ -40,7 +42,7 @@ const StartHere = () => {
       <OnlineHeader />
 
       {/* Hero Section - positioned to start where tab content begins */}
-      <div className="relative h-[320px] sm:h-[380px] md:h-[420px] z-10 mt-[280px] sm:mt-[320px] md:mt-[380px]">
+      <div className="relative z-10 mt-[280px] h-[320px] sm:mt-[320px] sm:h-[380px] md:mt-[380px] md:h-[420px]">
         <div
           className="absolute inset-0 bg-cover bg-center transition-transform duration-700"
           style={{ backgroundImage: `url('${startHereButterfly}')` }}
@@ -48,12 +50,12 @@ const StartHere = () => {
         <div className="absolute inset-0 bg-black/30" />
         <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
 
-        <div className="relative h-full flex items-end px-6 md:px-10 lg:px-12 pb-10 sm:pb-14">
+        <div className="relative flex h-full items-end px-6 pb-10 sm:pb-14 md:px-10 lg:px-12">
           <div className="w-full">
-            <p className="text-[#D4A574] text-xs sm:text-sm tracking-[0.15em] uppercase font-light mb-2 sm:mb-3">
+            <p className="mb-2 text-xs font-light uppercase tracking-[0.15em] text-[#D4A574] sm:mb-3 sm:text-sm">
               Your First Two Weeks
             </p>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-editorial text-[#E6DBC7]">
+            <h1 className="font-editorial text-3xl text-[#E6DBC7] sm:text-4xl md:text-5xl lg:text-6xl">
               A Simple Place to Begin
             </h1>
           </div>
@@ -61,29 +63,30 @@ const StartHere = () => {
       </div>
 
       {/* Main Content */}
-      <div className="px-6 md:px-10 lg:px-12 pt-10 sm:pt-14 md:pt-16 pb-16 sm:pb-20 md:pb-24">
-
+      <div className="px-6 pb-16 pt-10 sm:pb-20 sm:pt-14 md:px-10 md:pb-24 md:pt-16 lg:px-12">
         {/* Subtitle - moved below hero */}
-        <p className="text-lg sm:text-xl md:text-2xl text-[#E6DBC7]/80 font-editorial italic leading-relaxed mb-12 sm:mb-16 md:mb-20">
+        <p className="mb-12 font-editorial text-lg italic leading-relaxed text-[#E6DBC7]/80 sm:mb-16 sm:text-xl md:mb-20 md:text-2xl">
           No pressure. No expectations. Just a gentle way to arrive.
         </p>
 
         {/* Introduction Text - no box */}
-        <div className="text-white font-light text-sm sm:text-base md:text-lg leading-relaxed max-w-3xl mb-10 sm:mb-20 md:mb-28">
+        <div className="mb-10 max-w-3xl text-sm font-light leading-relaxed text-white sm:mb-20 sm:text-base md:mb-28 md:text-lg">
           <p>
-            This space is designed to help you arrive gently and find your footing — without pressure or expectation. If all you do in your first two weeks is try these few practices and come to the Weekly Reset, that's more than enough.
+            This space is designed to help you arrive gently and find your footing — without
+            pressure or expectation. If all you do in your first two weeks is try these few
+            practices and come to the Weekly Reset, that's more than enough.
           </p>
         </div>
 
         {/* Section 1: Recommended Practices */}
         <div className="mb-16 sm:mb-20 md:mb-28">
-          <div className="flex items-baseline gap-3 sm:gap-5 mb-6">
-            <span className="text-xl sm:text-2xl md:text-3xl font-editorial text-white">1</span>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-editorial text-[#E6DBC7] font-light">
+          <div className="mb-6 flex items-baseline gap-3 sm:gap-5">
+            <span className="font-editorial text-xl text-white sm:text-2xl md:text-3xl">1</span>
+            <h2 className="font-editorial text-xl font-light text-[#E6DBC7] sm:text-2xl md:text-3xl">
               Try These First
             </h2>
           </div>
-          <p className="text-[#E6DBC7]/50 font-light mb-8 sm:mb-10 md:mb-12 ml-7 sm:ml-10 text-xs sm:text-sm md:text-base">
+          <p className="mb-8 ml-7 text-xs font-light text-[#E6DBC7]/50 sm:mb-10 sm:ml-10 sm:text-sm md:mb-12 md:text-base">
             Two gentle practices to help you settle in
           </p>
 
@@ -93,7 +96,14 @@ const StartHere = () => {
                 key={session.id}
                 title={session.title}
                 description={session.short_description || session.description || ""}
-                meta={[session.teacher_name, session.duration_minutes != null && `${session.duration_minutes} min`, session.intensity, session.technique].filter(Boolean).join(' • ')}
+                meta={[
+                  session.teacher_name,
+                  session.duration_minutes != null && `${session.duration_minutes} min`,
+                  session.intensity,
+                  session.technique,
+                ]
+                  .filter(Boolean)
+                  .join(" • ")}
                 imageUrl={session.image_url || ""}
                 onClick={() => setSelectedSessionId(session.id)}
                 mobileStacked
@@ -104,23 +114,23 @@ const StartHere = () => {
 
         {/* Section 2: Weekly Reset */}
         <div className="mb-10 sm:mb-20 md:mb-28">
-          <div className="flex items-baseline gap-3 sm:gap-5 mb-3 sm:mb-4">
-            <span className="text-xl sm:text-2xl md:text-3xl font-editorial text-white">2</span>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-editorial text-[#E6DBC7] font-light">
+          <div className="mb-3 flex items-baseline gap-3 sm:mb-4 sm:gap-5">
+            <span className="font-editorial text-xl text-white sm:text-2xl md:text-3xl">2</span>
+            <h2 className="font-editorial text-xl font-light text-[#E6DBC7] sm:text-2xl md:text-3xl">
               Join the Weekly Reset
             </h2>
           </div>
-          <p className="text-[#E6DBC7]/50 font-light mb-10 md:mb-12 ml-7 sm:ml-10 text-xs sm:text-sm md:text-base">
+          <p className="mb-10 ml-7 text-xs font-light text-[#E6DBC7]/50 sm:ml-10 sm:text-sm md:mb-12 md:text-base">
             A live session every Tuesday to reset and reconnect
           </p>
 
           {/* Weekly Reset Card - now using shared component */}
-          <WeeklyResetCard onClick={() => navigate('/online?tab=live')} />
+          <WeeklyResetCard onClick={() => navigate("/online?tab=live")} />
         </div>
 
         {/* Closing */}
-        <div className="text-center pt-6 sm:pt-8 pb-16 sm:pb-20 md:pb-24">
-          <p className="text-[#E6DBC7]/50 font-light text-sm sm:text-base italic px-4">
+        <div className="pb-16 pt-6 text-center sm:pb-20 sm:pt-8 md:pb-24">
+          <p className="px-4 text-sm font-light italic text-[#E6DBC7]/50 sm:text-base">
             That's it. Start here, go gently, and trust the process.
           </p>
         </div>

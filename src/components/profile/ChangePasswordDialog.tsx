@@ -38,19 +38,19 @@ export const ChangePasswordDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="backdrop-blur-xl bg-black/50 border border-white/20 p-0 overflow-hidden rounded-xl max-w-md">
+      <DialogContent className="max-w-md overflow-hidden rounded-xl border border-white/20 bg-black/50 p-0 backdrop-blur-xl">
         <div className="p-10 md:p-12">
           <DialogHeader className="mb-8">
-            <DialogTitle className="text-white text-xl md:text-2xl font-editorial mb-3">
+            <DialogTitle className="mb-3 font-editorial text-xl text-white md:text-2xl">
               Change Password
             </DialogTitle>
-            <DialogDescription className="text-white/60 font-light text-sm">
+            <DialogDescription className="text-sm font-light text-white/60">
               Enter your new password below
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-6">
             <div className="space-y-3">
-              <Label htmlFor="new-password" className="text-white/90 text-sm font-light">
+              <Label htmlFor="new-password" className="text-sm font-light text-white/90">
                 New Password
               </Label>
               <Input
@@ -59,11 +59,11 @@ export const ChangePasswordDialog = ({
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="Enter new password"
-                className="bg-white/5 border-white/20 text-white placeholder:text-white/40 focus:border-white/40 h-12"
+                className="h-12 border-white/20 bg-white/5 text-white placeholder:text-white/40 focus:border-white/40"
               />
             </div>
             <div className="space-y-3">
-              <Label htmlFor="confirm-password" className="text-white/90 text-sm font-light">
+              <Label htmlFor="confirm-password" className="text-sm font-light text-white/90">
                 Confirm Password
               </Label>
               <Input
@@ -72,21 +72,21 @@ export const ChangePasswordDialog = ({
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm new password"
-                className="bg-white/5 border-white/20 text-white placeholder:text-white/40 focus:border-white/40 h-12"
+                className="h-12 border-white/20 bg-white/5 text-white placeholder:text-white/40 focus:border-white/40"
               />
             </div>
             <div className="flex gap-3 pt-4">
               <Button
                 variant="outline"
                 onClick={handleClose}
-                className="flex-1 border-2 border-white/20 bg-transparent text-white hover:bg-white/10 hover:border-white/40 h-12 font-light"
+                className="h-12 flex-1 border-2 border-white/20 bg-transparent font-light text-white hover:border-white/40 hover:bg-white/10"
                 disabled={isUpdating}
               >
                 Cancel
               </Button>
               <Button
                 onClick={onSubmit}
-                className="flex-1 border-2 border-white text-white bg-transparent hover:bg-white/10 h-12 font-light"
+                className="h-12 flex-1 border-2 border-white bg-transparent font-light text-white hover:bg-white/10"
                 disabled={isUpdating}
               >
                 {isUpdating ? "Updating..." : "Update Password"}

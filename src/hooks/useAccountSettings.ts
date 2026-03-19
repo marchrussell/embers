@@ -24,7 +24,7 @@ export const useAccountSettings = (userId?: string) => {
       toast.error("Password must be at least 6 characters");
       return;
     }
-    
+
     if (newPassword !== confirmPassword) {
       toast.error("Passwords do not match");
       return;
@@ -33,7 +33,7 @@ export const useAccountSettings = (userId?: string) => {
     setIsUpdating(true);
     try {
       const { error } = await supabase.auth.updateUser({
-        password: newPassword
+        password: newPassword,
       });
 
       if (error) throw error;
@@ -58,7 +58,7 @@ export const useAccountSettings = (userId?: string) => {
     setIsUpdating(true);
     try {
       const { error } = await supabase.auth.updateUser({
-        email: newEmail
+        email: newEmail,
       });
 
       if (error) throw error;
@@ -86,12 +86,10 @@ export const useAccountSettings = (userId?: string) => {
 
     setIsSubmittingFeedback(true);
     try {
-      const { error } = await supabase
-        .from("feedback")
-        .insert({
-          user_id: userId,
-          message: feedback.trim(),
-        });
+      const { error } = await supabase.from("feedback").insert({
+        user_id: userId,
+        message: feedback.trim(),
+      });
 
       if (error) throw error;
 

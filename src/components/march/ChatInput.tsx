@@ -11,7 +11,11 @@ interface ChatInputProps {
   placeholder?: string;
 }
 
-export const ChatInput = ({ onSend, disabled, placeholder = "Type your message..." }: ChatInputProps) => {
+export const ChatInput = ({
+  onSend,
+  disabled,
+  placeholder = "Type your message...",
+}: ChatInputProps) => {
   const [message, setMessage] = useState("");
   const [showSafetyAlert, setShowSafetyAlert] = useState(false);
   const [isHighRisk, setIsHighRisk] = useState(false);
@@ -21,7 +25,7 @@ export const ChatInput = ({ onSend, disabled, placeholder = "Type your message..
 
     // Check for crisis language
     const safetyCheck = detectCrisisLanguage(message);
-    
+
     if (safetyCheck.isCrisis) {
       setIsHighRisk(safetyCheck.isHighRisk);
       setShowSafetyAlert(true);
@@ -36,7 +40,7 @@ export const ChatInput = ({ onSend, disabled, placeholder = "Type your message..
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
     }
@@ -45,7 +49,7 @@ export const ChatInput = ({ onSend, disabled, placeholder = "Type your message..
   return (
     <div className="space-y-4">
       {showSafetyAlert && <SafetyAlert isHighRisk={isHighRisk} />}
-      
+
       <div className="flex gap-2">
         <Textarea
           value={message}
@@ -53,7 +57,7 @@ export const ChatInput = ({ onSend, disabled, placeholder = "Type your message..
           onKeyPress={handleKeyPress}
           placeholder={placeholder}
           disabled={disabled}
-          className="min-h-[60px] max-h-[120px] resize-none"
+          className="max-h-[120px] min-h-[60px] resize-none"
         />
         <Button
           onClick={handleSend}

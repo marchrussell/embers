@@ -26,7 +26,7 @@ export const useSessionRecommendations = () => {
   const { user } = useAuth();
 
   const { data: onboardingData = null, isLoading } = useQuery({
-    queryKey: ['onboarding', user?.id],
+    queryKey: ["onboarding", user?.id],
     queryFn: async () => {
       const { data } = await supabase
         .from("user_onboarding")
@@ -39,7 +39,7 @@ export const useSessionRecommendations = () => {
   });
 
   const { data: recentMood = null } = useQuery<number | null>({
-    queryKey: ['recent-mood', user?.id],
+    queryKey: ["recent-mood", user?.id],
     queryFn: async () => {
       const sevenDaysAgo = new Date();
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
@@ -56,24 +56,25 @@ export const useSessionRecommendations = () => {
     enabled: !!user?.id,
   });
 
-  const getRecommendedSessions = async (params?: Partial<RecommendationParams>): Promise<Session[]> => {
+  const getRecommendedSessions = async (
+    params?: Partial<RecommendationParams>
+  ): Promise<Session[]> => {
     try {
       // Use provided params or fall back to user's onboarding data
       const goals = params?.goals || onboardingData?.goals || [];
-      const timeAvailability = params?.timeAvailability || onboardingData?.time_availability || "10";
+      const timeAvailability =
+        params?.timeAvailability || onboardingData?.time_availability || "10";
       const mood = params?.recentMood !== undefined ? params.recentMood : recentMood;
       const excludeIds = params?.excludeSessionIds || [];
 
       console.log("Getting recommendations with:", { goals, timeAvailability, mood });
 
       // Map time availability to recommended_for_time values
-      const timeCategory = timeAvailability === "5" ? "short" : timeAvailability === "10" ? "medium" : "long";
+      const timeCategory =
+        timeAvailability === "5" ? "short" : timeAvailability === "10" ? "medium" : "long";
 
       // Build query
-      let query = supabase
-        .from("classes")
-        .select("*")
-        .eq("is_published", true);
+      let query = supabase.from("classes").select("*").eq("is_published", true);
 
       // Exclude specific sessions
       if (excludeIds.length > 0) {
@@ -127,13 +128,16 @@ export const useSessionRecommendations = () => {
 
       // Sort by score and return top matches
       const sorted = scoredSessions.sort((a, b) => b.score - a.score);
-      
-      console.log("Top recommendations:", sorted.slice(0, 3).map(s => ({ 
-        title: s.title, 
-        score: s.score,
-        goals: s.goal_fit,
-        tags: s.focus_tags 
-      })));
+
+      console.log(
+        "Top recommendations:",
+        sorted.slice(0, 3).map((s) => ({
+          title: s.title,
+          score: s.score,
+          goals: s.goal_fit,
+          tags: s.focus_tags,
+        }))
+      );
 
       return sorted.slice(0, 5); // Return top 5
     } catch (error) {
@@ -158,8 +162,8 @@ export const useSessionRecommendations = () => {
 
       if (!currentSession) {
         // Fallback to regular recommendations
-        const recommendations = await getRecommendedSessions({ 
-          excludeSessionIds: [currentSessionId] 
+        const recommendations = await getRecommendedSessions({
+          excludeSessionIds: [currentSessionId],
         });
         return recommendations.slice(0, 3);
       }
@@ -177,24 +181,28 @@ export const useSessionRecommendations = () => {
       const scoredAlternatives = allSessions.map((session: any) => {
         let score = 0;
         const currentGoals = Array.isArray(currentSession.goal_fit) ? currentSession.goal_fit : [];
-        const currentTags = Array.isArray(currentSession.focus_tags) ? currentSession.focus_tags : [];
+        const currentTags = Array.isArray(currentSession.focus_tags)
+          ? currentSession.focus_tags
+          : [];
         const sessionGoals = Array.isArray(session.goal_fit) ? session.goal_fit : [];
         const sessionTags = Array.isArray(session.focus_tags) ? session.focus_tags : [];
 
         // Heavily weight matching goals (user's current need)
-        const matchedGoals = sessionGoals.filter((goal: any) => 
-          typeof goal === 'string' && currentGoals.includes(goal)
+        const matchedGoals = sessionGoals.filter(
+          (goal: any) => typeof goal === "string" && currentGoals.includes(goal)
         );
         score += matchedGoals.length * 15;
 
         // Similar focus/technique type (breathwork, meditation, etc.)
-        const matchedTags = sessionTags.filter((tag: any) => 
-          typeof tag === 'string' && currentTags.includes(tag)
+        const matchedTags = sessionTags.filter(
+          (tag: any) => typeof tag === "string" && currentTags.includes(tag)
         );
         score += matchedTags.length * 10;
 
         // Similar duration (within 5 minutes)
-        const durationDiff = Math.abs((session.duration_minutes || 10) - (currentSession.duration_minutes || 10));
+        const durationDiff = Math.abs(
+          (session.duration_minutes || 10) - (currentSession.duration_minutes || 10)
+        );
         if (durationDiff <= 5) {
           score += 12 - durationDiff; // More points for closer duration
         }
@@ -206,7 +214,7 @@ export const useSessionRecommendations = () => {
 
         // Bonus for user's preferences if available
         if (onboardingData?.goals && Array.isArray(onboardingData.goals)) {
-          const userGoalMatches = onboardingData.goals.filter((goal: string) => 
+          const userGoalMatches = onboardingData.goals.filter((goal: string) =>
             sessionGoals.includes(goal)
           );
           score += userGoalMatches.length * 5;
@@ -222,13 +230,16 @@ export const useSessionRecommendations = () => {
 
       // Sort by score and return top 3
       const sorted = scoredAlternatives.sort((a, b) => b.score - a.score);
-      
-      console.log("Alternative recommendations:", sorted.slice(0, 3).map(s => ({ 
-        title: s.title, 
-        score: s.score,
-        matchedGoals: s.goal_fit,
-        matchedTags: s.focus_tags 
-      })));
+
+      console.log(
+        "Alternative recommendations:",
+        sorted.slice(0, 3).map((s) => ({
+          title: s.title,
+          score: s.score,
+          matchedGoals: s.goal_fit,
+          matchedTags: s.focus_tags,
+        }))
+      );
 
       return sorted.slice(0, 3);
     } catch (error) {

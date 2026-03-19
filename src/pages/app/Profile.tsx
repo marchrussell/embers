@@ -85,17 +85,17 @@ const Profile = () => {
   // Redirect to auth if not logged in
   useEffect(() => {
     if (!authLoading && !user) {
-      navigate('/auth');
+      navigate("/auth");
     }
   }, [user, authLoading, navigate]);
 
   const { data: userProfile, isLoading: isLoadingProfile } = useQuery<ProfileData | null>({
-    queryKey: ['profile', user?.id],
+    queryKey: ["profile", user?.id],
     queryFn: async () => {
       const { data } = await supabase
-        .from('profiles')
-        .select('full_name')
-        .eq('id', user!.id)
+        .from("profiles")
+        .select("full_name")
+        .eq("id", user!.id)
         .maybeSingle();
       return data as ProfileData | null;
     },
@@ -103,25 +103,25 @@ const Profile = () => {
   });
 
   const { data: stats = defaultStats } = useQuery<StatsData>({
-    queryKey: ['profile-stats', user?.id],
+    queryKey: ["profile-stats", user?.id],
     queryFn: async () => {
       const { data: progressData, error } = await supabase
-        .from('user_progress')
-        .select('completed_at, last_position_seconds, class_id')
-        .eq('user_id', user!.id)
-        .eq('completed', true)
-        .order('completed_at', { ascending: true });
+        .from("user_progress")
+        .select("completed_at, last_position_seconds, class_id")
+        .eq("user_id", user!.id)
+        .eq("completed", true)
+        .order("completed_at", { ascending: true });
 
       const memberSince = user?.created_at
-        ? new Date(user.created_at).toLocaleDateString('en-GB', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
+        ? new Date(user.created_at).toLocaleDateString("en-GB", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
           })
-        : '';
+        : "";
 
       if (error) {
-        console.error('Error fetching progress:', error);
+        console.error("Error fetching progress:", error);
         return { ...defaultStats, memberSince };
       }
 
@@ -131,17 +131,17 @@ const Profile = () => {
 
       const totalSessions = progressData.length;
 
-      const classIds = progressData.map(p => p.class_id);
+      const classIds = progressData.map((p) => p.class_id);
       const { data: classesData } = await supabase
-        .from('classes')
-        .select('id, duration_minutes')
-        .in('id', classIds);
+        .from("classes")
+        .select("id, duration_minutes")
+        .in("id", classIds);
 
       const totalMinutes =
         classesData?.reduce((sum, cls) => sum + (cls.duration_minutes || 0), 0) || 0;
 
       const completedDates = progressData
-        .map(p => new Date(p.completed_at).toDateString())
+        .map((p) => new Date(p.completed_at).toDateString())
         .filter((date, index, self) => self.indexOf(date) === index)
         .sort();
 
@@ -198,29 +198,32 @@ const Profile = () => {
 
     setIsLoadingPortal(true);
     try {
-      console.log('Opening customer portal...');
+      console.log("Opening customer portal...");
       toast.loading("Opening subscription portal...");
 
       const { data, error } = await supabase.functions.invoke("customer-portal");
-      console.log('Customer portal response:', { data, error });
+      console.log("Customer portal response:", { data, error });
 
       toast.dismiss();
 
       if (error) {
-        console.error('Customer portal error:', error);
-        toast.error(error.message || "Failed to open customer portal. Please ensure you have an active subscription.");
+        console.error("Customer portal error:", error);
+        toast.error(
+          error.message ||
+            "Failed to open customer portal. Please ensure you have an active subscription."
+        );
         return;
       }
 
       if (data?.url) {
-        console.log('Redirecting to:', data.url);
+        console.log("Redirecting to:", data.url);
         window.open(data.url, "_blank");
         toast.success("Portal opened in new tab");
       } else {
         toast.error("No portal URL received. Please contact support.");
       }
     } catch (error: any) {
-      console.error('Customer portal exception:', error);
+      console.error("Customer portal exception:", error);
       toast.dismiss();
       toast.error(error.message || "Failed to open customer portal. Please try again.");
     } finally {
@@ -232,7 +235,7 @@ const Profile = () => {
     try {
       console.log("Starting sign out...");
       // Navigate FIRST to avoid ProtectedRoute redirect to /auth
-      navigate('/online', { replace: true });
+      navigate("/online", { replace: true });
       // Then sign out
       await signOut();
       toast.success("Signed out successfully");
@@ -254,7 +257,7 @@ const Profile = () => {
     }
   };
 
-  const firstName = userProfile?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || 'User';
+  const firstName = userProfile?.full_name?.split(" ")[0] || user?.email?.split("@")[0] || "User";
   const capitalizedFirstName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
 
   if (isLoadingProfile) {
@@ -271,49 +274,69 @@ const Profile = () => {
         {/* Header */}
         <div className="px-6 pt-16 md:pt-24">
           {/* Welcome Message with Back Button */}
-          <div className="flex items-center justify-between mb-12 md:mb-16">
-            <h1 className="text-3xl md:text-4xl font-editorial text-[#E6DBC7]">
+          <div className="mb-12 flex items-center justify-between md:mb-16">
+            <h1 className="font-editorial text-3xl text-[#E6DBC7] md:text-4xl">
               Welcome {capitalizedFirstName}
             </h1>
             <Link
-              to='/online'
-              className="inline-flex items-center gap-2 text-[#E6DBC7]/70 hover:text-[#E6DBC7] transition-colors text-sm md:text-base tracking-wide shrink-0"
+              to="/online"
+              className="inline-flex shrink-0 items-center gap-2 text-sm tracking-wide text-[#E6DBC7]/70 transition-colors hover:text-[#E6DBC7] md:text-base"
             >
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft className="h-5 w-5" />
               <span className="hidden sm:inline">Back</span>
               <span className="sm:hidden">Back</span>
             </Link>
           </div>
 
           {/* Progress Section */}
-          <div className="mb-10 md:mb-12 pb-8 md:pb-10 border-b border-[#E6DBC7]/10">
-            <h2 className="text-sm font-light text-[#E6DBC7]/60 uppercase tracking-[0.2em] mb-6 md:mb-8">Your Progress</h2>
-            <div className="grid grid-cols-2 gap-x-6 md:gap-x-10 gap-y-8 md:gap-y-10 mb-8 md:mb-10">
+          <div className="mb-10 border-b border-[#E6DBC7]/10 pb-8 md:mb-12 md:pb-10">
+            <h2 className="mb-6 text-sm font-light uppercase tracking-[0.2em] text-[#E6DBC7]/60 md:mb-8">
+              Your Progress
+            </h2>
+            <div className="mb-8 grid grid-cols-2 gap-x-6 gap-y-8 md:mb-10 md:gap-x-10 md:gap-y-10">
               <div>
-                <div className="text-4xl md:text-5xl lg:text-6xl font-light text-[#E6DBC7] mb-2 md:mb-3">{stats.currentStreak}</div>
-                <div className="text-xs md:text-sm font-light text-[#E6DBC7]/60 uppercase tracking-wider">Current Streak</div>
+                <div className="mb-2 text-4xl font-light text-[#E6DBC7] md:mb-3 md:text-5xl lg:text-6xl">
+                  {stats.currentStreak}
+                </div>
+                <div className="text-xs font-light uppercase tracking-wider text-[#E6DBC7]/60 md:text-sm">
+                  Current Streak
+                </div>
               </div>
               <div>
-                <div className="text-4xl md:text-5xl lg:text-6xl font-light text-[#E6DBC7] mb-2 md:mb-3">{stats.longestStreak}</div>
-                <div className="text-xs md:text-sm font-light text-[#E6DBC7]/60 uppercase tracking-wider">Best Streak</div>
+                <div className="mb-2 text-4xl font-light text-[#E6DBC7] md:mb-3 md:text-5xl lg:text-6xl">
+                  {stats.longestStreak}
+                </div>
+                <div className="text-xs font-light uppercase tracking-wider text-[#E6DBC7]/60 md:text-sm">
+                  Best Streak
+                </div>
               </div>
               <div>
-                <div className="text-4xl md:text-5xl lg:text-6xl font-light text-[#E6DBC7] mb-2 md:mb-3">{stats.totalSessions}</div>
-                <div className="text-xs md:text-sm font-light text-[#E6DBC7]/60 uppercase tracking-wider">Classes Taken</div>
+                <div className="mb-2 text-4xl font-light text-[#E6DBC7] md:mb-3 md:text-5xl lg:text-6xl">
+                  {stats.totalSessions}
+                </div>
+                <div className="text-xs font-light uppercase tracking-wider text-[#E6DBC7]/60 md:text-sm">
+                  Classes Taken
+                </div>
               </div>
               <div>
-                <div className="text-4xl md:text-5xl lg:text-6xl font-light text-[#E6DBC7] mb-2 md:mb-3">{stats.totalMinutes}</div>
-                <div className="text-xs md:text-sm font-light text-[#E6DBC7]/60 uppercase tracking-wider">Minutes Practiced</div>
+                <div className="mb-2 text-4xl font-light text-[#E6DBC7] md:mb-3 md:text-5xl lg:text-6xl">
+                  {stats.totalMinutes}
+                </div>
+                <div className="text-xs font-light uppercase tracking-wider text-[#E6DBC7]/60 md:text-sm">
+                  Minutes Practiced
+                </div>
               </div>
             </div>
-            <div className="text-base md:text-lg font-light text-[#E6DBC7]/60">
+            <div className="text-base font-light text-[#E6DBC7]/60 md:text-lg">
               Member Since: <span className="text-[#E6DBC7]">{stats.memberSince}</span>
             </div>
           </div>
 
           {/* Account Section */}
-          <div className="mb-10 md:mb-12 pb-8 md:pb-10 border-b border-[#E6DBC7]/10">
-            <h2 className="text-sm font-light text-[#E6DBC7]/60 uppercase tracking-[0.2em] mb-6 md:mb-8">Account</h2>
+          <div className="mb-10 border-b border-[#E6DBC7]/10 pb-8 md:mb-12 md:pb-10">
+            <h2 className="mb-6 text-sm font-light uppercase tracking-[0.2em] text-[#E6DBC7]/60 md:mb-8">
+              Account
+            </h2>
             <div className="space-y-2">
               <ProfileMenuItem
                 label={isLoadingPortal ? "Opening portal..." : "Manage Subscription"}
@@ -324,16 +347,15 @@ const Profile = () => {
                 label="Change Password"
                 onClick={() => setShowPasswordDialog(true)}
               />
-              <ProfileMenuItem
-                label="Change Email"
-                onClick={() => setShowEmailDialog(true)}
-              />
+              <ProfileMenuItem label="Change Email" onClick={() => setShowEmailDialog(true)} />
             </div>
           </div>
 
           {/* Information Section */}
-          <div className="mb-10 md:mb-12 pb-8 md:pb-10 border-b border-[#E6DBC7]/10">
-            <h2 className="text-sm font-light text-[#E6DBC7]/60 uppercase tracking-[0.2em] mb-6 md:mb-8">Information</h2>
+          <div className="mb-10 border-b border-[#E6DBC7]/10 pb-8 md:mb-12 md:pb-10">
+            <h2 className="mb-6 text-sm font-light uppercase tracking-[0.2em] text-[#E6DBC7]/60 md:mb-8">
+              Information
+            </h2>
             <div className="space-y-2">
               <ProfileMenuItem
                 label="Leave Feedback / Make Suggestion"
@@ -341,7 +363,9 @@ const Profile = () => {
               />
               <ProfileMenuItem
                 label="Contact Support"
-                onClick={() => window.location.href = "mailto:support@embersstudio.io?subject=Support Request"}
+                onClick={() =>
+                  (window.location.href = "mailto:support@embersstudio.io?subject=Support Request")
+                }
               />
               <ProfileMenuItem
                 label="Safety Information"
@@ -351,17 +375,13 @@ const Profile = () => {
           </div>
 
           {/* Data & Privacy Section */}
-          <div className="mb-10 md:mb-12 pb-8 md:pb-10">
-            <h2 className="text-sm font-light text-[#E6DBC7]/60 uppercase tracking-[0.2em] mb-6 md:mb-8">Data & Privacy</h2>
+          <div className="mb-10 pb-8 md:mb-12 md:pb-10">
+            <h2 className="mb-6 text-sm font-light uppercase tracking-[0.2em] text-[#E6DBC7]/60 md:mb-8">
+              Data & Privacy
+            </h2>
             <div className="space-y-2">
-              <ProfileMenuItem
-                label="Privacy Policy"
-                onClick={() => setShowPrivacyModal(true)}
-              />
-              <ProfileMenuItem
-                label="Terms of Use"
-                onClick={() => setShowTermsModal(true)}
-              />
+              <ProfileMenuItem label="Privacy Policy" onClick={() => setShowPrivacyModal(true)} />
+              <ProfileMenuItem label="Terms of Use" onClick={() => setShowTermsModal(true)} />
               <ProfileMenuItem
                 label={isExporting ? "Exporting..." : "Download My Data"}
                 onClick={exportUserData}
@@ -381,14 +401,14 @@ const Profile = () => {
           {/* Sign Out Button */}
           <button
             onClick={handleSignOut}
-            className="w-full text-[#E6DBC7]/90 py-4 md:py-5 text-sm md:text-base font-light hover:text-[#E6DBC7] transition-colors flex items-center justify-center gap-3 hover:bg-[#E6DBC7]/5 rounded-lg"
+            className="flex w-full items-center justify-center gap-3 rounded-lg py-4 text-sm font-light text-[#E6DBC7]/90 transition-colors hover:bg-[#E6DBC7]/5 hover:text-[#E6DBC7] md:py-5 md:text-base"
           >
-            <LogOut className="w-5 h-5" />
+            <LogOut className="h-5 w-5" />
             Sign Out
           </button>
 
           {/* Logged in as */}
-          <div className="text-center mt-4 md:mt-6 text-xs md:text-base text-[#E6DBC7]/60 font-light">
+          <div className="mt-4 text-center text-xs font-light text-[#E6DBC7]/60 md:mt-6 md:text-base">
             Logged in as {user?.email}
           </div>
 
@@ -446,27 +466,30 @@ const Profile = () => {
 
         {/* Delete March Data Dialog (unique to this page) */}
         <Dialog open={showDeleteDataDialog} onOpenChange={setShowDeleteDataDialog}>
-          <DialogContent className="backdrop-blur-xl bg-black/50 border border-white/30 p-0 overflow-hidden rounded-xl max-w-md">
+          <DialogContent className="max-w-md overflow-hidden rounded-xl border border-white/30 bg-black/50 p-0 backdrop-blur-xl">
             <div className="p-8 md:p-10">
               <DialogHeader className="mb-6">
-                <DialogTitle className="text-white text-xl md:text-2xl font-editorial mb-3">Delete March Chat Data</DialogTitle>
-                <DialogDescription className="text-white/60 font-light text-sm">
+                <DialogTitle className="mb-3 font-editorial text-xl text-white md:text-2xl">
+                  Delete March Chat Data
+                </DialogTitle>
+                <DialogDescription className="text-sm font-light text-white/60">
                   This will permanently delete:
                 </DialogDescription>
               </DialogHeader>
-              <ul className="list-disc pl-6 space-y-2 text-white/60 text-sm font-light">
+              <ul className="list-disc space-y-2 pl-6 text-sm font-light text-white/60">
                 <li>All March Chat conversations and preferences</li>
                 <li>Learned session recommendations</li>
                 <li>Interaction history</li>
               </ul>
-              <p className="mt-6 text-white/60 text-sm font-light">
-                Your account, progress, and favorites will remain intact. This action cannot be undone.
+              <p className="mt-6 text-sm font-light text-white/60">
+                Your account, progress, and favorites will remain intact. This action cannot be
+                undone.
               </p>
               <div className="flex gap-3 pt-6">
                 <Button
                   variant="outline"
                   onClick={() => setShowDeleteDataDialog(false)}
-                  className="flex-1 border-2 border-white/20 bg-transparent text-white hover:bg-white/10 hover:border-white/40 h-12 font-light"
+                  className="h-12 flex-1 border-2 border-white/20 bg-transparent font-light text-white hover:border-white/40 hover:bg-white/10"
                   disabled={isDeleting}
                 >
                   Cancel
@@ -476,7 +499,7 @@ const Profile = () => {
                     await deleteMarchData();
                     setShowDeleteDataDialog(false);
                   }}
-                  className="flex-1 border-2 border-red-500 bg-red-500/10 text-red-400 hover:bg-red-500/20 h-12 font-light"
+                  className="h-12 flex-1 border-2 border-red-500 bg-red-500/10 font-light text-red-400 hover:bg-red-500/20"
                   disabled={isDeleting}
                 >
                   {isDeleting ? "Deleting..." : "Delete March Chat Data"}

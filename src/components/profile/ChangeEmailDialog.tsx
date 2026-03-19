@@ -35,19 +35,19 @@ export const ChangeEmailDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="backdrop-blur-xl bg-black/50 border border-white/20 p-0 overflow-hidden rounded-xl max-w-md">
+      <DialogContent className="max-w-md overflow-hidden rounded-xl border border-white/20 bg-black/50 p-0 backdrop-blur-xl">
         <div className="p-10 md:p-12">
           <DialogHeader className="mb-8">
-            <DialogTitle className="text-white text-xl md:text-2xl font-editorial mb-3">
+            <DialogTitle className="mb-3 font-editorial text-xl text-white md:text-2xl">
               Change Email
             </DialogTitle>
-            <DialogDescription className="text-white/60 font-light text-sm">
+            <DialogDescription className="text-sm font-light text-white/60">
               Enter your new email address. You'll need to confirm it.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-6">
             <div className="space-y-3">
-              <Label htmlFor="current-email" className="text-white/90 text-sm font-light">
+              <Label htmlFor="current-email" className="text-sm font-light text-white/90">
                 Current Email
               </Label>
               <Input
@@ -55,11 +55,11 @@ export const ChangeEmailDialog = ({
                 type="email"
                 value={currentEmail}
                 disabled
-                className="bg-white/5 border-white/20 text-white/50 h-12"
+                className="h-12 border-white/20 bg-white/5 text-white/50"
               />
             </div>
             <div className="space-y-3">
-              <Label htmlFor="new-email" className="text-white/90 text-sm font-light">
+              <Label htmlFor="new-email" className="text-sm font-light text-white/90">
                 New Email
               </Label>
               <Input
@@ -68,21 +68,21 @@ export const ChangeEmailDialog = ({
                 value={newEmail}
                 onChange={(e) => setNewEmail(e.target.value)}
                 placeholder="Enter new email"
-                className="bg-white/5 border-white/20 text-white placeholder:text-white/40 focus:border-white/40 h-12"
+                className="h-12 border-white/20 bg-white/5 text-white placeholder:text-white/40 focus:border-white/40"
               />
             </div>
             <div className="flex gap-3 pt-4">
               <Button
                 variant="outline"
                 onClick={handleClose}
-                className="flex-1 border-2 border-white/20 bg-transparent text-white hover:bg-white/10 hover:border-white/40 h-12 font-light"
+                className="h-12 flex-1 border-2 border-white/20 bg-transparent font-light text-white hover:border-white/40 hover:bg-white/10"
                 disabled={isUpdating}
               >
                 Cancel
               </Button>
               <Button
                 onClick={onSubmit}
-                className="flex-1 border-2 border-white text-white bg-transparent hover:bg-white/10 h-12 font-light"
+                className="h-12 flex-1 border-2 border-white bg-transparent font-light text-white hover:bg-white/10"
                 disabled={isUpdating}
               >
                 {isUpdating ? "Updating..." : "Update Email"}

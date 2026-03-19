@@ -3,128 +3,128 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'PP Editorial Old';
-  src: url('/fonts/PPEditorialOld-Regular.otf') format('opentype');
+  font-family: "PP Editorial Old";
+  src: url("/fonts/PPEditorialOld-Regular.otf") format("opentype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'PP Editorial Old';
-  src: url('/fonts/PPEditorialOld-Italic.otf') format('opentype');
+  font-family: "PP Editorial Old";
+  src: url("/fonts/PPEditorialOld-Italic.otf") format("opentype");
   font-weight: 400;
   font-style: italic;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Unica77';
-  src: url('/fonts/Unica77LLTT-Thin.ttf') format('truetype');
+  font-family: "Unica77";
+  src: url("/fonts/Unica77LLTT-Thin.ttf") format("truetype");
   font-weight: 100;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Unica77';
-  src: url('/fonts/Unica77LLTT-ThinItalic.ttf') format('truetype');
+  font-family: "Unica77";
+  src: url("/fonts/Unica77LLTT-ThinItalic.ttf") format("truetype");
   font-weight: 100;
   font-style: italic;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Unica77';
-  src: url('/fonts/Unica77LLTT-Light.ttf') format('truetype');
+  font-family: "Unica77";
+  src: url("/fonts/Unica77LLTT-Light.ttf") format("truetype");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Unica77';
-  src: url('/fonts/Unica77LLTT-LightItalic.ttf') format('truetype');
+  font-family: "Unica77";
+  src: url("/fonts/Unica77LLTT-LightItalic.ttf") format("truetype");
   font-weight: 300;
   font-style: italic;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Unica77';
-  src: url('/fonts/Unica77LLTT-Regular.ttf') format('truetype');
+  font-family: "Unica77";
+  src: url("/fonts/Unica77LLTT-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Unica77';
-  src: url('/fonts/Unica77LLTT-Italic.ttf') format('truetype');
+  font-family: "Unica77";
+  src: url("/fonts/Unica77LLTT-Italic.ttf") format("truetype");
   font-weight: 400;
   font-style: italic;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Unica77';
-  src: url('/fonts/Unica77LLTT-Medium.ttf') format('truetype');
+  font-family: "Unica77";
+  src: url("/fonts/Unica77LLTT-Medium.ttf") format("truetype");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Unica77';
-  src: url('/fonts/Unica77LLTT-MediumItalic.ttf') format('truetype');
+  font-family: "Unica77";
+  src: url("/fonts/Unica77LLTT-MediumItalic.ttf") format("truetype");
   font-weight: 500;
   font-style: italic;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Unica77';
-  src: url('/fonts/Unica77LLTT-Bold.ttf') format('truetype');
+  font-family: "Unica77";
+  src: url("/fonts/Unica77LLTT-Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Unica77';
-  src: url('/fonts/Unica77LLTT-BoldItalic.ttf') format('truetype');
+  font-family: "Unica77";
+  src: url("/fonts/Unica77LLTT-BoldItalic.ttf") format("truetype");
   font-weight: 700;
   font-style: italic;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Unica77';
-  src: url('/fonts/Unica77LLTT-Black.ttf') format('truetype');
+  font-family: "Unica77";
+  src: url("/fonts/Unica77LLTT-Black.ttf") format("truetype");
   font-weight: 900;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Unica77';
-  src: url('/fonts/Unica77LLTT-BlackItalic.ttf') format('truetype');
+  font-family: "Unica77";
+  src: url("/fonts/Unica77LLTT-BlackItalic.ttf") format("truetype");
   font-weight: 900;
   font-style: italic;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Unica77';
-  src: url('/fonts/Unica77LLTT-ExtraBlack.ttf') format('truetype');
+  font-family: "Unica77";
+  src: url("/fonts/Unica77LLTT-ExtraBlack.ttf") format("truetype");
   font-weight: 950;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Unica77';
-  src: url('/fonts/Unica77LLTT-ExtraBlackItalic.ttf') format('truetype');
+  font-family: "Unica77";
+  src: url("/fonts/Unica77LLTT-ExtraBlackItalic.ttf") format("truetype");
   font-weight: 950;
   font-style: italic;
   font-display: swap;
@@ -153,12 +153,12 @@
     --border-dark: 30 13% 7%;
     --border-subtle-light: 0 0% 100%;
     --border-subtle-dark: 30 13% 20%;
-    
+
     /* Radius */
     --radius-pill: 999px;
     --radius-card: 24px;
     --radius-sm: 12px;
-    
+
     /* Spacing Scale */
     --space-4: 4px;
     --space-8: 8px;
@@ -252,7 +252,6 @@
   }
 }
 
-
 @layer base {
   * {
     @apply border-border;
@@ -270,13 +269,13 @@
       font-size: 13.5px;
     }
   }
-  
+
   @media (max-width: 1200px) {
     html {
       font-size: 13px;
     }
   }
-  
+
   @media (max-width: 992px) {
     html {
       font-size: 12.5px;
@@ -284,15 +283,21 @@
   }
 
   body {
-    @apply bg-background text-foreground font-unica;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    @apply bg-background font-unica text-foreground;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
   }
 }
 
 /* Optimized animations */
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 .animate-shimmer {
@@ -304,8 +309,12 @@
 }
 
 @keyframes pageTransition {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* Glowing border effect for Events page */
@@ -313,8 +322,11 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  border: 1px solid rgba(255,255,255,0.6);
-  box-shadow: 0 0 12px rgba(255,255,255,0.3), 0 0 24px rgba(255,255,255,0.15), inset 0 0 8px rgba(255,255,255,0.1);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow:
+    0 0 12px rgba(255, 255, 255, 0.3),
+    0 0 24px rgba(255, 255, 255, 0.15),
+    inset 0 0 8px rgba(255, 255, 255, 0.1);
 }
 
 img {
@@ -328,5 +340,9 @@ img {
   perspective: 1000px;
 }
 
-.will-change-transform { will-change: transform; }
-.will-change-opacity { will-change: opacity; }
+.will-change-transform {
+  will-change: transform;
+}
+.will-change-opacity {
+  will-change: opacity;
+}

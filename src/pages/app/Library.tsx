@@ -1,7 +1,10 @@
 // Library page - Categories: CALM, ENERGY, TRANSFORM, SLEEP, RESILIENCE & CAPACITY
 import { NavBar } from "@/components/NavBar";
 import { ArcCardsModal } from "@/components/ArcCardsModal";
-import { LibraryEmbeddedSkeleton, LibraryPageSkeleton } from "@/components/skeletons/LibrarySkeleton";
+import {
+  LibraryEmbeddedSkeleton,
+  LibraryPageSkeleton,
+} from "@/components/skeletons/LibrarySkeleton";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavourites } from "@/hooks/useFavourites";
@@ -23,7 +26,11 @@ interface LibraryProps {
   shouldClearCategory?: boolean;
 }
 
-const Library = ({ isEmbedded = false, onClearCategory, shouldClearCategory = false }: LibraryProps) => {
+const Library = ({
+  isEmbedded = false,
+  onClearCategory,
+  shouldClearCategory = false,
+}: LibraryProps) => {
   const { user, hasSubscription, isAdmin, isTestUser, loading: authLoading } = useAuth();
   const { favouriteIds } = useFavourites();
   const [searchParams] = useSearchParams();
@@ -32,10 +39,12 @@ const Library = ({ isEmbedded = false, onClearCategory, shouldClearCategory = fa
   const [selectedCategory, setSelectedCategory] = useState<LibraryCategory | null>(null);
   const [selectedProgram, setSelectedProgram] = useState<LibraryProgram | null>(null);
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(() => {
-    return new URLSearchParams(window.location.search).get('session');
+    return new URLSearchParams(window.location.search).get("session");
   });
   const [dbUserProfile, setDbUserProfile] = useState<{ full_name: string } | null>(null);
-  const metadataProfile = user?.user_metadata?.full_name ? { full_name: user.user_metadata.full_name as string } : null;
+  const metadataProfile = user?.user_metadata?.full_name
+    ? { full_name: user.user_metadata.full_name as string }
+    : null;
   const userProfile = metadataProfile ?? dbUserProfile;
   const [showArcCardsModal, setShowArcCardsModal] = useState(false);
   const nervousSystemProgramRef = useRef<HTMLDivElement>(null);
@@ -43,8 +52,17 @@ const Library = ({ isEmbedded = false, onClearCategory, shouldClearCategory = fa
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
 
-  const { categoriesWithSessions, isLoading: isLoadingData } = useLibraryData({ hasSubscription, isAdmin, isTestUser });
-  const { favouriteSessions } = useFavouriteSessions({ favouriteIds, hasSubscription, isAdmin, isTestUser });
+  const { categoriesWithSessions, isLoading: isLoadingData } = useLibraryData({
+    hasSubscription,
+    isAdmin,
+    isTestUser,
+  });
+  const { favouriteSessions } = useFavouriteSessions({
+    favouriteIds,
+    hasSubscription,
+    isAdmin,
+    isTestUser,
+  });
   const { featuredSession } = useFeaturedSession();
 
   // Adjust state when shouldClearCategory prop changes — avoids setState-in-effect cascade
@@ -58,9 +76,9 @@ const Library = ({ isEmbedded = false, onClearCategory, shouldClearCategory = fa
 
   // Derive selected category from URL param — avoids setState-in-effect cascade
   const urlCategory = useMemo(() => {
-    const categoryParam = searchParams.get('category');
+    const categoryParam = searchParams.get("category");
     if (categoryParam && categoriesWithSessions.length > 0) {
-      return categoriesWithSessions.find(cat => cat.name === categoryParam) ?? null;
+      return categoriesWithSessions.find((cat) => cat.name === categoryParam) ?? null;
     }
     return null;
   }, [searchParams, categoriesWithSessions]);
@@ -75,11 +93,11 @@ const Library = ({ isEmbedded = false, onClearCategory, shouldClearCategory = fa
     }
   };
 
-  const scrollFavourites = (direction: 'left' | 'right') => {
+  const scrollFavourites = (direction: "left" | "right") => {
     if (favouritesScrollRef.current) {
       favouritesScrollRef.current.scrollBy({
-        left: direction === 'left' ? -280 : 280,
-        behavior: 'smooth'
+        left: direction === "left" ? -280 : 280,
+        behavior: "smooth",
       });
     }
   };
@@ -96,17 +114,17 @@ const Library = ({ isEmbedded = false, onClearCategory, shouldClearCategory = fa
 
   // Check for scroll intent from URL params
   useEffect(() => {
-    const scrollTo = searchParams.get('scrollTo');
-    if (scrollTo === 'nervous-system' && nervousSystemProgramRef.current) {
+    const scrollTo = searchParams.get("scrollTo");
+    if (scrollTo === "nervous-system" && nervousSystemProgramRef.current) {
       setTimeout(() => {
-        nervousSystemProgramRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        nervousSystemProgramRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
       }, 500);
     }
   }, [searchParams, isLoadingData]);
 
   // Navigate away after consuming session param — setState is in lazy initializer above
-  if (searchParams.get('session')) {
-    navigate('/online', { replace: true });
+  if (searchParams.get("session")) {
+    navigate("/online", { replace: true });
   }
 
   // Scroll to top when category is selected
@@ -122,9 +140,9 @@ const Library = ({ isEmbedded = false, onClearCategory, shouldClearCategory = fa
 
     let cancelled = false;
     supabase
-      .from('profiles')
-      .select('full_name')
-      .eq('id', user.id)
+      .from("profiles")
+      .select("full_name")
+      .eq("id", user.id)
       .maybeSingle()
       .then(({ data: profile, error }) => {
         if (!cancelled && !error && profile?.full_name) {
@@ -132,7 +150,9 @@ const Library = ({ isEmbedded = false, onClearCategory, shouldClearCategory = fa
         }
       });
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [user?.id, user?.user_metadata?.full_name]);
 
   const handleSessionClick = (sessionId: string) => {
@@ -204,15 +224,17 @@ const Library = ({ isEmbedded = false, onClearCategory, shouldClearCategory = fa
           onClose={() => setShowSubscriptionModal(false)}
         />
       </Suspense>
-      <ArcCardsModal
-        open={showArcCardsModal}
-        onOpenChange={setShowArcCardsModal}
-      />
+      <ArcCardsModal open={showArcCardsModal} onOpenChange={setShowArcCardsModal} />
     </>
   );
 
   if (isEmbedded) {
-    return <>{viewContent}{modals}</>;
+    return (
+      <>
+        {viewContent}
+        {modals}
+      </>
+    );
   }
 
   return (

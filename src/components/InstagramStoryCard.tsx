@@ -7,13 +7,9 @@ import {
 
 export const InstagramStoryCard = () => {
   return (
-    <InstagramStoryCardBase
-      backgroundImage={instagramBg}
-      overlay="blur"
-      showBorder
-    >
+    <InstagramStoryCardBase backgroundImage={instagramBg} overlay="blur" showBorder>
       {/* Content */}
-      <div className="relative h-full flex flex-col justify-end px-10 py-24">
+      <div className="relative flex h-full flex-col justify-end px-10 py-24">
         {/* Brand Identity + Body Text - Grouped together at bottom */}
         <div className="flex flex-col items-center space-y-12">
           {/* Top Section - Brand Identity (Logo + Title) */}
@@ -28,9 +24,11 @@ export const InstagramStoryCard = () => {
           </div>
 
           {/* Bottom Section - Narrative */}
-          <div className="text-center max-w-xs mx-auto space-y-6">
+          <div className="mx-auto max-w-xs space-y-6 text-center">
             <InstagramText variant="body">
-              Whether you're looking to calm anxiety, improve sleep, boost energy, or access deeper states of awareness, we've been carefully curating a collection of guided sessions to support your journey with bespoke music for each session.
+              Whether you're looking to calm anxiety, improve sleep, boost energy, or access deeper
+              states of awareness, we've been carefully curating a collection of guided sessions to
+              support your journey with bespoke music for each session.
             </InstagramText>
 
             <InstagramText variant="signature">Big Love, March x</InstagramText>

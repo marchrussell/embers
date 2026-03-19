@@ -18,7 +18,7 @@ import {
   Menu,
   Target,
   User,
-  Users
+  Users,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -56,7 +56,7 @@ export const CommandPalette = () => {
 
   const appRoutes = user
     ? [
-        { label: "Online", path: '/online', icon: Library },
+        { label: "Online", path: "/online", icon: Library },
         { label: "Profile", path: "/online/profile", icon: User },
         { label: "Mentorship Dashboard", path: "/online/mentorship", icon: GraduationCap },
         { label: "Mentorship Modules", path: "/online/mentorship/modules", icon: BookOpen },
@@ -83,10 +83,7 @@ export const CommandPalette = () => {
           {publicRoutes.map((route) => {
             const Icon = route.icon;
             return (
-              <CommandItem
-                key={route.path}
-                onSelect={() => handleSelect(route.path)}
-              >
+              <CommandItem key={route.path} onSelect={() => handleSelect(route.path)}>
                 <Icon className="mr-2 h-4 w-4" />
                 <span>{route.label}</span>
               </CommandItem>
@@ -101,10 +98,7 @@ export const CommandPalette = () => {
               {appRoutes.map((route) => {
                 const Icon = route.icon;
                 return (
-                  <CommandItem
-                    key={route.path}
-                    onSelect={() => handleSelect(route.path)}
-                  >
+                  <CommandItem key={route.path} onSelect={() => handleSelect(route.path)}>
                     <Icon className="mr-2 h-4 w-4" />
                     <span>{route.label}</span>
                   </CommandItem>
@@ -121,10 +115,7 @@ export const CommandPalette = () => {
               {adminRoutes.map((route) => {
                 const Icon = route.icon;
                 return (
-                  <CommandItem
-                    key={route.path}
-                    onSelect={() => handleSelect(route.path)}
-                  >
+                  <CommandItem key={route.path} onSelect={() => handleSelect(route.path)}>
                     <Icon className="mr-2 h-4 w-4" />
                     <span>{route.label}</span>
                   </CommandItem>

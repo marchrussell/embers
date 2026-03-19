@@ -20,7 +20,7 @@ export function WeeklyInsights() {
   const navigate = useNavigate();
 
   const { data: insights, isLoading: loading } = useQuery<WeeklyInsightsData | null>({
-    queryKey: ['weekly-insights', user?.id],
+    queryKey: ["weekly-insights", user?.id],
     queryFn: async () => {
       const sevenDaysAgo = new Date();
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
@@ -49,16 +49,28 @@ export function WeeklyInsights() {
         avgMood = moodLogs.reduce((sum, log) => sum + (log.mood_score || 0), 0) / moodLogs.length;
         const mid = Math.floor(moodLogs.length / 2);
         const firstAvg = moodLogs.slice(0, mid).reduce((s, l) => s + (l.mood_score || 0), 0) / mid;
-        const secondAvg = moodLogs.slice(mid).reduce((s, l) => s + (l.mood_score || 0), 0) / (moodLogs.length - mid);
+        const secondAvg =
+          moodLogs.slice(mid).reduce((s, l) => s + (l.mood_score || 0), 0) /
+          (moodLogs.length - mid);
         if (secondAvg > firstAvg + 0.5) moodTrend = "improving";
         else if (secondAvg < firstAvg - 0.5) moodTrend = "declining";
       }
 
-      const focusTags = sessions
-        ?.flatMap((s: any) => s.classes?.focus_tags || [])
-        .filter((tag): tag is string => !!tag) || [];
-      const tagCounts = focusTags.reduce((acc, tag) => { acc[tag] = (acc[tag] || 0) + 1; return acc; }, {} as Record<string, number>);
-      const topFocusAreas = Object.entries(tagCounts).sort(([, a], [, b]) => b - a).slice(0, 3).map(([tag]) => tag);
+      const focusTags =
+        sessions
+          ?.flatMap((s: any) => s.classes?.focus_tags || [])
+          .filter((tag): tag is string => !!tag) || [];
+      const tagCounts = focusTags.reduce(
+        (acc, tag) => {
+          acc[tag] = (acc[tag] || 0) + 1;
+          return acc;
+        },
+        {} as Record<string, number>
+      );
+      const topFocusAreas = Object.entries(tagCounts)
+        .sort(([, a], [, b]) => b - a)
+        .slice(0, 3)
+        .map(([tag]) => tag);
 
       let consistency: "excellent" | "good" | "needs-work" = "needs-work";
       if (sessionsCompleted >= 5) consistency = "excellent";
@@ -66,27 +78,39 @@ export function WeeklyInsights() {
 
       const lastSession = sessions?.[0];
       const daysSinceLastPractice = lastSession?.completed_at
-        ? Math.floor((Date.now() - new Date(lastSession.completed_at).getTime()) / (1000 * 60 * 60 * 24))
+        ? Math.floor(
+            (Date.now() - new Date(lastSession.completed_at).getTime()) / (1000 * 60 * 60 * 24)
+          )
         : 7;
 
-      return { sessionsCompleted, moodTrend, avgMood, topFocusAreas, consistency, daysSinceLastPractice };
+      return {
+        sessionsCompleted,
+        moodTrend,
+        avgMood,
+        topFocusAreas,
+        consistency,
+        daysSinceLastPractice,
+      };
     },
     enabled: !!user?.id,
   });
 
   const handleChatWithMarch = () => {
     navigate("/online/march-chat", {
-      state: { quickMessage: "Can you give me insights on my progress this week and suggest what I should focus on next?" }
+      state: {
+        quickMessage:
+          "Can you give me insights on my progress this week and suggest what I should focus on next?",
+      },
     });
   };
 
   if (loading) {
     return (
-      <Card className="p-6 bg-gradient-to-br from-[hsl(var(--warm-amber))]/10 via-[hsl(var(--warm-peach))]/10 to-background/50 border-[#E6DBC7]/20">
+      <Card className="border-[#E6DBC7]/20 bg-gradient-to-br from-[hsl(var(--warm-amber))]/10 via-[hsl(var(--warm-peach))]/10 to-background/50 p-6">
         <div className="animate-pulse space-y-3">
-          <div className="h-6 bg-muted/20 rounded w-1/2"></div>
-          <div className="h-4 bg-muted/20 rounded w-3/4"></div>
-          <div className="h-4 bg-muted/20 rounded w-2/3"></div>
+          <div className="h-6 w-1/2 rounded bg-muted/20"></div>
+          <div className="h-4 w-3/4 rounded bg-muted/20"></div>
+          <div className="h-4 w-2/3 rounded bg-muted/20"></div>
         </div>
       </Card>
     );
@@ -95,8 +119,10 @@ export function WeeklyInsights() {
   if (!insights) return null;
 
   const getMoodTrendIcon = () => {
-    if (insights.moodTrend === "improving") return <TrendingUp className="w-5 h-5 text-green-500" />;
-    if (insights.moodTrend === "declining") return <TrendingDown className="w-5 h-5 text-orange-500" />;
+    if (insights.moodTrend === "improving")
+      return <TrendingUp className="h-5 w-5 text-green-500" />;
+    if (insights.moodTrend === "declining")
+      return <TrendingDown className="h-5 w-5 text-orange-500" />;
     return <span className="text-muted-foreground">→</span>;
   };
 
@@ -107,10 +133,10 @@ export function WeeklyInsights() {
   };
 
   return (
-    <Card className="p-6 bg-gradient-to-br from-[hsl(var(--warm-amber))]/10 via-[hsl(var(--warm-peach))]/10 to-background/50 border-[#E6DBC7]/20 backdrop-blur-sm">
-      <div className="flex items-start justify-between mb-4">
+    <Card className="border-[#E6DBC7]/20 bg-gradient-to-br from-[hsl(var(--warm-amber))]/10 via-[hsl(var(--warm-peach))]/10 to-background/50 p-6 backdrop-blur-sm">
+      <div className="mb-4 flex items-start justify-between">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-[#E6DBC7]" />
+          <Sparkles className="h-5 w-5 text-[#E6DBC7]" />
           <h3 className="font-editorial text-xl text-[#E6DBC7]">Your Week at a Glance</h3>
         </div>
         {getMoodTrendIcon()}
@@ -119,10 +145,11 @@ export function WeeklyInsights() {
       <div className="space-y-4">
         {/* Sessions completed */}
         <div className="flex items-center gap-3">
-          <Award className="w-4 h-4 text-muted-foreground" />
+          <Award className="h-4 w-4 text-muted-foreground" />
           <div className="flex-1">
             <p className="text-sm font-medium">
-              {insights.sessionsCompleted} session{insights.sessionsCompleted !== 1 ? "s" : ""} completed
+              {insights.sessionsCompleted} session{insights.sessionsCompleted !== 1 ? "s" : ""}{" "}
+              completed
             </p>
             <p className="text-xs text-muted-foreground">{getConsistencyMessage()}</p>
           </div>
@@ -133,12 +160,11 @@ export function WeeklyInsights() {
           <div className="flex items-center gap-3">
             {getMoodTrendIcon()}
             <div className="flex-1">
-              <p className="text-sm font-medium">
-                Mood: {insights.avgMood.toFixed(1)}/10 average
-              </p>
-              <p className="text-xs text-muted-foreground capitalize">
+              <p className="text-sm font-medium">Mood: {insights.avgMood.toFixed(1)}/10 average</p>
+              <p className="text-xs capitalize text-muted-foreground">
                 {insights.moodTrend === "improving" && "Trending up this week ↗"}
-                {insights.moodTrend === "declining" && "Let's check in - seems like a tougher week ↘"}
+                {insights.moodTrend === "declining" &&
+                  "Let's check in - seems like a tougher week ↘"}
                 {insights.moodTrend === "stable" && "Holding steady →"}
               </p>
             </div>
@@ -148,22 +174,21 @@ export function WeeklyInsights() {
         {/* Top focus areas */}
         {insights.topFocusAreas.length > 0 && (
           <div className="flex items-center gap-3">
-            <Calendar className="w-4 h-4 text-muted-foreground" />
+            <Calendar className="h-4 w-4 text-muted-foreground" />
             <div className="flex-1">
               <p className="text-sm font-medium">Most practiced</p>
-              <p className="text-xs text-muted-foreground">
-                {insights.topFocusAreas.join(", ")}
-              </p>
+              <p className="text-xs text-muted-foreground">{insights.topFocusAreas.join(", ")}</p>
             </div>
           </div>
         )}
 
         {/* Days since practice */}
         {insights.daysSinceLastPractice >= 3 && (
-          <div className="p-3 bg-[hsl(var(--warm-amber))]/10 rounded-lg border border-[#E6DBC7]/20">
+          <div className="rounded-lg border border-[#E6DBC7]/20 bg-[hsl(var(--warm-amber))]/10 p-3">
             <p className="text-xs text-muted-foreground">
-              It's been {insights.daysSinceLastPractice} day{insights.daysSinceLastPractice !== 1 ? "s" : ""} since your last practice. 
-              What's been getting in the way?
+              It's been {insights.daysSinceLastPractice} day
+              {insights.daysSinceLastPractice !== 1 ? "s" : ""} since your last practice. What's
+              been getting in the way?
             </p>
           </div>
         )}
@@ -172,9 +197,9 @@ export function WeeklyInsights() {
         <Button
           onClick={handleChatWithMarch}
           variant="outline"
-          className="w-full mt-2 border-[#E6DBC7]/30 hover:bg-[hsl(var(--warm-amber))]/10"
+          className="mt-2 w-full border-[#E6DBC7]/30 hover:bg-[hsl(var(--warm-amber))]/10"
         >
-          <Sparkles className="w-4 h-4 mr-2" />
+          <Sparkles className="mr-2 h-4 w-4" />
           Ask March about my week
         </Button>
       </div>

@@ -39,13 +39,13 @@ export async function withRetry<T>(
   config: RetryConfig = {}
 ): Promise<{ data: T | null; error: any }> {
   const { maxRetries, retryDelay, timeout } = { ...DEFAULT_CONFIG, ...config };
-  
+
   let lastError: any;
-  
+
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
       const result = await withTimeout(queryFn(), timeout);
-      
+
       // If successful or has data, return immediately
       if (!result.error || result.data) {
         if (attempt > 0) {
@@ -53,36 +53,38 @@ export async function withRetry<T>(
         }
         return result;
       }
-      
+
       lastError = result.error;
-      
+
       // Don't retry on certain errors
       if (isNonRetryableError(result.error)) {
-        console.error('❌ Non-retryable error:', result.error);
+        console.error("❌ Non-retryable error:", result.error);
         return result;
       }
-      
+
       // If not the last attempt, wait and retry
       if (attempt < maxRetries) {
-        console.warn(`⚠️ Query failed (attempt ${attempt + 1}/${maxRetries + 1}), retrying in ${retryDelay}ms...`);
+        console.warn(
+          `⚠️ Query failed (attempt ${attempt + 1}/${maxRetries + 1}), retrying in ${retryDelay}ms...`
+        );
         await delay(retryDelay);
       }
     } catch (error: any) {
       lastError = error;
-      
+
       // Timeout errors should be retried
-      if (error.message?.includes('timed out') && attempt < maxRetries) {
+      if (error.message?.includes("timed out") && attempt < maxRetries) {
         console.warn(`⚠️ Query timed out (attempt ${attempt + 1}/${maxRetries + 1}), retrying...`);
         await delay(retryDelay);
         continue;
       }
-      
+
       // For other errors, return immediately
-      console.error('❌ Query error:', error);
+      console.error("❌ Query error:", error);
       return { data: null, error };
     }
   }
-  
+
   console.error(`❌ Query failed after ${maxRetries + 1} attempts`);
   return { data: null, error: lastError };
 }
@@ -92,22 +94,22 @@ export async function withRetry<T>(
  */
 function isNonRetryableError(error: any): boolean {
   if (!error) return false;
-  
+
   // Don't retry authentication errors
-  if (error.code === 'PGRST301' || error.message?.includes('JWT')) {
+  if (error.code === "PGRST301" || error.message?.includes("JWT")) {
     return true;
   }
-  
+
   // Don't retry permission errors
-  if (error.code === '42501' || error.message?.includes('permission denied')) {
+  if (error.code === "42501" || error.message?.includes("permission denied")) {
     return true;
   }
-  
+
   // Don't retry "not found" errors
-  if (error.code === 'PGRST116') {
+  if (error.code === "PGRST116") {
     return true;
   }
-  
+
   return false;
 }
 
@@ -117,17 +119,17 @@ function isNonRetryableError(error: any): boolean {
 export async function safeSupabaseOperation<T>(
   operation: () => Promise<{ data: T | null; error: any }>,
   fallbackValue: T,
-  operationName: string = 'Supabase operation',
+  operationName: string = "Supabase operation",
   config?: RetryConfig
 ): Promise<T> {
   try {
     const result = await withRetry(operation, config);
-    
+
     if (result.error) {
       console.error(`Error in ${operationName}:`, result.error);
       return fallbackValue;
     }
-    
+
     return result.data || fallbackValue;
   } catch (error) {
     console.error(`Exception in ${operationName}:`, error);
@@ -147,13 +149,11 @@ export async function batchOperations<T>(
   config?: RetryConfig
 ): Promise<T[]> {
   const results = await Promise.allSettled(
-    operations.map(({ fn, name, fallback }) =>
-      safeSupabaseOperation(fn, fallback, name, config)
-    )
+    operations.map(({ fn, name, fallback }) => safeSupabaseOperation(fn, fallback, name, config))
   );
-  
+
   return results.map((result, index) => {
-    if (result.status === 'fulfilled') {
+    if (result.status === "fulfilled") {
       return result.value;
     }
     console.error(`Batch operation "${operations[index].name}" failed:`, result.reason);

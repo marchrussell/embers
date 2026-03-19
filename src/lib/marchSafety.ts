@@ -38,25 +38,25 @@ export const CRISIS_RESOURCES: SafetyResource[] = [
 
 // Crisis keywords that trigger safety responses
 const CRISIS_KEYWORDS = [
-  'suicide',
-  'suicidal',
-  'kill myself',
-  'want to die',
-  'end my life',
-  'better off dead',
+  "suicide",
+  "suicidal",
+  "kill myself",
+  "want to die",
+  "end my life",
+  "better off dead",
   "can't go on",
-  'no point living',
-  'harm myself',
-  'self harm',
+  "no point living",
+  "harm myself",
+  "self harm",
 ];
 
 // High-risk phrases that suggest severe distress
 const HIGH_RISK_PHRASES = [
-  'planning to',
-  'going to hurt',
-  'ready to die',
-  'goodbye',
-  'final message',
+  "planning to",
+  "going to hurt",
+  "ready to die",
+  "goodbye",
+  "final message",
 ];
 
 /**
@@ -69,7 +69,7 @@ export function detectCrisisLanguage(message: string): {
 } {
   const lowerMessage = message.toLowerCase();
   const triggeredKeywords: string[] = [];
-  
+
   let isCrisis = false;
   let isHighRisk = false;
 
@@ -127,13 +127,13 @@ Is there anything else I can help you with today in terms of your wellbeing goal
  * Formats crisis resources for display
  */
 export function formatCrisisResources(): string {
-  return CRISIS_RESOURCES.map(resource => {
+  return CRISIS_RESOURCES.map((resource) => {
     let line = `**${resource.name}**`;
     if (resource.phone) line += `: ${resource.phone}`;
     if (resource.text) line += ` - ${resource.text}`;
     if (resource.availability) line += ` (${resource.availability})`;
     return line;
-  }).join('\n');
+  }).join("\n");
 }
 
 /**
@@ -141,9 +141,10 @@ export function formatCrisisResources(): string {
  */
 export const MARCH_BOUNDARIES = {
   role: "March is a wellbeing and accountability guide designed to help users build consistent habits, feel supported in their self-care, stay accountable to their goals, and reflect on their progress over time.",
-  
-  notATherapist: "March is not a therapist, counselor, or crisis responder. March is a coach-like companion focused on practical guidance, gentle motivation, and simple reflection.",
-  
+
+  notATherapist:
+    "March is not a therapist, counselor, or crisis responder. March is a coach-like companion focused on practical guidance, gentle motivation, and simple reflection.",
+
   canDo: [
     "Offer practical tips, reflections, and check-ins",
     "Listen empathetically and validate feelings",
@@ -151,7 +152,7 @@ export const MARCH_BOUNDARIES = {
     "Share general guidance on self-care routines",
     "Track consistency and accountability",
   ],
-  
+
   cannotDo: [
     "Provide medical, diagnostic, or therapeutic advice",
     "Deep emotional analysis or trauma support",
@@ -170,14 +171,14 @@ export const TONE_GUIDELINES = {
     "Empowering, non-judgmental phrasing",
     "Gentle accountability",
   ],
-  
+
   never: [
     "Promise outcomes",
     "Minimize emotions",
     "Give medical or mental health advice",
     "Attempt to interpret emotions deeply",
   ],
-  
+
   examples: {
     good: [
       "That sounds tough — I'm proud you're still showing up",

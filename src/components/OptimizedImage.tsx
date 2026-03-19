@@ -1,6 +1,11 @@
 import { useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
-import { getOptimizedImageUrl, generateResponsiveSrcSet, getResponsiveSizes, ImageTransformOptions } from "@/lib/supabaseImageOptimization";
+import {
+  getOptimizedImageUrl,
+  generateResponsiveSrcSet,
+  getResponsiveSizes,
+  ImageTransformOptions,
+} from "@/lib/supabaseImageOptimization";
 
 interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
@@ -10,23 +15,23 @@ interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> 
   optimizationOptions?: ImageTransformOptions;
   responsive?: boolean;
   showSkeleton?: boolean;
-  /** 
+  /**
    * When true, wraps image in a container for skeleton overlay.
    * When false (default), renders a plain img tag with original sizing behavior.
    */
   wrapForSkeleton?: boolean;
 }
 
-export const OptimizedImage = ({ 
-  src, 
-  alt, 
-  className, 
+export const OptimizedImage = ({
+  src,
+  alt,
+  className,
   priority = false,
   optimizationOptions = {},
   responsive = true,
   showSkeleton = true,
   wrapForSkeleton = false,
-  ...props 
+  ...props
 }: OptimizedImageProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -34,7 +39,7 @@ export const OptimizedImage = ({
   // Get optimized image URL
   const optimizedSrc = getOptimizedImageUrl(src, {
     quality: 80,
-    format: 'webp',
+    format: "webp",
     ...optimizationOptions,
   });
 
@@ -57,9 +62,9 @@ export const OptimizedImage = ({
     srcSet,
     sizes,
     alt,
-    loading: priority ? "eager" as const : "lazy" as const,
-    decoding: priority ? "sync" as const : "async" as const,
-    ...{ fetchpriority: priority ? "high" : "low" } as any,
+    loading: priority ? ("eager" as const) : ("lazy" as const),
+    decoding: priority ? ("sync" as const) : ("async" as const),
+    ...({ fetchpriority: priority ? "high" : "low" } as any),
     onLoad: handleLoad,
     onError: handleError,
     ...props,
@@ -68,8 +73,8 @@ export const OptimizedImage = ({
   // If error, show fallback
   if (error) {
     return (
-      <div className={cn("bg-muted/20 flex items-center justify-center", className)}>
-        <span className="text-muted-foreground text-sm">Failed to load image</span>
+      <div className={cn("flex items-center justify-center bg-muted/20", className)}>
+        <span className="text-sm text-muted-foreground">Failed to load image</span>
       </div>
     );
   }
@@ -80,20 +85,20 @@ export const OptimizedImage = ({
       <div className={cn("relative overflow-hidden", className)}>
         {/* Skeleton placeholder */}
         {isLoading && (
-          <div 
-            className="absolute inset-0 bg-muted/30 overflow-hidden"
-            style={{ borderRadius: 'inherit' }}
+          <div
+            className="absolute inset-0 overflow-hidden bg-muted/30"
+            style={{ borderRadius: "inherit" }}
           >
-            <div 
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer"
-              style={{ backgroundSize: '200% 100%' }}
+            <div
+              className="absolute inset-0 animate-shimmer bg-gradient-to-r from-transparent via-white/10 to-transparent"
+              style={{ backgroundSize: "200% 100%" }}
             />
           </div>
         )}
         <img
           {...imgProps}
           className={cn(
-            "transition-opacity duration-300 w-full h-full object-cover",
+            "h-full w-full object-cover transition-opacity duration-300",
             isLoading ? "opacity-0" : "opacity-100"
           )}
         />
@@ -113,7 +118,7 @@ export const OptimizedImage = ({
       style={{
         ...props.style,
         // Subtle background while loading
-        ...(showSkeleton && isLoading ? { backgroundColor: 'hsl(var(--muted) / 0.3)' } : {}),
+        ...(showSkeleton && isLoading ? { backgroundColor: "hsl(var(--muted) / 0.3)" } : {}),
       }}
     />
   );

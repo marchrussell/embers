@@ -4,7 +4,14 @@ import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { toast } from "@/hooks/use-toast";
 import { ArrowLeft, Search, RefreshCw, Mail, Eye, ShoppingBag, CheckCircle } from "lucide-react";
 import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
@@ -64,31 +71,38 @@ const AdminCoursePurchases = () => {
 
   const fetchPurchases = async () => {
     setRefreshing(true);
-    
+
     const { data: purchasesData, error: purchasesError } = await supabase
       .from("user_course_purchases")
-      .select(`
+      .select(
+        `
         *,
         course:courses(title, slug)
-      `)
+      `
+      )
       .order("purchased_at", { ascending: false });
-    
+
     if (purchasesError) {
-      toast({ title: "Error fetching purchases", description: purchasesError.message, variant: "destructive" });
+      toast({
+        title: "Error fetching purchases",
+        description: purchasesError.message,
+        variant: "destructive",
+      });
       setRefreshing(false);
       return;
     }
 
-    const userIds = [...new Set(purchasesData?.map(p => p.user_id) || [])];
+    const userIds = [...new Set(purchasesData?.map((p) => p.user_id) || [])];
     const { data: profilesData } = await supabase
       .from("profiles")
       .select("id, email, full_name")
       .in("id", userIds);
 
-    const purchasesWithProfiles = purchasesData?.map(purchase => ({
-      ...purchase,
-      profile: profilesData?.find(p => p.id === purchase.user_id)
-    })) || [];
+    const purchasesWithProfiles =
+      purchasesData?.map((purchase) => ({
+        ...purchase,
+        profile: profilesData?.find((p) => p.id === purchase.user_id),
+      })) || [];
 
     setPurchases(purchasesWithProfiles);
     setRefreshing(false);
@@ -96,7 +110,7 @@ const AdminCoursePurchases = () => {
 
   const viewUserProgress = async (purchase: Purchase) => {
     setSelectedPurchase(purchase);
-    
+
     const { data: lessonsData } = await supabase
       .from("course_lessons")
       .select("id, title, order_index")
@@ -107,30 +121,33 @@ const AdminCoursePurchases = () => {
       .from("user_lesson_progress")
       .select("*")
       .eq("user_id", purchase.user_id)
-      .in("lesson_id", lessonsData?.map(l => l.id) || []);
+      .in("lesson_id", lessonsData?.map((l) => l.id) || []);
 
-    const progressWithLessons = lessonsData?.map(lesson => ({
-      id: lesson.id,
-      lesson_id: lesson.id,
-      completed: progressData?.find(p => p.lesson_id === lesson.id)?.completed || false,
-      last_position_seconds: progressData?.find(p => p.lesson_id === lesson.id)?.last_position_seconds || null,
-      lesson: {
-        title: lesson.title,
-        order_index: lesson.order_index
-      }
-    })) || [];
+    const progressWithLessons =
+      lessonsData?.map((lesson) => ({
+        id: lesson.id,
+        lesson_id: lesson.id,
+        completed: progressData?.find((p) => p.lesson_id === lesson.id)?.completed || false,
+        last_position_seconds:
+          progressData?.find((p) => p.lesson_id === lesson.id)?.last_position_seconds || null,
+        lesson: {
+          title: lesson.title,
+          order_index: lesson.order_index,
+        },
+      })) || [];
 
     setUserProgress(progressWithLessons);
     setShowProgressModal(true);
   };
 
-  const filteredPurchases = purchases.filter(p =>
-    p.profile?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    p.profile?.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    p.course?.title?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredPurchases = purchases.filter(
+    (p) =>
+      p.profile?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.profile?.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.course?.title?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const activePurchases = purchases.filter(p => p.status === 'active').length;
+  const activePurchases = purchases.filter((p) => p.status === "active").length;
 
   if (loading) return <AdminSkeleton />;
   if (!isAdmin) return null;
@@ -139,24 +156,31 @@ const AdminCoursePurchases = () => {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-8 py-24">
         <div className="mb-8">
-          <Link to="/admin/courses" className="inline-flex items-center text-[#E6DBC7]/70 hover:text-[#E6DBC7] transition-colors gap-2 text-base md:text-lg">
+          <Link
+            to="/admin/courses"
+            className="inline-flex items-center gap-2 text-base text-[#E6DBC7]/70 transition-colors hover:text-[#E6DBC7] md:text-lg"
+          >
             <ArrowLeft className="h-5 w-5" />
             Back to Courses
           </Link>
         </div>
-        
+
         <div className="mb-12">
-          <h1 className="font-editorial text-5xl md:text-6xl text-[#E6DBC7] mb-3 font-light">Course Purchases</h1>
-          <p className="text-base text-foreground/70">View all course purchases and user progress</p>
+          <h1 className="mb-3 font-editorial text-5xl font-light text-[#E6DBC7] md:text-6xl">
+            Course Purchases
+          </h1>
+          <p className="text-base text-foreground/70">
+            View all course purchases and user progress
+          </p>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-          <Card className="bg-white/5 border-white/10">
+        <div className="mb-10 grid grid-cols-1 gap-6 md:grid-cols-2">
+          <Card className="border-white/10 bg-white/5">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-white/60 flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-[#E6DBC7]/20 flex items-center justify-center">
-                  <ShoppingBag className="w-5 h-5 text-[#E6DBC7]" />
+              <CardTitle className="flex items-center gap-2 text-sm text-white/60">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#E6DBC7]/20">
+                  <ShoppingBag className="h-5 w-5 text-[#E6DBC7]" />
                 </div>
                 Total Purchases
               </CardTitle>
@@ -165,11 +189,11 @@ const AdminCoursePurchases = () => {
               <p className="text-3xl font-semibold text-white">{purchases.length}</p>
             </CardContent>
           </Card>
-          <Card className="bg-white/5 border-white/10">
+          <Card className="border-white/10 bg-white/5">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-white/60 flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center">
-                  <CheckCircle className="w-5 h-5 text-green-400" />
+              <CardTitle className="flex items-center gap-2 text-sm text-white/60">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-500/20">
+                  <CheckCircle className="h-5 w-5 text-green-400" />
                 </div>
                 Active Purchases
               </CardTitle>
@@ -181,38 +205,38 @@ const AdminCoursePurchases = () => {
         </div>
 
         {/* Search and Actions */}
-        <div className="mb-8 flex flex-col md:flex-row gap-4">
-          <div className="relative flex-1 max-w-sm">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/40" />
+        <div className="mb-8 flex flex-col gap-4 md:flex-row">
+          <div className="relative max-w-sm flex-1">
+            <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 transform text-white/40" />
             <Input
               placeholder="Search by email, name, or course..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 bg-white/5 border-white/20 text-white placeholder:text-white/40"
+              className="border-white/20 bg-white/5 pl-10 text-white placeholder:text-white/40"
             />
           </div>
-          <Button 
-            onClick={fetchPurchases} 
-            disabled={refreshing} 
-            variant="outline" 
+          <Button
+            onClick={fetchPurchases}
+            disabled={refreshing}
+            variant="outline"
             className="gap-2 border-white/20 text-white hover:bg-white/10"
           >
-            <RefreshCw className={`h-5 w-5 ${refreshing ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`h-5 w-5 ${refreshing ? "animate-spin" : ""}`} />
             Refresh
           </Button>
         </div>
 
         {/* Purchases Table */}
-        <Card className="bg-white/5 border-white/10">
+        <Card className="border-white/10 bg-white/5">
           <CardHeader>
-            <CardTitle className="text-[#E6DBC7] text-xl">
+            <CardTitle className="text-xl text-[#E6DBC7]">
               All Purchases ({filteredPurchases.length})
             </CardTitle>
           </CardHeader>
           <CardContent>
             {filteredPurchases.length === 0 ? (
-              <div className="text-center py-12">
-                <ShoppingBag className="h-12 w-12 text-[#E6DBC7]/40 mx-auto mb-4" />
+              <div className="py-12 text-center">
+                <ShoppingBag className="mx-auto mb-4 h-12 w-12 text-[#E6DBC7]/40" />
                 <p className="text-white/60">
                   {searchTerm ? "No purchases match your search" : "No purchases yet"}
                 </p>
@@ -235,52 +259,57 @@ const AdminCoursePurchases = () => {
                       <TableRow key={purchase.id} className="border-white/10 hover:bg-white/5">
                         <TableCell>
                           <div>
-                            <p className="font-medium text-white">{purchase.profile?.full_name || 'Unknown'}</p>
+                            <p className="font-medium text-white">
+                              {purchase.profile?.full_name || "Unknown"}
+                            </p>
                             <p className="text-sm text-white/60">{purchase.profile?.email}</p>
                           </div>
                         </TableCell>
-                        <TableCell className="text-white">{purchase.course?.title || 'Unknown Course'}</TableCell>
+                        <TableCell className="text-white">
+                          {purchase.course?.title || "Unknown Course"}
+                        </TableCell>
                         <TableCell className="text-white/80">
-                          {purchase.purchased_at 
-                            ? format(new Date(purchase.purchased_at), 'MMM d, yyyy h:mm a')
-                            : '-'
-                          }
+                          {purchase.purchased_at
+                            ? format(new Date(purchase.purchased_at), "MMM d, yyyy h:mm a")
+                            : "-"}
                         </TableCell>
                         <TableCell>
-                          <Badge 
-                            variant={purchase.status === 'active' ? 'default' : 'secondary'}
-                            className={purchase.status === 'active' 
-                              ? 'bg-green-500/20 text-green-300' 
-                              : 'bg-white/10 text-white/60'
+                          <Badge
+                            variant={purchase.status === "active" ? "default" : "secondary"}
+                            className={
+                              purchase.status === "active"
+                                ? "bg-green-500/20 text-green-300"
+                                : "bg-white/10 text-white/60"
                             }
                           >
                             {purchase.status}
                           </Badge>
                         </TableCell>
                         <TableCell className="font-mono text-xs text-white/60">
-                          {purchase.stripe_payment_intent_id 
+                          {purchase.stripe_payment_intent_id
                             ? `${purchase.stripe_payment_intent_id.slice(0, 15)}...`
-                            : '-'
-                          }
+                            : "-"}
                         </TableCell>
                         <TableCell>
                           <div className="flex gap-2">
-                            <Button 
-                              variant="ghost" 
-                              size="icon" 
+                            <Button
+                              variant="ghost"
+                              size="icon"
                               onClick={() => viewUserProgress(purchase)}
                               title="View Progress"
-                              className="text-white/60 hover:text-white hover:bg-white/10"
+                              className="text-white/60 hover:bg-white/10 hover:text-white"
                             >
                               <Eye className="h-5 w-5" />
                             </Button>
                             {purchase.profile?.email && (
-                              <Button 
-                                variant="ghost" 
-                                size="icon" 
-                                onClick={() => window.open(`mailto:${purchase.profile?.email}`, '_blank')}
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() =>
+                                  window.open(`mailto:${purchase.profile?.email}`, "_blank")
+                                }
                                 title="Email User"
-                                className="text-white/60 hover:text-white hover:bg-white/10"
+                                className="text-white/60 hover:bg-white/10 hover:text-white"
                               >
                                 <Mail className="h-5 w-5" />
                               </Button>
@@ -298,16 +327,21 @@ const AdminCoursePurchases = () => {
 
         {/* Progress Modal */}
         <Dialog open={showProgressModal} onOpenChange={setShowProgressModal}>
-          <DialogContent className="max-w-lg bg-black/80 backdrop-blur-xl border-white/20">
+          <DialogContent className="max-w-lg border-white/20 bg-black/80 backdrop-blur-xl">
             <DialogHeader>
-              <DialogTitle className="text-[#E6DBC7] text-xl">User Progress</DialogTitle>
+              <DialogTitle className="text-xl text-[#E6DBC7]">User Progress</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
-              <div className="text-sm text-white/70 space-y-1">
-                <p><strong className="text-white">User:</strong> {selectedPurchase?.profile?.full_name || selectedPurchase?.profile?.email}</p>
-                <p><strong className="text-white">Course:</strong> {selectedPurchase?.course?.title}</p>
+              <div className="space-y-1 text-sm text-white/70">
+                <p>
+                  <strong className="text-white">User:</strong>{" "}
+                  {selectedPurchase?.profile?.full_name || selectedPurchase?.profile?.email}
+                </p>
+                <p>
+                  <strong className="text-white">Course:</strong> {selectedPurchase?.course?.title}
+                </p>
               </div>
-              
+
               <div className="space-y-3">
                 <p className="font-medium text-[#E6DBC7]">Lesson Progress:</p>
                 {userProgress.length === 0 ? (
@@ -315,19 +349,27 @@ const AdminCoursePurchases = () => {
                 ) : (
                   <div className="space-y-2">
                     {userProgress.map((progress, index) => (
-                      <div key={progress.id} className="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                      <div
+                        key={progress.id}
+                        className="flex items-center justify-between rounded-lg bg-white/5 p-3"
+                      >
                         <div className="flex items-center gap-3">
-                          <span className="text-white/50 w-6">{index + 1}.</span>
+                          <span className="w-6 text-white/50">{index + 1}.</span>
                           <span className="text-white">{progress.lesson?.title}</span>
                         </div>
-                        <Badge 
-                          variant={progress.completed ? 'default' : 'outline'}
-                          className={progress.completed 
-                            ? 'bg-green-500/20 text-green-300' 
-                            : 'border-white/20 text-white/60'
+                        <Badge
+                          variant={progress.completed ? "default" : "outline"}
+                          className={
+                            progress.completed
+                              ? "bg-green-500/20 text-green-300"
+                              : "border-white/20 text-white/60"
                           }
                         >
-                          {progress.completed ? 'Completed' : progress.last_position_seconds ? 'In Progress' : 'Not Started'}
+                          {progress.completed
+                            ? "Completed"
+                            : progress.last_position_seconds
+                              ? "In Progress"
+                              : "Not Started"}
                         </Badge>
                       </div>
                     ))}

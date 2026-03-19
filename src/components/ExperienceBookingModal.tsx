@@ -53,10 +53,10 @@ By signing below, I confirm I have read and agree to these terms.
 
 // Event prices in pence (GBP)
 const EVENT_PRICES: Record<string, number> = {
-  'breath-presence-online': 1500, // £15
-  'breath-presence-inperson': 2500, // £25
-  'breathwork-to-dub': 3000, // £30
-  'unwind-rest': 0, // Free (IG Live)
+  "breath-presence-online": 1500, // £15
+  "breath-presence-inperson": 2500, // £25
+  "breathwork-to-dub": 3000, // £30
+  "unwind-rest": 0, // Free (IG Live)
 };
 
 export function ExperienceBookingModal({ event, open, onClose }: Props) {
@@ -72,7 +72,7 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
 
   const config = event ? EVENT_CAPACITY_CONFIG[event.id] : null;
   const maxTickets = config?.isOnline ? 10 : Math.min(15, selectedDate?.spotsRemaining || 15);
-  const eventPrice = event ? (EVENT_PRICES[event.id] || 0) : 0;
+  const eventPrice = event ? EVENT_PRICES[event.id] || 0 : 0;
 
   useEffect(() => {
     if (open) {
@@ -142,13 +142,13 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
     if (!canvas) return;
 
     const signatureData = canvas.toDataURL();
-    
+
     // Check if signature is empty
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const isSignatureEmpty = !imageData.data.some(channel => channel !== 0);
-    
+    const isSignatureEmpty = !imageData.data.some((channel) => channel !== 0);
+
     if (isSignatureEmpty) {
       toast.error("Please provide your signature");
       return;
@@ -158,9 +158,10 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
 
     try {
       // Determine location based on event type
-      const eventLocation = event.id.includes('online') || event.id === 'unwind-rest' 
-        ? 'Online (Zoom link will be sent)' 
-        : 'AUFI, 20 Eastcastle St, London W1W 8DB';
+      const eventLocation =
+        event.id.includes("online") || event.id === "unwind-rest"
+          ? "Online (Zoom link will be sent)"
+          : "AUFI, 20 Eastcastle St, London W1W 8DB";
 
       const { data, error } = await supabase.functions.invoke("create-event-payment", {
         body: {
@@ -198,19 +199,24 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent hideClose className="max-w-2xl w-[92%] max-h-[90vh] overflow-y-auto backdrop-blur-xl bg-black/70 border border-white/20 rounded-3xl p-8 md:p-10">
+      <DialogContent
+        hideClose
+        className="max-h-[90vh] w-[92%] max-w-2xl overflow-y-auto rounded-3xl border border-white/20 bg-black/70 p-8 backdrop-blur-xl md:p-10"
+      >
         <ModalCloseButton onClose={onClose} size="md" />
         <DialogHeader className="pb-2">
-          <DialogTitle className="font-editorial text-2xl md:text-3xl text-white tracking-wide">
+          <DialogTitle className="font-editorial text-2xl tracking-wide text-white md:text-3xl">
             Book {event.title}
           </DialogTitle>
         </DialogHeader>
 
         {step === 1 && (
-          <div className="space-y-8 md:space-y-10 pt-6">
+          <div className="space-y-8 pt-6 md:space-y-10">
             {/* Date Selector */}
             <div>
-              <Label className="text-[15px] text-white/90 mb-4 block font-medium tracking-wide">Select a Date</Label>
+              <Label className="mb-4 block text-[15px] font-medium tracking-wide text-white/90">
+                Select a Date
+              </Label>
               <EventDateSelector
                 eventId={event.id}
                 eventTitle={event.title}
@@ -222,14 +228,16 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
             </div>
 
             <div>
-              <Label className="text-[15px] text-white/90 mb-4 block font-medium tracking-wide">Your Details</Label>
+              <Label className="mb-4 block text-[15px] font-medium tracking-wide text-white/90">
+                Your Details
+              </Label>
               <div className="space-y-4">
                 <DarkInput
                   placeholder="Full Name"
                   value={attendeeName}
                   onChange={(e) => setAttendeeName(e.target.value)}
                   required
-                  className="text-[15px] py-5"
+                  className="py-5 text-[15px]"
                 />
                 <DarkInput
                   type="email"
@@ -237,39 +245,43 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
                   value={attendeeEmail}
                   onChange={(e) => setAttendeeEmail(e.target.value)}
                   required
-                  className="text-[15px] py-5"
+                  className="py-5 text-[15px]"
                 />
               </div>
             </div>
 
             {!isFreeEvent && (
               <div>
-                <Label className="text-[15px] text-white/90 mb-4 block font-medium tracking-wide">Number of Tickets</Label>
-                <div className="flex items-center gap-4 mt-2">
+                <Label className="mb-4 block text-[15px] font-medium tracking-wide text-white/90">
+                  Number of Tickets
+                </Label>
+                <div className="mt-2 flex items-center gap-4">
                   <Button
                     type="button"
                     variant="outline"
                     size="icon"
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                     disabled={quantity <= 1}
-                    className="w-11 h-11 rounded-full border-white/30 bg-transparent text-white hover:bg-white/10"
+                    className="h-11 w-11 rounded-full border-white/30 bg-transparent text-white hover:bg-white/10"
                   >
                     <Minus className="h-4 w-4" />
                   </Button>
-                  <span className="text-2xl font-medium w-12 text-center text-white">{quantity}</span>
+                  <span className="w-12 text-center text-2xl font-medium text-white">
+                    {quantity}
+                  </span>
                   <Button
                     type="button"
                     variant="outline"
                     size="icon"
                     onClick={() => setQuantity(Math.min(maxTickets, quantity + 1))}
                     disabled={quantity >= maxTickets}
-                    className="w-11 h-11 rounded-full border-white/30 bg-transparent text-white hover:bg-white/10"
+                    className="h-11 w-11 rounded-full border-white/30 bg-transparent text-white hover:bg-white/10"
                   >
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
                 {!config?.isOnline && selectedDate?.spotsRemaining && (
-                  <p className="text-sm text-white/60 mt-3">
+                  <p className="mt-3 text-sm text-white/60">
                     {selectedDate.spotsRemaining} spots remaining
                   </p>
                 )}
@@ -277,7 +289,7 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
             )}
 
             {!isFreeEvent && (
-              <div className="bg-white/5 px-6 py-5 rounded-2xl border border-white/10">
+              <div className="rounded-2xl border border-white/10 bg-white/5 px-6 py-5">
                 <div className="flex justify-between text-lg font-medium text-white">
                   <span>Total:</span>
                   <span>£{totalPrice.toFixed(2)}</span>
@@ -287,7 +299,7 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
 
             <Button
               variant="outline"
-              className="w-full text-[15px] py-6 rounded-full border-white/40 bg-transparent text-white hover:bg-white/10 font-medium tracking-wide"
+              className="w-full rounded-full border-white/40 bg-transparent py-6 text-[15px] font-medium tracking-wide text-white hover:bg-white/10"
               onClick={() => setStep(2)}
               disabled={!attendeeName || !attendeeEmail || !selectedDate}
             >
@@ -297,9 +309,11 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
         )}
 
         {step === 2 && (
-          <div className="space-y-6 md:space-y-8 pt-4">
-            <div className="prose prose-sm max-w-none bg-white/5 p-5 md:p-6 rounded-2xl max-h-64 md:max-h-80 overflow-y-auto border border-white/10">
-              <pre className="whitespace-pre-wrap font-sans text-sm md:text-base text-white/90 leading-relaxed">{SAFETY_DISCLOSURE}</pre>
+          <div className="space-y-6 pt-4 md:space-y-8">
+            <div className="prose prose-sm max-h-64 max-w-none overflow-y-auto rounded-2xl border border-white/10 bg-white/5 p-5 md:max-h-80 md:p-6">
+              <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-white/90 md:text-base">
+                {SAFETY_DISCLOSURE}
+              </pre>
             </div>
 
             <div className="flex items-start gap-3">
@@ -307,22 +321,27 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
                 id="accept"
                 checked={hasAccepted}
                 onCheckedChange={(checked) => setHasAccepted(checked === true)}
-                className="border-white/40 data-[state=checked]:bg-white data-[state=checked]:text-black mt-0.5"
+                className="mt-0.5 border-white/40 data-[state=checked]:bg-white data-[state=checked]:text-black"
               />
-              <label htmlFor="accept" className="text-base leading-relaxed cursor-pointer text-white/90">
+              <label
+                htmlFor="accept"
+                className="cursor-pointer text-base leading-relaxed text-white/90"
+              >
                 I have read and agree to the safety disclosure above
               </label>
             </div>
 
             <div>
-              <Label className="text-base text-white/90 mb-3 block font-medium">Your Signature</Label>
-              <div className="border border-white/20 rounded-2xl overflow-hidden bg-white">
+              <Label className="mb-3 block text-base font-medium text-white/90">
+                Your Signature
+              </Label>
+              <div className="overflow-hidden rounded-2xl border border-white/20 bg-white">
                 <canvas
                   ref={canvasRef}
                   width={500}
                   height={180}
                   className="w-full touch-none"
-                  style={{ maxHeight: '140px' }}
+                  style={{ maxHeight: "140px" }}
                   onMouseDown={startDrawing}
                   onMouseMove={draw}
                   onMouseUp={stopDrawing}
@@ -336,17 +355,17 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
                 variant="ghost"
                 size="sm"
                 onClick={clearSignature}
-                className="mt-2 text-sm text-white/60 hover:text-white hover:bg-transparent"
+                className="mt-2 text-sm text-white/60 hover:bg-transparent hover:text-white"
               >
                 Clear Signature
               </Button>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-3 pt-2">
-              <Button 
-                variant="outline" 
-                onClick={() => setStep(1)} 
-                className="flex-1 text-base py-6 rounded-full border-white/30 bg-transparent text-white hover:bg-white/10"
+            <div className="flex flex-col gap-3 pt-2 md:flex-row">
+              <Button
+                variant="outline"
+                onClick={() => setStep(1)}
+                className="flex-1 rounded-full border-white/30 bg-transparent py-6 text-base text-white hover:bg-white/10"
               >
                 Back
               </Button>
@@ -354,9 +373,15 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
                 variant="outline"
                 onClick={handleProceedToPayment}
                 disabled={!hasAccepted || loading}
-                className="flex-1 text-base py-6 rounded-full border-white/40 bg-transparent text-white hover:bg-white/10 font-medium disabled:opacity-50"
+                className="flex-1 rounded-full border-white/40 bg-transparent py-6 text-base font-medium text-white hover:bg-white/10 disabled:opacity-50"
               >
-                {loading ? <ButtonLoadingSpinner /> : isFreeEvent ? "Confirm Booking" : `Pay £${totalPrice.toFixed(2)}`}
+                {loading ? (
+                  <ButtonLoadingSpinner />
+                ) : isFreeEvent ? (
+                  "Confirm Booking"
+                ) : (
+                  `Pay £${totalPrice.toFixed(2)}`
+                )}
               </Button>
             </div>
           </div>

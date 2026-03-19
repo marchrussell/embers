@@ -7,13 +7,13 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 
-type OnboardingStep = 
-  | "welcome" 
-  | "goal" 
-  | "time" 
-  | "style" 
-  | "recommend" 
-  | "accountability" 
+type OnboardingStep =
+  | "welcome"
+  | "goal"
+  | "time"
+  | "style"
+  | "recommend"
+  | "accountability"
   | "complete";
 
 interface Message {
@@ -63,7 +63,7 @@ export default function MarchOnboarding() {
   }, [user, navigate]);
 
   const { data: onboardingStatus } = useQuery({
-    queryKey: ['onboarding', user?.id],
+    queryKey: ["onboarding", user?.id],
     queryFn: async () => {
       const { data } = await supabase
         .from("user_onboarding")
@@ -85,9 +85,14 @@ export default function MarchOnboarding() {
     }
   }, [onboardingStatus]);
 
-  const addMessage = (text: string, isFromMarch: boolean, options?: any[], multiSelect?: boolean) => {
-    setMessages(prev => [...prev, { text, isFromMarch, options, multiSelect }]);
-    
+  const addMessage = (
+    text: string,
+    isFromMarch: boolean,
+    options?: any[],
+    multiSelect?: boolean
+  ) => {
+    setMessages((prev) => [...prev, { text, isFromMarch, options, multiSelect }]);
+
     // Save to database
     if (user) {
       saveMessage(text, isFromMarch);
@@ -110,26 +115,31 @@ export default function MarchOnboarding() {
       "Hi there 💛 I'm March — here to help you stay consistent and supported in your wellbeing journey.",
       true
     );
-    
+
     setTimeout(() => {
       addMessage(
         "Before we start, I want to be clear: I'm not a medical or therapeutic service. I'm here to help you build habits and feel accountable, but if you're struggling with your mental health, professional support is always available.",
         true
       );
-      
+
       setTimeout(() => {
-        addMessage(
-          "You don't have to face difficult things alone 💛",
-          true
-        );
-        
+        addMessage("You don't have to face difficult things alone 💛", true);
+
         setTimeout(() => {
           addMessage(
             "We'll take just a minute to build a simple plan you can actually stick to. Ready to start?",
             true,
             [
-              { label: "Yes, let's do it!", value: "yes", action: () => handleWelcomeResponse("yes") },
-              { label: "Tell me more first", value: "more", action: () => handleWelcomeResponse("more") },
+              {
+                label: "Yes, let's do it!",
+                value: "yes",
+                action: () => handleWelcomeResponse("yes"),
+              },
+              {
+                label: "Tell me more first",
+                value: "more",
+                action: () => handleWelcomeResponse("more"),
+              },
             ]
           );
         }, 1500);
@@ -139,7 +149,7 @@ export default function MarchOnboarding() {
 
   const handleWelcomeResponse = (response: string) => {
     addMessage(response === "yes" ? "Yes, let's do it!" : "Tell me more first", false);
-    
+
     if (response === "more") {
       setTimeout(() => {
         addMessage(
@@ -171,7 +181,7 @@ export default function MarchOnboarding() {
 
   const handleGoalSelection = (goal: string) => {
     const newGoals = selectedGoals.includes(goal)
-      ? selectedGoals.filter(g => g !== goal)
+      ? selectedGoals.filter((g) => g !== goal)
       : [...selectedGoals, goal];
     setSelectedGoals(newGoals);
   };
@@ -185,9 +195,9 @@ export default function MarchOnboarding() {
       return;
     }
 
-    setUserData(prev => ({ ...prev, goals: selectedGoals }));
-    
-    const goalLabels = selectedGoals.map(g => {
+    setUserData((prev) => ({ ...prev, goals: selectedGoals }));
+
+    const goalLabels = selectedGoals.map((g) => {
       const labels: Record<string, string> = {
         stuck: "Feeling stuck or unmotivated",
         structure: "Wanting more structure",
@@ -197,34 +207,30 @@ export default function MarchOnboarding() {
       };
       return labels[g];
     });
-    
+
     addMessage(goalLabels.join(", "), false);
     setTimeout(() => showTimeQuestion(), 800);
   };
 
   const showTimeQuestion = () => {
     setCurrentStep("time");
-    addMessage(
-      "How much time do you usually have most days for yourself?",
-      true,
-      [
-        { label: "5 minutes", value: "5", action: () => handleTimeResponse("5") },
-        { label: "10 minutes", value: "10", action: () => handleTimeResponse("10") },
-        { label: "15+ minutes", value: "15", action: () => handleTimeResponse("15") },
-      ]
-    );
+    addMessage("How much time do you usually have most days for yourself?", true, [
+      { label: "5 minutes", value: "5", action: () => handleTimeResponse("5") },
+      { label: "10 minutes", value: "10", action: () => handleTimeResponse("10") },
+      { label: "15+ minutes", value: "15", action: () => handleTimeResponse("15") },
+    ]);
   };
 
   const handleTimeResponse = (time: string) => {
-    setUserData(prev => ({ ...prev, timeAvailability: time }));
+    setUserData((prev) => ({ ...prev, timeAvailability: time }));
     addMessage(`${time} minutes`, false);
-    
+
     const responses: Record<string, string> = {
       "5": "Perfect — small moments can make a big difference 💛",
       "10": "Nice! That's a sweet spot for real progress without pressure.",
       "15": "Beautiful — we can explore deeper sessions together.",
     };
-    
+
     setTimeout(() => {
       addMessage(responses[time], true);
       setTimeout(() => showStyleQuestion(), 1200);
@@ -233,23 +239,28 @@ export default function MarchOnboarding() {
 
   const showStyleQuestion = () => {
     setCurrentStep("style");
-    addMessage(
-      "Would you like me to…",
-      true,
-      [
-        { label: "Give you one daily suggestion to follow", value: "daily", action: () => handleStyleResponse("daily") },
-        { label: "Help you build a short plan for the next few days", value: "plan", action: () => handleStyleResponse("plan") },
-      ]
-    );
+    addMessage("Would you like me to…", true, [
+      {
+        label: "Give you one daily suggestion to follow",
+        value: "daily",
+        action: () => handleStyleResponse("daily"),
+      },
+      {
+        label: "Help you build a short plan for the next few days",
+        value: "plan",
+        action: () => handleStyleResponse("plan"),
+      },
+    ]);
   };
 
   const handleStyleResponse = (style: string) => {
-    setUserData(prev => ({ ...prev, planType: style }));
-    const label = style === "daily" 
-      ? "Give you one daily suggestion to follow" 
-      : "Help you build a short plan for the next few days";
+    setUserData((prev) => ({ ...prev, planType: style }));
+    const label =
+      style === "daily"
+        ? "Give you one daily suggestion to follow"
+        : "Help you build a short plan for the next few days";
     addMessage(label, false);
-    
+
     setTimeout(() => fetchAndShowRecommendations(), 1000);
   };
 
@@ -285,17 +296,29 @@ export default function MarchOnboarding() {
             }, index * 600);
           });
 
-          setTimeout(() => {
-            addMessage(
-              "Would you like to start one of these today?",
-              true,
-              [
-                { label: `Start ${sessions[0]?.title}`, value: "session1", action: () => handleSessionChoice(sessions[0]?.id) },
-                { label: sessions[1] ? `Start ${sessions[1]?.title}` : "I'll explore later", value: "session2", action: () => sessions[1] ? handleSessionChoice(sessions[1]?.id) : handleSessionChoice(null) },
-                { label: "I'll explore later", value: "later", action: () => handleSessionChoice(null) },
-              ]
-            );
-          }, sessions.length * 600 + 800);
+          setTimeout(
+            () => {
+              addMessage("Would you like to start one of these today?", true, [
+                {
+                  label: `Start ${sessions[0]?.title}`,
+                  value: "session1",
+                  action: () => handleSessionChoice(sessions[0]?.id),
+                },
+                {
+                  label: sessions[1] ? `Start ${sessions[1]?.title}` : "I'll explore later",
+                  value: "session2",
+                  action: () =>
+                    sessions[1] ? handleSessionChoice(sessions[1]?.id) : handleSessionChoice(null),
+                },
+                {
+                  label: "I'll explore later",
+                  value: "later",
+                  action: () => handleSessionChoice(null),
+                },
+              ]);
+            },
+            sessions.length * 600 + 800
+          );
         }
       }, 1000);
     } catch (error) {
@@ -341,13 +364,13 @@ export default function MarchOnboarding() {
   };
 
   const handleAccountabilityResponse = (enabled: boolean) => {
-    setUserData(prev => ({ ...prev, accountabilityEnabled: enabled }));
+    setUserData((prev) => ({ ...prev, accountabilityEnabled: enabled }));
     addMessage(enabled ? "Yes, please" : "Maybe later", false);
-    
+
     const response = enabled
       ? "Got it 💛 I'll check in every few days and celebrate your progress with you."
       : "Totally fine — you can turn reminders on anytime.";
-    
+
     setTimeout(() => {
       addMessage(response, true);
       setTimeout(() => showDataConsentQuestion(), 1200);
@@ -359,14 +382,18 @@ export default function MarchOnboarding() {
       "One last thing: To provide personalized support, I'll remember our conversations and learn from your interactions. This helps me give better recommendations over time. You can delete this data anytime from your profile.",
       true
     );
-    
+
     setTimeout(() => {
       addMessage(
         "You can read more in our Privacy Policy and Terms of Service. Do you consent to this data collection?",
         true,
         [
           { label: "Yes, I consent", value: "yes", action: () => handleConsentResponse(true) },
-          { label: "View Privacy Policy first", value: "privacy", action: () => handlePrivacyView() },
+          {
+            label: "View Privacy Policy first",
+            value: "privacy",
+            action: () => handlePrivacyView(),
+          },
           { label: "No, I don't consent", value: "no", action: () => handleConsentResponse(false) },
         ]
       );
@@ -376,23 +403,19 @@ export default function MarchOnboarding() {
   const handlePrivacyView = () => {
     addMessage("View Privacy Policy first", false);
     window.open("/privacy-policy", "_blank");
-    
+
     setTimeout(() => {
-      addMessage(
-        "Take your time reading it. Ready to decide?",
-        true,
-        [
-          { label: "Yes, I consent", value: "yes", action: () => handleConsentResponse(true) },
-          { label: "No, I don't consent", value: "no", action: () => handleConsentResponse(false) },
-        ]
-      );
+      addMessage("Take your time reading it. Ready to decide?", true, [
+        { label: "Yes, I consent", value: "yes", action: () => handleConsentResponse(true) },
+        { label: "No, I don't consent", value: "no", action: () => handleConsentResponse(false) },
+      ]);
     }, 1000);
   };
 
   const handleConsentResponse = (consented: boolean) => {
-    setUserData(prev => ({ ...prev, hasAcceptedDataConsent: consented }));
+    setUserData((prev) => ({ ...prev, hasAcceptedDataConsent: consented }));
     addMessage(consented ? "Yes, I consent" : "No, I don't consent", false);
-    
+
     if (!consented) {
       setTimeout(() => {
         addMessage(
@@ -403,10 +426,7 @@ export default function MarchOnboarding() {
       }, 800);
     } else {
       setTimeout(() => {
-        addMessage(
-          "Thank you 💛 This helps me support you better.",
-          true
-        );
+        addMessage("Thank you 💛 This helps me support you better.", true);
         setTimeout(() => completeOnboarding(), 1200);
       }, 800);
     }
@@ -414,12 +434,12 @@ export default function MarchOnboarding() {
 
   const completeOnboarding = async () => {
     setCurrentStep("complete");
-    
+
     addMessage(
       "You're all set! I've created your personalised plan — you'll find it on your dashboard.",
       true
     );
-    
+
     setTimeout(() => {
       addMessage(
         "Each day, I'll suggest a simple session and help you track how you're feeling along the way.",
@@ -432,16 +452,14 @@ export default function MarchOnboarding() {
 
     try {
       // Save onboarding data
-      const { error: onboardingError } = await supabase
-        .from("user_onboarding")
-        .upsert({
-          user_id: user.id,
-          goals: userData.goals,
-          time_availability: userData.timeAvailability,
-          plan_type: userData.planType,
-          accountability_enabled: userData.accountabilityEnabled,
-          onboarding_completed: true,
-        });
+      const { error: onboardingError } = await supabase.from("user_onboarding").upsert({
+        user_id: user.id,
+        goals: userData.goals,
+        time_availability: userData.timeAvailability,
+        plan_type: userData.planType,
+        accountability_enabled: userData.accountabilityEnabled,
+        onboarding_completed: true,
+      });
 
       if (onboardingError) throw onboardingError;
 
@@ -450,7 +468,9 @@ export default function MarchOnboarding() {
         .from("profiles")
         .update({
           has_accepted_march_data_consent: userData.hasAcceptedDataConsent,
-          march_data_consent_date: userData.hasAcceptedDataConsent ? new Date().toISOString() : null,
+          march_data_consent_date: userData.hasAcceptedDataConsent
+            ? new Date().toISOString()
+            : null,
         })
         .eq("id", user.id);
 
@@ -471,24 +491,24 @@ export default function MarchOnboarding() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/20">
-      <div className="container max-w-3xl mx-auto px-4 py-8">
+      <div className="container mx-auto max-w-3xl px-4 py-8">
         <div className="space-y-6">
           {/* Messages */}
           <div className="space-y-4">
             {messages.map((message, index) => (
               <div
                 key={index}
-                className={`flex ${message.isFromMarch ? "justify-start" : "justify-end"} animate-in fade-in slide-in-from-bottom-2 duration-500`}
+                className={`flex ${message.isFromMarch ? "justify-start" : "justify-end"} duration-500 animate-in fade-in slide-in-from-bottom-2`}
               >
                 <div
                   className={`max-w-[80%] rounded-2xl px-6 py-4 ${
                     message.isFromMarch
-                      ? "bg-card border border-border text-foreground"
+                      ? "border border-border bg-card text-foreground"
                       : "bg-primary text-primary-foreground"
                   }`}
                 >
-                  <p className="text-base leading-relaxed whitespace-pre-line">{message.text}</p>
-                  
+                  <p className="whitespace-pre-line text-base leading-relaxed">{message.text}</p>
+
                   {message.options && !message.multiSelect && (
                     <div className="mt-4 space-y-2">
                       {message.options.map((option, optIndex) => (
@@ -496,14 +516,14 @@ export default function MarchOnboarding() {
                           key={optIndex}
                           onClick={option.action}
                           variant="outline"
-                          className="w-full justify-start text-left h-auto py-3 px-4"
+                          className="h-auto w-full justify-start px-4 py-3 text-left"
                         >
                           {option.label}
                         </Button>
                       ))}
                     </div>
                   )}
-                  
+
                   {message.options && message.multiSelect && (
                     <div className="mt-4 space-y-3">
                       {message.options.map((option, optIndex) => (
@@ -511,14 +531,14 @@ export default function MarchOnboarding() {
                           key={optIndex}
                           onClick={() => handleGoalSelection(option.value)}
                           variant={selectedGoals.includes(option.value) ? "default" : "outline"}
-                          className="w-full justify-start text-left h-auto py-3 px-4"
+                          className="h-auto w-full justify-start px-4 py-3 text-left"
                         >
                           {option.label}
                         </Button>
                       ))}
                       <Button
                         onClick={confirmGoals}
-                        className="w-full mt-4"
+                        className="mt-4 w-full"
                         disabled={selectedGoals.length === 0}
                       >
                         Continue
@@ -528,16 +548,16 @@ export default function MarchOnboarding() {
                 </div>
               </div>
             ))}
-            
+
             {isLoading && (
               <div className="flex justify-start animate-in fade-in">
-                <div className="bg-card border border-border rounded-2xl px-6 py-4">
+                <div className="rounded-2xl border border-border bg-card px-6 py-4">
                   <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
                 </div>
               </div>
             )}
           </div>
-          
+
           <div ref={messagesEndRef} />
         </div>
       </div>

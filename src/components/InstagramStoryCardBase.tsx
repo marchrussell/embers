@@ -27,10 +27,12 @@ export const InstagramStoryCardBase = ({
   className,
 }: InstagramStoryCardBaseProps) => {
   return (
-    <div className={cn(
-      "relative w-full max-w-md mx-auto aspect-[9/16] overflow-hidden rounded-2xl shadow-2xl",
-      className
-    )}>
+    <div
+      className={cn(
+        "relative mx-auto aspect-[9/16] w-full max-w-md overflow-hidden rounded-2xl shadow-2xl",
+        className
+      )}
+    >
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover"
@@ -41,9 +43,7 @@ export const InstagramStoryCardBase = ({
       />
 
       {/* Overlay */}
-      {overlay !== "none" && (
-        <div className={cn("absolute inset-0", overlayClasses[overlay])} />
-      )}
+      {overlay !== "none" && <div className={cn("absolute inset-0", overlayClasses[overlay])} />}
 
       {/* Bottom Gradient for text visibility */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/40" />
@@ -53,7 +53,7 @@ export const InstagramStoryCardBase = ({
 
       {/* Decorative glass border */}
       {showBorder && (
-        <div className="absolute top-6 left-6 right-6 bottom-6 rounded-2xl border border-foreground/10 pointer-events-none" />
+        <div className="pointer-events-none absolute bottom-6 left-6 right-6 top-6 rounded-2xl border border-foreground/10" />
       )}
     </div>
   );
@@ -72,8 +72,10 @@ const logoSizes = {
   lg: { m: "w-32 h-32", march: "w-48" },
 };
 
-const defaultColorFilter = "brightness(0) saturate(100%) invert(40%) sepia(78%) saturate(1566%) hue-rotate(340deg) brightness(92%) contrast(90%)";
-const glowColorFilter = "brightness(0) saturate(100%) invert(71%) sepia(44%) saturate(1245%) hue-rotate(337deg) brightness(97%) contrast(92%) drop-shadow(0 0 20px hsl(30, 80%, 57%, 0.9)) drop-shadow(0 0 40px hsl(30, 80%, 57%, 0.7))";
+const defaultColorFilter =
+  "brightness(0) saturate(100%) invert(40%) sepia(78%) saturate(1566%) hue-rotate(340deg) brightness(92%) contrast(90%)";
+const glowColorFilter =
+  "brightness(0) saturate(100%) invert(71%) sepia(44%) saturate(1245%) hue-rotate(337deg) brightness(97%) contrast(92%) drop-shadow(0 0 20px hsl(30, 80%, 57%, 0.9)) drop-shadow(0 0 40px hsl(30, 80%, 57%, 0.7))";
 
 export const InstagramBrandLogos = ({
   showMarchLogo = true,
@@ -89,7 +91,7 @@ export const InstagramBrandLogos = ({
         <img
           src={mLogo}
           alt="M Logo"
-          className="w-full h-full object-contain drop-shadow-2xl"
+          className="h-full w-full object-contain drop-shadow-2xl"
           style={{ filter: colorFilter }}
         />
       </div>
@@ -100,7 +102,7 @@ export const InstagramBrandLogos = ({
           <img
             src={marchLogo}
             alt="March Logo"
-            className="w-full h-auto object-contain drop-shadow-2xl"
+            className="h-auto w-full object-contain drop-shadow-2xl"
             style={{ filter: colorFilter }}
           />
         </div>

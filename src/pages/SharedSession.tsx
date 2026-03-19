@@ -32,9 +32,9 @@ const SharedSession = () => {
 
       try {
         const { data, error: fetchError } = await supabase
-          .from('classes')
-          .select('id, title, is_published, requires_subscription')
-          .eq('id', sessionId)
+          .from("classes")
+          .select("id, title, is_published, requires_subscription")
+          .eq("id", sessionId)
           .single();
 
         if (fetchError || !data) {
@@ -77,15 +77,25 @@ const SharedSession = () => {
         navigate(`/app/session/${sessionId}`, { replace: true });
       }
     }
-  }, [user, hasSubscription, isAdmin, isTestUser, authLoading, loading, session, sessionId, navigate]);
+  }, [
+    user,
+    hasSubscription,
+    isAdmin,
+    isTestUser,
+    authLoading,
+    loading,
+    session,
+    sessionId,
+    navigate,
+  ]);
 
   // Show loading state
   if (loading || authLoading) {
     return (
       <>
         <NavBar />
-        <div className="min-h-screen bg-background flex items-center justify-center">
-          <Loader2 className="w-8 h-8 text-white/60 animate-spin" />
+        <div className="flex min-h-screen items-center justify-center bg-background">
+          <Loader2 className="h-8 w-8 animate-spin text-white/60" />
         </div>
       </>
     );
@@ -96,22 +106,20 @@ const SharedSession = () => {
     return (
       <>
         <NavBar />
-        <div className="min-h-screen bg-background flex items-center justify-center px-6">
-          <div className="max-w-2xl mx-auto text-center space-y-8">
+        <div className="flex min-h-screen items-center justify-center bg-background px-6">
+          <div className="mx-auto max-w-2xl space-y-8 text-center">
             <div className="space-y-4">
-              <h1 className="text-5xl font-normal text-white mb-6">
-                Session Not Found
-              </h1>
-              <p className="text-lg text-white/80 leading-relaxed">
+              <h1 className="mb-6 text-5xl font-normal text-white">Session Not Found</h1>
+              <p className="text-lg leading-relaxed text-white/80">
                 {error}. The link may have expired or the session may have been removed.
               </p>
             </div>
 
             <Button
-              onClick={() => navigate('/')}
-              className="bg-white/5 backdrop-blur-md text-white border-2 border-white px-12 py-6 text-lg rounded-full hover:bg-white/10 transition-all"
+              onClick={() => navigate("/")}
+              className="rounded-full border-2 border-white bg-white/5 px-12 py-6 text-lg text-white backdrop-blur-md transition-all hover:bg-white/10"
             >
-              Go to Homepage <ArrowRight className="w-5 h-5 ml-2" />
+              Go to Homepage <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </div>
         </div>
@@ -124,32 +132,34 @@ const SharedSession = () => {
     return (
       <>
         <NavBar />
-        <div className="min-h-screen bg-background flex items-center justify-center px-6">
-          <div className="max-w-2xl mx-auto text-center space-y-8">
+        <div className="flex min-h-screen items-center justify-center bg-background px-6">
+          <div className="mx-auto max-w-2xl space-y-8 text-center">
             <div className="space-y-4">
-              <h1 className="text-5xl font-normal text-white mb-6">
+              <h1 className="mb-6 text-5xl font-normal text-white">
                 A Session Was Shared With You
               </h1>
-              <p className="text-xl text-[#D4A574] font-light mb-4">
-                "{session.title}"
-              </p>
-              <p className="text-lg text-white/80 leading-relaxed">
-                Someone thought you'd benefit from this breathwork session.
-                Sign up now to access this session and our full library of transformative practices.
+              <p className="mb-4 text-xl font-light text-[#D4A574]">"{session.title}"</p>
+              <p className="text-lg leading-relaxed text-white/80">
+                Someone thought you'd benefit from this breathwork session. Sign up now to access
+                this session and our full library of transformative practices.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Button
-                onClick={() => navigate('/auth', { state: { redirectTo: `/app/session/${sessionId}` } })}
-                className="bg-white/5 backdrop-blur-md text-white border-2 border-white px-12 py-6 text-lg rounded-full hover:bg-white/10 transition-all"
+                onClick={() =>
+                  navigate("/auth", { state: { redirectTo: `/app/session/${sessionId}` } })
+                }
+                className="rounded-full border-2 border-white bg-white/5 px-12 py-6 text-lg text-white backdrop-blur-md transition-all hover:bg-white/10"
               >
-                Sign Up to Access <ArrowRight className="w-5 h-5 ml-2" />
+                Sign Up to Access <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
               <Button
-                onClick={() => navigate('/auth', { state: { redirectTo: `/app/session/${sessionId}` } })}
+                onClick={() =>
+                  navigate("/auth", { state: { redirectTo: `/app/session/${sessionId}` } })
+                }
                 variant="ghost"
-                className="text-[#E6DBC7] hover:text-[#E6DBC7]/80 text-base"
+                className="text-base text-[#E6DBC7] hover:text-[#E6DBC7]/80"
               >
                 Already have an account? Sign In
               </Button>

@@ -1,9 +1,5 @@
 import { IconButton } from "@/components/ui/icon-button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   CalendarEvent,
   downloadICalFile,
@@ -43,7 +39,7 @@ export const WeeklyResetCard = ({
     if (onClick) {
       onClick();
     } else {
-      navigate('/online?tab=live');
+      navigate("/online?tab=live");
     }
   };
 
@@ -67,9 +63,10 @@ export const WeeklyResetCard = ({
     const endDate = new Date(startDate.getTime() + 30 * 60000);
 
     return {
-      title: 'Weekly Session on Embers Studio',
-      description: 'A grounding, guided session to help you soften, settle, and reset\n\nSession with March Russell',
-      location: 'Online',
+      title: "Weekly Session on Embers Studio",
+      description:
+        "A grounding, guided session to help you soften, settle, and reset\n\nSession with March Russell",
+      location: "Online",
       startDate,
       endDate,
     };
@@ -77,7 +74,7 @@ export const WeeklyResetCard = ({
 
   const handleDownloadICal = (e: React.MouseEvent) => {
     e.stopPropagation();
-    downloadICalFile(getCalendarEvent(), 'weekly-reset');
+    downloadICalFile(getCalendarEvent(), "weekly-reset");
     setOpenCalendarPopover(false);
   };
 
@@ -96,70 +93,62 @@ export const WeeklyResetCard = ({
   return (
     <div
       onClick={handleCardClick}
-      className={`group cursor-pointer overflow-hidden rounded-xl border border-[#E6DBC7]/20 transition-all shadow-[0_8px_30px_rgba(230,219,199,0.1)] hover:border-[#E6DBC7]/30 ${className}`}
+      className={`group cursor-pointer overflow-hidden rounded-xl border border-[#E6DBC7]/20 shadow-[0_8px_30px_rgba(230,219,199,0.1)] transition-all hover:border-[#E6DBC7]/30 ${className}`}
     >
       <div className="flex flex-col sm:flex-row">
         {/* Image - Top on mobile, Left on tablet+ */}
         <div
-          className="relative w-full sm:w-[140px] md:w-[200px] lg:w-[240px] h-[140px] sm:h-auto sm:self-stretch flex-shrink-0 bg-cover bg-center"
+          className="relative h-[140px] w-full flex-shrink-0 bg-cover bg-center sm:h-auto sm:w-[140px] sm:self-stretch md:w-[200px] lg:w-[240px]"
           style={{ backgroundImage: `url('${weeklyResetImage}')` }}
         >
           <div className="absolute inset-0 bg-black/0" />
         </div>
 
         {/* Glassmorphism Content - Bottom on mobile, Right on tablet+ */}
-        <div className="flex-1 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 px-5 sm:px-6 md:px-10 py-6 backdrop-blur-xl bg-black/30 border-t sm:border-t-0 sm:border-l border-white/5">
-          <div className="flex-1 min-w-0">
-            <h3 className="text-lg md:text-xl font-editorial text-[#E6DBC7] mb-2">
-              Weekly Reset
-            </h3>
-            <p className="text-sm md:text-base text-[#E6DBC7]/60 font-light mb-3 leading-relaxed">
+        <div className="flex flex-1 flex-col items-start justify-between gap-4 border-t border-white/5 bg-black/30 px-5 py-6 backdrop-blur-xl sm:flex-row sm:items-center sm:border-l sm:border-t-0 sm:px-6 md:px-10">
+          <div className="min-w-0 flex-1">
+            <h3 className="mb-2 font-editorial text-lg text-[#E6DBC7] md:text-xl">Weekly Reset</h3>
+            <p className="mb-3 text-sm font-light leading-relaxed text-[#E6DBC7]/60 md:text-base">
               A grounding, guided session to help you soften, settle, and reset
             </p>
-            <p className="text-xs md:text-sm text-[#D4A574] font-light flex items-center gap-1 mb-6">
-              <Clock className="w-3.5 h-3.5" />
+            <p className="mb-6 flex items-center gap-1 text-xs font-light text-[#D4A574] md:text-sm">
+              <Clock className="h-3.5 w-3.5" />
               Every Tuesday, 7pm GMT
             </p>
 
             {/* Copy and Calendar icons */}
             <div className="flex items-center gap-3">
-              <IconButton
-                size="lg"
-                onClick={handleCopyLink}
-              >
-                <Share/>
+              <IconButton size="lg" onClick={handleCopyLink}>
+                <Share />
               </IconButton>
 
               <Popover open={openCalendarPopover} onOpenChange={setOpenCalendarPopover}>
                 <PopoverTrigger asChild>
-                  <IconButton
-                    size="lg"
-                    onClick={(e) => e.stopPropagation()}
-                  >
+                  <IconButton size="lg" onClick={(e) => e.stopPropagation()}>
                     <Calendar />
                   </IconButton>
                 </PopoverTrigger>
                 <PopoverContent
-                  className="w-auto p-0 bg-[#1A1A1A] border border-[#E6DBC7]/15 rounded-full shadow-lg"
+                  className="w-auto rounded-full border border-[#E6DBC7]/15 bg-[#1A1A1A] p-0 shadow-lg"
                   align="start"
                   sideOffset={8}
                 >
                   <div className="flex items-center gap-0.5 px-3 py-2">
                     <button
                       onClick={handleDownloadICal}
-                      className="text-[#E6DBC7]/80 text-[12px] font-light tracking-wide hover:text-white transition-colors px-2.5 py-1 rounded-full hover:bg-white/5"
+                      className="rounded-full px-2.5 py-1 text-[12px] font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:bg-white/5 hover:text-white"
                     >
                       iCal
                     </button>
                     <button
                       onClick={handleGoogleCalendar}
-                      className="text-[#E6DBC7]/80 text-[12px] font-light tracking-wide hover:text-white transition-colors px-2.5 py-1 rounded-full hover:bg-white/5"
+                      className="rounded-full px-2.5 py-1 text-[12px] font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:bg-white/5 hover:text-white"
                     >
                       Google
                     </button>
                     <button
                       onClick={handleOutlookCalendar}
-                      className="text-[#E6DBC7]/80 text-[12px] font-light tracking-wide hover:text-white transition-colors px-2.5 py-1 rounded-full hover:bg-white/5"
+                      className="rounded-full px-2.5 py-1 text-[12px] font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:bg-white/5 hover:text-white"
                     >
                       Outlook
                     </button>
@@ -170,8 +159,8 @@ export const WeeklyResetCard = ({
           </div>
 
           {/* Arrow */}
-          <div className="hidden sm:flex flex-shrink-0">
-            <ArrowLeft className="w-5 h-5 text-[#E6DBC7]/60 rotate-180 group-hover:text-[#E6DBC7] transition-all" />
+          <div className="hidden flex-shrink-0 sm:flex">
+            <ArrowLeft className="h-5 w-5 rotate-180 text-[#E6DBC7]/60 transition-all group-hover:text-[#E6DBC7]" />
           </div>
         </div>
       </div>

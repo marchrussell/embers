@@ -20,7 +20,8 @@ import { useNavigate, useParams } from "react-router-dom";
 const ClassPlayer = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user, hasAcceptedSafetyDisclosure, checkSubscription, refreshOnboardingStatus } = useAuth();
+  const { user, hasAcceptedSafetyDisclosure, checkSubscription, refreshOnboardingStatus } =
+    useAuth();
   const [classData, setClassData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -38,11 +39,7 @@ const ClassPlayer = () => {
 
   useEffect(() => {
     const fetchClass = async () => {
-      const { data } = await supabase
-        .from("classes")
-        .select("*")
-        .eq("id", id)
-        .single();
+      const { data } = await supabase.from("classes").select("*").eq("id", id).single();
 
       if (data) {
         setClassData(data);
@@ -130,20 +127,24 @@ const ClassPlayer = () => {
       {/* Session-specific Safety Reminder */}
       {classData?.show_safety_reminder && (
         <Dialog open={showSessionSafetyDisclosure} onOpenChange={setShowSessionSafetyDisclosure}>
-          <DialogContent className="backdrop-blur-xl bg-black/30 border border-white/30 max-w-2xl rounded-xl">
+          <DialogContent className="max-w-2xl rounded-xl border border-white/30 bg-black/30 backdrop-blur-xl">
             <DialogHeader>
               <DialogTitle>Safety Reminder</DialogTitle>
               <DialogDescription>
-                Please read this important safety information before starting this breathwork session.
+                Please read this important safety information before starting this breathwork
+                session.
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
               {classData?.safety_note && (
-                <div className="bg-muted/50 p-4 rounded-lg">
-                  <p className="text-sm whitespace-pre-wrap">{classData.safety_note}</p>
+                <div className="rounded-lg bg-muted/50 p-4">
+                  <p className="whitespace-pre-wrap text-sm">{classData.safety_note}</p>
                 </div>
               )}
-              <Button onClick={handleStart} className="w-full bg-white text-black hover:bg-white/90">
+              <Button
+                onClick={handleStart}
+                className="w-full bg-white text-black hover:bg-white/90"
+              >
                 I Understand, Begin Class
               </Button>
             </div>
@@ -151,62 +152,64 @@ const ClassPlayer = () => {
         </Dialog>
       )}
 
-      <div className="min-h-screen relative overflow-hidden">
+      <div className="relative min-h-screen overflow-hidden">
         {/* Blurred Background Image */}
         {classData?.image_url && (
           <>
-            <div 
+            <div
               className="absolute inset-0 bg-cover bg-center"
               style={{ backgroundImage: `url(${classData.image_url})` }}
             />
             {/* Glassmorphism Overlay */}
-            <div className="absolute inset-0 backdrop-blur-3xl bg-black/40" />
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-3xl" />
           </>
         )}
 
-        <div className="relative z-10 flex flex-col min-h-screen">
+        <div className="relative z-10 flex min-h-screen flex-col">
           {/* Header */}
           <div className="p-6">
             <Button
               variant="ghost"
-              onClick={() => navigate('/online')}
-              className="text-white hover:bg-white/10 text-base md:text-lg"
+              onClick={() => navigate("/online")}
+              className="text-base text-white hover:bg-white/10 md:text-lg"
             >
-              <ArrowLeft className="h-5 w-5 mr-2" />
+              <ArrowLeft className="mr-2 h-5 w-5" />
               Back
             </Button>
           </div>
 
           {/* Main Content */}
-          <div className="flex-1 flex items-center justify-center px-4 md:px-6 lg:px-8">
+          <div className="flex flex-1 items-center justify-center px-4 md:px-6 lg:px-8">
             {!hasStarted && !(classData?.show_safety_reminder && showSessionSafetyDisclosure) ? (
-              <div className="w-full max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              <div className="mx-auto grid w-full max-w-4xl grid-cols-1 items-center gap-8 md:grid-cols-2">
                 {/* Session Image Card */}
-                <div className="relative aspect-square rounded-2xl overflow-hidden border border-white/20 shadow-2xl">
+                <div className="relative aspect-square overflow-hidden rounded-2xl border border-white/20 shadow-2xl">
                   <OptimizedImage
                     src={classData?.image_url}
                     alt={classData?.title}
-                    className="w-full h-full object-cover"
+                    className="h-full w-full object-cover"
                     optimizationOptions={IMAGE_PRESETS.hero}
                     priority={true}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                 </div>
-                
+
                 {/* Session Info */}
                 <div className="space-y-6 text-center md:text-left">
-                  <h1 className="text-4xl md:text-5xl font-editorial text-white">
+                  <h1 className="font-editorial text-4xl text-white md:text-5xl">
                     {classData?.title}
                   </h1>
-                  <p className="text-lg text-white/90 leading-relaxed">{classData?.description}</p>
+                  <p className="text-lg leading-relaxed text-white/90">{classData?.description}</p>
                   <div className="space-y-2 text-white/70">
-                    <p className="text-base">Duration: {classData?.duration_minutes || 3} minutes</p>
+                    <p className="text-base">
+                      Duration: {classData?.duration_minutes || 3} minutes
+                    </p>
                     <p className="text-sm">Teacher: March Russell</p>
                   </div>
                   <Button
                     onClick={handleStart}
                     size="lg"
-                    className="mt-8 bg-white text-black hover:bg-white/90 px-8 py-6 text-lg"
+                    className="mt-8 bg-white px-8 py-6 text-lg text-black hover:bg-white/90"
                   >
                     <Play className="mr-2 h-5 w-5" strokeWidth={1.5} fill="none" />
                     Begin Class
@@ -214,24 +217,26 @@ const ClassPlayer = () => {
                 </div>
               </div>
             ) : (
-              <div className="w-full max-w-4xl mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              <div className="mx-auto w-full max-w-4xl">
+                <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2">
                   {/* Session Image Card */}
-                  <div className="relative aspect-square rounded-2xl overflow-hidden border border-white/20 shadow-2xl">
+                  <div className="relative aspect-square overflow-hidden rounded-2xl border border-white/20 shadow-2xl">
                     <OptimizedImage
                       src={classData?.image_url}
                       alt={classData?.title}
-                      className="w-full h-full object-cover"
+                      className="h-full w-full object-cover"
                       optimizationOptions={IMAGE_PRESETS.hero}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                   </div>
-                  
+
                   {/* Player Controls */}
                   <div className="space-y-8">
-                    <div className="text-center md:text-left space-y-2">
-                      <h2 className="text-3xl md:text-4xl font-editorial text-white">{classData?.title}</h2>
-                      <p className="text-white/60 text-sm">Guided by March Russell</p>
+                    <div className="space-y-2 text-center md:text-left">
+                      <h2 className="font-editorial text-3xl text-white md:text-4xl">
+                        {classData?.title}
+                      </h2>
+                      <p className="text-sm text-white/60">Guided by March Russell</p>
                     </div>
 
                     {/* Progress Bar */}
@@ -250,12 +255,12 @@ const ClassPlayer = () => {
                     </div>
 
                     {/* Controls */}
-                    <div className="flex items-center justify-center md:justify-start gap-4">
+                    <div className="flex items-center justify-center gap-4 md:justify-start">
                       <Button
                         onClick={handleRewind}
                         variant="ghost"
                         size="lg"
-                        className="text-white hover:bg-white/10 rounded-full h-12 w-12 p-0"
+                        className="h-12 w-12 rounded-full p-0 text-white hover:bg-white/10"
                       >
                         <SkipBack className="h-6 w-6" />
                       </Button>
@@ -263,7 +268,7 @@ const ClassPlayer = () => {
                       <Button
                         onClick={handlePlayPause}
                         size="lg"
-                        className="bg-white text-black hover:bg-white/90 rounded-full h-16 w-16 p-0"
+                        className="h-16 w-16 rounded-full bg-white p-0 text-black hover:bg-white/90"
                       >
                         {isPlaying ? (
                           <Pause className="h-8 w-8" strokeWidth={1.5} fill="none" />
@@ -276,15 +281,15 @@ const ClassPlayer = () => {
                         onClick={handleForward}
                         variant="ghost"
                         size="lg"
-                        className="text-white hover:bg-white/10 rounded-full h-12 w-12 p-0"
+                        className="h-12 w-12 rounded-full p-0 text-white hover:bg-white/10"
                       >
                         <SkipForward className="h-6 w-6" />
                       </Button>
                     </div>
 
                     {/* Breathing Instruction Area */}
-                    <div className="text-center md:text-left py-8">
-                      <p className="text-2xl text-white/90 font-light">
+                    <div className="py-8 text-center md:text-left">
+                      <p className="text-2xl font-light text-white/90">
                         {isPlaying ? "Follow your breath..." : "Paused"}
                       </p>
                     </div>
