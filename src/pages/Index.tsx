@@ -97,15 +97,15 @@ const Index = () => {
               Where your nervous system resets - and your senses awaken.
               <Link
                 to="/online"
-                className="inline-flex items-baseline gap-2"
+                className="group inline-flex items-baseline gap-2"
                 style={{
                   fontSize: "clamp(0.95rem, 1.1vw, 1.1rem)",
                   fontWeight: 400,
                   letterSpacing: "0.04em",
                 }}
               >
-                <span className="inline-flex items-center justify-center rounded-full px-9 py-3 transition-all duration-300 hover:bg-white/10">
-                  <ArrowRight className="h-10 w-10" />
+                <span className="inline-flex items-center justify-center rounded-full px-9 py-3">
+                  <ArrowRight className="h-10 w-10 transition-all duration-300 group-hover:fill-white/30" />
                 </span>
               </Link>
             </p>
