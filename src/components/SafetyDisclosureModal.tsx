@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ModalCloseButton } from "@/components/ui/modal-close-button";
+import { SafetyDisclosureContent } from "@/components/SafetyDisclosureContent";
 import { supabase } from "@/integrations/supabase/client";
 import { AlertTriangle, Wind } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -66,7 +67,7 @@ export const SafetyDisclosureModal = ({ isOpen, onAccept, userId }: SafetyDisclo
       >
         <ModalCloseButton onClose={() => {}} size="md" className="pointer-events-none opacity-0" />
         <div className="px-6 pb-10 pt-12 md:px-10 md:pt-16 lg:px-12">
-          {/* Header with Icon */}
+          {/* Header */}
           <div className="mb-6 flex items-center justify-center">
             <Wind className="h-12 w-12 text-[#E6DBC7]" />
           </div>
@@ -86,6 +87,17 @@ export const SafetyDisclosureModal = ({ isOpen, onAccept, userId }: SafetyDisclo
             Please read and accept our safety guidelines before accessing sessions
           </p>
 
+          {/* Warning Banner */}
+          <div className="mb-8 rounded-lg border border-red-500/30 bg-red-500/10 p-5">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-400" />
+              <p className="font-light text-[#E6DBC7]/90">
+                Important: You must accept this disclosure to access any breathwork sessions or
+                programs.
+              </p>
+            </div>
+          </div>
+
           <div
             className="mx-auto max-w-[46rem] space-y-8"
             style={{
@@ -94,57 +106,7 @@ export const SafetyDisclosureModal = ({ isOpen, onAccept, userId }: SafetyDisclo
               color: "rgba(230, 219, 199, 0.9)",
             }}
           >
-            {/* Warning Banner */}
-            <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-5">
-              <div className="flex items-start gap-3">
-                <AlertTriangle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-400" />
-                <p className="font-light text-[#E6DBC7]/90">
-                  Important: You must accept this disclosure to access any breathwork sessions or
-                  programs.
-                </p>
-              </div>
-            </div>
-
-            {/* Main Content Section */}
-            <section className="space-y-6">
-              <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                Important Safety Information
-              </h2>
-
-              <p>
-                The Studio provides specialist breathwork, meditation, and wellness classes designed
-                to support your wellbeing. All content and tools provided through the App are for
-                informational and educational purposes only and do not constitute or replace
-                medical, psychological, or therapeutic advice.
-              </p>
-
-              <p>
-                Breathwork can have powerful effects on the body and mind, so please practice
-                gently, safely, and within your own window of capacity. It is important and
-                advisable to read and understand the Safety Information before continuing.
-              </p>
-
-              <p>
-                Please consult a medical professional if you have any medical history, conditions,
-                or concerns, and reach out to March at{" "}
-                <a
-                  href="mailto:support@embersstudio.io"
-                  className="text-[#E6DBC7] underline transition-colors hover:text-[#E6DBC7]/80"
-                >
-                  support@embersstudio.io
-                </a>{" "}
-                if you have any questions.
-              </p>
-            </section>
-
-            {/* Confirmation Note */}
-            <div className="rounded-lg border border-[#E6DBC7]/20 bg-[#E6DBC7]/5 p-5">
-              <p className="text-[#E6DBC7]/90">
-                <span className="font-medium text-[#E6DBC7]">By accepting, you confirm</span> that
-                you have read and understood our safety guidelines, and that you take full
-                responsibility for your own health and wellbeing while using this service.
-              </p>
-            </div>
+            <SafetyDisclosureContent />
 
             {/* Checkbox Agreement */}
             <div className="flex items-start gap-4 rounded-lg border border-[#E6DBC7]/10 bg-background/20 p-5">
