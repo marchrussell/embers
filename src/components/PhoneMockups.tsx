@@ -128,8 +128,8 @@ export const PhoneMockups = () => {
             <div className="space-y-3 px-6 py-4">
               <div>
                 <p className="text-[12px] text-white/60">15 Days - 11 Lessons</p>
-                <p className="text-[12px] text-white/60">Stablise/Regulate/Restore</p>
               </div>
+              <p className="text-[12px] text-white/60 font-bold">Stablise/Regulate/Restore</p>
               {stabaliseLessons.map((lesson, i) => (
                 <div key={i} className="flex items-center gap-3">
                   <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg">
@@ -150,7 +150,7 @@ export const PhoneMockups = () => {
               ))}
 
               <div>
-                <p className="text-[12px] text-white/60">Open</p>
+                <p className="text-[12px] text-white/60 font-bold">Open</p>
               </div>
               {openLessons.map((lesson, i) => (
                 <div key={i} className="flex items-center gap-3">
