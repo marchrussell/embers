@@ -1,6 +1,3 @@
-import guestSessionBg from "@/assets/guest-session-bg.png";
-import heroHandsSession from "@/assets/hero-hands-session.png";
-import weeklyResetEvent from "@/assets/weekly-reset-event.jpg";
 import { Footer } from "@/components/Footer";
 import { NavBar } from "@/components/NavBar";
 import OnlineFooter from "@/components/OnlineFooter";
@@ -14,16 +11,20 @@ import {
   getNextThirdThursday,
   useNextGuestTeacher,
 } from "@/hooks/useNextGuestTeacher";
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
+import { Suspense, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { LiveSessionsData } from "./online/types";
-import HomeTab from "./online/HomeTab";
-import ProgramsTab from "./online/ProgramsTab";
-import LiveTab from "./online/LiveTab";
 import Library from "./Library";
 import SessionDetailModal from "./SessionDetail";
+import HomeTab from "./online/HomeTab";
+import LiveTab from "./online/LiveTab";
+import ProgramsTab from "./online/ProgramsTab";
+import { LiveSessionsData } from "./online/types";
 
 const VALID_TABS = ["home", "library", "programs", "live"];
+const weeklyResetImg = getCloudImageUrl(CLOUD_IMAGES.weeklyReset);
+const monthlyPresenceImg = getCloudImageUrl(CLOUD_IMAGES.monthlyBreath);
+const guestSessionImg = getCloudImageUrl(CLOUD_IMAGES.unwindReset);
 
 const Online = () => {
   const {
@@ -37,14 +38,9 @@ const Online = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
-  const [showSafetyModal, setShowSafetyModal] = useState(false);
-
-  useEffect(() => {
-    setShowSafetyModal(!hasAcceptedSafetyDisclosure);
-  }, [hasAcceptedSafetyDisclosure]);
+  const showSafetyModal = !hasAcceptedSafetyDisclosure;
 
   const handleSafetyAccept = async () => {
-    setShowSafetyModal(false);
     await refreshOnboardingStatus();
   };
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
@@ -62,7 +58,7 @@ const Online = () => {
         title: "Weekly Reset",
         subtitle: "Live every Sunday • 7:00 PM GMT • 30 mins",
         description: "A live space to pause, settle your system, and realign mid-week.",
-        image: weeklyResetEvent,
+        image: weeklyResetImg,
         nextDate: "Sunday, December 22",
         isLive: false,
         hasReplay: true,
@@ -72,7 +68,7 @@ const Online = () => {
         title: "Monthly Breath & Presence",
         subtitle: "First Saturday of each month • 10:00 AM GMT • 90 mins",
         description: "A longer, spacious session to soften tension and reconnect with yourself.",
-        image: heroHandsSession,
+        image: monthlyPresenceImg,
         nextDate: "Saturday, January 4",
         isLive: false,
         hasReplay: true,
@@ -85,8 +81,7 @@ const Online = () => {
             description:
               nextGuestTeacher.short_description ||
               `A unique session featuring ${nextGuestTeacher.name} with fresh perspectives.`,
-            image: nextGuestTeacher.photo_url || guestSessionBg,
-            nextDate: formatGuestSessionDate(new Date(nextGuestTeacher.session_date)),
+            image: nextGuestTeacher.photo_url || guestSessionImg,            nextDate: formatGuestSessionDate(new Date(nextGuestTeacher.session_date)),
             isLive: false,
             hasReplay: false,
             teacherName: nextGuestTeacher.name,
@@ -96,7 +91,7 @@ const Online = () => {
             title: "Guest Session",
             subtitle: "3rd Thursday of every month • 7:30 PM GMT • 1 hour",
             description: "A unique session featuring a guest teacher with fresh perspectives.",
-            image: guestSessionBg,
+            image: guestSessionImg,
             nextDate: formatGuestSessionDate(getNextThirdThursday()),
             isLive: false,
             hasReplay: false,

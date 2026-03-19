@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useState } from "react";
 
 export interface GuestTeacher {
   id: string;
@@ -83,7 +83,7 @@ function getThirdThursdayOfMonth(year: number, month: number): Date {
   const dayOfWeek = firstDay.getDay();
 
   // Days until first Thursday (Thursday = 4)
-  let daysUntilThursday = (4 - dayOfWeek + 7) % 7;
+  const daysUntilThursday = (4 - dayOfWeek + 7) % 7;
 
   // Third Thursday is 14 days after first Thursday
   const thirdThursday = new Date(year, month, 1 + daysUntilThursday + 14);
