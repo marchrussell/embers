@@ -75,7 +75,7 @@ serve(async (req) => {
     const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
     
     await resend.emails.send({
-      from: "Embers Studio <hello@embersstudio.io>",
+      from: "Embers Studio <march@embersstudio.io>",
       to: [attendeeEmail],
       subject: `Your ticket(s) for ${event.title}`,
       html: `
@@ -95,7 +95,7 @@ serve(async (req) => {
 
     // Send notification to admin
     await resend.emails.send({
-      from: "Embers Studio <hello@embersstudio.io>",
+      from: "Embers Studio <march@embersstudio.io>",
       to: ["support@embersstudio.io"],
       subject: `New Ticket Sale: ${event.title}`,
       html: `

@@ -73,7 +73,7 @@ serve(async (req) => {
         if (customer.email && resend) {
           // Send payment failure email
           const emailResult = await resend.emails.send({
-            from: "Embers Studio <hello@embersstudio.io>",
+            from: "Embers Studio <march@embersstudio.io>",
             to: [customer.email],
             subject: "Payment Failed - Please Update Your Payment Details",
             html: `
@@ -147,7 +147,7 @@ serve(async (req) => {
           
           if (customer.email && resend) {
             await resend.emails.send({
-              from: "Embers Studio <hello@embersstudio.io>",
+              from: "Embers Studio <march@embersstudio.io>",
               to: [customer.email],
               subject: "Action Required: Subscription Payment Issue",
               html: `
@@ -200,7 +200,7 @@ serve(async (req) => {
         
         if (customer.email && resend) {
           await resend.emails.send({
-            from: "Embers Studio <hello@embersstudio.io>",
+            from: "Embers Studio <march@embersstudio.io>",
             to: [customer.email],
             subject: "Your Embers Studio Subscription Has Been Canceled",
             html: `
@@ -296,7 +296,7 @@ serve(async (req) => {
                 .single();
 
               await resend.emails.send({
-                from: "Embers Studio <hello@embersstudio.io>",
+                from: "Embers Studio <march@embersstudio.io>",
                 to: [session.customer_details.email],
                 subject: `Welcome to ${courseData?.title || 'Your Course'}!`,
                 html: `

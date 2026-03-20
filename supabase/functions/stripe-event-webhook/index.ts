@@ -147,7 +147,7 @@ serve(async (req) => {
             });
 
             await resend.emails.send({
-              from: "Embers Studio <hello@embersstudio.io>",
+              from: "Embers Studio <march@embersstudio.io>",
               to: [attendeeEmail],
               subject: `Booking Confirmed: ${eventTitle}`,
               html: emailHtml,
@@ -174,7 +174,7 @@ serve(async (req) => {
             });
 
             await resend.emails.send({
-              from: "Embers Studio <hello@embersstudio.io>",
+              from: "Embers Studio <march@embersstudio.io>",
               to: ["support@embersstudio.io"],
               subject: `New Booking: ${eventTitle} — ${attendeeName}`,
               html: adminEmailHtml,
