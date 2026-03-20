@@ -94,7 +94,7 @@ const Index = () => {
                 fontWeight: 300,
               }}
             >
-              Where your nervous system resets - and your senses awaken.
+              Where your nervous system resets - and your senses awaken
               <Link
                 to="/online"
                 className="group inline-flex items-baseline"
@@ -248,7 +248,7 @@ const Index = () => {
 
                 <Button
                   onClick={() => {
-                    window.open("https://embersstudio.io/online", "_blank");
+                    window.open("/online", "_blank");
                   }}
                   className="inline-flex w-fit items-center justify-center rounded-full border border-white bg-transparent text-white transition-all hover:bg-white/10"
                   style={{
