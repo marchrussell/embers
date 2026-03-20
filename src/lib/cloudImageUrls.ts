@@ -92,7 +92,7 @@ export const CLOUD_IMAGES = {
   nsdr: "ai1f75cwoar-1772214259322.webp",
   findingSteadyGround: "c9pe6gazlz-1772213326416.webp",
   immediateRelief: "tb3tn4o4szk-1772458640802.webp",
-  nervousSystemReset: "wku49napxr-1772474484815.webp",
+  // nervousSystemReset: "wku49napxr-1772474484815.webp",
   softeningTension: "9yrw19mqpxn-1772567950813.webp",
   triangleBreathing: "s4gtteeras-1773335509049.webp",
   sleepTransition: "os2kvez50f8-1772472742856.webp",
