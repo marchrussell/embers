@@ -22,7 +22,7 @@ import { ArrowRight } from "lucide-react";
 import { Suspense, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-const nervousSystemImg = getCloudImageUrl(CLOUD_IMAGES.moreWaysToPractice, {
+const nervousSystemImg = getCloudImageUrl(CLOUD_IMAGES.nervousSystemReset, {
   width: 960,
   quality: 85,
 });
@@ -97,16 +97,9 @@ const Index = () => {
               Where your nervous system resets - and your senses awaken.
               <Link
                 to="/online"
-                className="group inline-flex items-baseline gap-2"
-                style={{
-                  fontSize: "clamp(0.95rem, 1.1vw, 1.1rem)",
-                  fontWeight: 400,
-                  letterSpacing: "0.04em",
-                }}
+                className="group inline-flex items-baseline"
               >
-                <span className="inline-flex items-center justify-center rounded-full px-9 py-3">
-                  <ArrowRight className="h-10 w-10 transition-all duration-300 group-hover:fill-white/30" />
-                </span>
+                <span className="font-editorial ml-4 inline-block transition-transform duration-300 group-hover:translate-x-2" style={{ fontSize: "clamp(2.4rem, 3.5vw, 3.5rem)", fontWeight: 300 }}>→</span>
               </Link>
             </p>
           </div>
@@ -114,17 +107,18 @@ const Index = () => {
 
         {/* Second Screen - Embers Studio */}
         <section
-          className="relative flex min-h-[100dvh] flex-col justify-between overflow-hidden"
+          className="relative flex min-h-[100dvh] flex-col justify-end overflow-hidden"
           style={{
             backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.6)), url("${getCloudImageUrl(CLOUD_IMAGES.heroBreathworkWide, { width: 1920, quality: 80 })}")`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         >
-          {/* Top Text */}
-          <div className="max-w-[900px] px-5 pt-16 sm:px-8 sm:pt-20 md:px-16 md:pt-28 lg:pt-32">
+
+          {/* Bottom Text and Pills */}
+          <div className="px-5 pb-8 sm:px-8 sm:pb-10 md:px-16 md:pb-12">
             <p
-              className="font-editorial leading-[1.35] text-white"
+              className="font-editorial leading-[1.5] text-white"
               style={{
                 fontSize: "clamp(2rem, 3vw, 3rem)",
                 fontWeight: 300,
@@ -136,11 +130,7 @@ const Index = () => {
               creates space for the nervous system to settle, perception to soften, and experience
               to open.
             </p>
-          </div>
-
-          {/* Bottom Pills */}
-          <div className="px-5 pb-8 sm:px-8 sm:pb-10 md:px-16 md:pb-12">
-            <div className="flex flex-wrap gap-2 md:gap-3">
+            <div className="flex flex-wrap gap-2 md:gap-3 mt-10">
               {[
                 "Calm the Nervous System",
                 "Sharpen Attention",
@@ -154,13 +144,6 @@ const Index = () => {
             </div>
           </div>
         </section>
-
-        {/* Glowing orange divider line */}
-        {/* <div className="w-full" style={{
-        height: '4px',
-        backgroundColor: '#E64C20',
-        boxShadow: '0 0 80px rgba(230, 76, 32, 1), 0 0 140px rgba(230, 76, 32, 1), 0 0 200px rgba(230, 76, 32, 0.9)'
-      }}></div> */}
 
         {/* Phone Mockups Section */}
         <section className="bg-background pb-16 pt-24 md:pb-24 md:pt-32 lg:pb-32 lg:pt-48">
@@ -181,7 +164,7 @@ const Index = () => {
 
               {/* Closing Line - moved here under mockups */}
               <p
-                className="mx-auto mt-12 max-w-[800px] text-center italic leading-[1.7] text-white/75 md:mt-16"
+                className="mx-auto mt-12 max-w-[800px] text-center italic leading-[1.7] text-white/75 md:mt-20"
                 style={{
                   fontSize: "clamp(0.95rem, 1.1vw, 1.1rem)",
                 }}
@@ -190,17 +173,17 @@ const Index = () => {
               </p>
             </div>
             {/* Light pills below mockups */}
-            <div className="mt-12 flex flex-col items-center gap-4 md:mt-16 md:gap-5">
-              <div className="flex flex-wrap justify-center gap-4 md:gap-6">
+            <div className="mt-12 flex flex-col items-center gap-4 md:mt-16 md:gap-6">
+              <div className="flex flex-wrap justify-center gap-4 md:gap-10">
                 {["Daily Resets", "Sleep Stories", "Courses"].map((label) => (
-                  <Pill key={label} variant="light">
+                  <Pill key={label} variant="dark">
                     {label}
                   </Pill>
                 ))}
               </div>
-              <div className="flex flex-wrap justify-center gap-4 md:gap-6">
+              <div className="flex flex-wrap justify-center gap-4 md:gap-10">
                 {["Workshops + Guest Experts", "Live Gathering"].map((label) => (
-                  <Pill key={label} variant="light">
+                  <Pill key={label} variant="dark">
                     {label}
                   </Pill>
                 ))}
@@ -242,15 +225,15 @@ const Index = () => {
                     fontWeight: 400,
                   }}
                 >
-                  14-Day Course
+                  Nervous System Reset
                 </h3>
                 <p
                   className="mb-5 font-light uppercase tracking-[0.1em] text-[#EC9037] sm:mb-6"
                   style={{
                     fontSize: "clamp(0.7rem, 0.8vw, 0.85rem)",
                   }}
-                >
-                  Nervous System Reset
+                  >
+                  14-Day Course
                 </p>
                 <p
                   className="mb-5 text-white/90 sm:mb-6"
@@ -265,7 +248,7 @@ const Index = () => {
 
                 <Button
                   onClick={() => {
-                    window.open("https://marchrussell.com/courses", "_blank");
+                    window.open("https://embersstudio.io/online", "_blank");
                   }}
                   className="inline-flex w-fit items-center justify-center rounded-full border border-white bg-transparent text-white transition-all hover:bg-white/10"
                   style={{
@@ -275,7 +258,7 @@ const Index = () => {
                     padding: "0.6rem 1.4rem",
                   }}
                 >
-                  Start the 14-Day Course
+                  Start Course
                 </Button>
               </div>
             </div>
@@ -283,7 +266,7 @@ const Index = () => {
         </section>
 
         {/* ========== EXPERIENCES ========== */}
-        <section className="relative overflow-hidden bg-background pb-16 md:pb-28 lg:pb-48">
+        <section className="relative overflow-hidden bg-background pb-16 md:py-28 lg:py-48">
           <div className="relative z-10 mx-auto max-w-[1400px] px-6 md:px-10 lg:px-12">
             {/* Section Header - Centered */}
             <div className="mb-10 text-center md:mb-14">

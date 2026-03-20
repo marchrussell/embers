@@ -71,6 +71,7 @@ export const CLOUD_IMAGES = {
   threeWaysMushroom: "home/three-ways-mushroom.webp",
   exploreAudioPlayer: "home/explore-studio-audio-player.webp",
   exploreTestimonials: "home/explore-studio-testimonials.webp",
+  nervousSystemReset: "home/nervous-system-reset.webp",
 
   // Experiences images
   breathPresence: "experiences/breath-presence-heart-connection-in-person.webp",

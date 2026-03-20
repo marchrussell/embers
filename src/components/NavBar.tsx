@@ -122,7 +122,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
 
       {/* Full width navigation layout - desktop - hide entirely in standalone mode */}
       {!standalone && (
-        <div className="fixed left-0 right-0 top-0 z-50 hidden px-8 pt-10 md:px-16 md:pt-12 lg:block">
+        <div className="fixed left-0 right-0 top-0 z-50 hidden px-8 pt-10 md:px-20 md:pt-12 lg:block">
           <div
             className="absolute inset-0 bg-gradient-to-b from-black/5 to-transparent"
             style={{ height: "140px" }}
@@ -140,6 +140,17 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                 }}
               />
             </Link> */}
+
+             <Link
+              to="/"
+              className="relative whitespace-nowrap pb-1 uppercase transition-colors hover:opacity-80"
+              style={{
+                color: location.pathname.startsWith("/") ? "#D4915A" : "#E6DBC7",
+                fontSize: "0.85rem",
+                letterSpacing: "0.12em",
+                fontWeight: 500,
+              }}
+            >Home</Link>
 
             {/* Experiences link */}
             <Link
