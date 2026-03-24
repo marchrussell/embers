@@ -9,7 +9,8 @@ import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
 import SessionDetailModal from "@/pages/app/SessionDetail";
 import SessionPlayCard from "@/pages/app/online/components/SessionPlayCard";
 import { FeaturedSession } from "@/pages/app/online/types";
-import { Suspense, useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Suspense, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const startHereButterfly = getCloudImageUrl(CLOUD_IMAGES.startHereButterfly);
@@ -18,10 +19,9 @@ const StartHere = () => {
   const navigate = useNavigate();
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
-  const [sessions, setSessions] = useState<FeaturedSession[]>([]);
-
-  useEffect(() => {
-    const fetchSessions = async () => {
+  const { data: sessions = [] } = useQuery<FeaturedSession[]>({
+    queryKey: ["start-here-sessions"],
+    queryFn: async () => {
       const { data } = await supabase
         .from("classes")
         .select(
@@ -29,12 +29,9 @@ const StartHere = () => {
         )
         .not("start_here_position", "is", null)
         .order("start_here_position");
-
-      setSessions(data || []);
-    };
-
-    fetchSessions();
-  }, []);
+      return data || [];
+    },
+  });
 
   return (
     <div className="min-h-screen bg-background">
@@ -50,7 +47,7 @@ const StartHere = () => {
         <div className="absolute inset-0 bg-black/30" />
         <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
 
-        <div className="relative flex h-full items-end px-6 pb-10 sm:pb-14 md:px-10 lg:px-12">
+        <div className="relative flex h-full items-end px-6 pb-16 md:px-10 lg:px-12">
           <div className="w-full">
             <p className="mb-2 text-xs font-light uppercase tracking-[0.15em] text-[#D4A574] sm:mb-3 sm:text-sm">
               Your First Two Weeks
@@ -65,7 +62,7 @@ const StartHere = () => {
       {/* Main Content */}
       <div className="px-6 pb-16 pt-10 sm:pb-20 sm:pt-14 md:px-10 md:pb-24 md:pt-16 lg:px-12">
         {/* Subtitle - moved below hero */}
-        <p className="mb-12 font-editorial text-lg italic leading-relaxed text-[#E6DBC7]/80 sm:mb-16 sm:text-xl md:mb-20 md:text-2xl">
+        <p className="mb-8 font-editorial text-lg italic leading-relaxed text-[#E6DBC7]/80 sm:mb-16 sm:text-xl md:text-2xl">
           No pressure. No expectations. Just a gentle way to arrive.
         </p>
 

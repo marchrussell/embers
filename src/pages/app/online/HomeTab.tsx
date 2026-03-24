@@ -8,8 +8,8 @@ import CourseCard from "./components/CourseCard";
 import SessionPlayCard from "./components/SessionPlayCard";
 import StartHereCard from "./components/StartHereCard";
 import { useFeaturedSession } from "./hooks/useFeaturedSession";
-import { useStartHereVisibility } from "./hooks/useStartHereVisibility";
 import { useQuickResets } from "./hooks/useQuickResets";
+import { useStartHereVisibility } from "./hooks/useStartHereVisibility";
 import { LiveSessionsData } from "./types";
 
 interface HomeTabProps {
@@ -87,7 +87,7 @@ const HomeTab = ({
 
       {/* Quick Resets */}
       {quickResets.length > 0 && (
-        <section className="pt-24">
+        <section className="pt-32">
           <div className="mb-2 flex items-center justify-between">
             <h2 className="text-2xl font-medium tracking-wide text-[#E6DBC7] md:text-3xl">
               Quick Resets
@@ -177,7 +177,7 @@ const HomeTab = ({
 
       {/* Featured This Week */}
       {featuredSession && (
-        <section className="pt-24">
+        <section className="pt-32">
           <h2 className="mb-2 text-2xl font-medium tracking-wide text-[#E6DBC7] md:text-3xl">
             A Place to Land This Week
           </h2>
@@ -213,7 +213,7 @@ const HomeTab = ({
       )}
 
       {/* Live Rhythm */}
-      <section className="pt-24">
+      <section className="pt-32">
         <h2 className="mb-2 text-2xl font-medium tracking-wide text-[#E6DBC7] md:text-3xl">
           Live Rhythm
         </h2>

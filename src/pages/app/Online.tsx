@@ -112,7 +112,7 @@ const Online = () => {
       <NavBar />
       <OnlineHeader activeTab={activeTab} onTabChange={handleTabChange} />
 
-      <div className="lg:pt-88 px-6 pb-24 pt-44 md:px-10 md:pb-0 md:pt-72 lg:px-12">
+      <div className="lg:pt-88 px-6 pb-40 pt-44 md:px-10 md:pt-72 lg:px-12">
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
           <TabsContent value="home" className="mt-0 pb-24">
             <HomeTab
