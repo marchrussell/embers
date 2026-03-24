@@ -29,7 +29,7 @@ const CategoryView = memo(
     });
 
     return (
-      <div className="min-h-screen bg-background pb-24">
+      <div className="min-h-screen bg-background pb-32">
         {/* Category Hero Header */}
         <div
           className={`relative z-10 h-[420px] ${isEmbedded ? "-mx-6 mt-[150px] md:-mx-10 lg:-mx-12" : "mt-[340px] md:mt-[380px]"}`}
@@ -64,7 +64,7 @@ const CategoryView = memo(
         </div>
 
         {/* Main Content */}
-        <div className={`py-16 ${isEmbedded ? "" : "px-6 md:px-12 lg:px-20"}`}>
+        <div className={`pt-16 ${isEmbedded ? "" : "px-6 md:px-12 lg:px-20"}`}>
           <p className="mb-20 font-editorial text-xl italic leading-relaxed text-[#E6DBC7]/80 md:text-2xl">
             {category.description}
           </p>
