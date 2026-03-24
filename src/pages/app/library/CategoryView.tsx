@@ -64,7 +64,7 @@ const CategoryView = memo(
         </div>
 
         {/* Main Content */}
-        <div className={`pt-16 ${isEmbedded ? "" : "px-6 md:px-12 lg:px-20"}`}>
+        <div className={`py-16 ${isEmbedded ? "" : "px-6 md:px-12 lg:px-20"}`}>
           <p className="mb-20 font-editorial text-xl italic leading-relaxed text-[#E6DBC7]/80 md:text-2xl">
             {category.description}
           </p>
