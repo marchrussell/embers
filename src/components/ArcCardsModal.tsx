@@ -127,8 +127,9 @@ export function ArcCardsModal({ open, onOpenChange }: ArcCardsModalProps) {
                   <div className="mt-auto">
                     {/* CTA */}
                     <button
-                      onClick={handleSelfStudyClick}
+                      disabled
                       className="flex w-full items-center justify-center rounded-none border border-white/40 bg-white/20 px-5 py-4 text-sm font-normal tracking-wide text-white backdrop-blur-sm transition-all hover:border-white/60 hover:bg-white/30"
+                      onClick={handleSelfStudyClick}
                     >
                       Coming Soon
                     </button>

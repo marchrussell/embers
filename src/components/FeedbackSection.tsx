@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { MessageSquare, Send, X } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { Send, X } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export const FeedbackSection = () => {
   const { user } = useAuth();
@@ -47,12 +47,6 @@ export const FeedbackSection = () => {
   return (
     <>
       <div className="mb-28">
-        {/* Reassuring Message */}
-        <p className="mb-48 text-center font-editorial text-lg italic text-[#E6DBC7]/70">
-          If you drift away for weeks or months, this remains a place you can return to without
-          guilt.
-        </p>
-
         <button
           onClick={() => setOpen(true)}
           className="group w-full rounded-2xl border border-white/20 bg-transparent px-8 py-6 transition-colors duration-300 hover:border-white/40 hover:bg-white/5"

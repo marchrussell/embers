@@ -4,8 +4,7 @@ import { CategoryCardSkeleton } from "@/components/skeletons/CategoryCardSkeleto
 import { IconButton } from "@/components/ui/icon-button";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 import type { User } from "@supabase/supabase-js";
-import { ChevronLeft, ChevronRight, Heart, Lock } from "lucide-react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Heart, Lock } from "lucide-react";
 import { memo } from "react";
 import { Link } from "react-router-dom";
 import { FavouriteSession, LibraryCategory } from "./types";
@@ -260,7 +259,7 @@ const LibraryMainView = memo(
                   className="inline-flex items-center gap-3 text-base font-light text-white/90 transition-colors hover:text-white"
                 >
                   <span>Learn about ARC</span>
-                  <ArrowRight className="h-6 w-6" />
+                  <ArrowRight className="h-5 w-5" />
                 </button>
               </div>
             </>
