@@ -1,5 +1,6 @@
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 import SessionPlayCard from "@/pages/app/online/components/SessionPlayCard";
+import { ChevronLeft } from "lucide-react";
 import { memo } from "react";
 import { LibraryCategory, LibrarySession } from "./types";
 
@@ -7,6 +8,7 @@ interface CategoryViewProps {
   category: LibraryCategory;
   isEmbedded: boolean;
   hasSubscription: boolean;
+  onBack: () => void;
   onSessionClick: (id: string) => void;
   onSubscriptionRequired: () => void;
 }
@@ -16,6 +18,7 @@ const CategoryView = memo(
     category,
     isEmbedded,
     hasSubscription,
+    onBack,
     onSessionClick,
     onSubscriptionRequired,
   }: CategoryViewProps) => {
@@ -29,7 +32,7 @@ const CategoryView = memo(
     });
 
     return (
-      <div className="min-h-screen bg-background pb-32">
+      <div className="min-h-screen bg-background pb-40">
         {/* Category Hero Header */}
         <div
           className={`relative z-10 h-[420px] ${isEmbedded ? "-mx-6 mt-[150px] md:-mx-10 lg:-mx-12" : "mt-[340px] md:mt-[380px]"}`}
@@ -43,13 +46,22 @@ const CategoryView = memo(
           <div
             className={`absolute inset-0 ${
               category.name === "AWAKEN" || category.name === "RELEASE"
-                ? "bg-black/40"
+                ? "bg-black/20"
                 : category.name === "ENERGY"
-                  ? "bg-black/25"
-                  : "bg-black/30"
+                  ? "bg-black/10"
+                  : "bg-black/15"
             }`}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
+
+          <button
+            onClick={onBack}
+            className="absolute left-6 top-6 flex items-center gap-1 text-[#E6DBC7]/80 transition-colors hover:text-[#E6DBC7] md:left-10 lg:left-12"
+            aria-label="Back to Library"
+          >
+            <ChevronLeft className="h-5 w-5" />
+            <span className="text-sm font-light tracking-wide">Library</span>
+          </button>
 
           <div className="relative flex h-full items-end px-6 pb-8 md:px-10 lg:px-12">
             <div className="w-full">
@@ -64,7 +76,7 @@ const CategoryView = memo(
         </div>
 
         {/* Main Content */}
-        <div className={`pt-16 ${isEmbedded ? "" : "px-6 md:px-12 lg:px-20"}`}>
+        <div className={`p-16 ${isEmbedded ? "" : "px-6 md:px-12 lg:px-20"}`}>
           <p className="mb-20 font-editorial text-xl italic leading-relaxed text-[#E6DBC7]/80 md:text-2xl">
             {category.description}
           </p>

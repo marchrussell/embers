@@ -155,6 +155,13 @@ const Library = ({
     };
   }, [user?.id, user?.user_metadata?.full_name]);
 
+  const handleBack = () => {
+    setSelectedCategory(null);
+    if (searchParams.get("category")) {
+      navigate("/library", { replace: true });
+    }
+  };
+
   const handleSessionClick = (sessionId: string) => {
     if (!sessionId) return;
     setSelectedSessionId(sessionId);
@@ -173,6 +180,7 @@ const Library = ({
         category={activeCategory}
         isEmbedded={isEmbedded}
         hasSubscription={hasSubscription}
+        onBack={handleBack}
         onSessionClick={handleSessionClick}
         onSubscriptionRequired={() => setShowSubscriptionModal(true)}
       />
