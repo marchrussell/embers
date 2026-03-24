@@ -51,7 +51,7 @@ const CategoryView = memo(
           />
           <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
 
-          <div className="relative flex h-full items-end px-6 pb-14 md:px-10 lg:px-12">
+          <div className="relative flex h-full items-end px-6 pb-8 md:px-10 lg:px-12">
             <div className="w-full">
               <p className="mb-3 text-sm font-light uppercase tracking-[0.15em] text-[#D4A574]">
                 {category.sessions.length} Sessions
