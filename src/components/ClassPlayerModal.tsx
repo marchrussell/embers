@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavourites } from "@/hooks/useFavourites";
@@ -32,9 +33,6 @@ export const ClassPlayerModal = ({
 }: ClassPlayerModalProps) => {
   const { user } = useAuth();
   const { isFavourite, toggleFavourite } = useFavourites();
-  const [classData, setClassData] = useState<any>(null);
-  const [classCategories, setClassCategories] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -47,118 +45,103 @@ export const ClassPlayerModal = ({
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const hasShownCompletion = useRef(false);
 
+  const { data: classQueryData, isLoading: loading } = useQuery({
+    queryKey: ["class-player", classId],
+    queryFn: async () => {
+      const { data } = await supabase.from("classes").select("*").eq("id", classId!).single();
+      if (!data) return null;
+
+      const { data: junctionData } = await supabase
+        .from("class_categories")
+        .select("categories(*)")
+        .eq("class_id", classId!);
+      const cats = (junctionData || []).map((row: any) => row.categories).filter(Boolean);
+
+      let classCategories = cats;
+      if (cats.length === 0 && data.category_id) {
+        const { data: fallbackCat } = await supabase
+          .from("categories")
+          .select("*")
+          .eq("id", data.category_id)
+          .single();
+        if (fallbackCat) classCategories = [fallbackCat];
+      }
+
+      return { classData: data, classCategories };
+    },
+    enabled: !!classId && open,
+  });
+
+  const classData = classQueryData?.classData ?? null;
+  const classCategories = classQueryData?.classCategories ?? [];
+
+  // Reset playback state when modal opens
   useEffect(() => {
     if (classId && open) {
-      setLoading(true);
-      setClassData(null);
-      setClassCategories([]);
       setDuration(0);
       setHasStarted(false);
       setIsPlaying(false);
       setCurrentTime(0);
-
-      const fetchClass = async () => {
-        // Fetch the class data first
-        const { data } = await supabase.from("classes").select("*").eq("id", classId).single();
-
-        if (data) {
-          setClassData(data);
-
-          // Only show safety disclosure if:
-          // 1. This specific class has show_safety_reminder enabled AND
-          // 2. We haven't already shown the safety modal (skipSafetyModal is false)
-          const shouldShowSafety = !skipSafetyModal && (data.show_safety_reminder || false);
-          setShowSafetyDisclosure(shouldShowSafety);
-
-          // If no safety reminder needed, automatically start the session
-          if (!shouldShowSafety) {
-            setHasStarted(true);
-            setIsPlaying(true);
-          }
-
-          // Fetch all categories via junction table
-          const { data: junctionData } = await supabase
-            .from("class_categories")
-            .select("categories(*)")
-            .eq("class_id", classId);
-          const cats = (junctionData || []).map((row: any) => row.categories).filter(Boolean);
-          if (cats.length > 0) {
-            setClassCategories(cats);
-          } else if (data.category_id) {
-            // Fallback to legacy category_id
-            const { data: fallbackCat } = await supabase
-              .from("categories")
-              .select("*")
-              .eq("id", data.category_id)
-              .single();
-            if (fallbackCat) setClassCategories([fallbackCat]);
-          }
-
-          // Create audio element with lazy loading
-          if (data.audio_url && !audioRef.current) {
-            const audio = new Audio();
-            // Optimize loading: only load metadata initially
-            audio.preload = "metadata";
-            audio.src = data.audio_url;
-
-            audio.addEventListener("loadedmetadata", () => {
-              setDuration(audio.duration);
-
-              // Auto-play if no safety reminder needed OR if we're skipping the safety modal
-              if (!data.show_safety_reminder || skipSafetyModal) {
-                audio.play().catch(() => {
-                  // Silent failure - user will manually play
-                });
-              }
-            });
-            audio.addEventListener("timeupdate", () => {
-              setCurrentTime(audio.currentTime);
-
-              // Check if session is complete (within 5 seconds of end)
-              if (
-                !hasShownCompletion.current &&
-                audio.duration - audio.currentTime <= 5 &&
-                audio.currentTime > 0
-              ) {
-                hasShownCompletion.current = true;
-                markSessionComplete();
-              }
-            });
-            audio.addEventListener("ended", () => {
-              setIsPlaying(false);
-              if (!hasShownCompletion.current) {
-                hasShownCompletion.current = true;
-                markSessionComplete();
-              }
-            });
-            audioRef.current = audio;
-          }
-
-          // Fetch user profile and stats
-          if (user?.id) {
-            fetchUserStatsAndProfile();
-          }
-        }
-        setLoading(false);
-      };
-
-      fetchClass();
     }
-
     return () => {
-      // Clean up audio when modal closes
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current = null;
       }
-      // Clean up video when modal closes
       if (videoRef.current) {
         videoRef.current.pause();
       }
-      // Reset completion flag when modal closes
       hasShownCompletion.current = false;
     };
   }, [classId, open]);
+
+  // Initialize safety disclosure and audio when class data loads
+  useEffect(() => {
+    if (!classData || !open) return;
+
+    const shouldShowSafety = !skipSafetyModal && (classData.show_safety_reminder || false);
+    setShowSafetyDisclosure(shouldShowSafety);
+
+    if (!shouldShowSafety) {
+      setHasStarted(true);
+      setIsPlaying(true);
+    }
+
+    if (user?.id) fetchUserStatsAndProfile();
+
+    if (classData.audio_url && !audioRef.current) {
+      const audio = new Audio();
+      audio.preload = "metadata";
+      audio.src = classData.audio_url;
+
+      audio.addEventListener("loadedmetadata", () => {
+        setDuration(audio.duration);
+        if (!classData.show_safety_reminder || skipSafetyModal) {
+          audio.play().catch(() => {});
+        }
+      });
+      audio.addEventListener("timeupdate", () => {
+        setCurrentTime(audio.currentTime);
+        if (
+          !hasShownCompletion.current &&
+          audio.duration - audio.currentTime <= 5 &&
+          audio.currentTime > 0
+        ) {
+          hasShownCompletion.current = true;
+          markSessionComplete();
+        }
+      });
+      audio.addEventListener("ended", () => {
+        setIsPlaying(false);
+        if (!hasShownCompletion.current) {
+          hasShownCompletion.current = true;
+          markSessionComplete();
+        }
+      });
+      audioRef.current = audio;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [classData?.id, open]);
 
   const isVideoClass = !!classData?.video_url;
 

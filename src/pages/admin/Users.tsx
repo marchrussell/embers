@@ -26,7 +26,8 @@ import {
   Users as UsersIcon,
   XCircle,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
 interface UserData {
@@ -72,38 +73,15 @@ interface AnalyticsData {
 
 const AdminUsers = () => {
   const { isAdmin } = useAuth();
-  const [users, setUsers] = useState<UserData[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<UserData[]>([]);
+  const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
-  const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [sortBy, setSortBy] = useState<"plays" | "favorites">("plays");
 
-  useEffect(() => {
-    if (isAdmin) {
-      fetchUsers();
-      fetchAnalytics();
-    }
-  }, [isAdmin]);
-
-  useEffect(() => {
-    if (searchQuery) {
-      const filtered = users.filter(
-        (user) =>
-          user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          user.full_name?.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-      setFilteredUsers(filtered);
-    } else {
-      setFilteredUsers(users);
-    }
-  }, [searchQuery, users]);
-
-  const fetchUsers = async () => {
-    try {
-      setIsLoading(true);
+  const { data: users = [], isLoading } = useQuery<UserData[]>({
+    queryKey: ["admin-users"],
+    queryFn: async () => {
 
       // Fetch profiles
       const { data: profiles, error: profilesError } = await supabase
@@ -184,17 +162,23 @@ const AdminUsers = () => {
         }
       });
 
-      setUsers(usersData);
-      setFilteredUsers(usersData);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-      toast.error("Failed to load users");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      return usersData;
+    },
+    enabled: isAdmin,
+  });
 
-  const fetchAnalytics = async () => {
+  const filteredUsers = useMemo(() => {
+    if (!searchQuery) return users;
+    return users.filter(
+      (user) =>
+        user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.full_name?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery, users]);
+
+  const { data: analytics = null } = useQuery<AnalyticsData | null>({
+    queryKey: ["admin-analytics"],
+    queryFn: async () => {
     try {
       // Total signups
       const { count: totalSignups } = await supabase
@@ -539,7 +523,7 @@ const AdminUsers = () => {
         (a, b) => b.completions - a.completions
       );
 
-      setAnalytics({
+      return {
         totalSignups: totalSignups || 0,
         activeSubscribers: activeSubs?.length || 0,
         monthlySubscribers,
@@ -561,11 +545,14 @@ const AdminUsers = () => {
         categoryPerformance,
         programCompletionRates,
         sessionStats: allSessionStats,
-      });
+      };
     } catch (error) {
       console.error("Error fetching analytics:", error);
+      return null;
     }
-  };
+    },
+    enabled: isAdmin,
+  });
 
   const getRoleLabel = (role: string) => {
     switch (role) {
@@ -623,12 +610,12 @@ const AdminUsers = () => {
 
       console.log("✅ User deleted successfully");
       toast.success("User deleted successfully");
-      setUsers((prev) => prev.filter((u) => u.id !== selectedUser.id));
+      queryClient.setQueryData<UserData[]>(["admin-users"], (prev) =>
+        (prev || []).filter((u) => u.id !== selectedUser.id)
+      );
+      queryClient.invalidateQueries({ queryKey: ["admin-analytics"] });
       setDeleteDialogOpen(false);
       setSelectedUser(null);
-
-      // Refresh analytics after deletion
-      fetchAnalytics();
     } catch (error) {
       console.error("❌ Error deleting user:", error);
       const errorMessage = error instanceof Error ? error.message : "Unknown error";

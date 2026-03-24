@@ -9,6 +9,7 @@ import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavourites } from "@/hooks/useFavourites";
 import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
 import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import SessionDetailModal from "./SessionDetail";
@@ -41,7 +42,19 @@ const Library = ({
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(() => {
     return new URLSearchParams(window.location.search).get("session");
   });
-  const [dbUserProfile, setDbUserProfile] = useState<{ full_name: string } | null>(null);
+  const { data: dbUserProfile = null } = useQuery<{ full_name: string } | null>({
+    queryKey: ["profile-name", user?.id],
+    queryFn: async () => {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("full_name")
+        .eq("id", user!.id)
+        .maybeSingle();
+      return profile ?? null;
+    },
+    enabled: !!user?.id && !user.user_metadata?.full_name,
+  });
+
   const metadataProfile = user?.user_metadata?.full_name
     ? { full_name: user.user_metadata.full_name as string }
     : null;
@@ -134,26 +147,6 @@ const Library = ({
     }
   }, [activeCategory]);
 
-  // Fetch profile from DB only when user metadata has no name
-  useEffect(() => {
-    if (!user?.id || user.user_metadata?.full_name) return;
-
-    let cancelled = false;
-    supabase
-      .from("profiles")
-      .select("full_name")
-      .eq("id", user.id)
-      .maybeSingle()
-      .then(({ data: profile, error }) => {
-        if (!cancelled && !error && profile?.full_name) {
-          setDbUserProfile(profile);
-        }
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [user?.id, user?.user_metadata?.full_name]);
 
   const handleBack = () => {
     setSelectedCategory(null);

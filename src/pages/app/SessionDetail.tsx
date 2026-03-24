@@ -16,6 +16,7 @@ import { useFavourites } from "@/hooks/useFavourites";
 import { supabase } from "@/integrations/supabase/client";
 import { IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 import { ArrowRight, ChevronDown, Heart, Play, Share } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 interface SessionDetailModalProps {
@@ -34,100 +35,52 @@ export default function SessionDetailModal({
 }: SessionDetailModalProps) {
   const { user, hasSubscription, isAdmin, isTestUser } = useAuth();
   const { isFavourite, toggleFavourite } = useFavourites();
-  const [session, setSession] = useState<any>(null);
-  const [sessionCategories, setSessionCategories] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
   const [showPlayer, setShowPlayer] = useState(false);
   const [showSafetyModal, setShowSafetyModal] = useState(false);
   const [showFullSafetyDisclosure, setShowFullSafetyDisclosure] = useState(false);
   const [safetyExpanded, setSafetyExpanded] = useState(false);
   const [showArcCardsModal, setShowArcCardsModal] = useState(false);
-  useEffect(() => {
-    if (!open) {
-      // Only reset when modal closes, keep session data while open
-      setShowPlayer(false);
-      return;
-    }
-    if (!sessionId) {
-      setSession(null);
-      setSessionCategories([]);
-      setLoading(false);
-      return;
-    }
 
-    let isMounted = true;
+  const { data, isLoading: loading } = useQuery({
+    queryKey: ["session-detail", sessionId],
+    queryFn: async () => {
+      const { data: classData, error } = await supabase
+        .from("classes")
+        .select("*")
+        .eq("id", sessionId!.trim())
+        .maybeSingle();
 
-    const fetchSession = async () => {
-      try {
-        setLoading(true);
-        console.log("🔍 SessionDetail: Fetching session with ID:", sessionId);
+      if (error) throw error;
+      if (!classData) return { session: null, sessionCategories: [] };
 
-        const { data: classData, error: classError } = await supabase
-          .from("classes")
+      const { data: junctionData } = await supabase
+        .from("class_categories")
+        .select("categories(*)")
+        .eq("class_id", sessionId!.trim());
+
+      let cats = (junctionData || []).map((row: any) => row.categories).filter(Boolean);
+
+      if (cats.length === 0 && classData.category_id) {
+        const { data: fallbackCat } = await supabase
+          .from("categories")
           .select("*")
-          .eq("id", sessionId.trim())
+          .eq("id", classData.category_id)
           .maybeSingle();
-
-        if (!isMounted) return;
-
-        console.log("📊 SessionDetail: Query result:", { data: classData, error: classError });
-
-        if (classError) {
-          console.error("❌ SessionDetail: Error fetching class:", classError);
-          toast.error(`Error loading session: ${classError.message}`);
-          setLoading(false);
-          return;
-        }
-
-        if (!classData) {
-          console.error("❌ SessionDetail: No class data found for ID:", sessionId);
-          toast.error("Session not found in database");
-          setLoading(false);
-          return;
-        }
-
-        setSession(classData);
-
-        // Fetch all categories via junction table (non-blocking)
-        supabase
-          .from("class_categories")
-          .select("categories(*)")
-          .eq("class_id", sessionId.trim())
-          .then(({ data: junctionData }) => {
-            if (isMounted) {
-              const cats = (junctionData || []).map((row: any) => row.categories).filter(Boolean);
-              // Fallback to legacy category_id if junction table has no rows
-              if (cats.length === 0 && classData.category_id) {
-                supabase
-                  .from("categories")
-                  .select("*")
-                  .eq("id", classData.category_id)
-                  .maybeSingle()
-                  .then(({ data: fallbackCat }) => {
-                    if (isMounted && fallbackCat) setSessionCategories([fallbackCat]);
-                  });
-              } else {
-                setSessionCategories(cats);
-              }
-            }
-          });
-
-        setLoading(false);
-      } catch (error) {
-        console.error("❌ SessionDetail: Unexpected error:", error);
-        if (isMounted) {
-          toast.error("Failed to load session");
-          setLoading(false);
-        }
+        if (fallbackCat) cats = [fallbackCat];
       }
-    };
 
-    fetchSession();
+      return { session: classData, sessionCategories: cats };
+    },
+    enabled: !!open && !!sessionId,
+  });
 
-    return () => {
-      isMounted = false;
-    };
-  }, [sessionId, user?.id, open]);
+  const session = data?.session ?? null;
+  const sessionCategories = data?.sessionCategories ?? [];
+
+  // Reset player state when modal closes
+  useEffect(() => {
+    if (!open) setShowPlayer(false);
+  }, [open]);
 
   const handleFavourite = () => {
     if (sessionId) {
@@ -195,11 +148,7 @@ export default function SessionDetailModal({
       >
         <DialogContent
           className="max-h-[90vh] w-[95%] max-w-5xl overflow-y-auto rounded-xl border border-white/[0.08] bg-black/95 p-0 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-2xl md:w-[90%]"
-          onCloseAutoFocus={() => {
-            // Clean up state after modal closes
-            setSession(null);
-            setSessionCategories([]);
-          }}
+          onCloseAutoFocus={() => {}}
         >
           <DialogTitle className="sr-only">{session?.title || "Session Details"}</DialogTitle>
           {loading ? (

@@ -9,67 +9,45 @@ import { useFavourites } from "@/hooks/useFavourites";
 import { supabase } from "@/integrations/supabase/client";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 import { Heart, Play, Share2 } from "lucide-react";
-import { Suspense, useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Suspense, useState } from "react";
 import { toast } from "sonner";
 
 const Favourites = () => {
   const { user, hasSubscription } = useAuth();
   const { favouriteIds, removeFavourite, loading: favouritesLoading } = useFavourites();
-  const [favourites, setFavourites] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
   const [showClassPlayer, setShowClassPlayer] = useState(false);
 
-  // Fetch full session data when favouriteIds change
-  useEffect(() => {
-    const fetchFavouriteSessions = async () => {
-      if (!user) {
-        setFavourites([]);
-        setLoading(false);
-        return;
-      }
+  const { data: favourites = [], isLoading: loading } = useQuery({
+    queryKey: ["favourite-sessions", favouriteIds],
+    queryFn: async () => {
+      if (!user || favouriteIds.length === 0) return [];
 
-      if (favouriteIds.length === 0) {
-        setFavourites([]);
-        setLoading(false);
-        return;
-      }
+      const { data: classesData, error } = await supabase
+        .from("classes")
+        .select("*, categories:categories!classes_category_id_fkey(name)")
+        .in("id", favouriteIds)
+        .eq("is_published", true);
 
-      try {
-        const { data: classesData, error: classError } = await supabase
-          .from("classes")
-          .select("*, categories:categories!classes_category_id_fkey(name)")
-          .in("id", favouriteIds)
-          .eq("is_published", true);
+      if (error) throw error;
 
-        if (classError) throw classError;
-
-        const transformedFavourites =
-          classesData?.map((cls) => ({
-            id: cls.id,
-            title: cls.title,
-            description: cls.description || cls.short_description,
-            duration: cls.duration_minutes,
-            locked: cls.requires_subscription && !user,
-            category: cls.categories?.name || "",
-            teacher: cls.teacher_name,
-            image: cls.image_url,
-          })) || [];
-
-        setFavourites(transformedFavourites);
-      } catch (error) {
-        console.error("Error fetching favourites:", error);
-        setFavourites([]);
-      }
-
-      setLoading(false);
-    };
-
-    if (!favouritesLoading) {
-      fetchFavouriteSessions();
-    }
-  }, [favouriteIds, favouritesLoading, user]);
+      return (
+        classesData?.map((cls) => ({
+          id: cls.id,
+          title: cls.title,
+          description: cls.description || cls.short_description,
+          duration: cls.duration_minutes,
+          locked: cls.requires_subscription && !user,
+          category: cls.categories?.name || "",
+          teacher: cls.teacher_name,
+          image: cls.image_url,
+        })) || []
+      );
+    },
+    enabled: !favouritesLoading,
+  });
 
   const handleRemoveFavourite = (sessionId: string) => {
     removeFavourite(sessionId);

@@ -1,5 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 export interface GuestTeacher {
   id: string;
@@ -14,43 +14,26 @@ export interface GuestTeacher {
 }
 
 export function useNextGuestTeacher() {
-  const [teacher, setTeacher] = useState<GuestTeacher | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const { data: teacher = null, isLoading: loading, error } = useQuery<GuestTeacher | null>({
+    queryKey: ["next-guest-teacher"],
+    queryFn: async () => {
+      const now = new Date().toISOString();
 
-  useEffect(() => {
-    const controller = new AbortController();
+      const { data, error: fetchError } = await supabase
+        .from("guest_teachers")
+        .select("*")
+        .eq("is_active", true)
+        .gte("session_date", now)
+        .order("session_date", { ascending: true })
+        .limit(1)
+        .maybeSingle();
 
-    const fetchNextTeacher = async () => {
-      try {
-        const now = new Date().toISOString();
+      if (fetchError) throw fetchError;
+      return data;
+    },
+  });
 
-        const { data, error: fetchError } = await supabase
-          .from("guest_teachers")
-          .select("*")
-          .eq("is_active", true)
-          .gte("session_date", now)
-          .order("session_date", { ascending: true })
-          .limit(1)
-          .abortSignal(controller.signal)
-          .maybeSingle();
-
-        if (fetchError) throw fetchError;
-        if (!controller.signal.aborted) setTeacher(data);
-      } catch (err) {
-        if (controller.signal.aborted) return;
-        console.error("Error fetching next guest teacher:", err);
-        setError(err instanceof Error ? err : new Error("Unknown error"));
-      } finally {
-        if (!controller.signal.aborted) setLoading(false);
-      }
-    };
-
-    fetchNextTeacher();
-    return () => controller.abort();
-  }, []);
-
-  return { teacher, loading, error };
+  return { teacher, loading, error: error as Error | null };
 }
 
 // Helper function to calculate next 3rd Thursday

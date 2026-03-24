@@ -14,6 +14,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 import { ArrowLeft, Pause, Play, SkipBack, SkipForward } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -22,37 +23,35 @@ const ClassPlayer = () => {
   const navigate = useNavigate();
   const { user, hasAcceptedSafetyDisclosure, checkSubscription, refreshOnboardingStatus } =
     useAuth();
-  const [classData, setClassData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [showSessionSafetyDisclosure, setShowSessionSafetyDisclosure] = useState(true);
+  const [showSessionSafetyDisclosure, setShowSessionSafetyDisclosure] = useState(false);
   const [showGlobalSafetyModal, setShowGlobalSafetyModal] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const { data: classData, isLoading: loading } = useQuery({
+    queryKey: ["class", id],
+    queryFn: async () => {
+      const { data } = await supabase.from("classes").select("*").eq("id", id).single();
+      return data;
+    },
+    enabled: !!id,
+  });
+
+  const duration = (classData?.duration_minutes || 3) * 60;
 
   // Sync modal state with acceptance status
   useEffect(() => {
     setShowGlobalSafetyModal(!hasAcceptedSafetyDisclosure);
   }, [hasAcceptedSafetyDisclosure]);
 
+  // Initialize safety disclosure from class data
   useEffect(() => {
-    const fetchClass = async () => {
-      const { data } = await supabase.from("classes").select("*").eq("id", id).single();
-
-      if (data) {
-        setClassData(data);
-        // Duration in minutes from database, convert to seconds
-        setDuration((data.duration_minutes || 3) * 60);
-        // Only show session safety disclosure if the class has show_safety_reminder enabled
-        setShowSessionSafetyDisclosure(data.show_safety_reminder || false);
-      }
-      setLoading(false);
-    };
-
-    fetchClass();
-  }, [id]);
+    if (classData) {
+      setShowSessionSafetyDisclosure(classData.show_safety_reminder || false);
+    }
+  }, [classData]);
 
   // Playback timer
   useEffect(() => {

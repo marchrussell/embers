@@ -1,6 +1,7 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 interface UseFavouritesReturn {
@@ -13,43 +14,22 @@ interface UseFavouritesReturn {
 
 export function useFavourites(): UseFavouritesReturn {
   const { user } = useAuth();
-  const [favouriteIds, setFavouriteIds] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
+  const queryKey = ["favourites", user?.id];
 
-  // Fetch favourites on mount and when user changes
-  useEffect(() => {
-    const controller = new AbortController();
+  const { data: favouriteIds = [], isLoading: loading } = useQuery<string[]>({
+    queryKey,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("user_favourites")
+        .select("session_id")
+        .eq("user_id", user!.id);
 
-    const fetchFavourites = async () => {
-      if (!user?.id) {
-        setFavouriteIds([]);
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const { data, error } = await supabase
-          .from("user_favourites")
-          .select("session_id")
-          .eq("user_id", user.id)
-          .abortSignal(controller.signal);
-
-        if (error) throw error;
-        setFavouriteIds(data?.map((f) => f.session_id) || []);
-      } catch (error) {
-        if (controller.signal.aborted) return;
-        console.error("Error fetching favourites:", error);
-        setFavouriteIds([]);
-      } finally {
-        if (!controller.signal.aborted) {
-          setLoading(false);
-        }
-      }
-    };
-
-    fetchFavourites();
-    return () => controller.abort();
-  }, [user?.id]);
+      if (error) throw error;
+      return data?.map((f) => f.session_id) || [];
+    },
+    enabled: !!user?.id,
+  });
 
   const isFavourite = useCallback(
     (sessionId: string) => favouriteIds.includes(sessionId),
@@ -77,7 +57,9 @@ export function useFavourites(): UseFavouritesReturn {
           return;
         }
 
-        setFavouriteIds((prev) => prev.filter((id) => id !== sessionId));
+        queryClient.setQueryData<string[]>(queryKey, (prev) =>
+          (prev || []).filter((id) => id !== sessionId)
+        );
         toast.success("Removed from favourites");
       } else {
         const { error } = await supabase
@@ -89,11 +71,14 @@ export function useFavourites(): UseFavouritesReturn {
           return;
         }
 
-        setFavouriteIds((prev) => [...prev, sessionId]);
+        queryClient.setQueryData<string[]>(queryKey, (prev) => [
+          ...(prev || []),
+          sessionId,
+        ]);
         toast.success("Added to favourites");
       }
     },
-    [user?.id, favouriteIds]
+    [user?.id, favouriteIds, queryClient, queryKey]
   );
 
   const removeFavourite = useCallback(
@@ -114,10 +99,12 @@ export function useFavourites(): UseFavouritesReturn {
         return;
       }
 
-      setFavouriteIds((prev) => prev.filter((id) => id !== sessionId));
+      queryClient.setQueryData<string[]>(queryKey, (prev) =>
+        (prev || []).filter((id) => id !== sessionId)
+      );
       toast.success("Removed from favourites");
     },
-    [user?.id]
+    [user?.id, queryClient, queryKey]
   );
 
   return {

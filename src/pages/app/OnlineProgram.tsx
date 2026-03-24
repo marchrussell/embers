@@ -1,4 +1,5 @@
 import { useState, useEffect, Suspense } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { NavBar } from "@/components/NavBar";
 import { supabase } from "@/integrations/supabase/client";
@@ -55,65 +56,41 @@ const OnlineProgram = () => {
   const navigate = useNavigate();
   const { user, hasSubscription, isAdmin, isTestUser } = useAuth();
 
-  const [course, setCourse] = useState<Course | null>(null);
-  const [lessons, setLessons] = useState<Lesson[]>([]);
-  const [loading, setLoading] = useState(true);
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
-  const [userProfile, setUserProfile] = useState<any>(null);
 
-  // Set profile from user metadata
+  const { data, isLoading: loading, isError } = useQuery({
+    queryKey: ["course", slug],
+    queryFn: async () => {
+      const { data: courseData, error: courseError } = await supabase
+        .from("courses")
+        .select("*")
+        .eq("slug", slug!)
+        .eq("is_published", true)
+        .single();
+
+      if (courseError) throw courseError;
+
+      const { data: lessonsData, error: lessonsError } = await supabase
+        .from("course_lessons")
+        .select("*")
+        .eq("course_id", courseData.id)
+        .eq("is_published", true)
+        .order("order_index");
+
+      if (lessonsError) throw lessonsError;
+
+      return { course: courseData as Course, lessons: (lessonsData || []) as Lesson[] };
+    },
+    enabled: !!slug,
+  });
+
   useEffect(() => {
-    if (user) {
-      const metadataName = user.user_metadata?.full_name;
-      if (metadataName) {
-        setUserProfile({ full_name: metadataName });
-      }
-    }
-  }, [user]);
+    if (isError) toast.error("Unable to load program");
+  }, [isError]);
 
-  useEffect(() => {
-    const fetchCourseData = async () => {
-      if (!slug) return;
-
-      try {
-        setLoading(true);
-
-        // Fetch course
-        const { data: courseData, error: courseError } = await supabase
-          .from("courses")
-          .select("*")
-          .eq("slug", slug)
-          .eq("is_published", true)
-          .single();
-
-        if (courseError) throw courseError;
-        if (courseData) {
-          setCourse(courseData);
-
-          // Fetch lessons for this course
-          const { data: lessonsData, error: lessonsError } = await supabase
-            .from("course_lessons")
-            .select("*")
-            .eq("course_id", courseData.id)
-            .eq("is_published", true)
-            .order("order_index");
-
-          if (lessonsError) throw lessonsError;
-          if (lessonsData) {
-            setLessons(lessonsData);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching course:", error);
-        toast.error("Unable to load program");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCourseData();
-  }, [slug]);
+  const course = data?.course ?? null;
+  const lessons = data?.lessons ?? [];
 
   const handleLessonClick = (lessonId: string) => {
     // For now, show subscription modal if not subscribed

@@ -208,6 +208,7 @@ export type Database = {
           title: string;
           updated_at: string | null;
           audio_url: string;
+          video_url?: string | null;
         };
         Insert: {
           category_id?: string | null;
@@ -235,6 +236,7 @@ export type Database = {
           title: string;
           updated_at?: string | null;
           audio_url: string;
+          video_url?: string | null;
         };
         Update: {
           category_id?: string | null;
