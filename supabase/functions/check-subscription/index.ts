@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
+import { upsertLoopsContact, fireLoopsEvent } from "../_shared/loops.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -99,9 +100,21 @@ serve(async (req) => {
           .from("pending_subscriptions")
           .delete()
           .eq("email", user.email);
-        
+
         logStep("Successfully migrated pending subscription to user account");
-        
+
+        // Update Loops contact and fire setup + subscription events
+        await upsertLoopsContact(user.email, {
+          userId: user.id,
+          subscriptionStatus: pendingSub.status,
+          pendingSetup: false,
+          subscriptionStartedAt: new Date().toISOString(),
+          ...(pendingSub.current_period_end ? { trialEndsAt: pendingSub.current_period_end } : {}),
+        });
+        await fireLoopsEvent(user.email, "accountSetupCompleted");
+        await fireLoopsEvent(user.email, "subscriptionStarted");
+        logStep("Loops events fired: accountSetupCompleted, subscriptionStarted");
+
         // Return immediately since we just migrated the data
         return new Response(JSON.stringify({
           subscribed: true,

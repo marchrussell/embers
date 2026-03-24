@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
+import { upsertLoopsContact, fireLoopsEvent } from "../_shared/loops.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -182,6 +183,16 @@ serve(async (req) => {
           logStep("Failed to save pending subscription", { error: pendingError });
         } else {
           logStep("Successfully saved pending subscription", { email: customerEmail });
+
+          // Create Loops contact and fire paymentCompleted event
+          const trialEndsAt = upsertData.current_period_end ?? null;
+          await upsertLoopsContact(customerEmail, {
+            subscriptionStatus: "pending_setup",
+            pendingSetup: true,
+            ...(trialEndsAt ? { trialEndsAt } : {}),
+          });
+          await fireLoopsEvent(customerEmail, "paymentCompleted");
+          logStep("Loops contact created and paymentCompleted event fired");
         }
       } catch (saveError) {
         logStep("Error saving subscription data", { error: saveError });
