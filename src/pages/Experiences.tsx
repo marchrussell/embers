@@ -1,3 +1,8 @@
+import { Calendar, Share } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ExperienceBookingModal } from "@/components/ExperienceBookingModal";
 import { Footer } from "@/components/Footer";
@@ -6,21 +11,16 @@ import { SubscriptionModal } from "@/components/SubscriptionModal";
 import { TermsMicrocopy } from "@/components/TermsMicrocopy";
 import { GlowButton } from "@/components/ui/glow-button";
 import { IconButton } from "@/components/ui/icon-button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   CalendarEvent,
   downloadICalFile,
   getGoogleCalendarUrl,
   getOutlookCalendarUrl,
 } from "@/lib/calendarUtils";
+import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
 import { formatEventDate, getNextEventDate } from "@/lib/experienceDateUtils";
 import { EventSchedule, experiencesData } from "@/lib/experiencesData";
-import { Calendar, Share } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
-
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
 
 const moreWaysToPracticeImg = getCloudImageUrl(CLOUD_IMAGES.moreWaysToPractice);
 

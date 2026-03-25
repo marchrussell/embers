@@ -1,15 +1,16 @@
+import { ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
 import { InstagramStoryCard } from "@/components/InstagramStoryCard";
-import { InstagramStoryCardWithSession } from "@/components/InstagramStoryCardWithSession";
-import { InstagramStoryCardMushroom } from "@/components/InstagramStoryCardMushroom";
-import { InstagramStoryCardLiveSession } from "@/components/InstagramStoryCardLiveSession";
-import { InstagramStoryCardSelfCompassion } from "@/components/InstagramStoryCardSelfCompassion";
-import { InstagramStoryCardInnerChild } from "@/components/InstagramStoryCardInnerChild";
 import { InstagramStoryCardAwakening } from "@/components/InstagramStoryCardAwakening";
 import { InstagramStoryCardClearAwareness } from "@/components/InstagramStoryCardClearAwareness";
 import { InstagramStoryCardComingSoon } from "@/components/InstagramStoryCardComingSoon";
+import { InstagramStoryCardInnerChild } from "@/components/InstagramStoryCardInnerChild";
+import { InstagramStoryCardLiveSession } from "@/components/InstagramStoryCardLiveSession";
+import { InstagramStoryCardMushroom } from "@/components/InstagramStoryCardMushroom";
+import { InstagramStoryCardSelfCompassion } from "@/components/InstagramStoryCardSelfCompassion";
+import { InstagramStoryCardWithSession } from "@/components/InstagramStoryCardWithSession";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
 const InstagramPreview = () => {
   const navigate = useNavigate();

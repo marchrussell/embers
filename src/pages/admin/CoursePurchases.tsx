@@ -1,8 +1,13 @@
+import { format } from "date-fns";
+import { ArrowLeft, CheckCircle, Eye, Mail, RefreshCw, Search, ShoppingBag } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate, Link } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { Link, useNavigate } from "react-router-dom";
+
+import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -12,13 +17,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
-import { ArrowLeft, Search, RefreshCw, Mail, Eye, ShoppingBag, CheckCircle } from "lucide-react";
-import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
-import { Badge } from "@/components/ui/badge";
-import { format } from "date-fns";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Purchase {
   id: string;

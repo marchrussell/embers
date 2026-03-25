@@ -1,22 +1,23 @@
-import { useEffect, useState, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
-import { useFavourites } from "@/hooks/useFavourites";
+import { Heart, Pause, Play, Share2, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
-import { Play, Pause, X, Heart, Share2 } from "lucide-react";
+
 import { SessionCompletionModal } from "@/components/SessionCompletionModal";
-import { analytics } from "@/lib/posthog";
 import { ModalContentSkeleton } from "@/components/skeletons/ModalContentSkeleton";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
+import { Slider } from "@/components/ui/slider";
+import { useAuth } from "@/contexts/AuthContext";
+import { useFavourites } from "@/hooks/useFavourites";
+import { supabase } from "@/integrations/supabase/client";
+import { analytics } from "@/lib/posthog";
 
 interface ClassPlayerModalProps {
   classId: string | null;

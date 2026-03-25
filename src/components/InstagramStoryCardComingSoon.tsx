@@ -1,5 +1,5 @@
-import mLogo from "@/assets/m-logo.png";
 import liveSessionBg from "@/assets/instagram-live-session-bg.jpg";
+import mLogo from "@/assets/m-logo.png";
 
 export const InstagramStoryCardComingSoon = () => {
   return (

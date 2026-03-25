@@ -1,7 +1,9 @@
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { GlowButton } from "@/components/ui/glow-button";
 import { ArrowRight, X } from "lucide-react";
 import { useState } from "react";
+
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { GlowButton } from "@/components/ui/glow-button";
+
 import { RiseArcApplicationForm } from "./RiseArcApplicationForm";
 interface RiseArcIntroModalProps {
   open: boolean;

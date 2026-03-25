@@ -1,3 +1,8 @@
+import { ChevronLeft, ChevronRight, Play, Video } from "lucide-react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
 import guestSessionBg from "@/assets/guest-session-bg.png";
 import heroHandsSession from "@/assets/hero-hands-session.png";
 import weeklyResetEvent from "@/assets/weekly-reset-event.jpg";
@@ -8,10 +13,7 @@ import {
   getGoogleCalendarUrl,
   getOutlookCalendarUrl,
 } from "@/lib/calendarUtils";
-import { ChevronLeft, ChevronRight, Play, Video } from "lucide-react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+
 import LiveProgramCard from "./components/LiveProgramCard";
 import { AVAILABILITY_DAYS, useLiveReplays } from "./hooks/useLiveReplays";
 import { LiveReplay, LiveSessionsData } from "./types";

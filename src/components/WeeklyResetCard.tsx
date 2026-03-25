@@ -1,3 +1,8 @@
+import { ArrowLeft, Calendar, Clock, Share } from "lucide-react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
 import { IconButton } from "@/components/ui/icon-button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
@@ -7,10 +12,6 @@ import {
   openOutlookCalendar,
 } from "@/lib/calendarUtils";
 import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
-import { ArrowLeft, Calendar, Clock, Share } from "lucide-react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 
 const weeklyResetImage = getCloudImageUrl(CLOUD_IMAGES.weeklyReset);
 

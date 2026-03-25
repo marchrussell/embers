@@ -1,9 +1,11 @@
-import { IconButton } from "@/components/ui/icon-button";
-import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 import { ChevronLeft, ChevronRight, Lock } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+
+import { IconButton } from "@/components/ui/icon-button";
+import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
+
 import CourseCard from "./components/CourseCard";
 import SessionPlayCard from "./components/SessionPlayCard";
 import StartHereCard from "./components/StartHereCard";

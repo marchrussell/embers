@@ -1,18 +1,19 @@
-import { useState, useEffect, useRef } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { NavBar } from "@/components/NavBar";
+import { ArrowLeft, Sparkles } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+
 import { Footer } from "@/components/Footer";
 import { ChatInput } from "@/components/march/ChatInput";
 import { ChatMessage } from "@/components/march/ChatMessage";
-import { TypingIndicator } from "@/components/march/TypingIndicator";
 import { MarchPrivacyModal } from "@/components/march/MarchPrivacyModal";
-import { Card } from "@/components/ui/card";
+import { TypingIndicator } from "@/components/march/TypingIndicator";
+import { NavBar } from "@/components/NavBar";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Sparkles } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Message {
   role: "user" | "assistant";

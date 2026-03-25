@@ -1,9 +1,12 @@
+import { Suspense, useMemo, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+
 import { Footer } from "@/components/Footer";
+import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { NavBar } from "@/components/NavBar";
 import OnlineFooter from "@/components/OnlineFooter";
 import OnlineHeader from "@/components/OnlineHeader";
 import { SafetyDisclosureModal } from "@/components/SafetyDisclosureModal";
-import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import {
@@ -12,14 +15,13 @@ import {
   useNextGuestTeacher,
 } from "@/hooks/useNextGuestTeacher";
 import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
-import { Suspense, useMemo, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+
 import Library from "./Library";
-import SessionDetailModal from "./SessionDetail";
 import HomeTab from "./online/HomeTab";
 import LiveTab from "./online/LiveTab";
 import ProgramsTab from "./online/ProgramsTab";
 import { LiveSessionsData } from "./online/types";
+import SessionDetailModal from "./SessionDetail";
 
 const VALID_TABS = ["home", "library", "programs", "live"];
 const weeklyResetImg = getCloudImageUrl(CLOUD_IMAGES.weeklyReset);
@@ -81,7 +83,8 @@ const Online = () => {
             description:
               nextGuestTeacher.short_description ||
               `A unique session featuring ${nextGuestTeacher.name} with fresh perspectives.`,
-            image: nextGuestTeacher.photo_url || guestSessionImg,            nextDate: formatGuestSessionDate(new Date(nextGuestTeacher.session_date)),
+            image: nextGuestTeacher.photo_url || guestSessionImg,
+            nextDate: formatGuestSessionDate(new Date(nextGuestTeacher.session_date)),
             isLive: false,
             hasReplay: false,
             teacherName: nextGuestTeacher.name,

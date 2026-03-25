@@ -1,12 +1,13 @@
+import { CheckCircle, Mail } from "lucide-react";
 import { useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Mail, CheckCircle } from "lucide-react";
-import { NavBar } from "@/components/NavBar";
+
 import { Footer } from "@/components/Footer";
+import { NavBar } from "@/components/NavBar";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { supabase } from "@/integrations/supabase/client";
 
 const NewsletterUnsubscribe = () => {
   const [email, setEmail] = useState("");

@@ -1,10 +1,11 @@
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { useState } from "react";
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import { DarkInput } from "@/components/ui/dark-input";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ModalCloseButton } from "@/components/ui/modal-close-button";
-import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
 
 interface NewsletterModalProps {
   open: boolean;

@@ -1,5 +1,6 @@
-import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
 import { Heart, Pause, Play, Star } from "lucide-react";
+
+import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
 
 // Shared phone frame styles
 const phoneFrameStyles =
@@ -10,15 +11,43 @@ const categoryCalm = getCloudImageUrl(CLOUD_IMAGES.startHereButterfly, { width: 
 const reviewsBg = getCloudImageUrl(CLOUD_IMAGES.exploreTestimonials, { width: 600, quality: 80 });
 
 const session1 = getCloudImageUrl(CLOUD_IMAGES.nsdr, { width: 600, quality: 80 }, "class-images");
-const session2 = getCloudImageUrl(CLOUD_IMAGES.findingSteadyGround, { width: 600, quality: 80 }, "class-images");
-const session3 = getCloudImageUrl(CLOUD_IMAGES.immediateRelief, { width: 600, quality: 80 }, "class-images");
+const session2 = getCloudImageUrl(
+  CLOUD_IMAGES.findingSteadyGround,
+  { width: 600, quality: 80 },
+  "class-images"
+);
+const session3 = getCloudImageUrl(
+  CLOUD_IMAGES.immediateRelief,
+  { width: 600, quality: 80 },
+  "class-images"
+);
 const session4 = getCloudImageUrl(CLOUD_IMAGES.nervousSystemReset, { width: 600, quality: 80 });
-const session5 = getCloudImageUrl(CLOUD_IMAGES.softeningTension, { width: 600, quality: 80 }, "class-images");
+const session5 = getCloudImageUrl(
+  CLOUD_IMAGES.softeningTension,
+  { width: 600, quality: 80 },
+  "class-images"
+);
 
-const stabaliseLesson1 = getCloudImageUrl(CLOUD_IMAGES.triangleBreathing, { width: 600, quality: 80 }, "class-images");
-const stabaliseLesson2 = getCloudImageUrl(CLOUD_IMAGES.findingSteadyGround, { width: 600, quality: 80 }, "class-images");
-const stabaliseLesson3 = getCloudImageUrl(CLOUD_IMAGES.nsdr, { width: 600, quality: 80 }, "class-images");
-const stabaliseLesson4 = getCloudImageUrl(CLOUD_IMAGES.sleepTransition, { width: 600, quality: 80 }, "class-images");
+const stabaliseLesson1 = getCloudImageUrl(
+  CLOUD_IMAGES.triangleBreathing,
+  { width: 600, quality: 80 },
+  "class-images"
+);
+const stabaliseLesson2 = getCloudImageUrl(
+  CLOUD_IMAGES.findingSteadyGround,
+  { width: 600, quality: 80 },
+  "class-images"
+);
+const stabaliseLesson3 = getCloudImageUrl(
+  CLOUD_IMAGES.nsdr,
+  { width: 600, quality: 80 },
+  "class-images"
+);
+const stabaliseLesson4 = getCloudImageUrl(
+  CLOUD_IMAGES.sleepTransition,
+  { width: 600, quality: 80 },
+  "class-images"
+);
 
 const sessions = [
   { title: "NSDR: Gentle Reset", duration: "11 min", image: session1 },

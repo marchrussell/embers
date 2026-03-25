@@ -1,6 +1,7 @@
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
+
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 const TWO_WEEKS_MS = 14 * 24 * 60 * 60 * 1000;
 

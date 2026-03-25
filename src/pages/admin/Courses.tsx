@@ -1,3 +1,7 @@
+import { BookOpen, GraduationCap, Pencil, Plus, Trash2, Users } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import {
   AdminLayout,
   AdminStatsCard,
@@ -22,9 +26,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
-import { BookOpen, GraduationCap, Pencil, Plus, Trash2, Users } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 interface Course {
   id: string;

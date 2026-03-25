@@ -19,7 +19,11 @@ export interface CloudImageOptions {
 /**
  * Generate a CDN-optimized URL for a Cloud Storage image
  */
-export const getCloudImageUrl = (imagePath: string, options: CloudImageOptions = {}, bucket = BUCKET_NAME): string => {
+export const getCloudImageUrl = (
+  imagePath: string,
+  options: CloudImageOptions = {},
+  bucket = BUCKET_NAME
+): string => {
   const { width, height, quality = 80, format = "webp", resize = "cover" } = options;
 
   const baseUrl = `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${imagePath}`;

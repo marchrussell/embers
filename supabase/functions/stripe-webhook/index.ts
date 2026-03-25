@@ -1,7 +1,8 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 import Stripe from "https://esm.sh/stripe@18.5.0";
-import { upsertLoopsContact, fireLoopsEvent } from "../_shared/loops.ts";
+
+import { fireLoopsEvent,upsertLoopsContact } from "../_shared/loops.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -216,6 +217,17 @@ serve(async (req) => {
               logStep("Error saving pending subscription", { error: pendingError });
             } else {
               logStep("Pending subscription saved via webhook", { email: session.customer_email });
+
+              // Create Loops contact and fire paymentCompleted — covers both normal
+              // flow and fallback (user closes browser before /payment-success loads)
+              const trialEndsAt = upsertData.current_period_end as string | undefined;
+              await upsertLoopsContact(session.customer_email, {
+                subscriptionStatus: "pending_setup",
+                pendingSetup: true,
+                ...(trialEndsAt ? { trialEndsAt } : {}),
+              });
+              await fireLoopsEvent(session.customer_email, "paymentCompleted");
+              logStep("Loops contact created and paymentCompleted event fired");
             }
           } catch (err) {
             logStep("Error processing subscription checkout", { error: err instanceof Error ? err.message : String(err) });

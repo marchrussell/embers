@@ -1,5 +1,6 @@
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangle, Heart, Phone } from "lucide-react";
+
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { CRISIS_RESOURCES } from "@/lib/marchSafety";
 

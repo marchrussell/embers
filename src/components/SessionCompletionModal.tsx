@@ -1,10 +1,11 @@
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Award, Target, Zap, ArrowRight, Share2 } from "lucide-react";
-import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { Award, Share2, Target, Zap } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
 import { PostSessionFeedbackModal } from "@/components/PostSessionFeedbackModal";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 interface SessionCompletionModalProps {
   open: boolean;

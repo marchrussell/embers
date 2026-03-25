@@ -1,5 +1,5 @@
-import mLogo from "@/assets/m-logo.png";
 import sessionImage from "@/assets/finding-aliveness.jpg";
+import mLogo from "@/assets/m-logo.png";
 
 export const InstagramStoryCardInnerChild = () => {
   return (

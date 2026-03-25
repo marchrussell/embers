@@ -1,5 +1,5 @@
-import mLogo from "@/assets/m-logo.png";
 import sessionImage from "@/assets/clear-awareness-flowers.jpg";
+import mLogo from "@/assets/m-logo.png";
 
 export const InstagramStoryCardClearAwareness = () => {
   return (

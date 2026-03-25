@@ -1,7 +1,8 @@
-import { OptimizedImage } from "@/components/OptimizedImage";
-import { IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 import { Lock } from "lucide-react";
 import { memo } from "react";
+
+import { OptimizedImage } from "@/components/OptimizedImage";
+import { IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 
 interface CourseCardProps {
   title: string;

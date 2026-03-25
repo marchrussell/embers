@@ -1,3 +1,17 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  Activity,
+  CheckCircle,
+  Search,
+  Trash2,
+  TrendingUp,
+  User,
+  Users as UsersIcon,
+  XCircle,
+} from "lucide-react";
+import { useMemo, useState } from "react";
+import { toast } from "sonner";
+
 import { AdminLayout, AdminStatsCard } from "@/components/admin";
 import {
   AlertDialog,
@@ -16,19 +30,6 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import {
-  Activity,
-  CheckCircle,
-  Search,
-  Trash2,
-  TrendingUp,
-  User,
-  Users as UsersIcon,
-  XCircle,
-} from "lucide-react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
-import { toast } from "sonner";
 
 interface UserData {
   id: string;
@@ -82,7 +83,6 @@ const AdminUsers = () => {
   const { data: users = [], isLoading } = useQuery<UserData[]>({
     queryKey: ["admin-users"],
     queryFn: async () => {
-
       // Fetch profiles
       const { data: profiles, error: profilesError } = await supabase
         .from("profiles")
@@ -179,377 +179,379 @@ const AdminUsers = () => {
   const { data: analytics = null } = useQuery<AnalyticsData | null>({
     queryKey: ["admin-analytics"],
     queryFn: async () => {
-    try {
-      // Total signups
-      const { count: totalSignups } = await supabase
-        .from("profiles")
-        .select("*", { count: "exact", head: true });
+      try {
+        // Total signups
+        const { count: totalSignups } = await supabase
+          .from("profiles")
+          .select("*", { count: "exact", head: true });
 
-      // Get all profiles with created_at for retention calculations
-      const { data: allProfiles } = await supabase.from("profiles").select("id, created_at");
+        // Get all profiles with created_at for retention calculations
+        const { data: allProfiles } = await supabase.from("profiles").select("id, created_at");
 
-      // Active subscribers with price info for type breakdown
-      const { data: activeSubs } = await supabase
-        .from("user_subscriptions")
-        .select("user_id, stripe_price_id")
-        .eq("status", "active");
+        // Active subscribers with price info for type breakdown
+        const { data: activeSubs } = await supabase
+          .from("user_subscriptions")
+          .select("user_id, stripe_price_id")
+          .eq("status", "active");
 
-      // Count monthly vs annual
-      const monthlySubscribers =
-        activeSubs?.filter((s) => s.stripe_price_id === "price_1SaMRuGBlPMRpwZ6M3bbM1H8").length ||
-        0;
-      const annualSubscribers =
-        activeSubs?.filter((s) => s.stripe_price_id === "price_1SaMMWGBlPMRpwZ64lDmN0cr").length ||
-        0;
+        // Count monthly vs annual
+        const monthlySubscribers =
+          activeSubs?.filter((s) => s.stripe_price_id === "price_1SaMRuGBlPMRpwZ6M3bbM1H8")
+            .length || 0;
+        const annualSubscribers =
+          activeSubs?.filter((s) => s.stripe_price_id === "price_1SaMMWGBlPMRpwZ64lDmN0cr")
+            .length || 0;
 
-      // Get all user progress data
-      const { data: allProgress } = await supabase
-        .from("user_progress")
-        .select("user_id, class_id, completed, updated_at, last_position_seconds, created_at");
+        // Get all user progress data
+        const { data: allProgress } = await supabase
+          .from("user_progress")
+          .select("user_id, class_id, completed, updated_at, last_position_seconds, created_at");
 
-      // Calculate time-based metrics
-      const now = new Date();
-      const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-      const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-      const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+        // Calculate time-based metrics
+        const now = new Date();
+        const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+        const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-      // Active users (by session activity)
-      const activeToday = new Set(
-        allProgress?.filter((p) => new Date(p.updated_at) >= oneDayAgo).map((p) => p.user_id)
-      ).size;
+        // Active users (by session activity)
+        const activeToday = new Set(
+          allProgress?.filter((p) => new Date(p.updated_at) >= oneDayAgo).map((p) => p.user_id)
+        ).size;
 
-      const activeThisWeek = new Set(
-        allProgress?.filter((p) => new Date(p.updated_at) >= sevenDaysAgo).map((p) => p.user_id)
-      ).size;
+        const activeThisWeek = new Set(
+          allProgress?.filter((p) => new Date(p.updated_at) >= sevenDaysAgo).map((p) => p.user_id)
+        ).size;
 
-      const activeThisMonth = new Set(
-        allProgress?.filter((p) => new Date(p.updated_at) >= thirtyDaysAgo).map((p) => p.user_id)
-      ).size;
+        const activeThisMonth = new Set(
+          allProgress?.filter((p) => new Date(p.updated_at) >= thirtyDaysAgo).map((p) => p.user_id)
+        ).size;
 
-      // Retention calculations - users who came back after signup
-      let day1Retention = 0;
-      let day7Retention = 0;
-      let day30Retention = 0;
+        // Retention calculations - users who came back after signup
+        let day1Retention = 0;
+        let day7Retention = 0;
+        let day30Retention = 0;
 
-      if (allProfiles && allProgress) {
-        const usersSignedUpAtLeast1DayAgo = allProfiles.filter(
-          (p) => new Date(p.created_at) <= oneDayAgo
-        );
-        const usersSignedUpAtLeast7DaysAgo = allProfiles.filter(
-          (p) => new Date(p.created_at) <= sevenDaysAgo
-        );
-        const usersSignedUpAtLeast30DaysAgo = allProfiles.filter(
-          (p) => new Date(p.created_at) <= thirtyDaysAgo
-        );
-
-        // Day 1 retention: users who signed up at least 1 day ago and had activity within day 2-3
-        const day1RetainedUsers = usersSignedUpAtLeast1DayAgo.filter((profile) => {
-          const signupDate = new Date(profile.created_at);
-          const day2Start = new Date(signupDate.getTime() + 24 * 60 * 60 * 1000);
-          const day3End = new Date(signupDate.getTime() + 72 * 60 * 60 * 1000);
-          return allProgress.some(
-            (p) =>
-              p.user_id === profile.id &&
-              new Date(p.updated_at) >= day2Start &&
-              new Date(p.updated_at) <= day3End
+        if (allProfiles && allProgress) {
+          const usersSignedUpAtLeast1DayAgo = allProfiles.filter(
+            (p) => new Date(p.created_at) <= oneDayAgo
           );
-        }).length;
-        day1Retention =
-          usersSignedUpAtLeast1DayAgo.length > 0
-            ? (day1RetainedUsers / usersSignedUpAtLeast1DayAgo.length) * 100
-            : 0;
-
-        // Day 7 retention: users who signed up at least 7 days ago and had activity within day 7-14
-        const day7RetainedUsers = usersSignedUpAtLeast7DaysAgo.filter((profile) => {
-          const signupDate = new Date(profile.created_at);
-          const day7Start = new Date(signupDate.getTime() + 7 * 24 * 60 * 60 * 1000);
-          const day14End = new Date(signupDate.getTime() + 14 * 24 * 60 * 60 * 1000);
-          return allProgress.some(
-            (p) =>
-              p.user_id === profile.id &&
-              new Date(p.updated_at) >= day7Start &&
-              new Date(p.updated_at) <= day14End
+          const usersSignedUpAtLeast7DaysAgo = allProfiles.filter(
+            (p) => new Date(p.created_at) <= sevenDaysAgo
           );
-        }).length;
-        day7Retention =
-          usersSignedUpAtLeast7DaysAgo.length > 0
-            ? (day7RetainedUsers / usersSignedUpAtLeast7DaysAgo.length) * 100
-            : 0;
-
-        // Day 30 retention: users who signed up at least 30 days ago and had activity within day 30-60
-        const day30RetainedUsers = usersSignedUpAtLeast30DaysAgo.filter((profile) => {
-          const signupDate = new Date(profile.created_at);
-          const day30Start = new Date(signupDate.getTime() + 30 * 24 * 60 * 60 * 1000);
-          const day60End = new Date(signupDate.getTime() + 60 * 24 * 60 * 60 * 1000);
-          return allProgress.some(
-            (p) =>
-              p.user_id === profile.id &&
-              new Date(p.updated_at) >= day30Start &&
-              new Date(p.updated_at) <= day60End
+          const usersSignedUpAtLeast30DaysAgo = allProfiles.filter(
+            (p) => new Date(p.created_at) <= thirtyDaysAgo
           );
-        }).length;
-        day30Retention =
-          usersSignedUpAtLeast30DaysAgo.length > 0
-            ? (day30RetainedUsers / usersSignedUpAtLeast30DaysAgo.length) * 100
-            : 0;
-      }
 
-      // 30-day retention rate (existing metric)
-      const retentionRate = totalSignups ? (activeThisMonth / totalSignups) * 100 : 0;
+          // Day 1 retention: users who signed up at least 1 day ago and had activity within day 2-3
+          const day1RetainedUsers = usersSignedUpAtLeast1DayAgo.filter((profile) => {
+            const signupDate = new Date(profile.created_at);
+            const day2Start = new Date(signupDate.getTime() + 24 * 60 * 60 * 1000);
+            const day3End = new Date(signupDate.getTime() + 72 * 60 * 60 * 1000);
+            return allProgress.some(
+              (p) =>
+                p.user_id === profile.id &&
+                new Date(p.updated_at) >= day2Start &&
+                new Date(p.updated_at) <= day3End
+            );
+          }).length;
+          day1Retention =
+            usersSignedUpAtLeast1DayAgo.length > 0
+              ? (day1RetainedUsers / usersSignedUpAtLeast1DayAgo.length) * 100
+              : 0;
 
-      // Average sessions per active user
-      const activeUsersSet = new Set(allProgress?.map((p) => p.user_id));
-      const totalSessions = allProgress?.length || 0;
-      const avgSessionsPerUser = activeUsersSet.size > 0 ? totalSessions / activeUsersSet.size : 0;
+          // Day 7 retention: users who signed up at least 7 days ago and had activity within day 7-14
+          const day7RetainedUsers = usersSignedUpAtLeast7DaysAgo.filter((profile) => {
+            const signupDate = new Date(profile.created_at);
+            const day7Start = new Date(signupDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+            const day14End = new Date(signupDate.getTime() + 14 * 24 * 60 * 60 * 1000);
+            return allProgress.some(
+              (p) =>
+                p.user_id === profile.id &&
+                new Date(p.updated_at) >= day7Start &&
+                new Date(p.updated_at) <= day14End
+            );
+          }).length;
+          day7Retention =
+            usersSignedUpAtLeast7DaysAgo.length > 0
+              ? (day7RetainedUsers / usersSignedUpAtLeast7DaysAgo.length) * 100
+              : 0;
 
-      // Session completion rate
-      const completedSessions = allProgress?.filter((p) => p.completed).length || 0;
-      const sessionCompletionRate =
-        totalSessions > 0 ? (completedSessions / totalSessions) * 100 : 0;
-
-      // Session drop-off rate (sessions started but not completed)
-      const sessionDropOffRate = 100 - sessionCompletionRate;
-
-      // Average days since last activity
-      let avgDaysSinceLastActivity = 0;
-      if (allProgress && allProgress.length > 0) {
-        const userLastActivity = new Map<string, Date>();
-        allProgress.forEach((p) => {
-          const activityDate = new Date(p.updated_at);
-          const existing = userLastActivity.get(p.user_id);
-          if (!existing || activityDate > existing) {
-            userLastActivity.set(p.user_id, activityDate);
-          }
-        });
-
-        const daysSinceActivities = Array.from(userLastActivity.values()).map((date) =>
-          Math.floor((now.getTime() - date.getTime()) / (24 * 60 * 60 * 1000))
-        );
-        avgDaysSinceLastActivity =
-          daysSinceActivities.length > 0
-            ? daysSinceActivities.reduce((sum, days) => sum + days, 0) / daysSinceActivities.length
-            : 0;
-      }
-
-      // Churn rate: users who were active 30-60 days ago but not in last 30 days
-      const sixtyDaysAgo = new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000);
-      const usersActive30to60DaysAgo = new Set(
-        allProgress
-          ?.filter((p) => {
-            const activityDate = new Date(p.updated_at);
-            return activityDate >= sixtyDaysAgo && activityDate < thirtyDaysAgo;
-          })
-          .map((p) => p.user_id)
-      );
-
-      const recentlyActiveUsers = new Set(
-        allProgress?.filter((p) => new Date(p.updated_at) >= thirtyDaysAgo).map((p) => p.user_id)
-      );
-
-      const churnedUsers = Array.from(usersActive30to60DaysAgo).filter(
-        (userId) => !recentlyActiveUsers.has(userId)
-      ).length;
-
-      const churnRate =
-        usersActive30to60DaysAgo.size > 0
-          ? (churnedUsers / usersActive30to60DaysAgo.size) * 100
-          : 0;
-
-      // Peak usage times - analyze by hour and day of week
-      const hourlyUsage = new Map<number, number>();
-      const dailyUsage = new Map<string, number>();
-
-      const dayNames = [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-      ];
-
-      allProgress?.forEach((p) => {
-        const activityDate = new Date(p.updated_at);
-        const hour = activityDate.getHours();
-        const dayName = dayNames[activityDate.getDay()];
-
-        hourlyUsage.set(hour, (hourlyUsage.get(hour) || 0) + 1);
-        dailyUsage.set(dayName, (dailyUsage.get(dayName) || 0) + 1);
-      });
-
-      const peakUsageHours = Array.from(hourlyUsage.entries())
-        .filter(([_, sessions]) => sessions > 0) // Only include hours with activity
-        .map(([hour, sessions]) => ({ hour, sessions }))
-        .sort((a, b) => b.sessions - a.sessions)
-        .slice(0, 5); // Top 5 hours
-
-      const peakUsageDays = Array.from(dailyUsage.entries())
-        .map(([day, sessions]) => ({ day, sessions }))
-        .sort((a, b) => b.sessions - a.sessions);
-
-      // Get all published sessions with categories
-      const { data: allClasses } = await supabase
-        .from("classes")
-        .select("id, title, category_id")
-        .eq("is_published", true);
-
-      // Get categories
-      const { data: categories } = await supabase.from("categories").select("id, name");
-
-      // Get all favorites
-      const { data: favorites } = await supabase.from("user_favourites").select("session_id");
-
-      // Category performance - just plays, no completion rates
-      const categoryMap = new Map();
-      categories?.forEach((cat) => {
-        categoryMap.set(cat.id, {
-          category: cat.name,
-          plays: 0,
-        });
-      });
-
-      allClasses?.forEach((cls) => {
-        if (cls.category_id && categoryMap.has(cls.category_id)) {
-          const sessionProgress = allProgress?.filter((p) => p.class_id === cls.id) || [];
-          const categoryData = categoryMap.get(cls.category_id);
-          categoryData.plays += sessionProgress.length;
+          // Day 30 retention: users who signed up at least 30 days ago and had activity within day 30-60
+          const day30RetainedUsers = usersSignedUpAtLeast30DaysAgo.filter((profile) => {
+            const signupDate = new Date(profile.created_at);
+            const day30Start = new Date(signupDate.getTime() + 30 * 24 * 60 * 60 * 1000);
+            const day60End = new Date(signupDate.getTime() + 60 * 24 * 60 * 60 * 1000);
+            return allProgress.some(
+              (p) =>
+                p.user_id === profile.id &&
+                new Date(p.updated_at) >= day30Start &&
+                new Date(p.updated_at) <= day60End
+            );
+          }).length;
+          day30Retention =
+            usersSignedUpAtLeast30DaysAgo.length > 0
+              ? (day30RetainedUsers / usersSignedUpAtLeast30DaysAgo.length) * 100
+              : 0;
         }
-      });
 
-      const categoryPerformance = Array.from(categoryMap.values())
-        .map((cat) => ({
-          category: cat.category,
-          plays: cat.plays,
-        }))
-        .sort((a, b) => b.plays - a.plays);
+        // 30-day retention rate (existing metric)
+        const retentionRate = totalSignups ? (activeThisMonth / totalSignups) * 100 : 0;
 
-      // Individual program completion rates
-      const { data: programs } = await supabase
-        .from("programs")
-        .select("id, title")
-        .eq("is_published", true);
+        // Average sessions per active user
+        const activeUsersSet = new Set(allProgress?.map((p) => p.user_id));
+        const totalSessions = allProgress?.length || 0;
+        const avgSessionsPerUser =
+          activeUsersSet.size > 0 ? totalSessions / activeUsersSet.size : 0;
 
-      const { data: programClasses } = await supabase
-        .from("classes")
-        .select("id, program_id")
-        .not("program_id", "is", null)
-        .eq("is_published", true);
+        // Session completion rate
+        const completedSessions = allProgress?.filter((p) => p.completed).length || 0;
+        const sessionCompletionRate =
+          totalSessions > 0 ? (completedSessions / totalSessions) * 100 : 0;
 
-      const programCompletionRates: Array<{
-        programTitle: string;
-        completionRate: number;
-        totalEnrollments: number;
-      }> = [];
+        // Session drop-off rate (sessions started but not completed)
+        const sessionDropOffRate = 100 - sessionCompletionRate;
 
-      if (programs && programClasses && allProgress) {
-        const programMap = new Map();
-        programs.forEach((prog) => {
-          programMap.set(prog.id, {
-            title: prog.title,
-            totalClasses: 0,
-            userProgress: new Map<string, number>(),
-          });
-        });
-
-        programClasses.forEach((cls) => {
-          if (cls.program_id && programMap.has(cls.program_id)) {
-            programMap.get(cls.program_id).totalClasses += 1;
-          }
-        });
-
-        allProgress.forEach((progress) => {
-          const programClass = programClasses.find((pc) => pc.id === progress.class_id);
-          if (programClass?.program_id && progress.completed) {
-            const progData = programMap.get(programClass.program_id);
-            const userCompletions = progData.userProgress.get(progress.user_id) || 0;
-            progData.userProgress.set(progress.user_id, userCompletions + 1);
-          }
-        });
-
-        programMap.forEach((progData) => {
-          let totalEnrollments = 0;
-          let completedPrograms = 0;
-
-          progData.userProgress.forEach((completions: number) => {
-            totalEnrollments += 1;
-            if (completions >= progData.totalClasses) {
-              completedPrograms += 1;
+        // Average days since last activity
+        let avgDaysSinceLastActivity = 0;
+        if (allProgress && allProgress.length > 0) {
+          const userLastActivity = new Map<string, Date>();
+          allProgress.forEach((p) => {
+            const activityDate = new Date(p.updated_at);
+            const existing = userLastActivity.get(p.user_id);
+            if (!existing || activityDate > existing) {
+              userLastActivity.set(p.user_id, activityDate);
             }
           });
 
-          if (totalEnrollments > 0) {
-            programCompletionRates.push({
-              programTitle: progData.title,
-              completionRate: (completedPrograms / totalEnrollments) * 100,
-              totalEnrollments,
-            });
-          }
-        });
-
-        // Sort by completion rate descending
-        programCompletionRates.sort((a, b) => b.completionRate - a.completionRate);
-      }
-
-      // Build session stats map
-      const sessionMap = new Map();
-      allClasses?.forEach((cls) => {
-        sessionMap.set(cls.id, {
-          id: cls.id,
-          title: cls.title,
-          completions: 0,
-          favorites: 0,
-        });
-      });
-
-      // Count completions
-      allProgress
-        ?.filter((p) => p.completed)
-        .forEach((item) => {
-          if (sessionMap.has(item.class_id)) {
-            sessionMap.get(item.class_id).completions++;
-          }
-        });
-
-      // Count favorites
-      favorites?.forEach((item) => {
-        if (sessionMap.has(item.session_id)) {
-          sessionMap.get(item.session_id).favorites++;
+          const daysSinceActivities = Array.from(userLastActivity.values()).map((date) =>
+            Math.floor((now.getTime() - date.getTime()) / (24 * 60 * 60 * 1000))
+          );
+          avgDaysSinceLastActivity =
+            daysSinceActivities.length > 0
+              ? daysSinceActivities.reduce((sum, days) => sum + days, 0) /
+                daysSinceActivities.length
+              : 0;
         }
-      });
 
-      // Convert to array and sort by completions
-      const allSessionStats = Array.from(sessionMap.values()).sort(
-        (a, b) => b.completions - a.completions
-      );
+        // Churn rate: users who were active 30-60 days ago but not in last 30 days
+        const sixtyDaysAgo = new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000);
+        const usersActive30to60DaysAgo = new Set(
+          allProgress
+            ?.filter((p) => {
+              const activityDate = new Date(p.updated_at);
+              return activityDate >= sixtyDaysAgo && activityDate < thirtyDaysAgo;
+            })
+            .map((p) => p.user_id)
+        );
 
-      return {
-        totalSignups: totalSignups || 0,
-        activeSubscribers: activeSubs?.length || 0,
-        monthlySubscribers,
-        annualSubscribers,
-        retentionRate,
-        day1Retention,
-        day7Retention,
-        day30Retention,
-        activeToday,
-        activeThisWeek,
-        activeThisMonth,
-        avgSessionsPerUser,
-        sessionCompletionRate,
-        sessionDropOffRate,
-        avgDaysSinceLastActivity,
-        churnRate,
-        peakUsageHours,
-        peakUsageDays,
-        categoryPerformance,
-        programCompletionRates,
-        sessionStats: allSessionStats,
-      };
-    } catch (error) {
-      console.error("Error fetching analytics:", error);
-      return null;
-    }
+        const recentlyActiveUsers = new Set(
+          allProgress?.filter((p) => new Date(p.updated_at) >= thirtyDaysAgo).map((p) => p.user_id)
+        );
+
+        const churnedUsers = Array.from(usersActive30to60DaysAgo).filter(
+          (userId) => !recentlyActiveUsers.has(userId)
+        ).length;
+
+        const churnRate =
+          usersActive30to60DaysAgo.size > 0
+            ? (churnedUsers / usersActive30to60DaysAgo.size) * 100
+            : 0;
+
+        // Peak usage times - analyze by hour and day of week
+        const hourlyUsage = new Map<number, number>();
+        const dailyUsage = new Map<string, number>();
+
+        const dayNames = [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ];
+
+        allProgress?.forEach((p) => {
+          const activityDate = new Date(p.updated_at);
+          const hour = activityDate.getHours();
+          const dayName = dayNames[activityDate.getDay()];
+
+          hourlyUsage.set(hour, (hourlyUsage.get(hour) || 0) + 1);
+          dailyUsage.set(dayName, (dailyUsage.get(dayName) || 0) + 1);
+        });
+
+        const peakUsageHours = Array.from(hourlyUsage.entries())
+          .filter(([_, sessions]) => sessions > 0) // Only include hours with activity
+          .map(([hour, sessions]) => ({ hour, sessions }))
+          .sort((a, b) => b.sessions - a.sessions)
+          .slice(0, 5); // Top 5 hours
+
+        const peakUsageDays = Array.from(dailyUsage.entries())
+          .map(([day, sessions]) => ({ day, sessions }))
+          .sort((a, b) => b.sessions - a.sessions);
+
+        // Get all published sessions with categories
+        const { data: allClasses } = await supabase
+          .from("classes")
+          .select("id, title, category_id")
+          .eq("is_published", true);
+
+        // Get categories
+        const { data: categories } = await supabase.from("categories").select("id, name");
+
+        // Get all favorites
+        const { data: favorites } = await supabase.from("user_favourites").select("session_id");
+
+        // Category performance - just plays, no completion rates
+        const categoryMap = new Map();
+        categories?.forEach((cat) => {
+          categoryMap.set(cat.id, {
+            category: cat.name,
+            plays: 0,
+          });
+        });
+
+        allClasses?.forEach((cls) => {
+          if (cls.category_id && categoryMap.has(cls.category_id)) {
+            const sessionProgress = allProgress?.filter((p) => p.class_id === cls.id) || [];
+            const categoryData = categoryMap.get(cls.category_id);
+            categoryData.plays += sessionProgress.length;
+          }
+        });
+
+        const categoryPerformance = Array.from(categoryMap.values())
+          .map((cat) => ({
+            category: cat.category,
+            plays: cat.plays,
+          }))
+          .sort((a, b) => b.plays - a.plays);
+
+        // Individual program completion rates
+        const { data: programs } = await supabase
+          .from("programs")
+          .select("id, title")
+          .eq("is_published", true);
+
+        const { data: programClasses } = await supabase
+          .from("classes")
+          .select("id, program_id")
+          .not("program_id", "is", null)
+          .eq("is_published", true);
+
+        const programCompletionRates: Array<{
+          programTitle: string;
+          completionRate: number;
+          totalEnrollments: number;
+        }> = [];
+
+        if (programs && programClasses && allProgress) {
+          const programMap = new Map();
+          programs.forEach((prog) => {
+            programMap.set(prog.id, {
+              title: prog.title,
+              totalClasses: 0,
+              userProgress: new Map<string, number>(),
+            });
+          });
+
+          programClasses.forEach((cls) => {
+            if (cls.program_id && programMap.has(cls.program_id)) {
+              programMap.get(cls.program_id).totalClasses += 1;
+            }
+          });
+
+          allProgress.forEach((progress) => {
+            const programClass = programClasses.find((pc) => pc.id === progress.class_id);
+            if (programClass?.program_id && progress.completed) {
+              const progData = programMap.get(programClass.program_id);
+              const userCompletions = progData.userProgress.get(progress.user_id) || 0;
+              progData.userProgress.set(progress.user_id, userCompletions + 1);
+            }
+          });
+
+          programMap.forEach((progData) => {
+            let totalEnrollments = 0;
+            let completedPrograms = 0;
+
+            progData.userProgress.forEach((completions: number) => {
+              totalEnrollments += 1;
+              if (completions >= progData.totalClasses) {
+                completedPrograms += 1;
+              }
+            });
+
+            if (totalEnrollments > 0) {
+              programCompletionRates.push({
+                programTitle: progData.title,
+                completionRate: (completedPrograms / totalEnrollments) * 100,
+                totalEnrollments,
+              });
+            }
+          });
+
+          // Sort by completion rate descending
+          programCompletionRates.sort((a, b) => b.completionRate - a.completionRate);
+        }
+
+        // Build session stats map
+        const sessionMap = new Map();
+        allClasses?.forEach((cls) => {
+          sessionMap.set(cls.id, {
+            id: cls.id,
+            title: cls.title,
+            completions: 0,
+            favorites: 0,
+          });
+        });
+
+        // Count completions
+        allProgress
+          ?.filter((p) => p.completed)
+          .forEach((item) => {
+            if (sessionMap.has(item.class_id)) {
+              sessionMap.get(item.class_id).completions++;
+            }
+          });
+
+        // Count favorites
+        favorites?.forEach((item) => {
+          if (sessionMap.has(item.session_id)) {
+            sessionMap.get(item.session_id).favorites++;
+          }
+        });
+
+        // Convert to array and sort by completions
+        const allSessionStats = Array.from(sessionMap.values()).sort(
+          (a, b) => b.completions - a.completions
+        );
+
+        return {
+          totalSignups: totalSignups || 0,
+          activeSubscribers: activeSubs?.length || 0,
+          monthlySubscribers,
+          annualSubscribers,
+          retentionRate,
+          day1Retention,
+          day7Retention,
+          day30Retention,
+          activeToday,
+          activeThisWeek,
+          activeThisMonth,
+          avgSessionsPerUser,
+          sessionCompletionRate,
+          sessionDropOffRate,
+          avgDaysSinceLastActivity,
+          churnRate,
+          peakUsageHours,
+          peakUsageDays,
+          categoryPerformance,
+          programCompletionRates,
+          sessionStats: allSessionStats,
+        };
+      } catch (error) {
+        console.error("Error fetching analytics:", error);
+        return null;
+      }
     },
     enabled: isAdmin,
   });

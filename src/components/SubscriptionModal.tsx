@@ -1,13 +1,14 @@
-import { ButtonLoadingSpinner } from "@/components/skeletons";
-import { Dialog, DialogPortal } from "@/components/ui/dialog";
-import { GlowButton } from "@/components/ui/glow-button";
-import { supabase } from "@/integrations/supabase/client";
-import { SUBSCRIPTION_PRICES } from "@/lib/stripePrices";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Check, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+
+import { ButtonLoadingSpinner } from "@/components/skeletons";
+import { Dialog, DialogPortal } from "@/components/ui/dialog";
+import { GlowButton } from "@/components/ui/glow-button";
+import { supabase } from "@/integrations/supabase/client";
 import { analytics } from "@/lib/posthog";
+import { SUBSCRIPTION_PRICES } from "@/lib/stripePrices";
 
 interface SubscriptionModalProps {
   open: boolean;

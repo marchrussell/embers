@@ -1,4 +1,5 @@
 import { NavBar } from "@/components/NavBar";
+
 import { CategoryCardSkeleton } from "./CategoryCardSkeleton";
 import { FeaturedHeroSkeleton } from "./FeaturedHeroSkeleton";
 

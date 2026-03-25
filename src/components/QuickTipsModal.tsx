@@ -1,7 +1,8 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { ModalCloseButton } from "@/components/ui/modal-close-button";
 import { useNavigate } from "react-router-dom";
+
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ModalCloseButton } from "@/components/ui/modal-close-button";
 
 interface QuickTipsModalProps {
   open: boolean;

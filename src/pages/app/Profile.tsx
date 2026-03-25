@@ -1,3 +1,9 @@
+import { useQuery } from "@tanstack/react-query";
+import { ArrowLeft, LogOut } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
 import { PrivacyModal, TermsModal } from "@/components/LegalModals";
 import {
   ChangeEmailDialog,
@@ -22,11 +28,6 @@ import { useAccountSettings } from "@/hooks/useAccountSettings";
 import { useDataDeletion } from "@/hooks/useDataDeletion";
 import { useDataExport } from "@/hooks/useDataExport";
 import { supabase } from "@/integrations/supabase/client";
-import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, LogOut } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 
 interface ProfileData {
   full_name: string | null;

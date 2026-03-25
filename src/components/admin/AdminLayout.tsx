@@ -1,8 +1,9 @@
-import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
-import { useAuth } from "@/contexts/AuthContext";
 import { ArrowLeft } from "lucide-react";
 import { ReactNode } from "react";
 import { Link, Navigate } from "react-router-dom";
+
+import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface AdminLayoutProps {
   children: ReactNode;

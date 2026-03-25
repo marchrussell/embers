@@ -1,6 +1,8 @@
-import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 import { Lock } from "lucide-react";
 import { memo } from "react";
+
+import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
+
 import { LibraryProgram, LibrarySession } from "./types";
 
 interface ProgramViewProps {

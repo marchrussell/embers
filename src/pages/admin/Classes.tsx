@@ -1,3 +1,8 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { BookOpen, Pencil, Plus, Star, Trash2, Zap } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { AdminLayout, AdminStatsCard } from "@/components/admin";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,10 +34,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { BookOpen, Pencil, Plus, Star, Trash2, Zap } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 interface Class {
   id: string;

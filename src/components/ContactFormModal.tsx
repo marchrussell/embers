@@ -1,3 +1,6 @@
+import { X } from "lucide-react";
+import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DarkInput } from "@/components/ui/dark-input";
@@ -5,8 +8,6 @@ import { DarkTextarea } from "@/components/ui/dark-textarea";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { X } from "lucide-react";
-import { useState } from "react";
 
 interface ContactFormModalProps {
   open: boolean;

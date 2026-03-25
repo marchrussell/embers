@@ -1,25 +1,24 @@
-import { useState, useEffect, Suspense } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useParams, useNavigate, Link } from "react-router-dom";
-import { NavBar } from "@/components/NavBar";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
-import { Play, Lock, ArrowLeft, User } from "lucide-react";
+import { Lock, Play } from "lucide-react";
+import { Suspense, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
-import { analytics } from "@/lib/posthog";
-import SessionDetailModal from "./SessionDetail";
-import { SubscriptionModal } from "@/components/modals/LazyModals";
-import { OptimizedImage } from "@/components/OptimizedImage";
-import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
-import OnlineFooter from "@/components/OnlineFooter";
-import { Footer } from "@/components/Footer";
-import OnlineHeader from "@/components/OnlineHeader";
 
 // Course images
 import anxietyResetDandelion from "@/assets/anxiety-reset-dandelion.jpg";
 import emotionalFirstAid from "@/assets/emotional-first-aid.jpg";
 import sleepNsdrMoon from "@/assets/sleep-nsdr-moon.jpg";
 import trialProgramImage from "@/assets/trial-program.webp";
+import { Footer } from "@/components/Footer";
+import { SubscriptionModal } from "@/components/modals/LazyModals";
+import { NavBar } from "@/components/NavBar";
+import OnlineFooter from "@/components/OnlineFooter";
+import OnlineHeader from "@/components/OnlineHeader";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { analytics } from "@/lib/posthog";
+
+import SessionDetailModal from "./SessionDetail";
 
 interface Course {
   id: string;
@@ -59,7 +58,11 @@ const OnlineProgram = () => {
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
 
-  const { data, isLoading: loading, isError } = useQuery({
+  const {
+    data,
+    isLoading: loading,
+    isError,
+  } = useQuery({
     queryKey: ["course", slug],
     queryFn: async () => {
       const { data: courseData, error: courseError } = await supabase

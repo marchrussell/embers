@@ -1,7 +1,9 @@
-import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
-import SessionPlayCard from "@/pages/app/online/components/SessionPlayCard";
 import { ChevronLeft } from "lucide-react";
 import { memo } from "react";
+
+import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
+import SessionPlayCard from "@/pages/app/online/components/SessionPlayCard";
+
 import { LibraryCategory, LibrarySession } from "./types";
 
 interface CategoryViewProps {

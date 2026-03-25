@@ -1,14 +1,15 @@
 // import mLogo from "@/assets/m-logo.png";
 // import marchLogo from "@/assets/march-logo.png";
+import { useQuery } from "@tanstack/react-query";
+import { Menu, User, X } from "lucide-react";
+import { memo, Suspense, useCallback, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+
 import { AuthSignInModal } from "@/components/AuthSignInModal";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { useQuery } from "@tanstack/react-query";
-import { Menu, User, X } from "lucide-react";
-import { memo, Suspense, useCallback, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
 
 // Sheet import removed - using custom overlay menu instead
 
@@ -141,7 +142,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
               />
             </Link> */}
 
-             <Link
+            <Link
               to="/"
               className="relative whitespace-nowrap pb-1 uppercase transition-colors hover:opacity-80"
               style={{
@@ -150,7 +151,9 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                 letterSpacing: "0.12em",
                 fontWeight: 500,
               }}
-            >Home</Link>
+            >
+              Home
+            </Link>
 
             {/* Experiences link */}
             <Link

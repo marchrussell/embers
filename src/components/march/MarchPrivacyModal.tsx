@@ -1,3 +1,5 @@
+import { Shield } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -6,7 +8,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Shield } from "lucide-react";
 
 interface MarchPrivacyModalProps {
   open: boolean;

@@ -1,18 +1,19 @@
-import { useState, useRef, useEffect } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { DarkInput } from "@/components/ui/dark-input";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ModalCloseButton } from "@/components/ui/modal-close-button";
-import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 import { Minus, Plus } from "lucide-react";
-import { ButtonLoadingSpinner } from "@/components/skeletons";
-import { analytics } from "@/lib/posthog";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
+
 import { EventDateSelector } from "@/components/ExperienceDateSelector";
-import { ScheduledEventDate, EVENT_CAPACITY_CONFIG } from "@/lib/experienceSchedule2026";
+import { ButtonLoadingSpinner } from "@/components/skeletons";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { DarkInput } from "@/components/ui/dark-input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { ModalCloseButton } from "@/components/ui/modal-close-button";
+import { supabase } from "@/integrations/supabase/client";
 import { RecurrenceRule } from "@/lib/experienceDateUtils";
+import { EVENT_CAPACITY_CONFIG, ScheduledEventDate } from "@/lib/experienceSchedule2026";
+import { analytics } from "@/lib/posthog";
 
 interface EventData {
   id: string;

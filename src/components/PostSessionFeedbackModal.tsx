@@ -1,11 +1,12 @@
+import { Sparkles, Star } from "lucide-react";
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Star, Sparkles } from "lucide-react";
-import { ButtonLoadingSpinner } from "@/components/skeletons";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+
+import { ButtonLoadingSpinner } from "@/components/skeletons";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { supabase } from "@/integrations/supabase/client";
 
 interface PostSessionFeedbackModalProps {
   open: boolean;

@@ -1,11 +1,12 @@
+import { Send, X } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { Send, X } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
 
 export const FeedbackSection = () => {
   const { user } = useAuth();

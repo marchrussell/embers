@@ -1,5 +1,6 @@
-import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { X } from "lucide-react";
+
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 interface VaseBreathModalProps {
   open: boolean;

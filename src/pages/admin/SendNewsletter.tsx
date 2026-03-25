@@ -1,3 +1,7 @@
+import { Mail, Send, TestTube } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+
 import { AdminLayout } from "@/components/admin";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -7,9 +11,6 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
-import { Mail, Send, TestTube } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
 
 const SendNewsletter = () => {
   const [subject, setSubject] = useState("");

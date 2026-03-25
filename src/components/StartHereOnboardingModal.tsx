@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Play } from "lucide-react";
-import SessionDetailModal from "@/pages/app/SessionDetail";
-import { OptimizedImage } from "@/components/OptimizedImage";
+import { useState } from "react";
+
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
+import SessionDetailModal from "@/pages/app/SessionDetail";
 
 // Pre-selected session IDs - these should be configured to actual session IDs
 const BREATH_PRACTICE_ID = ""; // Short breath practice 8-12 min

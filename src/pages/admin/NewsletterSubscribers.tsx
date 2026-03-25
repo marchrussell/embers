@@ -1,3 +1,7 @@
+import { Download, Mail, Search, UserCheck, Users, UserX } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+
 import {
   AdminLayout,
   AdminStatsCard,
@@ -24,9 +28,6 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
-import { Download, Mail, Search, UserCheck, Users, UserX } from "lucide-react";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
 
 interface Subscriber {
   id: string;

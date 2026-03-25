@@ -1,17 +1,18 @@
+import { useQuery } from "@tanstack/react-query";
+import { Suspense, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { Footer } from "@/components/Footer";
+import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { NavBar } from "@/components/NavBar";
 import OnlineFooter from "@/components/OnlineFooter";
 import OnlineHeader from "@/components/OnlineHeader";
 import { WeeklyResetCard } from "@/components/WeeklyResetCard";
-import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { supabase } from "@/integrations/supabase/client";
 import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
-import SessionDetailModal from "@/pages/app/SessionDetail";
 import SessionPlayCard from "@/pages/app/online/components/SessionPlayCard";
 import { FeaturedSession } from "@/pages/app/online/types";
-import { useQuery } from "@tanstack/react-query";
-import { Suspense, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import SessionDetailModal from "@/pages/app/SessionDetail";
 
 const startHereButterfly = getCloudImageUrl(CLOUD_IMAGES.startHereButterfly);
 

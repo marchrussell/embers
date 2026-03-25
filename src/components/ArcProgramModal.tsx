@@ -1,10 +1,11 @@
+import { Check } from "lucide-react";
+import { useState } from "react";
+
 import { ButtonLoadingSpinner } from "@/components/skeletons/ButtonLoadingSpinner";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { RISE_ARC_PRICES } from "@/lib/stripePrices";
-import { Check } from "lucide-react";
-import { useState } from "react";
 
 type ProgramType = "self-study" | "group" | "one-on-one";
 

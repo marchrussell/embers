@@ -1,3 +1,7 @@
+import { FolderOpen, Pencil, Plus, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import {
   AdminLayout,
   AdminStatsCard,
@@ -21,9 +25,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
-import { FolderOpen, Pencil, Plus, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 interface Category {
   id: string;

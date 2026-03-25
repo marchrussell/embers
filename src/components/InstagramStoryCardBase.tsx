@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils";
 import mLogo from "@/assets/m-logo.png";
 import marchLogo from "@/assets/march-logo.png";
+import { cn } from "@/lib/utils";
 
 interface InstagramStoryCardBaseProps {
   backgroundImage: string;

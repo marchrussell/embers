@@ -1,9 +1,10 @@
+import { ArrowRight, X } from "lucide-react";
+import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowRight, X } from "lucide-react";
-import { useState } from "react";
 
 interface ContactTeamsModalProps {
   open: boolean;

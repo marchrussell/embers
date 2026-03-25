@@ -1,8 +1,9 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useCallback } from "react";
+import { toast } from "sonner";
+
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { useCallback } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
 
 interface UseFavouritesReturn {
   favouriteIds: string[];
@@ -71,10 +72,7 @@ export function useFavourites(): UseFavouritesReturn {
           return;
         }
 
-        queryClient.setQueryData<string[]>(queryKey, (prev) => [
-          ...(prev || []),
-          sessionId,
-        ]);
+        queryClient.setQueryData<string[]>(queryKey, (prev) => [...(prev || []), sessionId]);
         toast.success("Added to favourites");
       }
     },

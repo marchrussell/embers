@@ -32,9 +32,9 @@ export const SafetyDisclosureContent = () => (
     {/* Confirmation Note */}
     <div className="rounded-lg border border-[#E6DBC7]/20 bg-[#E6DBC7]/5 p-5">
       <p>
-        <span className="font-medium text-[#E6DBC7]">By continuing, you confirm</span> that you
-        have read and understood our safety guidelines, and that you take full responsibility for
-        your own health and wellbeing while using this service.
+        <span className="font-medium text-[#E6DBC7]">By continuing, you confirm</span> that you have
+        read and understood our safety guidelines, and that you take full responsibility for your
+        own health and wellbeing while using this service.
       </p>
     </div>
 
@@ -177,8 +177,8 @@ export const SafetyDisclosureContent = () => (
           </li>
         </ul>
         <p className="mb-4">
-          Instead of practicing the aforementioned techniques, allow your breath to flow back to
-          its natural rhythm and you can then continue as normal afterwards.
+          Instead of practicing the aforementioned techniques, allow your breath to flow back to its
+          natural rhythm and you can then continue as normal afterwards.
         </p>
         <p className="italic">
           Please note: Breathwork is not a suitable practice for you, if you are in your first
@@ -216,7 +216,8 @@ export const SafetyDisclosureContent = () => (
         <p className="mb-4">
           If you are neurodiverse or have any psychological conditions like anxiety and depression,
           these breathing exercises can be beneficial. However, it is important to proceed at your
-          own pace and seek professional advice if you feel uncertain about engaging with breathwork.
+          own pace and seek professional advice if you feel uncertain about engaging with
+          breathwork.
         </p>
         <p>
           There have been rare reports that people with certain mental health conditions such as
@@ -228,9 +229,7 @@ export const SafetyDisclosureContent = () => (
 
       {/* Tips */}
       <div className="border-b border-foreground/10 pb-6">
-        <h2 className="mb-4 text-lg font-semibold uppercase tracking-wide text-[#E6DBC7]">
-          Tips
-        </h2>
+        <h2 className="mb-4 text-lg font-semibold uppercase tracking-wide text-[#E6DBC7]">Tips</h2>
         <p>It is advisable to practice breathwork on an empty stomach.</p>
       </div>
 

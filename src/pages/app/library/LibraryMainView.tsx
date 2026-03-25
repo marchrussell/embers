@@ -1,12 +1,14 @@
+import type { User } from "@supabase/supabase-js";
+import { ArrowRight, ChevronLeft, ChevronRight, Heart, Lock } from "lucide-react";
+import { memo } from "react";
+import { Link } from "react-router-dom";
+
 import { FeedbackSection } from "@/components/FeedbackSection";
 import { OptimizedImage } from "@/components/OptimizedImage";
 import { CategoryCardSkeleton } from "@/components/skeletons/CategoryCardSkeleton";
 import { IconButton } from "@/components/ui/icon-button";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
-import type { User } from "@supabase/supabase-js";
-import { ArrowRight, ChevronLeft, ChevronRight, Heart, Lock } from "lucide-react";
-import { memo } from "react";
-import { Link } from "react-router-dom";
+
 import { FavouriteSession, LibraryCategory } from "./types";
 
 interface LibraryMainViewProps {

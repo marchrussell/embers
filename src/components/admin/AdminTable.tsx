@@ -1,7 +1,8 @@
+import { ReactNode } from "react";
+
+import { TableRowSkeleton } from "@/components/skeletons/TableRowSkeleton";
 import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import { ReactNode } from "react";
-import { TableRowSkeleton } from "@/components/skeletons/TableRowSkeleton";
 
 export interface AdminTableHeader {
   label: string;

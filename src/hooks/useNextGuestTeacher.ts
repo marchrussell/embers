@@ -1,5 +1,6 @@
-import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
+
+import { supabase } from "@/integrations/supabase/client";
 
 export interface GuestTeacher {
   id: string;
@@ -14,7 +15,11 @@ export interface GuestTeacher {
 }
 
 export function useNextGuestTeacher() {
-  const { data: teacher = null, isLoading: loading, error } = useQuery<GuestTeacher | null>({
+  const {
+    data: teacher = null,
+    isLoading: loading,
+    error,
+  } = useQuery<GuestTeacher | null>({
     queryKey: ["next-guest-teacher"],
     queryFn: async () => {
       const now = new Date().toISOString();

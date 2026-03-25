@@ -1,14 +1,4 @@
 import {
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-} from "@/components/ui/command";
-import { useAuth } from "@/contexts/AuthContext";
-import {
   BookOpen,
   FileText,
   GraduationCap,
@@ -22,6 +12,17 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+} from "@/components/ui/command";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const CommandPalette = () => {
   const [open, setOpen] = useState(false);

@@ -1,20 +1,21 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { NavBar } from "@/components/NavBar";
-import { Button } from "@/components/ui/button";
 import { Calendar, Clock, Video } from "lucide-react";
-import { Footer } from "@/components/Footer";
-import OnlineFooter from "@/components/OnlineFooter";
-import weeklyResetEvent from "@/assets/weekly-reset-event.jpg";
-import liveSessionCountdownBg from "@/assets/live-session-countdown-bg.png";
-import heroHandsSession from "@/assets/hero-hands-session.png";
-import marchPortrait from "@/assets/march-portrait-casual.jpg";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+
 import guestSessionBg from "@/assets/guest-session-bg.png";
+import heroHandsSession from "@/assets/hero-hands-session.png";
+import liveSessionCountdownBg from "@/assets/live-session-countdown-bg.png";
+import marchPortrait from "@/assets/march-portrait-casual.jpg";
+import weeklyResetEvent from "@/assets/weekly-reset-event.jpg";
+import { Footer } from "@/components/Footer";
+import { NavBar } from "@/components/NavBar";
+import OnlineFooter from "@/components/OnlineFooter";
 import OnlineHeader from "@/components/OnlineHeader";
+import { Button } from "@/components/ui/button";
 import {
-  useNextGuestTeacher,
   formatGuestSessionDate,
   getNextThirdThursday,
+  useNextGuestTeacher,
 } from "@/hooks/useNextGuestTeacher";
 
 interface LiveSessionData {

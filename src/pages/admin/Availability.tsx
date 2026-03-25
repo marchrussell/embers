@@ -1,15 +1,16 @@
+import { ArrowLeft, Calendar, Clock, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate, Link } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { Link, useNavigate } from "react-router-dom";
+
+import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { toast } from "@/hooks/use-toast";
-import { Plus, Trash2, ArrowLeft, Clock, Calendar } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
-import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface AvailabilitySlot {
   id: string;

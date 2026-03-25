@@ -1,6 +1,7 @@
-import mLogo from "@/assets/m-logo.png";
 import liveSessionBg from "@/assets/instagram-live-session-bg.jpg";
-import { InstagramStoryCardBase, INSTAGRAM_FILTERS } from "./InstagramStoryCardBase";
+import mLogo from "@/assets/m-logo.png";
+
+import { INSTAGRAM_FILTERS, InstagramStoryCardBase } from "./InstagramStoryCardBase";
 
 export const InstagramStoryCardLiveSession = () => {
   return (

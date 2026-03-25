@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+
+import { Footer } from "@/components/Footer";
+import { NavBar } from "@/components/NavBar";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { toast } from "sonner";
-import { NavBar } from "@/components/NavBar";
-import { Footer } from "@/components/Footer";
+import { supabase } from "@/integrations/supabase/client";
 
 const PasswordReset = () => {
   const [searchParams] = useSearchParams();

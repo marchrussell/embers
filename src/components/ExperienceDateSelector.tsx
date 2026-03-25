@@ -1,3 +1,5 @@
+import { useQuery } from "@tanstack/react-query";
+
 import {
   Select,
   SelectContent,
@@ -6,14 +8,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
-import {
-  getUpcomingEventDates,
-  formatTime,
-  ScheduledEventDate,
-  EVENT_CAPACITY_CONFIG,
-} from "@/lib/experienceSchedule2026";
 import { RecurrenceRule } from "@/lib/experienceDateUtils";
-import { useQuery } from "@tanstack/react-query";
+import {
+  EVENT_CAPACITY_CONFIG,
+  formatTime,
+  getUpcomingEventDates,
+  ScheduledEventDate,
+} from "@/lib/experienceSchedule2026";
 
 interface Props {
   eventId: string;

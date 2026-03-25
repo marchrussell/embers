@@ -3,7 +3,7 @@
  * Generates all dates for recurring events in 2026
  */
 
-import { RecurrenceRule, WEEKDAYS } from "./experienceDateUtils";
+import { RecurrenceRule } from "./experienceDateUtils";
 
 export interface ScheduledEventDate {
   date: string; // ISO date string (YYYY-MM-DD)

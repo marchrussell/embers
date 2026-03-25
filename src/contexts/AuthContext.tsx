@@ -1,8 +1,9 @@
 // @refresh reset
-import { supabase } from "@/integrations/supabase/client";
 import { Session, User } from "@supabase/supabase-js";
 import React, { createContext, useContext, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+
+import { supabase } from "@/integrations/supabase/client";
 
 interface AuthContextType {
   user: User | null;

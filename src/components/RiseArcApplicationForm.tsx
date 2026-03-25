@@ -1,14 +1,15 @@
+import { ArrowLeft, ArrowRight, Check } from "lucide-react";
+import { useState } from "react";
+
+import { ButtonLoadingSpinner } from "@/components/skeletons";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { DarkInput } from "@/components/ui/dark-input";
 import { DarkTextarea } from "@/components/ui/dark-textarea";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { ModalCloseButton } from "@/components/ui/modal-close-button";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
-import { ArrowLeft, ArrowRight, Check } from "lucide-react";
-import { ButtonLoadingSpinner } from "@/components/skeletons";
-import { useState } from "react";
 
 interface RiseArcApplicationFormProps {
   open: boolean;

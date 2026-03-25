@@ -1,3 +1,8 @@
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
 import marchLogoModal from "@/assets/march-logo-modal.png";
 import { Dialog, DialogPortal } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -5,10 +10,6 @@ import { Label } from "@/components/ui/label";
 import { ModalCloseButton } from "@/components/ui/modal-close-button";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 
 type FooterVariant = "trial" | "courses" | "signup" | "none";
 

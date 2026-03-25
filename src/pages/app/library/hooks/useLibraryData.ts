@@ -1,6 +1,8 @@
+import { useEffect, useMemo, useState } from "react";
+
 import energyCategoryImage from "@/assets/energy-ocean-sunset.jpg";
 import { supabase } from "@/integrations/supabase/client";
-import { useEffect, useMemo, useState } from "react";
+
 import { LibraryCategory, LibrarySession } from "../types";
 
 const CATEGORY_ORDER = ["CALM", "ENERGY", "TRANSFORM", "SLEEP", "RESILIENCE & CAPACITY"];

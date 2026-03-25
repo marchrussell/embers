@@ -1,9 +1,11 @@
+import { useNavigate } from "react-router-dom";
+
 import anxietyResetDandelion from "@/assets/anxiety-reset-dandelion.jpg";
 import emotionalFirstAid from "@/assets/emotional-first-aid.jpg";
 import sleepNsdrMoon from "@/assets/sleep-nsdr-moon.jpg";
 import trialProgramImage from "@/assets/trial-program.webp";
 import { GlowButton } from "@/components/ui/glow-button";
-import { useNavigate } from "react-router-dom";
+
 import { useCourses } from "./hooks/useCourses";
 
 const courseImages: Record<string, string> = {

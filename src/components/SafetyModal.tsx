@@ -1,7 +1,8 @@
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { ModalCloseButton } from "@/components/ui/modal-close-button";
 import { AlertTriangle } from "lucide-react";
 import { Link } from "react-router-dom";
+
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { ModalCloseButton } from "@/components/ui/modal-close-button";
 
 interface SafetyModalProps {
   open: boolean;

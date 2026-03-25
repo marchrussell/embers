@@ -1,12 +1,13 @@
+import { ArrowLeft } from "lucide-react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+
 import { FeedbackSection } from "@/components/FeedbackSection";
 import { Footer } from "@/components/Footer";
 import { PrivacyModal, TermsModal } from "@/components/LegalModals";
 import { NavBar } from "@/components/NavBar";
 import { OptimizedImage } from "@/components/OptimizedImage";
 import { getCloudImageUrl } from "@/lib/cloudImageUrls";
-import { ArrowLeft } from "lucide-react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
 
 const marchBioPhoto = getCloudImageUrl("about/march-bio-photo.webp", { width: 800, quality: 80 });
 

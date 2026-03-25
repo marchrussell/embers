@@ -1,13 +1,14 @@
+import { AlertTriangle, Wind } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+
+import { SafetyDisclosureContent } from "@/components/SafetyDisclosureContent";
 import { ButtonLoadingSpinner } from "@/components/skeletons";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ModalCloseButton } from "@/components/ui/modal-close-button";
-import { SafetyDisclosureContent } from "@/components/SafetyDisclosureContent";
 import { supabase } from "@/integrations/supabase/client";
-import { AlertTriangle, Wind } from "lucide-react";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
 
 interface SafetyDisclosureModalProps {
   isOpen: boolean;

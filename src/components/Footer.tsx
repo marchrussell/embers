@@ -1,7 +1,9 @@
-import { supabase } from "@/integrations/supabase/client";
 import { ArrowRight } from "lucide-react";
 import { memo, Suspense, useCallback, useState } from "react";
 import { toast } from "sonner";
+
+import { supabase } from "@/integrations/supabase/client";
+
 import { PrivacyModal, RefundModal, TermsModal } from "./LegalModals";
 import { ContactFormModal } from "./modals/LazyModals";
 

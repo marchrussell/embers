@@ -1,3 +1,8 @@
+import { Check, Wind } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
 import { SafetyDisclosureContent } from "@/components/SafetyDisclosureContent";
 import { ButtonLoadingSpinner } from "@/components/skeletons";
 import { Button } from "@/components/ui/button";
@@ -5,10 +10,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { Check, Wind } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 import { analytics } from "@/lib/posthog";
 import { SUBSCRIPTION_PRICES } from "@/lib/stripePrices";
 

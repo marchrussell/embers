@@ -1,5 +1,3 @@
-import { supabase } from "@/integrations/supabase/client";
-
 interface RetryConfig {
   maxRetries?: number;
   retryDelay?: number;

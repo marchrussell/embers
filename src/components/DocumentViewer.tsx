@@ -1,5 +1,6 @@
-import { Card, CardContent } from "@/components/ui/card";
 import { FileText } from "lucide-react";
+
+import { Card, CardContent } from "@/components/ui/card";
 
 interface DocumentViewerProps {
   url: string;

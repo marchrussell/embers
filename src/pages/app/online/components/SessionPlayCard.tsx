@@ -1,6 +1,7 @@
-import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 import { Lock } from "lucide-react";
 import { memo } from "react";
+
+import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 
 interface SessionPlayCardProps {
   title: string;

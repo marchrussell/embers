@@ -1,17 +1,18 @@
+import { useQuery } from "@tanstack/react-query";
+import { Heart, Play, Share2 } from "lucide-react";
+import { Suspense, useState } from "react";
+import { toast } from "sonner";
+
 import favouritesHeroImage from "@/assets/favourites-hero.jpg";
 import { ClassPlayerModal } from "@/components/ClassPlayerModal";
-import { NavBar } from "@/components/NavBar";
-import { SessionCardSkeleton } from "@/components/skeletons/SessionCardSkeleton";
-import OnlineHeader from "@/components/OnlineHeader";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
+import { NavBar } from "@/components/NavBar";
+import OnlineHeader from "@/components/OnlineHeader";
+import { SessionCardSkeleton } from "@/components/skeletons/SessionCardSkeleton";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavourites } from "@/hooks/useFavourites";
 import { supabase } from "@/integrations/supabase/client";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
-import { Heart, Play, Share2 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { Suspense, useState } from "react";
-import { toast } from "sonner";
 
 const Favourites = () => {
   const { user, hasSubscription } = useAuth();

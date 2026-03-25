@@ -1,3 +1,7 @@
+import { ArrowRight } from "lucide-react";
+import { Suspense, useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+
 import { Footer } from "@/components/Footer";
 import {
   ClassPlayerModal,
@@ -18,9 +22,6 @@ import { Pill } from "@/components/ui/pill";
 import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
 import { formatEventDate, getNextEventDate } from "@/lib/experienceDateUtils";
 import { experiencesData } from "@/lib/experiencesData";
-import { ArrowRight } from "lucide-react";
-import { Suspense, useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
 
 const nervousSystemImg = getCloudImageUrl(CLOUD_IMAGES.nervousSystemReset, {
   width: 960,
@@ -95,11 +96,13 @@ const Index = () => {
               }}
             >
               Where your nervous system resets - and your senses awaken
-              <Link
-                to="/online"
-                className="group inline-flex items-baseline"
-              >
-                <span className="font-editorial ml-4 inline-block transition-transform duration-300 group-hover:translate-x-2" style={{ fontSize: "clamp(2.4rem, 3.5vw, 3.5rem)", fontWeight: 300 }}>→</span>
+              <Link to="/online" className="group inline-flex items-baseline">
+                <span
+                  className="ml-4 inline-block font-editorial transition-transform duration-300 group-hover:translate-x-2"
+                  style={{ fontSize: "clamp(2.4rem, 3.5vw, 3.5rem)", fontWeight: 300 }}
+                >
+                  →
+                </span>
               </Link>
             </p>
           </div>
@@ -114,7 +117,6 @@ const Index = () => {
             backgroundPosition: "center",
           }}
         >
-
           {/* Bottom Text and Pills */}
           <div className="px-5 pb-8 sm:px-8 sm:pb-10 md:px-16 md:pb-12">
             <p
@@ -130,7 +132,7 @@ const Index = () => {
               creates space for the nervous system to settle, perception to soften, and experience
               to open.
             </p>
-            <div className="flex flex-wrap gap-2 md:gap-3 mt-10">
+            <div className="mt-10 flex flex-wrap gap-2 md:gap-3">
               {[
                 "Calm the Nervous System",
                 "Sharpen Attention",
@@ -232,7 +234,7 @@ const Index = () => {
                   style={{
                     fontSize: "clamp(0.7rem, 0.8vw, 0.85rem)",
                   }}
-                  >
+                >
                   14-Day Course
                 </p>
                 <p

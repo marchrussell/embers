@@ -1,11 +1,12 @@
-import { useState, useCallback } from "react";
-import { cn } from "@/lib/utils";
+import { useCallback, useState } from "react";
+
 import {
-  getOptimizedImageUrl,
   generateResponsiveSrcSet,
+  getOptimizedImageUrl,
   getResponsiveSizes,
   ImageTransformOptions,
 } from "@/lib/supabaseImageOptimization";
+import { cn } from "@/lib/utils";
 
 interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;

@@ -1,7 +1,9 @@
+import "./index.css";
+
+import { PostHogProvider } from "@posthog/react";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { PostHogProvider } from "@posthog/react";
-import "./index.css";
+
 import App from "./App.tsx";
 
 // Suppress unhandled AbortErrors originating from Supabase Realtime internals.

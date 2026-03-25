@@ -1,3 +1,8 @@
+import { useQuery } from "@tanstack/react-query";
+import { ArrowRight, ChevronDown, Heart, Play, Share } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+
 import { ArcCardsModal } from "@/components/ArcCardsModal";
 import { ClassPlayerModal } from "@/components/ClassPlayerModal";
 import { OptimizedImage } from "@/components/OptimizedImage";
@@ -15,10 +20,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useFavourites } from "@/hooks/useFavourites";
 import { supabase } from "@/integrations/supabase/client";
 import { IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
-import { ArrowRight, ChevronDown, Heart, Play, Share } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
 interface SessionDetailModalProps {
   sessionId: string | null;
   open: boolean;

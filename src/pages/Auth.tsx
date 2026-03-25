@@ -1,3 +1,8 @@
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { Suspense, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
 import marchLogoModal from "@/assets/march-logo-modal.png";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { Dialog, DialogPortal } from "@/components/ui/dialog";
@@ -6,10 +11,6 @@ import { Label } from "@/components/ui/label";
 import { ModalCloseButton } from "@/components/ui/modal-close-button";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { Suspense, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 
 const Auth = () => {
   const [email, setEmail] = useState("");

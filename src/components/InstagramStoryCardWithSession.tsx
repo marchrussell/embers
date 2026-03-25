@@ -1,8 +1,9 @@
 import instagramBg from "@/assets/instagram-story-bg.jpg";
 import theLandingImage from "@/assets/the-landing-calm.jpg";
+
 import {
-  InstagramStoryCardBase,
   InstagramBrandLogos,
+  InstagramStoryCardBase,
   InstagramText,
 } from "./InstagramStoryCardBase";
 

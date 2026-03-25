@@ -1,5 +1,9 @@
-import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
+import { ArrowLeft, Pencil, Plus, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+
 import { UploadingSkeleton } from "@/components/skeletons";
+import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -30,9 +34,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowLeft, Pencil, Plus, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 
 interface Lesson {
   id: string;

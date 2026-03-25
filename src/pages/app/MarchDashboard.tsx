@@ -1,16 +1,17 @@
-import { useEffect, useState, useRef, Suspense } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { ArrowRight, Loader2, RefreshCw } from "lucide-react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
-import { IconButton } from "@/components/ui/icon-button";
-import { toast } from "@/hooks/use-toast";
-import { TrendingUp, ArrowRight, RefreshCw, MessageCircle, Loader2 } from "lucide-react";
-import { NavBar } from "@/components/NavBar";
+
+import featherTexture from "@/assets/feather-texture.jpg";
+import marchHeroOrangeFlowers from "@/assets/march-hero-orange-flowers.jpg";
 import { Footer } from "@/components/Footer";
-import { useSessionRecommendations } from "@/hooks/useSessionRecommendations";
+import { ChatInput } from "@/components/march/ChatInput";
+import { ChatMessage } from "@/components/march/ChatMessage";
+import { TypingIndicator } from "@/components/march/TypingIndicator";
+import { SubscriptionModal } from "@/components/modals/LazyModals";
+import { NavBar } from "@/components/NavBar";
+import { DashboardSkeleton } from "@/components/skeletons/DashboardSkeleton";
 import {
   Dialog,
   DialogContent,
@@ -18,18 +19,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ChatInput } from "@/components/march/ChatInput";
-import { ChatMessage } from "@/components/march/ChatMessage";
-import { TypingIndicator } from "@/components/march/TypingIndicator";
-import SessionDetailModal from "@/pages/app/SessionDetail";
-import { SubscriptionModal } from "@/components/modals/LazyModals";
+import { IconButton } from "@/components/ui/icon-button";
+import { Slider } from "@/components/ui/slider";
 import { WeeklyInsights } from "@/components/WeeklyInsights";
-import { DashboardSkeleton } from "@/components/skeletons/DashboardSkeleton";
-import dashboardBackground from "@/assets/explore-background.png";
-import marchHeroImage from "@/assets/march-hero-golden.jpg";
-import glowingCircle from "@/assets/march-glowing-circle.png";
-import marchHeroOrangeFlowers from "@/assets/march-hero-orange-flowers.jpg";
-import featherTexture from "@/assets/feather-texture.jpg";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "@/hooks/use-toast";
+import { useSessionRecommendations } from "@/hooks/useSessionRecommendations";
+import { supabase } from "@/integrations/supabase/client";
+import SessionDetailModal from "@/pages/app/SessionDetail";
 
 export default function MarchDashboard() {
   const { user } = useAuth();

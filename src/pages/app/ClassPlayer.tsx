@@ -1,3 +1,8 @@
+import { useQuery } from "@tanstack/react-query";
+import { ArrowLeft, Pause, Play, SkipBack, SkipForward } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+
 import { OptimizedImage } from "@/components/OptimizedImage";
 import { SafetyDisclosureModal } from "@/components/SafetyDisclosureModal";
 import { ClassPlayerSkeleton } from "@/components/skeletons/ClassPlayerSkeleton";
@@ -13,10 +18,6 @@ import { Slider } from "@/components/ui/slider";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
-import { ArrowLeft, Pause, Play, SkipBack, SkipForward } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 
 const ClassPlayer = () => {
   const { id } = useParams();

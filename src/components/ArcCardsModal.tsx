@@ -1,13 +1,14 @@
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Flame, HandHeart, Leaf, X } from "lucide-react";
 import { useState } from "react";
-import { ArcProgramModal } from "./ArcProgramModal";
-import { RiseArcApplicationForm } from "./RiseArcApplicationForm";
 
 // Background images
 import arc11MentorshipBg from "@/assets/arc-1-1-mentorship-bg.jpg";
 import arcGroupMentorshipBg from "@/assets/arc-group-mentorship-bg.jpg";
 import arcSelfStudyBg from "@/assets/arc-self-study-bg.jpg";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+
+import { ArcProgramModal } from "./ArcProgramModal";
+import { RiseArcApplicationForm } from "./RiseArcApplicationForm";
 
 interface ArcCardsModalProps {
   open: boolean;
@@ -128,7 +129,7 @@ export function ArcCardsModal({ open, onOpenChange }: ArcCardsModalProps) {
                     {/* CTA */}
                     <button
                       disabled
-                      className="flex w-full items-center justify-center rounded-none border border-white/40 bg-white/20 px-5 py-4 text-sm font-normal tracking-wide text-white backdrop-blur-sm transition-all hover:border-white/60 hover:bg-white/30"
+                      className="flex w-full items-center justify-center rounded-none border border-white/40 bg-white/20 px-5 py-4 text-sm font-normal tracking-wide text-white backdrop-blur-sm transition-all hover:border-white/60 hover:bg-white/30 disabled:cursor-not-allowed disabled:border-white/20 disabled:bg-white/10 disabled:text-white/50"
                       onClick={handleSelfStudyClick}
                     >
                       Coming Soon
@@ -208,8 +209,9 @@ export function ArcCardsModal({ open, onOpenChange }: ArcCardsModalProps) {
                   <div className="mt-auto">
                     {/* CTA */}
                     <button
+                      disabled
                       onClick={handleGroupClick}
-                      className="flex w-full items-center justify-center rounded-none border border-white/40 bg-white/20 px-5 py-4 text-sm font-normal tracking-wide text-white backdrop-blur-sm transition-all hover:border-white/60 hover:bg-white/30"
+                      className="flex w-full items-center justify-center rounded-none border border-white/40 bg-white/20 px-5 py-4 text-sm font-normal tracking-wide text-white backdrop-blur-sm transition-all hover:border-white/60 hover:bg-white/30 disabled:cursor-not-allowed disabled:border-white/20 disabled:bg-white/10 disabled:text-white/50"
                     >
                       Coming Soon
                     </button>

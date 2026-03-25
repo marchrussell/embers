@@ -1,25 +1,27 @@
 // Library page - Categories: CALM, ENERGY, TRANSFORM, SLEEP, RESILIENCE & CAPACITY
-import { NavBar } from "@/components/NavBar";
+import { useQuery } from "@tanstack/react-query";
+import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+
 import { ArcCardsModal } from "@/components/ArcCardsModal";
+import { SubscriptionModal } from "@/components/modals/LazyModals";
+import { NavBar } from "@/components/NavBar";
 import {
   LibraryEmbeddedSkeleton,
   LibraryPageSkeleton,
 } from "@/components/skeletons/LibrarySkeleton";
-import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavourites } from "@/hooks/useFavourites";
 import { supabase } from "@/integrations/supabase/client";
-import { useQuery } from "@tanstack/react-query";
-import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import SessionDetailModal from "./SessionDetail";
+
+import CategoryView from "./library/CategoryView";
 import { useFavouriteSessions } from "./library/hooks/useFavouriteSessions";
 import { useLibraryData } from "./library/hooks/useLibraryData";
-import { LibraryCategory, LibraryProgram } from "./library/types";
-import CategoryView from "./library/CategoryView";
-import ProgramView from "./library/ProgramView";
 import LibraryMainView from "./library/LibraryMainView";
+import ProgramView from "./library/ProgramView";
+import { LibraryCategory, LibraryProgram } from "./library/types";
 import { useFeaturedSession } from "./online/hooks/useFeaturedSession";
+import SessionDetailModal from "./SessionDetail";
 
 interface LibraryProps {
   isEmbedded?: boolean;
@@ -146,7 +148,6 @@ const Library = ({
       window.scrollTo(0, 0);
     }
   }, [activeCategory]);
-
 
   const handleBack = () => {
     setSelectedCategory(null);

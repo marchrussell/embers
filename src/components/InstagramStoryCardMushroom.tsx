@@ -1,6 +1,7 @@
-import mLogo from "@/assets/m-logo.png";
 import mushroomBg from "@/assets/instagram-mushroom-closeup.png";
-import { InstagramStoryCardBase, INSTAGRAM_FILTERS } from "./InstagramStoryCardBase";
+import mLogo from "@/assets/m-logo.png";
+
+import { INSTAGRAM_FILTERS, InstagramStoryCardBase } from "./InstagramStoryCardBase";
 
 export const InstagramStoryCardMushroom = () => {
   return (

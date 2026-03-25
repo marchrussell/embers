@@ -1,3 +1,6 @@
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useState } from "react";
+
 import marchTeacher from "@/assets/march-russell-teacher.jpg";
 import amphitheaterSpace from "@/assets/pitch-deck/amphitheater-space.jpg";
 import circularCeiling from "@/assets/pitch-deck/circular-ceiling.jpg";
@@ -10,8 +13,6 @@ import studioRoom from "@/assets/pitch-deck/studio-room.png";
 import thermalSpace from "@/assets/pitch-deck/thermal-space.jpg";
 import { SectionHeading } from "@/components/SectionHeading";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
 
 const slides = [
   {

@@ -1,7 +1,8 @@
 import instagramBg from "@/assets/instagram-story-bg.jpg";
+
 import {
-  InstagramStoryCardBase,
   InstagramBrandLogos,
+  InstagramStoryCardBase,
   InstagramText,
 } from "./InstagramStoryCardBase";
 

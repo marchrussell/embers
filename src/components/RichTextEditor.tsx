@@ -1,6 +1,7 @@
-import { useState, useRef, useEffect } from "react";
-import { Button } from "./ui/button";
 import { Bold, Italic } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+
+import { Button } from "./ui/button";
 
 interface RichTextEditorProps {
   value: string;
@@ -28,7 +29,7 @@ export const RichTextEditor = ({
     if (!text) return "";
 
     // Convert markdown-style formatting to HTML
-    let formatted = text
+    const formatted = text
       .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // **bold**
       .replace(/\*(.*?)\*/g, "<em>$1</em>") // *italic*
       .replace(/\n/g, "<br>"); // line breaks
@@ -40,7 +41,7 @@ export const RichTextEditor = ({
     if (!html) return "";
 
     // Convert HTML back to markdown-style
-    let text = html
+    const text = html
       .replace(/<strong>(.*?)<\/strong>/g, "**$1**")
       .replace(/<b>(.*?)<\/b>/g, "**$1**")
       .replace(/<em>(.*?)<\/em>/g, "*$1*")

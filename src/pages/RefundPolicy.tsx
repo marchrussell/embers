@@ -1,7 +1,8 @@
+import { memo } from "react";
+
 import Footer from "@/components/Footer";
 import { NavBar } from "@/components/NavBar";
 import { Card } from "@/components/ui/card";
-import { memo } from "react";
 
 const RefundPolicy = memo(() => {
   return (
