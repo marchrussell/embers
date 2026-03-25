@@ -28,7 +28,7 @@ const CourseCard = memo(
   }: CourseCardProps) => (
     <div
       onClick={onClick}
-      className="group relative cursor-pointer overflow-hidden rounded-2xl border border-[#E6DBC7]/15 bg-black/20 shadow-[0_0_40px_rgba(230,219,199,0.15)] backdrop-blur-sm transition-colors duration-500 hover:border-[#E6DBC7]/30"
+      className="group relative cursor-pointer overflow-hidden rounded-2xl border border-[#E6DBC7]/15 bg-black/20 shadow-glow backdrop-blur-sm transition-colors duration-500 hover:border-[#E6DBC7]/30"
     >
       <div className="relative h-48 overflow-hidden">
         <OptimizedImage

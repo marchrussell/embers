@@ -36,7 +36,7 @@ const SessionPlayCard = memo(
     return (
       <div
         onClick={onClick}
-        className="group cursor-pointer overflow-hidden rounded-xl border border-[#E6DBC7]/20 shadow-[0_8px_30px_rgba(230,219,199,0.1)] transition-all hover:border-[#E6DBC7]/30"
+        className="group cursor-pointer overflow-hidden rounded-xl border border-[#E6DBC7]/20 shadow-glow transition-all hover:border-[#E6DBC7]/30"
       >
         <div
           className={`flex ${mobileStacked ? "h-auto flex-col sm:h-[140px] sm:flex-row md:h-[160px] lg:h-[180px]" : "h-[140px] md:h-[160px] lg:h-[180px]"}`}

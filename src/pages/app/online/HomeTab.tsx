@@ -146,7 +146,7 @@ const HomeTab = ({
                   }}
                   className="group w-52 flex-shrink-0 cursor-pointer"
                 >
-                  <div className="relative mb-4 h-52 w-52 overflow-hidden rounded-lg">
+                  <div className="relative mb-4 h-52 w-52 overflow-hidden rounded-lg border border-[#E6DBC7]/15 shadow-glow">
                     <div
                       className="relative h-full w-full bg-cover bg-center"
                       style={{

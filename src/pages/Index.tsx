@@ -196,7 +196,7 @@ const Index = () => {
 
         {/* Nervous System Program Card - White-lined curved box */}
         <section className="w-full bg-background px-6 py-12 md:px-8 md:py-16 lg:px-12 lg:py-20">
-          <div className="mx-auto max-w-[1400px] overflow-hidden rounded-2xl border border-white/50 shadow-[0_0_60px_rgba(230,219,199,0.4)]">
+          <div className="mx-auto max-w-[1400px] overflow-hidden rounded-2xl border border-white/50 shadow-glow-strong">
             <div className="grid min-h-[280px] sm:min-h-[320px] md:min-h-[380px] md:grid-cols-2">
               {/* Left: Image */}
               <div className="relative min-h-[160px] sm:min-h-[180px] md:min-h-[380px]">

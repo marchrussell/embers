@@ -4,7 +4,7 @@ import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
 
 // Shared phone frame styles
 const phoneFrameStyles =
-  "w-[280px] h-[560px] bg-black rounded-[28px] overflow-hidden shadow-[0_0_60px_rgba(230,219,199,0.4)] border border-white/20";
+  "w-[280px] h-[560px] bg-black rounded-[28px] overflow-hidden shadow-glow-strong border border-white/20";
 const nowPlayingBg = getCloudImageUrl(CLOUD_IMAGES.exploreAudioPlayer, { width: 600, quality: 80 });
 const programHero = getCloudImageUrl(CLOUD_IMAGES.breathPresence, { width: 600, quality: 80 });
 const categoryCalm = getCloudImageUrl(CLOUD_IMAGES.startHereButterfly, { width: 600, quality: 80 });

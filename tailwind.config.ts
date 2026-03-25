@@ -98,6 +98,10 @@ export default {
         '120': '120px',
         '160': '160px',
       },
+      boxShadow: {
+        'glow': '0 0 40px rgba(230,219,199,0.15)',
+        'glow-strong': '0 0 60px rgba(230,219,199,0.4)',
+      },
       borderRadius: {
         'pill': '999px',
         'card': '24px',

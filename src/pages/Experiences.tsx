@@ -168,7 +168,7 @@ const Experiences = () => {
                     <div
                       key={event.id}
                       id={event.id}
-                      className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/[0.12] shadow-[0_0_60px_rgba(230,219,199,0.4)] transition-colors duration-500 hover:border-white/25 lg:flex-row"
+                      className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/[0.12] shadow-glow-strong transition-colors duration-500 hover:border-white/25 lg:flex-row"
                       style={{
                         minHeight: "340px",
                         background:
@@ -327,7 +327,7 @@ const Experiences = () => {
 
               {/* The Embers Studio Card - Horizontal Layout */}
               <div
-                className="group relative flex cursor-pointer flex-col overflow-hidden rounded-3xl border border-[#E6DBC7]/20 bg-black shadow-[0_0_60px_rgba(230,219,199,0.4)] transition-colors duration-500 md:flex-row"
+                className="group relative flex cursor-pointer flex-col overflow-hidden rounded-3xl border border-[#E6DBC7]/20 bg-black shadow-glow-strong transition-colors duration-500 md:flex-row"
                 onClick={() => navigate("/online")}
                 style={{ minHeight: "340px" }}
               >

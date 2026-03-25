@@ -22,7 +22,7 @@ const StartHereCard = memo(({ locked = false, onLockedClick }: StartHereCardProp
         onLockedClick?.();
       }
     }}
-    className="group relative block h-[380px] cursor-pointer overflow-hidden rounded-2xl border border-[#E6DBC7]/15 shadow-[0_0_40px_rgba(230,219,199,0.15)] transition-all hover:border-[#E6DBC7]/25 md:h-[400px]"
+    className="group relative block h-[380px] cursor-pointer overflow-hidden rounded-2xl border border-[#E6DBC7]/15 shadow-glow transition-all hover:border-[#E6DBC7]/25 md:h-[400px]"
   >
     <OptimizedImage
       src={startHereButterfly}
