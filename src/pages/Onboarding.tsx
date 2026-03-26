@@ -265,7 +265,7 @@ const Onboarding = () => {
               id="safety"
               checked={safetyAccepted}
               onCheckedChange={(checked) => setSafetyAccepted(checked as boolean)}
-              className="mt-0.5 h-6 w-6 border-2 sm:h-6 sm:w-6"
+              className="mt-0.5 h-6 w-6 border-2"
             />
             <label
               htmlFor="safety"

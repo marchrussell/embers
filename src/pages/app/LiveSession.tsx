@@ -279,12 +279,12 @@ const LiveSession = () => {
               </div>
             ) : (
               <div className="relative z-10 p-8 text-center">
-                <p className="mb-6 text-sm font-light text-[#E6DBC7]/40">
+                <p className="mb-6 font-light text-[#E6DBC7]/40">
                   Next live gathering begins in
                 </p>
 
                 {/* Countdown */}
-                <div className="mb-8 flex items-center justify-center gap-4 md:gap-8">
+                <div className="mb-12 flex items-center justify-center gap-4 md:gap-8">
                   <div className="text-center">
                     <div className="mb-1 font-editorial text-4xl text-[#E6DBC7] md:text-5xl lg:text-6xl">
                       {String(countdown.days).padStart(2, "0")}
@@ -326,7 +326,7 @@ const LiveSession = () => {
                   Next session: <span className="text-[#E6DBC7]/70">{session.nextDate}</span> at{" "}
                   <span className="text-[#E6DBC7]/70">{session.time}</span>
                 </p>
-                <p className="text-sm font-light text-[#E6DBC7]/35">
+                <p className="text-md font-light text-[#E6DBC7]/35">
                   When we go live, the session will open here — no separate link needed.
                 </p>
               </div>
@@ -334,7 +334,7 @@ const LiveSession = () => {
           </div>
 
           {/* Reassurance line */}
-          <p className="mt-6 text-center text-sm font-light text-[#E6DBC7]/35">
+          <p className="mt-6 text-center text-md font-light text-[#E6DBC7]/35">
             If you miss this one, you can return next week — nothing to catch up on.
           </p>
         </div>
