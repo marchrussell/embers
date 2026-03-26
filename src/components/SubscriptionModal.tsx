@@ -102,7 +102,7 @@ export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => 
                   </p>
                   <div className="flex items-center justify-center gap-4">
                     <div className="h-px w-10 bg-white/25" />
-                    <span className="text-[11px] font-light uppercase tracking-[0.3em] text-white/50 sm:text-xs">
+                    <span className="font-bold uppercase tracking-[0.3em] text-white/50 sm:text-xs">
                       Join Embers
                     </span>
                     <div className="h-px w-10 bg-white/25" />
