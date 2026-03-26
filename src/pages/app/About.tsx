@@ -1,17 +1,18 @@
 import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { FeedbackSection } from "@/components/FeedbackSection";
 import { Footer } from "@/components/Footer";
 import { PrivacyModal, TermsModal } from "@/components/LegalModals";
 import { NavBar } from "@/components/NavBar";
 import { OptimizedImage } from "@/components/OptimizedImage";
-import { getCloudImageUrl } from "@/lib/cloudImageUrls";
+import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
 
-const marchBioPhoto = getCloudImageUrl("about/march-bio-photo.webp", { width: 800, quality: 80 });
+const marchBioPhoto = getCloudImageUrl(CLOUD_IMAGES.march);
 
 const About = () => {
+  const navigate = useNavigate();
   const [showTerms, setShowTerms] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
 
@@ -27,14 +28,13 @@ const About = () => {
             <h1 className="font-editorial text-3xl text-[#E6DBC7] md:text-5xl lg:text-6xl">
               Welcome
             </h1>
-            <Link
-              to="/online"
+            <button
+              onClick={() => navigate(-1)}
               className="inline-flex shrink-0 items-center gap-2 text-sm tracking-wide text-[#E6DBC7]/70 transition-colors hover:text-[#E6DBC7] md:text-base"
             >
               <ArrowLeft className="h-5 w-5" />
-              <span className="hidden sm:inline">Back</span>
-              <span className="sm:hidden">Back</span>
-            </Link>
+              Back
+            </button>
           </div>
 
           {/* Desktop: Side-by-side hero layout */}
@@ -57,7 +57,7 @@ const About = () => {
                 >
                   <div className="absolute inset-0 bg-black/60 backdrop-blur-2xl" />
                   <div className="relative z-10 space-y-3 p-6 text-base leading-relaxed text-foreground/90">
-                    <p>Hey, welcome to this space.</p>
+                    <p className="font-editorial text-lg text-[#E6DBC7]">Hey, welcome to this space.</p>
                     <p>
                       Everything we seek already lives within us. This studio is an invitation to
                       experience that for yourself.
@@ -76,12 +76,12 @@ const About = () => {
                       I'm right here with you. Reach out anytime with questions, reflections, or
                       requests. Like you, I'm learning too - a curious explorer.
                     </p>
-                    <p className="mt-6 text-foreground/80">
+                    <p className="mt-6 text-foreground/70">
                       Thank you for giving yourself this space, and for being here on this journey
                       with me.
                     </p>
-                    <p className="text-foreground/80">Big love,</p>
-                    <p className="text-foreground/80">March x</p>
+                    <p className="text-foreground/70">Big love,</p>
+                    <p className="font-editorial text-lg text-[#E6DBC7]">March x</p>
                   </div>
                 </div>
               </div>
@@ -100,7 +100,7 @@ const About = () => {
 
               {/* Text column */}
               <div className="space-y-6 text-lg leading-relaxed text-foreground/90 lg:col-span-3 lg:text-xl">
-                <p className="text-2xl font-light text-[#E6DBC7] lg:text-3xl">
+                <p className="font-editorial text-2xl text-[#E6DBC7] lg:text-3xl">
                   Hey, welcome to this space.
                 </p>
                 <p>
@@ -135,14 +135,13 @@ const About = () => {
 
         {/* Content Sections */}
         <div className="mx-auto max-w-[1600px] px-6 md:px-10 lg:px-16 xl:px-24">
-          {/* Desktop: Two-column grid for main sections */}
-          <div className="mb-16 grid grid-cols-1 gap-10 md:mb-32 md:gap-12 lg:grid-cols-2 lg:gap-20">
+          {/* All content sections stacked with dividers */}
+          <div className="mb-16 md:mb-32">
             {/* Breathwork Safety Section */}
-            <div>
-              <h2 className="mb-6 font-editorial text-2xl text-[#E6DBC7] md:mb-8 md:text-3xl lg:text-4xl">
+            <div className="border-t border-muted-foreground/20 py-10 md:py-14">
+              <h2 className="mb-6 font-editorial text-2xl text-[#E6DBC7] md:mb-8 md:text-3xl">
                 Breathwork Safety
               </h2>
-
               <div className="space-y-4 text-base leading-relaxed text-foreground/90 md:space-y-5 md:text-lg">
                 <p>
                   The breathing classes and techniques in this app are not suitable for everyone.
@@ -173,11 +172,10 @@ const About = () => {
             </div>
 
             {/* About the App Section */}
-            <div>
-              <h2 className="mb-6 font-editorial text-2xl text-[#E6DBC7] md:mb-8 md:text-3xl lg:text-4xl">
+            <div className="border-t border-muted-foreground/20 py-10 md:py-14">
+              <h2 className="mb-6 font-editorial text-2xl text-[#E6DBC7] md:mb-8 md:text-3xl">
                 About the App
               </h2>
-
               <div className="space-y-4 text-base leading-relaxed text-foreground/90 md:space-y-5 md:text-lg">
                 <p>
                   This app is designed to make transformative breathwork practices accessible
@@ -191,56 +189,53 @@ const About = () => {
                 </p>
               </div>
             </div>
-          </div>
 
-          {/* Additional sections in a narrower container */}
-          <div className="mx-auto max-w-4xl lg:mx-0 lg:max-w-none">
-            {/* Desktop: Three-column grid for feature sections */}
-            <div className="mb-16 grid grid-cols-1 gap-10 md:mb-32 md:grid-cols-2 md:gap-12 lg:grid-cols-3 lg:gap-16">
-              <div>
-                <h3 className="mb-4 font-editorial text-xl text-[#E6DBC7] md:mb-5 md:text-2xl">
-                  How It Works
-                </h3>
-                <div className="space-y-4 text-base leading-relaxed text-foreground/90 md:text-lg">
-                  <p>
-                    Each session is carefully crafted to guide you through specific breathing
-                    techniques that work with your nervous system. From quick 3-minute resets to
-                    deeper 60-minute journeys, you'll find practices for every moment of your day.
-                  </p>
-                  <p>
-                    Browse by category to find what you need right now - whether that's calming your
-                    mind, preparing for sleep, energizing your body, or processing emotions.
-                  </p>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="mb-4 font-editorial text-xl text-[#E6DBC7] md:mb-5 md:text-2xl">
-                  Music & Sound
-                </h3>
-                <p className="text-base leading-relaxed text-foreground/90 md:text-lg">
-                  Music is a passion of mine and I believe it's such a powerful tool for breathwork
-                  sessions. We work closely with music producers to create bespoke music
-                  specifically designed for each session, enhancing your journey and deepening the
-                  experience.
+            {/* How It Works Section */}
+            <div className="border-t border-muted-foreground/20 py-10 md:py-14">
+              <h2 className="mb-6 font-editorial text-2xl text-[#E6DBC7] md:mb-8 md:text-3xl">
+                How It Works
+              </h2>
+              <div className="space-y-4 text-base leading-relaxed text-foreground/90 md:space-y-5 md:text-lg">
+                <p>
+                  Each session is carefully crafted to guide you through specific breathing
+                  techniques that work with your nervous system. From quick 3-minute resets to
+                  deeper 60-minute journeys, you'll find practices for every moment of your day.
+                </p>
+                <p>
+                  Browse by category to find what you need right now - whether that's calming your
+                  mind, preparing for sleep, energizing your body, or processing emotions.
                 </p>
               </div>
+            </div>
 
-              <div>
-                <h3 className="mb-4 font-editorial text-xl text-[#E6DBC7] md:mb-5 md:text-2xl">
-                  Your Journey
-                </h3>
-                <div className="space-y-4 text-base leading-relaxed text-foreground/90 md:text-lg">
-                  <p>
-                    Start with whatever calls you. There's no wrong way to begin. Some people prefer
-                    to follow a structured program, while others choose sessions intuitively based
-                    on how they're feeling in the moment.
-                  </p>
-                  <p>
-                    Take your time with each session. Each one builds on the last, and your only job
-                    is to keep showing up with curiosity.
-                  </p>
-                </div>
+            {/* Music & Sound Section */}
+            <div className="border-t border-muted-foreground/20 py-10 md:py-14">
+              <h2 className="mb-6 font-editorial text-2xl text-[#E6DBC7] md:mb-8 md:text-3xl">
+                Music & Sound
+              </h2>
+              <p className="text-base leading-relaxed text-foreground/90 md:text-lg">
+                Music is a passion of mine and I believe it's such a powerful tool for breathwork
+                sessions. We work closely with music producers to create bespoke music
+                specifically designed for each session, enhancing your journey and deepening the
+                experience.
+              </p>
+            </div>
+
+            {/* Your Journey Section */}
+            <div className="border-t border-muted-foreground/20 py-10 md:py-14">
+              <h2 className="mb-6 font-editorial text-2xl text-[#E6DBC7] md:mb-8 md:text-3xl">
+                Your Journey
+              </h2>
+              <div className="space-y-4 text-base leading-relaxed text-foreground/90 md:text-lg">
+                <p>
+                  Start with whatever calls you. There's no wrong way to begin. Some people prefer
+                  to follow a structured program, while others choose sessions intuitively based
+                  on how they're feeling in the moment.
+                </p>
+                <p>
+                  Take your time with each session. Each one builds on the last, and your only job
+                  is to keep showing up with curiosity.
+                </p>
               </div>
             </div>
 

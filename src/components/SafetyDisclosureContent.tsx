@@ -1,8 +1,8 @@
 export const SafetyDisclosureContent = () => (
-  <div className="space-y-8">
+  <div className="space-y-10">
     {/* Introduction */}
-    <section className="space-y-4">
-      <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
+    <section className="space-y-6">
+      <h2 className="my-6 font-editorial text-xl font-medium text-[#E6DBC7]">
         Important Safety Information
       </h2>
       <p>
@@ -41,9 +41,9 @@ export const SafetyDisclosureContent = () => (
     {/* Full Disclosure */}
     <section className="space-y-8">
       <div>
-        <h1 className="mb-3 font-editorial text-2xl text-[#E6DBC7]">Full Safety Disclosure</h1>
+        <h1 className="my-6 font-editorial text-2xl text-[#E6DBC7]">Full Safety Disclosure</h1>
         <p className="text-sm italic">
-          Please read all of the information below before continuing to The Studio.
+          Please read all of the information below before continuing to Embers Studio.
         </p>
       </div>
 
@@ -69,7 +69,7 @@ export const SafetyDisclosureContent = () => (
 
       {/* Contraindications */}
       <div className="border-b border-foreground/10 pb-6">
-        <h2 className="mb-4 text-lg font-semibold uppercase tracking-wide text-[#E6DBC7]">
+        <h2 className="my-6 text-lg font-semibold uppercase tracking-wide text-[#E6DBC7]">
           Contraindications
         </h2>
         <p className="mb-5">
@@ -108,7 +108,7 @@ export const SafetyDisclosureContent = () => (
 
       {/* Breathholds */}
       <div className="border-b border-foreground/10 pb-6">
-        <h2 className="mb-4 text-lg font-semibold uppercase tracking-wide text-[#E6DBC7]">
+        <h2 className="my-6 text-lg font-semibold uppercase tracking-wide text-[#E6DBC7]">
           Breathholds
         </h2>
         <p className="mb-5">
@@ -142,7 +142,7 @@ export const SafetyDisclosureContent = () => (
 
       {/* Where Not to Practice */}
       <div className="border-b border-foreground/10 pb-6">
-        <h2 className="mb-4 text-lg font-semibold uppercase tracking-wide text-[#E6DBC7]">
+        <h2 className="my-6 text-lg font-semibold uppercase tracking-wide text-[#E6DBC7]">
           Where Not to Practice Breathwork
         </h2>
         <p>
@@ -158,7 +158,7 @@ export const SafetyDisclosureContent = () => (
 
       {/* Pregnancy */}
       <div className="border-b border-foreground/10 pb-6">
-        <h2 className="mb-4 text-lg font-semibold uppercase tracking-wide text-[#E6DBC7]">
+        <h2 className="my-6 text-lg font-semibold uppercase tracking-wide text-[#E6DBC7]">
           Pregnancy
         </h2>
         <p className="mb-4">
@@ -188,7 +188,7 @@ export const SafetyDisclosureContent = () => (
 
       {/* Cardiovascular Problems */}
       <div className="border-b border-foreground/10 pb-6">
-        <h2 className="mb-4 text-lg font-semibold uppercase tracking-wide text-[#E6DBC7]">
+        <h2 className="my-6 text-lg font-semibold uppercase tracking-wide text-[#E6DBC7]">
           Cardiovascular Problems
         </h2>
         <p className="mb-4">If you have cardiovascular problems, please note:</p>
@@ -210,7 +210,7 @@ export const SafetyDisclosureContent = () => (
 
       {/* Neurodiverse People */}
       <div className="border-b border-foreground/10 pb-6">
-        <h2 className="mb-4 text-lg font-semibold uppercase tracking-wide text-[#E6DBC7]">
+        <h2 className="my-6 text-lg font-semibold uppercase tracking-wide text-[#E6DBC7]">
           Neurodiverse People
         </h2>
         <p className="mb-4">
@@ -229,25 +229,25 @@ export const SafetyDisclosureContent = () => (
 
       {/* Tips */}
       <div className="border-b border-foreground/10 pb-6">
-        <h2 className="mb-4 text-lg font-semibold uppercase tracking-wide text-[#E6DBC7]">Tips</h2>
+        <h2 className="my-6 text-lg font-semibold uppercase tracking-wide text-[#E6DBC7]">Tips</h2>
         <p>It is advisable to practice breathwork on an empty stomach.</p>
       </div>
 
       {/* Legal Disclaimer */}
-      <div className="space-y-4">
+      <div className="space-y-6">
         <p>
-          The Studio Ltd. assumes no responsibility for injuries suffered while practicing these
-          techniques and The Studio Ltd. shall not be held liable for any damages, circumstances,
+          Embers Studio Ltd. assumes no responsibility for injuries suffered while practicing these
+          techniques and Embers Studio Ltd. shall not be held liable for any damages, circumstances,
           conditions or injuries that may occur, directly or indirectly, from engaging in any
-          activities or ideas presented in any Application made by The Studio, Ltd.
+          activities or ideas presented in any Application made by Embers Studio, Ltd.
         </p>
         <p>
-          By continuing to access and use The Studio App, you agree that you have read and
+          By continuing to access and use Embers Studio App, you agree that you have read and
           understood the above Safety Disclosure and accept all responsibility for your physical and
           mental health and any resultant injury or mishap that may affect your well-being or health
           in any way.
         </p>
-        <p className="text-sm">
+        <p>
           If you have questions or comments, you may email us at{" "}
           <a href="mailto:support@embersstudio.io" className="text-[#E6DBC7] hover:underline">
             support@embersstudio.io

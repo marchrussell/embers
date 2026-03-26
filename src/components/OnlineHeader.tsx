@@ -1,5 +1,5 @@
-import { ArrowLeft, Info } from "lucide-react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface OnlineHeaderProps {
   activeTab?: string;
@@ -72,16 +72,6 @@ const OnlineHeader = ({
 
   return (
     <>
-      {/* About Button - Absolute position (scrolls with page) */}
-      <div className="lg:top-68 absolute right-6 top-44 z-50 flex items-center gap-3 md:right-10 md:top-52 lg:right-12">
-        <Link
-          to="/online/about"
-          className="flex h-12 w-12 items-center justify-center rounded-full border border-[#E6DBC7]/30 text-[#E6DBC7] transition-colors duration-300 hover:border-[#E6DBC7]/50 hover:bg-white/[0.03] md:h-11 md:w-11"
-        >
-          <Info className="h-5 w-5" />
-        </Link>
-      </div>
-
       {/* Back Button - aligned with tabs */}
       {showBackButton && (
         <div className="absolute left-6 top-20 z-50 flex h-10 items-center md:left-10 md:top-[14.25rem] md:h-11 lg:left-12 lg:top-48">

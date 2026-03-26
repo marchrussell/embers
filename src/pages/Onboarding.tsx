@@ -178,7 +178,7 @@ const Onboarding = () => {
             </div>
 
             <p className="pt-4 text-center text-[10px] font-light text-foreground/60 md:pt-6 md:text-xs">
-              The Studio is free for anyone who can't afford it.
+              Embers Studio is free for anyone who can't afford it.
               <br />
               Please email support@embersstudio.io to receive access.
             </p>
@@ -217,45 +217,6 @@ const Onboarding = () => {
           </p>
         </CardHeader>
         <CardContent className="px-5 pb-8 sm:px-6 sm:pb-10 md:px-8 md:pb-12">
-          <div className="mb-8 space-y-5 rounded-xl border border-[#E6DBC7]/10 bg-background/30 p-5 backdrop-blur-sm sm:mb-10 sm:space-y-6 sm:p-7 md:mb-10 md:space-y-6 md:p-8">
-            <h3 className="mb-4 text-lg font-light text-[#E6DBC7] sm:text-xl md:text-xl">
-              Important Safety Information
-            </h3>
-
-            <p className="text-sm font-light leading-relaxed text-foreground/80 sm:text-base md:text-base">
-              Embers Studio provides specialist breathwork, meditation, and wellness classes
-              designed to support your wellbeing. All content and tools provided through the App are
-              for informational and educational purposes only and do not constitute or replace
-              medical, psychological, or therapeutic advice.
-            </p>
-
-            <p className="text-sm font-light leading-relaxed text-foreground/80 sm:text-base md:text-base">
-              Breathwork can have powerful effects on the body and mind, so please practice gently,
-              safely, and within your own window of capacity. It is important and advisable to read
-              and understand the Safety Information below before continuing.
-            </p>
-
-            <p className="text-sm font-light leading-relaxed text-foreground/80 sm:text-base md:text-base">
-              Please consult a medical professional if you have any medical history, conditions, or
-              concerns, and reach out to March at{" "}
-              <a
-                href="mailto:support@embersstudio.io"
-                className="text-[#E6DBC7] underline transition-colors hover:text-[#E6DBC7]/80"
-              >
-                support@embersstudio.io
-              </a>{" "}
-              if you have any questions.
-            </p>
-
-            <div className="mt-5 rounded-lg border border-[#E6DBC7]/20 bg-[#E6DBC7]/5 p-4 sm:p-5 md:p-5">
-              <p className="text-sm font-light leading-relaxed text-foreground/90 sm:text-base md:text-base">
-                <span className="font-medium text-[#E6DBC7]">By continuing, you confirm</span> that
-                you have read and understood our safety guidelines, and that you take full
-                responsibility for your own health and wellbeing while using this service.
-              </p>
-            </div>
-          </div>
-
           <div className="mb-6 max-h-[50vh] overflow-y-auto border-t border-foreground/10 pr-3 pt-6 text-sm font-light leading-relaxed text-foreground/80 sm:mb-8 sm:max-h-[60vh] sm:pr-4 sm:pt-7 sm:text-base md:pt-8">
             <SafetyDisclosureContent />
           </div>
@@ -277,7 +238,7 @@ const Onboarding = () => {
 
           <Button
             onClick={completeOnboarding}
-            className="w-full rounded-full border-2 border-white bg-white/5 py-5 text-sm font-light text-white backdrop-blur-md transition-all hover:bg-white/10 sm:py-6 sm:text-base md:py-6 md:text-base"
+            className="w-full rounded-full border-2 border-white bg-white/5 font-light text-white backdrop-blur-md transition-all hover:bg-white/10 py-6 text-sm"
             disabled={!safetyAccepted || loading}
           >
             {loading ? <ButtonLoadingSpinner /> : "Continue to Library"}

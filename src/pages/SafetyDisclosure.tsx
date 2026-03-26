@@ -213,20 +213,20 @@ const SafetyDisclosure = () => {
 
         {/* Legal Disclaimer */}
         <div className="mb-10">
-          <p className="mb-6 text-xs font-light leading-relaxed text-white/50">
+          <p className="mb-6 text-sm font-light leading-relaxed text-white/50">
             Embers Studio Ltd. assumes no responsibility for injuries suffered while practicing
             these techniques and Embers Studio Ltd. shall not be held liable for any damages,
             circumstances, conditions or injuries that may occur, directly or indirectly, from
             engaging in any activities or ideas presented in any Application made by Embers Studio
             Ltd.
           </p>
-          <p className="mb-6 text-xs font-light leading-relaxed text-white/60">
-            By continuing to access and use the March app, you agree that you have read and
+          <p className="mb-6 text-sm font-light leading-relaxed text-white/60">
+            By continuing to access and use Embers Studio, you agree that you have read and
             understood the above Safety Disclosure and accept all responsibility for your physical
             and mental health and any resultant injury or mishap that may affect your well-being or
             health in any way.
           </p>
-          <p className="text-xs font-light text-white/50">
+          <p className="text-sm font-light text-white/50">
             If you have questions or comments, you may email us at{" "}
             <a href="mailto:support@embersstudio.io" className="text-[#5B9C9E] hover:underline">
               support@embersstudio.io

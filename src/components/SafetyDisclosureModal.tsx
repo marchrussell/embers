@@ -122,7 +122,7 @@ export const SafetyDisclosureModal = ({ isOpen, onAccept, userId }: SafetyDisclo
                 className="cursor-pointer text-sm font-light leading-relaxed text-[#E6DBC7]/80"
               >
                 I have read and understood the safety guidelines. I confirm that I take full
-                responsibility for my own health and wellbeing while using The Studio, and I
+                responsibility for my own health and wellbeing while using Embers Studio, and I
                 understand that this service does not replace medical, psychological, or therapeutic
                 advice.
               </label>

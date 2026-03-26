@@ -32,7 +32,7 @@ const programContent = {
       "Somatic, breathwork & presence practices",
       "Emotional integration tools",
       "ARC Journal for nervous system mapping",
-      "6 months access to The Studio",
+      "6 months access to Embers Studio",
       "Bonus: Sleep & Burnout Module",
     ],
     tagline: "Self-paced, structured, powerful. Designed to meet you exactly where you are.",

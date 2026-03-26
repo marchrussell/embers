@@ -131,7 +131,7 @@ const RefundPolicy = memo(() => {
               {/* Section 3 */}
               <section className="space-y-4">
                 <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                  3. Memberships (The Studio)
+                  3. Memberships (Embers Studio)
                 </h2>
                 <p>Covered under the Terms of Use, but summarised here for clarity:</p>
                 <ul className="list-disc space-y-1 pl-6 text-[#E6DBC7]/80">

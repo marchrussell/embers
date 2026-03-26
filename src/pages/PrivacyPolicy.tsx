@@ -38,7 +38,7 @@ const PrivacyPolicy = () => {
                 </a>
                 )
               </li>
-              <li>Use our mobile or web applications (the "App"), including The Studio</li>
+              <li>Use our mobile or web applications (the "App"), including Embers Studio</li>
               <li>Purchase or access digital courses, toolkits, or pre-sale products</li>
               <li>Interact with March Chat AI</li>
               <li>Attend our events or workshops</li>
@@ -65,7 +65,7 @@ const PrivacyPolicy = () => {
               <p>This Policy applies to all information collected through:</p>
               <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
                 <li>The website</li>
-                <li>The Studio membership</li>
+                <li>Embers Studio membership</li>
                 <li>
                   Digital products (e.g., Anxiety Reset, Emotional Regulation Toolkit, Sleep & NSDR
                   Pack)
@@ -130,7 +130,7 @@ const PrivacyPolicy = () => {
               <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
                 <li>Provide personalised guidance</li>
                 <li>Improve response relevance</li>
-                <li>Support your experience in The Studio or digital courses</li>
+                <li>Support your experience in Embers Studio or digital courses</li>
               </ul>
               <p>We do not use March Chat data for marketing or resale.</p>
               <p>You may delete your March Chat history at any time from your account settings.</p>

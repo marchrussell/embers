@@ -359,6 +359,10 @@ const Profile = () => {
             </h2>
             <div className="space-y-2">
               <ProfileMenuItem
+                label="About the App"
+                onClick={() => navigate("/online/about")}
+              />
+              <ProfileMenuItem
                 label="Leave Feedback / Make Suggestion"
                 onClick={() => setShowFeedbackDialog(true)}
               />

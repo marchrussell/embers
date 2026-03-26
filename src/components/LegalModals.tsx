@@ -44,7 +44,7 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
             <p>
               These Terms of Use ("Terms") govern your access to and use of our digital products and
               services, including our website www.embers-space.com, our mobile and web applications
-              (the "App"), The Studio membership, digital courses, live events, and all related
+              (the "App"), Embers Studio membership, digital courses, live events, and all related
               content, materials, and features (collectively, the "Services").
             </p>
 
@@ -75,7 +75,7 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
             <section className="space-y-4">
               <h3 className="text-lg font-medium text-[#E6DBC7]">1.1 Membership and Accounts</h3>
               <p>
-                To access certain features, including The Studio and digital courses, you must
+                To access certain features, including Embers Studio and digital courses, you must
                 create an account by providing accurate and complete information. By creating an
                 account, you agree to:
               </p>
@@ -96,7 +96,7 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
                 2. Paid Services
               </h2>
               <p>
-                The Studio membership, digital courses, and ticketed events are purchased through
+                Embers Studio membership, digital courses, and ticketed events are purchased through
                 Stripe at www.embers-space.com.
               </p>
             </section>
@@ -104,9 +104,9 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
             {/* Section 2.1 */}
             <section className="space-y-4">
               <h3 className="text-lg font-medium text-[#E6DBC7]">
-                2.1 The Studio Membership (Subscription Service)
+                2.1 Embers Studio Membership (Subscription Service)
               </h3>
-              <p>The Studio is offered as a monthly or annual subscription.</p>
+              <p>Embers Studio is offered as a monthly or annual subscription.</p>
 
               <h4 className="font-medium text-[#E6DBC7]/90">Subscription Terms</h4>
               <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
@@ -122,7 +122,7 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
               <h4 className="mt-4 font-medium text-[#E6DBC7]/90">Cooling-Off Period</h4>
               <p>
                 Under UK consumer law, you have a 14-day cooling-off period for subscription
-                purchases. You acknowledge that by accessing The Studio content immediately, you
+                purchases. You acknowledge that by accessing Embers Studio content immediately, you
                 waive the right to withdraw during this period.
               </p>
 
@@ -404,7 +404,7 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => {
 
             <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
               <li>Visit or use our website (www.embers-space.com)</li>
-              <li>Use our mobile or web applications (the "App"), including The Studio</li>
+              <li>Use our mobile or web applications (the "App"), including Embers Studio</li>
               <li>Purchase or access digital courses, toolkits, or pre-sale products</li>
               <li>Interact with Embers Studio Chat AI</li>
               <li>Attend our events or workshops</li>
@@ -426,7 +426,7 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => {
               <p>This Policy applies to all information collected through:</p>
               <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
                 <li>The website</li>
-                <li>The Studio membership</li>
+                <li>Embers Studio membership</li>
                 <li>
                   Digital products (e.g., Anxiety Reset, Emotional Regulation Toolkit, Sleep & NSDR
                   Pack)
@@ -482,7 +482,7 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => {
               </p>
               <p>
                 Chat data is only used to provide personalised guidance, improve response relevance,
-                and support your experience in The Studio or digital courses.
+                and support your experience in Embers Studio or digital courses.
               </p>
               <p>
                 We do not use Embers Studio Chat data for marketing or resale. You may delete your
@@ -782,7 +782,7 @@ export const RefundModal = ({ open, onOpenChange }: LegalModalProps) => {
             {/* Section 3 */}
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                3. Memberships (The Studio)
+                3. Memberships (Embers Studio)
               </h2>
               <p>Covered under the Terms of Use, but summarised here for clarity:</p>
               <ul className="list-disc space-y-1 pl-6 text-[#E6DBC7]/80">

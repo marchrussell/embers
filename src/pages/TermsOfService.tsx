@@ -35,7 +35,7 @@ const TermsOfService = () => {
               <a href="https://www.marchrussell.com" className="underline hover:text-[#E6DBC7]">
                 www.marchrussell.com
               </a>
-              , our mobile and web applications (the "App"), The Studio membership, digital courses,
+              , our mobile and web applications (the "App"), Embers Studio membership, digital courses,
               live events, and all related content, materials, and features (collectively, the
               "Services").
             </p>
@@ -64,7 +64,7 @@ const TermsOfService = () => {
             <section className="space-y-4">
               <h3 className="text-lg font-medium text-[#E6DBC7]">1.1 Membership and Accounts</h3>
               <p>
-                To access certain features, including The Studio and digital courses, you must
+                To access certain features, including Embers Studio and digital courses, you must
                 create an account by providing accurate and complete information. By creating an
                 account, you agree to:
               </p>
@@ -91,7 +91,7 @@ const TermsOfService = () => {
                 2. Paid Services
               </h2>
               <p>
-                The Studio membership, digital courses, and ticketed events are purchased through
+                Embers Studio membership, digital courses, and ticketed events are purchased through
                 Stripe at{" "}
                 <a href="https://www.marchrussell.com" className="underline hover:text-[#E6DBC7]">
                   www.marchrussell.com
@@ -103,9 +103,9 @@ const TermsOfService = () => {
             {/* Section 2.1 */}
             <section className="space-y-4">
               <h3 className="text-lg font-medium text-[#E6DBC7]">
-                2.1 The Studio Membership (Subscription Service)
+                2.1 Embers Studio Membership (Subscription Service)
               </h3>
-              <p>The Studio is offered as a monthly or annual subscription.</p>
+              <p>Embers Studio is offered as a monthly or annual subscription.</p>
 
               <h4 className="font-medium text-[#E6DBC7]/90">Subscription Terms</h4>
               <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
@@ -127,7 +127,7 @@ const TermsOfService = () => {
               <h4 className="mt-4 font-medium text-[#E6DBC7]/90">Cooling-Off Period</h4>
               <p>
                 Under UK consumer law, you have a 14-day cooling-off period for subscription
-                purchases. You acknowledge that by accessing The Studio content immediately, you
+                purchases. You acknowledge that by accessing Embers Studio content immediately, you
                 waive the right to withdraw during this period.
               </p>
 
