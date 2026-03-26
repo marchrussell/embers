@@ -14,7 +14,11 @@ import {
   getNextThirdThursday,
   useNextGuestTeacher,
 } from "@/hooks/useNextGuestTeacher";
-import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
+import {
+  guestSessionImg,
+  monthlyBreathOnlineImg as monthlyPresenceImg,
+  weeklyResetImg,
+} from "@/lib/experiencesData";
 
 import Library from "./Library";
 import HomeTab from "./online/HomeTab";
@@ -24,9 +28,6 @@ import { LiveSessionsData } from "./online/types";
 import SessionDetailModal from "./SessionDetail";
 
 const VALID_TABS = ["home", "library", "programs", "live"];
-const weeklyResetImg = getCloudImageUrl(CLOUD_IMAGES.weeklyReset);
-const monthlyPresenceImg = getCloudImageUrl(CLOUD_IMAGES.monthlyBreath);
-const guestSessionImg = getCloudImageUrl(CLOUD_IMAGES.unwindReset);
 
 const Online = () => {
   const {

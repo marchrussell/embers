@@ -2,11 +2,7 @@ import { Calendar, Clock, Video } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import guestSessionBg from "@/assets/guest-session-bg.png";
-import heroHandsSession from "@/assets/hero-hands-session.png";
 import liveSessionCountdownBg from "@/assets/live-session-countdown-bg.png";
-import marchPortrait from "@/assets/march-portrait-casual.jpg";
-import weeklyResetEvent from "@/assets/weekly-reset-event.jpg";
 import { Footer } from "@/components/Footer";
 import { NavBar } from "@/components/NavBar";
 import OnlineFooter from "@/components/OnlineFooter";
@@ -17,6 +13,11 @@ import {
   getNextThirdThursday,
   useNextGuestTeacher,
 } from "@/hooks/useNextGuestTeacher";
+import {
+  guestSessionImg,
+  monthlyBreathOnlineImg as monthlyPresenceImg,
+  weeklyResetImg,
+} from "@/lib/experiencesData";
 
 interface LiveSessionData {
   title: string;
@@ -32,13 +33,17 @@ interface LiveSessionData {
   whatToExpect?: string[];
 }
 
+import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
+
+const marchPortrait = getCloudImageUrl(CLOUD_IMAGES.march);
+
 const staticSessionsConfig: Record<string, LiveSessionData> = {
   "weekly-reset": {
     title: "Weekly Reset",
     subtitle: "Live every Tuesday",
     description:
       "A live weekly space with practices to pause, soothe your central nervous system, and come back home to yourself - wherever you are in the week.",
-    image: weeklyResetEvent,
+    image: weeklyResetImg,
     nextDate: "Tuesday, December 31",
     teacher: "March",
     duration: "30 mins",
@@ -48,7 +53,7 @@ const staticSessionsConfig: Record<string, LiveSessionData> = {
     title: "Monthly Breath & Presence",
     subtitle: "First Saturday of each month",
     description: "A longer, spacious session to soften tension and reconnect with yourself.",
-    image: heroHandsSession,
+    image: monthlyPresenceImg,
     nextDate: "Saturday, January 4",
     teacher: "March",
     duration: "90 mins",
@@ -76,7 +81,7 @@ const LiveSession = () => {
           description:
             nextGuestTeacher.short_description ||
             "A unique session featuring a guest teacher with fresh perspectives and new practices to explore.",
-          image: nextGuestTeacher.photo_url || guestSessionBg,
+          image: nextGuestTeacher.photo_url || guestSessionImg,
           nextDate: formatGuestSessionDate(new Date(nextGuestTeacher.session_date)),
           teacher: nextGuestTeacher.name,
           teacherTitle: nextGuestTeacher.title,
@@ -92,7 +97,7 @@ const LiveSession = () => {
         subtitle: "3rd Thursday of every month",
         description:
           "A unique session featuring a guest teacher with fresh perspectives and new practices to explore.",
-        image: guestSessionBg,
+        image: guestSessionImg,
         nextDate: formatGuestSessionDate(getNextThirdThursday()),
         teacher: "Guest Teacher",
         duration: "1 hour",

@@ -3,9 +3,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-import guestSessionBg from "@/assets/guest-session-bg.png";
-import heroHandsSession from "@/assets/hero-hands-session.png";
-import weeklyResetEvent from "@/assets/weekly-reset-event.jpg";
 import { IconButton } from "@/components/ui/icon-button";
 import {
   CalendarEvent,
@@ -13,6 +10,11 @@ import {
   getGoogleCalendarUrl,
   getOutlookCalendarUrl,
 } from "@/lib/calendarUtils";
+import {
+  guestSessionImg,
+  monthlyBreathOnlineImg as monthlyPresenceImg,
+  weeklyResetImg,
+} from "@/lib/experiencesData";
 
 import LiveProgramCard from "./components/LiveProgramCard";
 import { AVAILABILITY_DAYS, useLiveReplays } from "./hooks/useLiveReplays";
@@ -218,7 +220,7 @@ const LiveTab = ({
           {/* Weekly Reset & Monthly Presence Replays */}
           <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2">
             <ReplayBox
-              image={weeklyResetEvent}
+              image={weeklyResetImg}
               alt="Weekly Reset Replay"
               availability={formatAvailability("weekly-reset")}
               category="Weekly Reset"
@@ -230,7 +232,7 @@ const LiveTab = ({
               }
             />
             <ReplayBox
-              image={heroHandsSession}
+              image={monthlyPresenceImg}
               alt="Monthly Presence Replay"
               availability={formatAvailability("monthly-presence")}
               category="Monthly Breath & Presence"
@@ -352,7 +354,7 @@ const GuestReplayCard = ({ replay }: { replay: LiveReplay }) => (
   >
     <div className="relative h-44 overflow-hidden">
       <img
-        src={replay.teacher_photo || guestSessionBg}
+        src={replay.teacher_photo || guestSessionImg}
         alt={replay.title}
         className="absolute inset-0 h-full w-full object-cover object-bottom"
         loading="lazy"
@@ -381,7 +383,7 @@ const GuestReplayComingSoon = () => (
     <div className="group relative cursor-pointer overflow-hidden rounded-2xl border border-[#E6DBC7]/15 bg-black/40 transition-colors duration-500 hover:border-[#E6DBC7]/30">
       <div className="relative h-44 overflow-hidden">
         <img
-          src={guestSessionBg}
+          src={guestSessionImg}
           alt="Guest Session"
           className="absolute inset-0 h-full w-full object-cover object-bottom"
           loading="lazy"

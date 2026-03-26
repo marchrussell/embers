@@ -9,9 +9,10 @@ export type { EventSchedule };
 
 const breathPresenceOnlineImg = getCloudImageUrl(CLOUD_IMAGES.breathPresence);
 const breathworkToDubImg = getCloudImageUrl(CLOUD_IMAGES.breathWorkToDub);
-const monthlyBreathOnlineImg = getCloudImageUrl(CLOUD_IMAGES.monthlyBreath);
-const unwindResetImg = getCloudImageUrl(CLOUD_IMAGES.unwindReset);
-const weeklyResetImg = getCloudImageUrl(CLOUD_IMAGES.weeklyReset);
+export const monthlyBreathOnlineImg = getCloudImageUrl(CLOUD_IMAGES.monthlyBreath);
+export const unwindResetImg = getCloudImageUrl(CLOUD_IMAGES.unwindReset);
+export const weeklyResetImg = getCloudImageUrl(CLOUD_IMAGES.weeklyReset);
+export const guestSessionImg = getCloudImageUrl(CLOUD_IMAGES.unwindReset);
 
 // Venue address
 const AUFI_ADDRESS = "AUFI, 20 Eastcastle St, London W1W 8DB";
