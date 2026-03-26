@@ -94,6 +94,7 @@ const CategoryView = memo(
               return (
                 <SessionPlayCard
                   key={session.id}
+                  sessionId={session.id}
                   title={session.title}
                   description={
                     session.description ||

@@ -92,6 +92,7 @@ const StartHere = () => {
             {sessions.map((session) => (
               <SessionPlayCard
                 key={session.id}
+                sessionId={session.id}
                 title={session.title}
                 description={session.short_description || session.description || ""}
                 meta={[

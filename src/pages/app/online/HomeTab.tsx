@@ -187,6 +187,7 @@ const HomeTab = ({
             One gentle practice — that's enough.
           </p>
           <SessionPlayCard
+            sessionId={featuredSession.id}
             title={featuredSession.title}
             description={featuredSession.short_description || featuredSession.description || ""}
             meta={[
