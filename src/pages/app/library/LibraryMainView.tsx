@@ -110,8 +110,8 @@ const LibraryMainView = memo(
                           <div
                             key={category.id}
                             onClick={() => onCategorySelect(category)}
-                            className={`group relative cursor-pointer overflow-hidden rounded-2xl border border-[#E6DBC7]/15 shadow-glow transition-all hover:border-[#E6DBC7]/25 ${
-                              isLastOdd ? "col-span-2 h-64 md:h-72" : "h-56 md:h-64"
+                            className={`group relative cursor-pointer overflow-hidden rounded-2xl border border-[#E6DBC7]/15 shadow-glow transition-all hover:border-[#E6DBC7]/25 h-64 md:h-72 ${
+                              isLastOdd ? "col-span-2" : ""
                             }`}
                           >
                             <OptimizedImage
