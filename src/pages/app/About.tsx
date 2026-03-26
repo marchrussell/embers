@@ -21,9 +21,8 @@ const About = () => {
       <NavBar />
 
       <main className="flex-1 pb-16 pt-36 md:pb-24 md:pt-24">
-        {/* Hero Section - Full width on desktop */}
         <div className="mx-auto max-w-[1600px] px-6 md:px-10 lg:px-16 xl:px-24">
-          {/* Header row with Welcome and Back button */}
+          {/* Header row */}
           <div className="mb-12 mt-20 flex items-center justify-between">
             <h1 className="font-editorial text-3xl text-[#E6DBC7] md:text-5xl lg:text-6xl">
               Welcome
@@ -56,7 +55,7 @@ const About = () => {
                   }}
                 >
                   <div className="absolute inset-0 bg-black/60 backdrop-blur-2xl" />
-                  <div className="relative z-10 space-y-3 p-6 text-base leading-relaxed text-foreground/90">
+                  <div className="relative z-10 space-y-4 p-6 text-base leading-relaxed text-foreground/90">
                     <p className="font-editorial text-lg text-[#E6DBC7]">Hey, welcome to this space.</p>
                     <p>
                       Everything we seek already lives within us. This studio is an invitation to
@@ -76,11 +75,11 @@ const About = () => {
                       I'm right here with you. Reach out anytime with questions, reflections, or
                       requests. Like you, I'm learning too - a curious explorer.
                     </p>
-                    <p className="mt-6 text-foreground/70">
+                    <p className="mt-6">
                       Thank you for giving yourself this space, and for being here on this journey
                       with me.
                     </p>
-                    <p className="text-foreground/70">Big love,</p>
+                    <p>Big love,</p>
                     <p className="font-editorial text-lg text-[#E6DBC7]">March x</p>
                   </div>
                 </div>
@@ -120,7 +119,7 @@ const About = () => {
                   I'm right here with you. Reach out anytime with questions, reflections, or
                   requests. Like you, I'm learning too - a curious explorer.
                 </p>
-                <div className="space-y-2 pt-4 text-foreground/70">
+                <div className="space-y-2 pt-4">
                   <p>
                     Thank you for giving yourself this space, and for being here on this journey
                     with me.
