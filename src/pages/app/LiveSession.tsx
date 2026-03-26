@@ -220,7 +220,7 @@ const LiveSession = () => {
       <div className="px-6 pb-24 md:px-10 lg:px-12">
         <div className="mx-auto max-w-4xl">
           {/* Facilitator and What to expect - connected layout */}
-          <div className="mb-32 mt-32 flex flex-col overflow-hidden rounded-2xl md:flex-row">
+          <div className="mb-36 mt-32 flex flex-col overflow-hidden rounded-2xl md:flex-row">
             {/* Image on the left - height determined by content */}
             <div className="relative flex-shrink-0 overflow-hidden rounded-l-2xl border-b border-l border-t border-[#E6DBC7]/20 md:w-1/2 md:border-r-0">
               <img
