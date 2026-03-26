@@ -97,45 +97,45 @@ const LibraryMainView = memo(
                 <p className="mb-10 text-base font-light text-[#E6DBC7]/60 md:text-lg">
                   Move at your own pace — return anytime.
                 </p>
-                <div className="grid grid-cols-2 gap-6">
-                  {categoriesWithSessions
-                    .filter(
-                      (category) => category && category.image && category.name !== "MEDITATIONS"
-                    )
-                    .map((category) => (
-                      <div
-                        key={category.id}
-                        onClick={() => onCategorySelect(category)}
-                        className="group relative h-56 cursor-pointer overflow-hidden rounded-lg transition-all"
-                      >
-                        <OptimizedImage
-                          src={category.image}
-                          alt={category.name}
-                          className="absolute inset-0 h-full w-full object-cover"
-                          optimizationOptions={IMAGE_PRESETS.categoryCard}
-                          loading="lazy"
-                        />
-                        <div
-                          className={`absolute inset-0 ${
-                            category.name === "AWAKEN" ||
-                            category.name === "ENERGY" ||
-                            category.name === "RELEASE"
-                              ? "bg-black/30"
-                              : "bg-black/15"
-                          }`}
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
-                        <div className="relative flex h-full flex-col justify-end p-6">
-                          <h3 className="mb-3 font-editorial text-4xl text-[#E6DBC7]">
-                            {category.name}
-                          </h3>
-                          <p className="text-base font-light text-[#E6DBC7]/70 md:text-lg">
-                            {category.sessions.length} sessions
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                </div>
+                {(() => {
+                  const filteredCategories = categoriesWithSessions.filter(
+                    (category) => category && category.image && category.name !== "MEDITATIONS"
+                  );
+                  const isOdd = filteredCategories.length % 2 !== 0;
+                  return (
+                    <div className="grid grid-cols-2 gap-6">
+                      {filteredCategories.map((category, index) => {
+                        const isLastOdd = isOdd && index === filteredCategories.length - 1;
+                        return (
+                          <div
+                            key={category.id}
+                            onClick={() => onCategorySelect(category)}
+                            className={`group relative cursor-pointer overflow-hidden rounded-2xl border border-[#E6DBC7]/15 shadow-glow transition-all hover:border-[#E6DBC7]/25 ${
+                              isLastOdd ? "col-span-2 h-64 md:h-72" : "h-56 md:h-64"
+                            }`}
+                          >
+                            <OptimizedImage
+                              src={category.image}
+                              alt={category.name}
+                              className="absolute inset-0 h-full w-full object-cover"
+                              optimizationOptions={IMAGE_PRESETS.categoryCard}
+                              loading="lazy"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                            <div className="relative flex h-full flex-col justify-end p-6">
+                              <h3 className="mb-2 font-editorial text-4xl text-[#E6DBC7]">
+                                {category.name}
+                              </h3>
+                              <p className="text-sm font-light text-[#E6DBC7]/60 md:text-base">
+                                {category.sessions.length} sessions
+                              </p>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  );
+                })()}
 
                 {/* Favourites Section - Only shown for authenticated users */}
                 {user && (
