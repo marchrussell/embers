@@ -249,16 +249,16 @@ const LibraryMainView = memo(
 
               {/* ARC Mentorship CTA */}
               <div className="mx-auto mb-16 mt-24 max-w-2xl px-6 text-center">
-                <p className="mb-2 text-lg font-light leading-relaxed text-white/90 md:text-xl">
+                <p className="mb-2 text-lg font-light leading-relaxed md:text-xl">
                   Looking for deeper, guided support?
                 </p>
-                <p className="mb-6 text-base font-light leading-relaxed text-white/70 md:text-lg">
+                <p className="mb-6 text-base font-light leading-relaxed  md:text-lg">
                   For those wanting a more personalised, relational process, ARC mentorship is
                   available by application.
                 </p>
                 <button
                   onClick={onArcCardsOpen}
-                  className="inline-flex items-center gap-3 text-base font-light text-white/90 transition-colors hover:text-white"
+                  className="inline-flex items-center gap-3 text-base font-light transition-colors hover:text-white"
                 >
                   <span>Learn about ARC</span>
                   <ArrowRight className="h-5 w-5" />
