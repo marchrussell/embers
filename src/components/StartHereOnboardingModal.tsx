@@ -51,7 +51,7 @@ const StartHereOnboardingModal = ({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-        <DialogContent className="max-h-[90vh] w-[95vw] max-w-3xl overflow-y-auto rounded-2xl border border-[#E6DBC7]/15 bg-[#1A1A1A] p-0">
+        <DialogContent className="max-h-[90vh] w-[95vw] max-w-3xl overflow-y-auto rounded-2xl border border-white/20 bg-black/75 p-0 backdrop-blur-xl">
           <div className="p-8 md:p-12">
             {/* Screen title */}
             <DialogTitle className="mb-8 font-editorial text-3xl font-light tracking-tight text-[#E6DBC7] md:text-4xl">

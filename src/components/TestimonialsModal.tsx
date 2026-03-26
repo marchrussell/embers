@@ -92,7 +92,7 @@ export const TestimonialsModal = ({ open, onOpenChange }: TestimonialsModalProps
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         hideClose
-        className="max-h-[92vh] w-[94%] max-w-[1600px] overflow-y-auto rounded-[28px] border border-white/20 bg-black p-0 sm:max-h-[88vh] sm:w-[90%]"
+        className="max-h-[92vh] w-[94%] max-w-[1600px] overflow-y-auto rounded-[28px] border border-white/20 bg-black/75 p-0 backdrop-blur-xl sm:max-h-[88vh] sm:w-[90%]"
       >
         <button
           onClick={() => onOpenChange(false)}
