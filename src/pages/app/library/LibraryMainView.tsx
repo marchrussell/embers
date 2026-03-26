@@ -81,7 +81,7 @@ const LibraryMainView = memo(
               <p className="mb-10 text-base font-light text-[#E6DBC7]/60 md:text-lg">
                 Move at your own pace — return anytime.
               </p>
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 {[1, 2, 3, 4, 5, 6].map((i) => (
                   <CategoryCardSkeleton key={i} />
                 ))}
@@ -103,14 +103,14 @@ const LibraryMainView = memo(
                   );
                   const isOdd = filteredCategories.length % 2 !== 0;
                   return (
-                    <div className="grid grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                       {filteredCategories.map((category, index) => {
                         const isLastOdd = isOdd && index === filteredCategories.length - 1;
                         return (
                           <div
                             key={category.id}
                             onClick={() => onCategorySelect(category)}
-                            className={`group relative cursor-pointer overflow-hidden rounded-2xl border border-[#E6DBC7]/15 shadow-glow transition-all hover:border-[#E6DBC7]/25 h-64 md:h-72 ${
+                            className={`group relative cursor-pointer overflow-hidden rounded-2xl border border-[#E6DBC7]/15 shadow-glow transition-all hover:border-[#E6DBC7]/25 h-72 ${
                               isLastOdd ? "col-span-2" : ""
                             }`}
                           >
@@ -139,7 +139,7 @@ const LibraryMainView = memo(
 
                 {/* Favourites Section - Only shown for authenticated users */}
                 {user && (
-                  <div className="mb-48 mt-24 md:mt-32">
+                  <div className="mb-48 mt-32">
                     <div className="mb-10 flex items-center justify-between">
                       <Link
                         to="/online/favourites"
@@ -231,8 +231,8 @@ const LibraryMainView = memo(
                         ))}
                       </div>
                     ) : (
-                      <div className="py-8 text-center">
-                        <p className="text-base font-light text-white/50">
+                      <div className="pt-8">
+                        <p className="text-base font-light">
                           Sessions you love will appear here. Tap the heart on any practice to save
                           it.
                         </p>
