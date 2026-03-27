@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import {
   formatGuestSessionDate,
   getNextThirdThursday,
+  parseUTCDateForDisplay,
   useNextGuestTeacher,
 } from "@/hooks/useNextGuestTeacher";
 import {
@@ -37,14 +38,37 @@ import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
 
 const marchPortrait = getCloudImageUrl(CLOUD_IMAGES.march);
 
-const staticSessionsConfig: Record<string, LiveSessionData> = {
+function getNextTuesdayDate(): Date {
+  const now = new Date();
+  const daysUntilTuesday = (2 - now.getDay() + 7) % 7 || 7;
+  const next = new Date(now);
+  next.setDate(now.getDate() + daysUntilTuesday);
+  next.setHours(19, 0, 0, 0);
+  return next;
+}
+
+function getNextFirstSaturdayDate(): Date {
+  const now = new Date();
+  let month = now.getMonth() + 1;
+  let year = now.getFullYear();
+  if (month > 11) {
+    month = 0;
+    year++;
+  }
+  const firstDay = new Date(year, month, 1);
+  const daysUntilSaturday = (6 - firstDay.getDay() + 7) % 7;
+  const firstSaturday = new Date(year, month, 1 + daysUntilSaturday);
+  firstSaturday.setHours(10, 0, 0, 0);
+  return firstSaturday;
+}
+
+const staticSessionsConfig: Record<string, Omit<LiveSessionData, "nextDate">> = {
   "weekly-reset": {
     title: "Weekly Reset",
     subtitle: "Live every Tuesday",
     description:
       "A live weekly space with practices to pause, soothe your central nervous system, and come back home to yourself - wherever you are in the week.",
     image: weeklyResetImg,
-    nextDate: "Tuesday, December 31",
     teacher: "March",
     duration: "30 mins",
     time: "7:00 PM GMT",
@@ -54,7 +78,6 @@ const staticSessionsConfig: Record<string, LiveSessionData> = {
     subtitle: "First Saturday of each month",
     description: "A longer, spacious session to soften tension and reconnect with yourself.",
     image: monthlyPresenceImg,
-    nextDate: "Saturday, January 4",
     teacher: "March",
     duration: "90 mins",
     time: "10:00 AM GMT",
@@ -82,7 +105,7 @@ const LiveSession = () => {
             nextGuestTeacher.short_description ||
             "A unique session featuring a guest teacher with fresh perspectives and new practices to explore.",
           image: nextGuestTeacher.photo_url || guestSessionImg,
-          nextDate: formatGuestSessionDate(new Date(nextGuestTeacher.session_date)),
+          nextDate: formatGuestSessionDate(parseUTCDateForDisplay(nextGuestTeacher.session_date)),
           teacher: nextGuestTeacher.name,
           teacherTitle: nextGuestTeacher.title,
           teacherImage: nextGuestTeacher.photo_url || undefined,
@@ -105,7 +128,15 @@ const LiveSession = () => {
       };
     }
 
-    return staticSessionsConfig[sessionId] || null;
+    const config = staticSessionsConfig[sessionId];
+    if (!config) return null;
+    if (sessionId === "weekly-reset") {
+      return { ...config, nextDate: formatGuestSessionDate(getNextTuesdayDate()) };
+    }
+    if (sessionId === "monthly-presence") {
+      return { ...config, nextDate: formatGuestSessionDate(getNextFirstSaturdayDate()) };
+    }
+    return null;
   })();
 
   // Calculate countdown to next session
@@ -205,7 +236,7 @@ const LiveSession = () => {
         </span>
         <span className="flex items-center gap-3">
           <Calendar className="h-5 w-5" />
-          Every Tuesday at {session.time}
+          {session.nextDate} at {session.time}
         </span>
       </div>
 

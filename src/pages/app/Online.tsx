@@ -12,6 +12,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import {
   formatGuestSessionDate,
   getNextThirdThursday,
+  parseUTCDateForDisplay,
   useNextGuestTeacher,
 } from "@/hooks/useNextGuestTeacher";
 import {
@@ -86,7 +87,7 @@ const Online = () => {
               nextGuestTeacher.short_description ||
               `A unique session featuring ${nextGuestTeacher.name} with fresh perspectives.`,
             image: nextGuestTeacher.photo_url || guestSessionImg,
-            nextDate: formatGuestSessionDate(new Date(nextGuestTeacher.session_date)),
+            nextDate: formatGuestSessionDate(parseUTCDateForDisplay(nextGuestTeacher.session_date)),
             isLive: false,
             hasReplay: false,
             teacherName: nextGuestTeacher.name,

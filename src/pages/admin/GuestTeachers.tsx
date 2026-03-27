@@ -15,6 +15,7 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { AdminLayout, AdminStatsCard } from "@/components/admin";
 import { AdminContentSkeleton } from "@/components/skeletons/AdminContentSkeleton";
@@ -52,8 +53,7 @@ interface GuestTeacher {
 const AdminGuestTeachers = () => {
   const { isAdmin, loading, session } = useAuth();
   const navigate = useNavigate();
-  const [teachers, setTeachers] = useState<GuestTeacher[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingTeacher, setEditingTeacher] = useState<GuestTeacher | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -83,28 +83,18 @@ const AdminGuestTeachers = () => {
     }
   }, [isAdmin, loading, navigate]);
 
-  useEffect(() => {
-    if (isAdmin) {
-      fetchTeachers();
-    }
-  }, [isAdmin]);
-
-  const fetchTeachers = async () => {
-    try {
+  const { data: teachers = [], isLoading } = useQuery({
+    queryKey: ["guest-teachers"],
+    queryFn: async () => {
       const { data, error } = await supabase
         .from("guest_teachers")
         .select("*")
         .order("session_date", { ascending: true });
-
       if (error) throw error;
-      setTeachers(data || []);
-    } catch (error) {
-      console.error("Error fetching guest teachers:", error);
-      toast.error("Failed to load guest teachers");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      return (data ?? []) as GuestTeacher[];
+    },
+    enabled: !!isAdmin,
+  });
 
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -202,7 +192,7 @@ const AdminGuestTeachers = () => {
 
       setIsDialogOpen(false);
       resetForm();
-      fetchTeachers();
+      queryClient.invalidateQueries({ queryKey: ["guest-teachers"] });
     } catch (error) {
       console.error("Error saving guest teacher:", error);
       toast.error("Failed to save guest teacher");
@@ -217,7 +207,7 @@ const AdminGuestTeachers = () => {
 
       if (error) throw error;
       toast.success("Guest teacher deleted successfully");
-      fetchTeachers();
+      queryClient.invalidateQueries({ queryKey: ["guest-teachers"] });
     } catch (error) {
       console.error("Error deleting guest teacher:", error);
       toast.error("Failed to delete guest teacher");
@@ -285,7 +275,7 @@ const AdminGuestTeachers = () => {
         .eq("id", teacher.id);
 
       toast.success("Guest link generated successfully!");
-      fetchTeachers();
+      queryClient.invalidateQueries({ queryKey: ["guest-teachers"] });
     } catch (error) {
       console.error("Error generating guest link:", error);
       toast.error("Failed to generate guest link");

@@ -87,3 +87,11 @@ export function formatGuestSessionDate(date: Date): string {
     day: "numeric",
   });
 }
+
+// Parse a UTC ISO date string for display — extracts the UTC date to avoid
+// local timezone shifting the day (e.g. 7:30 PM GMT appearing as the next day
+// for users in UTC+5+)
+export function parseUTCDateForDisplay(isoString: string): Date {
+  const [year, month, day] = isoString.slice(0, 10).split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
