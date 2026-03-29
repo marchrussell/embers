@@ -1,13 +1,14 @@
 export interface Course {
   id: string;
   title: string;
-  slug: string;
-  description: string;
-  short_description: string;
-  duration_days: number;
-  price_cents: number;
-  currency: string;
+  slug: string | null;
+  description: string | null;
+  short_description: string | null;
+  duration_days: number | null;
   image_url: string | null;
+  teacher_name: string | null;
+  lesson_count: number | null;
+  is_published: boolean;
 }
 
 export interface LiveSessionData {

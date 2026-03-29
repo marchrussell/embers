@@ -25,6 +25,7 @@ import { supabase } from "@/integrations/supabase/client";
 interface Program {
   id: string;
   title: string;
+  slug: string | null;
   short_description: string | null;
   description: string | null;
   teacher_name: string | null;
@@ -32,6 +33,7 @@ interface Program {
   is_published: boolean;
   category_id: string | null;
   lesson_count: number | null;
+  duration_days: number | null;
 }
 
 interface Class {
@@ -57,11 +59,13 @@ const AdminPrograms = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [formData, setFormData] = useState({
     title: "",
+    slug: "",
     short_description: "",
     description: "",
     teacher_name: "March Russell",
     image_url: "",
     is_published: false,
+    duration_days: "",
   });
 
   useEffect(() => {
@@ -173,6 +177,7 @@ const AdminPrograms = () => {
 
     const programData = {
       title: formData.title,
+      slug: formData.slug || null,
       short_description: formData.short_description,
       description: formData.description,
       teacher_name: formData.teacher_name,
@@ -180,6 +185,7 @@ const AdminPrograms = () => {
       category_id: null,
       is_published: formData.is_published,
       lesson_count: selectedClasses.length,
+      duration_days: formData.duration_days ? parseInt(formData.duration_days) : null,
     };
 
     if (editingProgram) {
@@ -250,11 +256,13 @@ const AdminPrograms = () => {
     setEditingProgram(program);
     setFormData({
       title: program.title,
+      slug: program.slug || "",
       short_description: program.short_description || "",
       description: program.description || "",
       teacher_name: program.teacher_name || "March Russell",
       image_url: program.image_url || "",
       is_published: program.is_published,
+      duration_days: program.duration_days?.toString() || "",
     });
 
     const { data } = await supabase
@@ -287,11 +295,13 @@ const AdminPrograms = () => {
   const resetForm = () => {
     setFormData({
       title: "",
+      slug: "",
       short_description: "",
       description: "",
       teacher_name: "March Russell",
       image_url: "",
       is_published: false,
+      duration_days: "",
     });
     setSelectedClasses([]);
     setClassSearchQuery("");
@@ -353,6 +363,34 @@ const AdminPrograms = () => {
               className="border-white/20 bg-white/5 text-white"
               required
             />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="slug" className="text-white/80">
+                Slug
+              </Label>
+              <Input
+                id="slug"
+                value={formData.slug}
+                onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                className="border-white/20 bg-white/5 text-white"
+                placeholder="e.g. anxiety-reset"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="duration_days" className="text-white/80">
+                Duration (days)
+              </Label>
+              <Input
+                id="duration_days"
+                type="number"
+                min="1"
+                value={formData.duration_days}
+                onChange={(e) => setFormData({ ...formData, duration_days: e.target.value })}
+                className="border-white/20 bg-white/5 text-white"
+                placeholder="e.g. 7"
+              />
+            </div>
           </div>
           <div className="space-y-2">
             <Label htmlFor="short_description" className="text-white/80">

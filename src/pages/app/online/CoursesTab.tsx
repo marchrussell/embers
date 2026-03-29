@@ -61,7 +61,7 @@ const CoursesTab = () => {
         {courses.map((course) => (
           <div
             key={course.id}
-            onClick={() => navigate(`/online/program/${course.slug}`)}
+            onClick={() => course.slug && navigate(`/online/program/${course.slug}`)}
             className="group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-white/[0.12] shadow-glow-strong transition-colors duration-500 hover:border-white/25 lg:flex-row"
             style={{
               minHeight: "400px",
@@ -97,7 +97,9 @@ const CoursesTab = () => {
                     <span className="h-1.5 w-1.5 rounded-full bg-[#E6DBC7]" />
                     {course.slug === "nervous-system-reset"
                       ? "14-Day Flagship Reset"
-                      : `${course.duration_days}-Day Course`}
+                      : course.duration_days
+                        ? `${course.duration_days}-Day Course`
+                        : "Course"}
                   </span>
                 </div>
                 <h2 className="mb-3 font-editorial text-[clamp(1.5rem,2.4vw,2.1rem)] font-light leading-[1.2] tracking-[-0.01em] text-[#E6DBC7]">
