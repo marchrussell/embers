@@ -1,20 +1,8 @@
 import { useNavigate } from "react-router-dom";
 
-import anxietyResetDandelion from "@/assets/anxiety-reset-dandelion.jpg";
-import emotionalFirstAid from "@/assets/emotional-first-aid.jpg";
-import sleepNsdrMoon from "@/assets/sleep-nsdr-moon.jpg";
-import trialProgramImage from "@/assets/trial-program.webp";
 import { GlowButton } from "@/components/ui/glow-button";
 
 import { useCourses } from "./hooks/useCourses";
-
-const courseImages: Record<string, string> = {
-  "breathwork-anxiety-reset": anxietyResetDandelion,
-  "anxiety-reset": anxietyResetDandelion,
-  "sleep-nsdr-pack": sleepNsdrMoon,
-  "emotional-first-aid-kit": emotionalFirstAid,
-  "nervous-system-reset": trialProgramImage,
-};
 
 const CoursesTab = () => {
   const navigate = useNavigate();
@@ -70,7 +58,7 @@ const CoursesTab = () => {
           >
             <div className="relative h-[240px] shrink-0 overflow-hidden lg:h-auto lg:min-h-full lg:w-[52%]">
               <img
-                src={courseImages[course.slug] || course.image_url || ""}
+                src={course.image_url || ""}
                 alt={course.title}
                 className="absolute inset-0 h-full w-full object-cover"
                 loading="lazy"
