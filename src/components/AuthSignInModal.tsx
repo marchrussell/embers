@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-import marchLogoModal from "@/assets/march-logo-modal.png";
 import { Dialog, DialogPortal } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -164,12 +163,12 @@ export const AuthSignInModal = ({
           <div className="p-8 md:p-10">
             {/* Logo */}
             <div className="mb-8 text-center">
-              <img
+              {/* <img
                 src={marchLogoModal}
                 alt="MARCH"
                 className="mx-auto mb-6 h-20 object-contain"
                 style={{ filter: "brightness(0) invert(1)" }}
-              />
+              /> */}
               <h2 className="font-editorial text-[clamp(1.5rem,2vw,1.75rem)] font-light text-white">
                 {showForgotPasswordForm ? "Reset Password" : "Welcome back"}
               </h2>
