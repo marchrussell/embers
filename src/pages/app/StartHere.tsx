@@ -129,7 +129,7 @@ const StartHere = () => {
 
         {/* Closing */}
         <div className="pb-16 pt-6 text-center sm:pb-20 sm:pt-8 md:pb-24">
-          <p className="px-4 text-sm font-light italic text-[#E6DBC7]/50 sm:text-base">
+          <p className="px-4 text-sm font-light text-[#E6DBC7]/50 sm:text-base">
             That's it. Start here, go gently, and trust the process.
           </p>
         </div>
