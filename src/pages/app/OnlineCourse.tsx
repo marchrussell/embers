@@ -4,56 +4,34 @@ import { Suspense, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
-// Course images
-import anxietyResetDandelion from "@/assets/anxiety-reset-dandelion.jpg";
-import emotionalFirstAid from "@/assets/emotional-first-aid.jpg";
-import sleepNsdrMoon from "@/assets/sleep-nsdr-moon.jpg";
-import trialProgramImage from "@/assets/trial-program.webp";
 import { Footer } from "@/components/Footer";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { NavBar } from "@/components/NavBar";
 import OnlineFooter from "@/components/OnlineFooter";
 import OnlineHeader from "@/components/OnlineHeader";
+import { CoursePlayerSkeleton } from "@/components/skeletons";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { analytics } from "@/lib/posthog";
+import { Course } from "@/pages/app/online/types";
 
 import SessionDetailModal from "./SessionDetail";
 
-interface Course {
-  id: string;
-  title: string;
-  slug: string;
-  description: string;
-  short_description: string;
-  duration_days: number;
-  price_cents: number;
-  currency: string;
-  image_url: string | null;
-}
-
-interface Lesson {
+interface ClassItem {
   id: string;
   title: string;
   description: string | null;
+  short_description: string | null;
   duration_minutes: number | null;
-  order_index: number;
-  media_url: string;
-  content_type: string;
+  order_index: number | null;
+  image_url: string | null;
+  teacher_name: string | null;
 }
 
-const courseImages: Record<string, string> = {
-  "breathwork-anxiety-reset": anxietyResetDandelion,
-  "anxiety-reset": anxietyResetDandelion,
-  "sleep-nsdr-pack": sleepNsdrMoon,
-  "emotional-first-aid-kit": emotionalFirstAid,
-  "nervous-system-reset": trialProgramImage,
-};
-
-const OnlineProgram = () => {
+const OnlineCourse = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const { user, hasSubscription, isAdmin, isTestUser } = useAuth();
+  const { hasSubscription, isAdmin, isTestUser } = useAuth();
 
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
@@ -65,38 +43,40 @@ const OnlineProgram = () => {
   } = useQuery({
     queryKey: ["course", slug],
     queryFn: async () => {
-      const { data: courseData, error: courseError } = await supabase
-        .from("courses")
+      const { data: programData, error: programError } = await supabase
+        .from("programs")
         .select("*")
         .eq("slug", slug!)
         .eq("is_published", true)
         .single();
 
-      if (courseError) throw courseError;
+      if (programError) throw programError;
 
-      const { data: lessonsData, error: lessonsError } = await supabase
-        .from("course_lessons")
-        .select("*")
-        .eq("course_id", courseData.id)
+      const { data: classesData, error: classesError } = await supabase
+        .from("classes")
+        .select("id, title, description, short_description, duration_minutes, order_index, image_url, teacher_name")
+        .eq("program_id", programData.id)
         .eq("is_published", true)
         .order("order_index");
 
-      if (lessonsError) throw lessonsError;
+      if (classesError) throw classesError;
 
-      return { course: courseData as Course, lessons: (lessonsData || []) as Lesson[] };
+      return {
+        course: programData as unknown as Course,
+        lessons: (classesData ?? []) as ClassItem[],
+      };
     },
     enabled: !!slug,
   });
 
   useEffect(() => {
-    if (isError) toast.error("Unable to load program");
+    if (isError) toast.error("Unable to load course");
   }, [isError]);
 
   const course = data?.course ?? null;
   const lessons = data?.lessons ?? [];
 
   const handleLessonClick = (lessonId: string) => {
-    // For now, show subscription modal if not subscribed
     if (!hasSubscription && !isAdmin && !isTestUser) {
       setShowSubscriptionModal(true);
     } else {
@@ -105,17 +85,8 @@ const OnlineProgram = () => {
     }
   };
 
-  const courseImage = course ? courseImages[course.slug] || course.image_url : null;
-
   if (loading) {
-    return (
-      <div className="min-h-screen bg-background">
-        <NavBar />
-        <div className="flex items-center justify-center px-6 pt-44">
-          <div className="animate-pulse text-[#E6DBC7]/60">Loading program...</div>
-        </div>
-      </div>
-    );
+    return <CoursePlayerSkeleton />;
   }
 
   if (!course) {
@@ -123,12 +94,12 @@ const OnlineProgram = () => {
       <div className="min-h-screen bg-background">
         <NavBar />
         <div className="px-6 pt-44 text-center">
-          <p className="text-xl text-[#E6DBC7]/60">Program not found</p>
+          <p className="text-xl text-[#E6DBC7]/60">Course not found</p>
           <button
             onClick={() => navigate("/online?tab=courses")}
             className="mt-4 text-[#EC9037] transition-colors hover:text-[#EC9037]/80"
           >
-            Back to Programs
+            Back to Courses
           </button>
         </div>
       </div>
@@ -140,12 +111,12 @@ const OnlineProgram = () => {
       <NavBar />
       <OnlineHeader />
 
-      {/* Program Hero Header - matches StartHere layout exactly */}
+      {/* Program Hero Header */}
       <div className="relative z-10 mt-[340px] h-[420px] md:mt-[380px]">
-        {courseImage && (
+        {course.image_url && (
           <div
             className="absolute inset-0 bg-cover bg-center transition-transform duration-700"
-            style={{ backgroundImage: `url('${courseImage}')` }}
+            style={{ backgroundImage: `url('${course.image_url}')` }}
           />
         )}
         <div className="absolute inset-0 bg-black/30" />
@@ -161,7 +132,7 @@ const OnlineProgram = () => {
         </div>
       </div>
 
-      {/* Description - italic editorial style like category pages */}
+      {/* Description */}
       {(course.short_description || course.description) && (
         <div className="px-6 pb-8 pt-12 md:px-10 lg:px-12">
           <p className="max-w-4xl font-editorial text-xl italic leading-relaxed text-[#E6DBC7]/70 md:text-2xl lg:text-3xl">
@@ -170,11 +141,12 @@ const OnlineProgram = () => {
         </div>
       )}
 
-      {/* Main Content - matches StartHere layout */}
+      {/* Classes List */}
       <div className="px-6 pb-24 pt-16 md:px-10 lg:px-12">
         <div className="grid gap-4">
           {lessons.map((lesson) => {
             const isLocked = !hasSubscription && !isAdmin && !isTestUser;
+            const thumbnail = lesson.image_url || course.image_url;
 
             return (
               <div
@@ -183,10 +155,10 @@ const OnlineProgram = () => {
                 className="group relative cursor-pointer overflow-hidden rounded-xl border border-[#E6DBC7]/10 transition-all hover:border-[#E6DBC7]/20 hover:shadow-[0_8px_30px_rgba(230,219,199,0.08)]"
               >
                 <div className="flex items-stretch overflow-hidden rounded-xl bg-[#1a1a1a]/60 transition-all hover:bg-[#1a1a1a]/80">
-                  {/* Square Thumbnail - matching category card proportions */}
+                  {/* Square Thumbnail */}
                   <div
                     className="relative aspect-square w-[180px] flex-shrink-0 bg-cover bg-center md:w-[220px]"
-                    style={{ backgroundImage: courseImage ? `url('${courseImage}')` : undefined }}
+                    style={{ backgroundImage: thumbnail ? `url('${thumbnail}')` : undefined }}
                   >
                     <div className="absolute inset-0 bg-black/10" />
                     {isLocked && (
@@ -196,22 +168,22 @@ const OnlineProgram = () => {
                     )}
                   </div>
 
-                  {/* Info - centered vertically */}
+                  {/* Info */}
                   <div className="flex min-w-0 flex-1 flex-col justify-center px-6 py-6 md:px-8">
                     <h3 className="mb-2 font-editorial text-xl text-[#E6DBC7] md:text-2xl">
                       {lesson.title}
                     </h3>
-                    {lesson.description && (
+                    {(lesson.short_description || lesson.description) && (
                       <p className="mb-2 line-clamp-2 text-sm font-light text-[#E6DBC7]/70 md:text-base">
-                        {lesson.description}
+                        {lesson.short_description || lesson.description}
                       </p>
                     )}
                     <p className="text-sm font-light text-[#E6DBC7]/50">
-                      March Russell • {lesson.duration_minutes || 10} min
+                      {lesson.teacher_name || course.teacher_name} • {lesson.duration_minutes || 10} min
                     </p>
                   </div>
 
-                  {/* Circular Play Button - right side */}
+                  {/* Play / Lock button */}
                   <div className="flex items-center pr-6 md:pr-8">
                     {isLocked ? (
                       <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[#E6DBC7]/20 md:h-14 md:w-14">
@@ -268,4 +240,4 @@ const OnlineProgram = () => {
   );
 };
 
-export default OnlineProgram;
+export default OnlineCourse;

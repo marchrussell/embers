@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { lazy, Suspense } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { ScrollToTop } from "@/components/ScrollToTop";
@@ -27,7 +27,7 @@ const SharedSession = lazy(() => import("./pages/SharedSession"));
 
 // App pages (lazy loaded)
 const OnlinePage = lazy(() => import("./pages/app/Online"));
-const OnlineProgram = lazy(() => import("./pages/app/OnlineProgram"));
+const OnlineCourse = lazy(() => import("./pages/app/OnlineCourse"));
 const StartHere = lazy(() => import("./pages/app/StartHere"));
 const Library = lazy(() => import("./pages/app/Library"));
 const ClassPlayer = lazy(() => import("./pages/app/ClassPlayer"));
@@ -163,7 +163,7 @@ function AppContent() {
             {/* Online routes - Library and About are public, others protected */}
             <Route path="/online" element={<OnlinePage />} />
             <Route path="/online/start-here" element={<StartHere />} />
-            <Route path="/online/program/:slug" element={<OnlineProgram />} />
+            <Route path="/online/program/:slug" element={<OnlineCourse />} />
             <Route path="/online/about" element={<AppAbout />} />
             <Route
               path="/online/favourites"
