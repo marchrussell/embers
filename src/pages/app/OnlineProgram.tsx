@@ -125,7 +125,7 @@ const OnlineProgram = () => {
         <div className="px-6 pt-44 text-center">
           <p className="text-xl text-[#E6DBC7]/60">Program not found</p>
           <button
-            onClick={() => navigate("/online?tab=programs")}
+            onClick={() => navigate("/online?tab=courses")}
             className="mt-4 text-[#EC9037] transition-colors hover:text-[#EC9037]/80"
           >
             Back to Programs

@@ -16,7 +16,7 @@ const courseImages: Record<string, string> = {
   "nervous-system-reset": trialProgramImage,
 };
 
-const ProgramsTab = () => {
+const CoursesTab = () => {
   const navigate = useNavigate();
   const { courses, isLoading } = useCourses();
 
@@ -54,7 +54,7 @@ const ProgramsTab = () => {
 
         {!isLoading && courses.length === 0 && (
           <div className="py-24 text-center">
-            <p className="text-xl text-[#E6DBC7]/60">Programs coming soon</p>
+            <p className="text-xl text-[#E6DBC7]/60">Courses coming soon</p>
           </div>
         )}
 
@@ -118,4 +118,4 @@ const ProgramsTab = () => {
   );
 };
 
-export default ProgramsTab;
+export default CoursesTab;

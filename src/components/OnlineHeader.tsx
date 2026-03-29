@@ -27,13 +27,13 @@ const OnlineHeader = ({
     // Check URL params first
     const params = new URLSearchParams(search);
     const tabParam = params.get("tab");
-    if (tabParam && ["home", "library", "programs", "live"].includes(tabParam)) {
+    if (tabParam && ["home", "library", "courses", "live"].includes(tabParam)) {
       return tabParam;
     }
 
     // Infer from path
     if (path.includes("/online/live")) return "live";
-    if (path.includes("/online/program")) return "programs";
+    if (path.includes("/online/program")) return "courses";
     if (path.includes("/online/favourites")) return "library";
     if (path.includes("/online/start-here")) return "home";
     if (path === "/online") return "home";
@@ -66,7 +66,7 @@ const OnlineHeader = ({
   const tabs = [
     { id: "home", label: "Home" },
     { id: "library", label: "Library" },
-    { id: "programs", label: "Courses" },
+    { id: "courses", label: "Courses" },
     { id: "live", label: "Live" },
   ];
 

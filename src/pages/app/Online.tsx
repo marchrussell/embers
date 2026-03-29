@@ -22,13 +22,13 @@ import {
 } from "@/lib/experiencesData";
 
 import Library from "./Library";
+import CoursesTab from "./online/CoursesTab";
 import HomeTab from "./online/HomeTab";
 import LiveTab from "./online/LiveTab";
-import ProgramsTab from "./online/ProgramsTab";
 import { LiveSessionsData } from "./online/types";
 import SessionDetailModal from "./SessionDetail";
 
-const VALID_TABS = ["home", "library", "programs", "live"];
+const VALID_TABS = ["home", "library", "courses", "live"];
 
 const Online = () => {
   const {
@@ -139,8 +139,8 @@ const Online = () => {
             />
           </TabsContent>
 
-          <TabsContent value="programs" className="mt-0">
-            <ProgramsTab />
+          <TabsContent value="courses" className="mt-0">
+            <CoursesTab />
           </TabsContent>
 
           <TabsContent value="live" className="mt-0">
