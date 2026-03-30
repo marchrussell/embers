@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { Lock, Play } from "lucide-react";
 import { Suspense, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -15,6 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { analytics } from "@/lib/posthog";
 import { Course } from "@/pages/app/online/types";
 
+import SessionPlayCard from "./online/components/SessionPlayCard";
 import SessionDetailModal from "./SessionDetail";
 
 interface ClassItem {
@@ -143,69 +143,21 @@ const OnlineCourse = () => {
 
       {/* Classes List */}
       <div className="px-6 pb-24 pt-16 md:px-10 lg:px-12">
-        <div className="grid gap-4">
+        <div className="grid gap-10">
           {lessons.map((lesson) => {
             const isLocked = !hasSubscription && !isAdmin && !isTestUser;
-            const thumbnail = lesson.image_url || course.image_url;
 
             return (
-              <div
+              <SessionPlayCard
                 key={lesson.id}
+                sessionId={lesson.id}
+                title={lesson.title}
+                description={lesson.short_description || lesson.description || ""}
+                meta={`${lesson.teacher_name || course.teacher_name} • ${lesson.duration_minutes || 10} min`}
+                imageUrl={lesson.image_url || course.image_url}
                 onClick={() => handleLessonClick(lesson.id)}
-                className="group relative cursor-pointer overflow-hidden rounded-xl border border-[#E6DBC7]/10 transition-all hover:border-[#E6DBC7]/20 hover:shadow-[0_8px_30px_rgba(230,219,199,0.08)]"
-              >
-                <div className="flex items-stretch overflow-hidden rounded-xl bg-[#1a1a1a]/60 transition-all hover:bg-[#1a1a1a]/80">
-                  {/* Square Thumbnail */}
-                  <div
-                    className="relative aspect-square w-[180px] flex-shrink-0 bg-cover bg-center md:w-[220px]"
-                    style={{ backgroundImage: thumbnail ? `url('${thumbnail}')` : undefined }}
-                  >
-                    <div className="absolute inset-0 bg-black/10" />
-                    {isLocked && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-background/70">
-                        <Lock className="h-8 w-8 text-[#E6DBC7]" strokeWidth={1.5} />
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Info */}
-                  <div className="flex min-w-0 flex-1 flex-col justify-center px-6 py-6 md:px-8">
-                    <h3 className="mb-2 font-editorial text-xl text-[#E6DBC7] md:text-2xl">
-                      {lesson.title}
-                    </h3>
-                    {(lesson.short_description || lesson.description) && (
-                      <p className="mb-2 line-clamp-2 text-sm font-light text-[#E6DBC7]/70 md:text-base">
-                        {lesson.short_description || lesson.description}
-                      </p>
-                    )}
-                    <p className="text-sm font-light text-[#E6DBC7]/50">
-                      {lesson.teacher_name || course.teacher_name} • {lesson.duration_minutes || 10} min
-                    </p>
-                  </div>
-
-                  {/* Play / Lock button */}
-                  <div className="flex items-center pr-6 md:pr-8">
-                    {isLocked ? (
-                      <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[#E6DBC7]/20 md:h-14 md:w-14">
-                        <Lock className="h-5 w-5 text-[#E6DBC7]/40" strokeWidth={1.5} />
-                      </div>
-                    ) : (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleLessonClick(lesson.id);
-                        }}
-                        className="flex h-12 w-12 items-center justify-center rounded-full border border-[#E6DBC7]/30 transition-all hover:border-[#E6DBC7]/50 hover:bg-[#E6DBC7]/5 md:h-14 md:w-14"
-                      >
-                        <Play
-                          className="ml-0.5 h-5 w-5 text-[#E6DBC7] md:h-6 md:w-6"
-                          fill="currentColor"
-                        />
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
+                locked={isLocked}
+              />
             );
           })}
 
