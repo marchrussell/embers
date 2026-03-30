@@ -409,7 +409,7 @@ export const ClassPlayerModal = ({
           if (!isOpen) handleClose();
         }}
       >
-        <DialogContent className="max-w-2xl rounded-xl border border-white/30 bg-black/75 backdrop-blur-xl">
+        <DialogContent className="max-w-2xl rounded-xl border border-white/30 bg-black/75 backdrop-blur-xl z-[100]">
           <DialogHeader>
             <DialogTitle className="font-editorial text-4xl text-[#E6DBC7]">
               Breathwork Safety
@@ -443,7 +443,7 @@ export const ClassPlayerModal = ({
         }}
       >
         <DialogContent
-          className="relative h-[95vh] w-[98%] max-w-6xl overflow-hidden rounded-xl border border-white/30 bg-black/75 p-0 backdrop-blur-xl md:h-auto md:w-[95%]"
+          className="relative h-[95vh] w-[98%] max-w-6xl overflow-hidden rounded-xl border border-white/30 bg-black/75 p-0 backdrop-blur-xl md:h-auto md:w-[95%] z-[100]"
           hideClose
         >
           <DialogTitle className="sr-only">{classData?.title || "Audio Player"}</DialogTitle>
