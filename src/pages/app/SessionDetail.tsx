@@ -140,7 +140,7 @@ export default function SessionDetailModal({
   return (
     <>
       <Dialog
-        open={open}
+        open={open && !showPlayer}
         onOpenChange={(isOpen) => {
           if (!isOpen) {
             onClose();
