@@ -200,7 +200,7 @@ export default function SessionDetailModal({
                       {session.teacher_name && <p>{session.teacher_name}</p>}
                       <div className="flex items-center">
                         {session.technique && <p>{session.technique}</p>}
-                        {session.duration_minutes != null && <p>• {session.duration_minutes} min</p>}
+                        {session.duration_minutes != null && <p> • {session.duration_minutes} min</p>}
                       </div>
                       {session.intensity && <p>{session.intensity}</p>}
                     </div>
