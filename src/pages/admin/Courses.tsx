@@ -1,15 +1,12 @@
-import { BookOpen, GraduationCap, Pencil, Plus, Trash2, Users } from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { BookOpen, Eye, EyeOff, Pencil, Plus, Search, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import {
-  AdminLayout,
-  AdminStatsCard,
-  AdminTable,
-  adminTableCellClass,
-  adminTableRowClass,
-} from "@/components/admin";
+import { AdminLayout, AdminStatsCard } from "@/components/admin";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -20,48 +17,50 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { TableCell, TableRow } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { cn } from "@/lib/utils";
 
-interface Course {
+interface Program {
   id: string;
   title: string;
-  slug: string;
-  description: string | null;
+  slug: string | null;
   short_description: string | null;
-  duration_days: number;
-  price_cents: number;
-  currency: string;
-  stripe_price_id: string | null;
+  description: string | null;
+  teacher_name: string | null;
   image_url: string | null;
   is_published: boolean;
-  order_index: number | null;
-  created_at: string;
+  category_id: string | null;
+  lesson_count: number | null;
+  duration_days: number | null;
 }
 
-const AdminCourses = () => {
+interface Class {
+  id: string;
+  title: string;
+  duration_minutes: number | null;
+}
+
+const AdminPrograms = () => {
   const { isAdmin, loading } = useAuth();
   const navigate = useNavigate();
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingCourse, setEditingCourse] = useState<Course | null>(null);
+  const [editingProgram, setEditingProgram] = useState<Program | null>(null);
+  const [selectedClasses, setSelectedClasses] = useState<string[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [classSearchQuery, setClassSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [formData, setFormData] = useState({
     title: "",
     slug: "",
-    description: "",
     short_description: "",
-    duration_days: "7",
-    price_cents: "4700",
-    currency: "gbp",
-    stripe_price_id: "",
+    description: "",
+    teacher_name: "March Russell",
     image_url: "",
     is_published: false,
-    order_index: "0",
+    duration_days: "",
   });
 
   useEffect(() => {
@@ -70,129 +69,221 @@ const AdminCourses = () => {
     }
   }, [isAdmin, loading, navigate]);
 
-  useEffect(() => {
-    fetchCourses();
-  }, []);
+  const { data: programs = [] } = useQuery<Program[]>({
+    queryKey: ["admin-programs"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("programs")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: !!isAdmin,
+  });
 
-  const fetchCourses = async () => {
-    const { data, error } = await supabase
-      .from("courses")
-      .select("*")
-      .order("order_index", { ascending: true });
+  const { data: classes = [] } = useQuery<Class[]>({
+    queryKey: ["admin-classes-list"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("classes")
+        .select("id, title, duration_minutes")
+        .order("title");
+      return data || [];
+    },
+    enabled: !!isAdmin,
+  });
 
-    if (error) {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
       toast({
-        title: "Error fetching courses",
-        description: error.message,
+        title: "Invalid file type",
+        description: "Please upload an image file",
         variant: "destructive",
       });
-    } else {
-      setCourses(data || []);
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "Please upload an image smaller than 5MB",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setUploading(true);
+
+    try {
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("program-images")
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("program-images").getPublicUrl(filePath);
+
+      setFormData({ ...formData, image_url: publicUrl });
+      toast({ title: "Image uploaded successfully" });
+    } catch (error: any) {
+      toast({ title: "Upload failed", description: error.message, variant: "destructive" });
+    } finally {
+      setUploading(false);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.title || !formData.slug) {
+    if (
+      !formData.title ||
+      !formData.short_description ||
+      !formData.description ||
+      !formData.teacher_name ||
+      !formData.image_url
+    ) {
       toast({
         title: "Missing required fields",
-        description: "Please fill in title and slug",
+        description: "Please fill in all required fields",
         variant: "destructive",
       });
       return;
     }
 
-    const courseData = {
+    const wordCount = formData.description.split(/\s+/).filter((w) => w).length;
+    if (wordCount > 250) {
+      toast({
+        title: "Description too long",
+        description: "Please limit description to 250 words",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const programData = {
       title: formData.title,
-      slug: formData.slug,
-      description: formData.description || null,
-      short_description: formData.short_description || null,
-      duration_days: parseInt(formData.duration_days) || 7,
-      price_cents: parseInt(formData.price_cents) || 4700,
-      currency: formData.currency || "gbp",
-      stripe_price_id: formData.stripe_price_id || null,
-      image_url: formData.image_url || null,
+      slug: formData.slug || null,
+      short_description: formData.short_description,
+      description: formData.description,
+      teacher_name: formData.teacher_name,
+      image_url: formData.image_url,
+      category_id: null,
       is_published: formData.is_published,
-      order_index: parseInt(formData.order_index) || 0,
+      lesson_count: selectedClasses.length,
+      duration_days: formData.duration_days ? parseInt(formData.duration_days) : null,
     };
 
-    if (editingCourse) {
+    if (editingProgram) {
       const { error } = await supabase
-        .from("courses")
-        .update(courseData)
-        .eq("id", editingCourse.id);
+        .from("programs")
+        .update(programData)
+        .eq("id", editingProgram.id);
 
       if (error) {
         toast({
-          title: "Error updating course",
+          title: "Error updating program",
           description: error.message,
           variant: "destructive",
         });
       } else {
-        toast({ title: "Course updated successfully" });
-        fetchCourses();
+        await updateProgramClasses(editingProgram.id);
+        toast({ title: "Program updated successfully" });
+        queryClient.invalidateQueries({ queryKey: ["admin-programs"] });
         resetForm();
       }
     } else {
-      const { error } = await supabase.from("courses").insert(courseData);
+      const { data, error } = await supabase.from("programs").insert(programData).select().single();
 
       if (error) {
         toast({
-          title: "Error creating course",
+          title: "Error creating program",
           description: error.message,
           variant: "destructive",
         });
       } else {
-        toast({ title: "Course created successfully" });
-        fetchCourses();
+        if (data) await updateProgramClasses(data.id);
+        toast({ title: "Program created successfully" });
+        queryClient.invalidateQueries({ queryKey: ["admin-programs"] });
         resetForm();
       }
+    }
+  };
+
+  const updateProgramClasses = async (programId: string) => {
+    await supabase.from("classes").update({ program_id: null }).eq("program_id", programId);
+
+    for (let i = 0; i < selectedClasses.length; i++) {
+      await supabase
+        .from("classes")
+        .update({ program_id: programId, order_index: i })
+        .eq("id", selectedClasses[i]);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this course? This will also delete all lessons."))
-      return;
+    if (!confirm("Are you sure you want to delete this program?")) return;
 
-    const { error } = await supabase.from("courses").delete().eq("id", id);
+    const { error } = await supabase.from("programs").delete().eq("id", id);
 
     if (error) {
-      toast({ title: "Error deleting course", description: error.message, variant: "destructive" });
+      toast({
+        title: "Error deleting program",
+        description: error.message,
+        variant: "destructive",
+      });
     } else {
-      toast({ title: "Course deleted successfully" });
-      fetchCourses();
+      toast({ title: "Program deleted successfully" });
+      queryClient.invalidateQueries({ queryKey: ["admin-programs"] });
     }
   };
 
-  const handleEdit = (course: Course) => {
-    setEditingCourse(course);
+  const handleEdit = async (program: Program) => {
+    setEditingProgram(program);
     setFormData({
-      title: course.title,
-      slug: course.slug,
-      description: course.description || "",
-      short_description: course.short_description || "",
-      duration_days: course.duration_days?.toString() || "7",
-      price_cents: course.price_cents?.toString() || "4700",
-      currency: course.currency || "gbp",
-      stripe_price_id: course.stripe_price_id || "",
-      image_url: course.image_url || "",
-      is_published: course.is_published || false,
-      order_index: course.order_index?.toString() || "0",
+      title: program.title,
+      slug: program.slug || "",
+      short_description: program.short_description || "",
+      description: program.description || "",
+      teacher_name: program.teacher_name || "March Russell",
+      image_url: program.image_url || "",
+      is_published: program.is_published,
+      duration_days: program.duration_days?.toString() || "",
     });
+
+    const { data } = await supabase
+      .from("classes")
+      .select("id")
+      .eq("program_id", program.id)
+      .order("order_index");
+
+    setSelectedClasses(data?.map((c) => c.id) || []);
     setIsDialogOpen(true);
   };
 
-  const togglePublish = async (course: Course) => {
+  const togglePublish = async (program: Program) => {
     const { error } = await supabase
-      .from("courses")
-      .update({ is_published: !course.is_published })
-      .eq("id", course.id);
+      .from("programs")
+      .update({ is_published: !program.is_published })
+      .eq("id", program.id);
 
     if (error) {
-      toast({ title: "Error updating course", description: error.message, variant: "destructive" });
+      toast({
+        title: "Error updating program",
+        description: error.message,
+        variant: "destructive",
+      });
     } else {
-      fetchCourses();
+      queryClient.invalidateQueries({ queryKey: ["admin-programs"] });
     }
   };
 
@@ -200,193 +291,264 @@ const AdminCourses = () => {
     setFormData({
       title: "",
       slug: "",
-      description: "",
       short_description: "",
-      duration_days: "7",
-      price_cents: "4700",
-      currency: "gbp",
-      stripe_price_id: "",
+      description: "",
+      teacher_name: "March Russell",
       image_url: "",
       is_published: false,
-      order_index: "0",
+      duration_days: "",
     });
-    setEditingCourse(null);
+    setSelectedClasses([]);
+    setClassSearchQuery("");
+    setEditingProgram(null);
     setIsDialogOpen(false);
   };
 
-  const formatPrice = (cents: number, currency: string) => {
-    const amount = cents / 100;
-    if (currency === "gbp") return `£${amount}`;
-    if (currency === "usd") return `$${amount}`;
-    return `${amount} ${currency.toUpperCase()}`;
+  const toggleClass = (classId: string) => {
+    setSelectedClasses((prev) =>
+      prev.includes(classId) ? prev.filter((id) => id !== classId) : [...prev, classId]
+    );
   };
 
-  const filteredCourses = courses.filter((c) =>
-    c.title.toLowerCase().includes(searchTerm.toLowerCase())
+  const moveClass = (index: number, direction: "up" | "down") => {
+    const newSelectedClasses = [...selectedClasses];
+    const newIndex = direction === "up" ? index - 1 : index + 1;
+
+    if (newIndex < 0 || newIndex >= newSelectedClasses.length) return;
+
+    [newSelectedClasses[index], newSelectedClasses[newIndex]] = [
+      newSelectedClasses[newIndex],
+      newSelectedClasses[index],
+    ];
+
+    setSelectedClasses(newSelectedClasses);
+  };
+
+  const filteredPrograms = programs.filter(
+    (program) =>
+      program.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      program.teacher_name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const newCourseDialog = (
+  const newProgramDialog = (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
         <Button onClick={() => resetForm()} className="gap-2">
-          <Plus className="h-5 w-5" /> New Course
+          <Plus className="h-5 w-5" /> New Program
         </Button>
       </DialogTrigger>
       <DialogContent
-        className="max-h-[90vh] max-w-2xl overflow-y-auto rounded-xl border border-white/20 bg-black/60 backdrop-blur-xl"
+        className="max-h-[90vh] max-w-3xl overflow-y-auto rounded-xl border border-white/20 bg-black/60 backdrop-blur-xl"
         hideClose
       >
         <DialogHeader>
           <DialogTitle className="text-2xl text-[#E6DBC7]">
-            {editingCourse ? "Edit Course" : "Create New Course"}
+            {editingProgram ? "Edit Program" : "Create New Program"}
           </DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="mt-4 space-y-6">
+        <form onSubmit={handleSubmit} className="mt-4 space-y-6 pb-6">
+          <div className="space-y-2">
+            <Label htmlFor="title" className="text-white/80">
+              Title *
+            </Label>
+            <Input
+              id="title"
+              value={formData.title}
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              className="border-white/20 bg-white/5 text-white"
+              required
+            />
+          </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="title" className="text-white/80">
-                Title *
-              </Label>
-              <Input
-                id="title"
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                required
-                className="border-white/20 bg-white/5 text-white"
-              />
-            </div>
-            <div className="space-y-2">
               <Label htmlFor="slug" className="text-white/80">
-                Slug *
+                Slug
               </Label>
               <Input
                 id="slug"
                 value={formData.slug}
                 onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                placeholder="breathwork-anxiety-reset"
-                required
-                className="border-white/20 bg-white/5 text-white placeholder:text-white/40"
+                className="border-white/20 bg-white/5 text-white"
+                placeholder="e.g. anxiety-reset"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="duration_days" className="text-white/80">
+                Duration (days)
+              </Label>
+              <Input
+                id="duration_days"
+                type="number"
+                min="1"
+                value={formData.duration_days}
+                onChange={(e) => setFormData({ ...formData, duration_days: e.target.value })}
+                className="border-white/20 bg-white/5 text-white"
+                placeholder="e.g. 7"
               />
             </div>
           </div>
-
           <div className="space-y-2">
             <Label htmlFor="short_description" className="text-white/80">
-              Short Description
+              Short Description *
             </Label>
-            <Input
+            <Textarea
               id="short_description"
               value={formData.short_description}
               onChange={(e) => setFormData({ ...formData, short_description: e.target.value })}
-              placeholder="Brief tagline for the course"
+              rows={2}
               className="border-white/20 bg-white/5 text-white placeholder:text-white/40"
+              placeholder="Brief description for library page"
+              required
             />
           </div>
-
           <div className="space-y-2">
             <Label htmlFor="description" className="text-white/80">
-              Full Description
+              Long Description * -{" "}
+              {(formData.description || "").split(/\s+/).filter((w) => w).length}/250 words
             </Label>
             <Textarea
               id="description"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              rows={4}
+              rows={5}
+              className="border-white/20 bg-white/5 text-white placeholder:text-white/40"
+              placeholder="Detailed program description (max 250 words)"
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="teacher" className="text-white/80">
+              Teacher Name *
+            </Label>
+            <Input
+              id="teacher"
+              value={formData.teacher_name}
+              onChange={(e) => setFormData({ ...formData, teacher_name: e.target.value })}
+              className="border-white/20 bg-white/5 text-white"
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="image" className="text-white/80">
+              Program Image *
+            </Label>
+            <div className="space-y-2">
+              {formData.image_url && (
+                <div className="relative h-48 w-full overflow-hidden rounded-md border border-white/20">
+                  <img
+                    src={formData.image_url}
+                    alt="Preview"
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+              )}
+              <Input
+                id="image"
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                disabled={uploading}
+                className="border-white/20 bg-white/5 text-white"
+                required={!formData.image_url}
+              />
+              <p className="text-xs text-white/50">Upload an image for this program (max 5MB)</p>
+            </div>
+          </div>
+
+          <div className="space-y-4 rounded-lg border border-white/20 p-5">
+            <div>
+              <Label className="text-white/80">Program Classes ({selectedClasses.length})</Label>
+              <p className="mt-1 text-sm text-white/50">
+                Select and order classes for this program
+              </p>
+            </div>
+
+            <Input
+              placeholder="Search classes..."
+              value={classSearchQuery}
+              onChange={(e) => setClassSearchQuery(e.target.value)}
               className="border-white/20 bg-white/5 text-white placeholder:text-white/40"
             />
-          </div>
 
-          <div className="grid grid-cols-3 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="duration_days" className="text-white/80">
-                Duration (Days)
-              </Label>
-              <Input
-                id="duration_days"
-                type="number"
-                value={formData.duration_days}
-                onChange={(e) => setFormData({ ...formData, duration_days: e.target.value })}
-                className="border-white/20 bg-white/5 text-white"
-              />
+            {selectedClasses.length > 0 && (
+              <div className="rounded-md bg-white/5 p-3">
+                <p className="mb-2 text-sm font-medium text-white/80">Selected Classes Order:</p>
+                <div className="space-y-1">
+                  {selectedClasses.map((classId, index) => {
+                    const classItem = classes.find((c) => c.id === classId);
+                    return (
+                      <div key={classId} className="flex items-center gap-2 rounded bg-white/5 p-2">
+                        <span className="w-6 text-xs text-white/50">{index + 1}.</span>
+                        <span className="flex-1 text-sm text-white">{classItem?.title}</span>
+                        <div className="flex gap-1">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => moveClass(index, "up")}
+                            disabled={index === 0}
+                            className="h-7 w-7 p-0 text-white/60 hover:text-white"
+                          >
+                            ↑
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => moveClass(index, "down")}
+                            disabled={index === selectedClasses.length - 1}
+                            className="h-7 w-7 p-0 text-white/60 hover:text-white"
+                          >
+                            ↓
+                          </Button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            <div className="max-h-60 space-y-2 overflow-y-auto">
+              {classes
+                .filter((classItem) =>
+                  classItem.title.toLowerCase().includes(classSearchQuery.toLowerCase())
+                )
+                .map((classItem) => (
+                  <div
+                    key={classItem.id}
+                    className="flex items-center gap-2 rounded p-2 hover:bg-white/5"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedClasses.includes(classItem.id)}
+                      onChange={() => toggleClass(classItem.id)}
+                      className="h-4 w-4"
+                    />
+                    <span className="flex-1 text-white">{classItem.title}</span>
+                    <span className="text-sm text-white/50">
+                      {classItem.duration_minutes ? `${classItem.duration_minutes}min` : ""}
+                    </span>
+                  </div>
+                ))}
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="price_cents" className="text-white/80">
-                Price (Pence/Cents)
-              </Label>
-              <Input
-                id="price_cents"
-                type="number"
-                value={formData.price_cents}
-                onChange={(e) => setFormData({ ...formData, price_cents: e.target.value })}
-                className="border-white/20 bg-white/5 text-white"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="currency" className="text-white/80">
-                Currency
-              </Label>
-              <Input
-                id="currency"
-                value={formData.currency}
-                onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
-                placeholder="gbp"
-                className="border-white/20 bg-white/5 text-white placeholder:text-white/40"
-              />
-            </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="stripe_price_id" className="text-white/80">
-              Stripe Price ID
-            </Label>
-            <Input
-              id="stripe_price_id"
-              value={formData.stripe_price_id}
-              onChange={(e) => setFormData({ ...formData, stripe_price_id: e.target.value })}
-              placeholder="price_xxx"
-              className="border-white/20 bg-white/5 text-white placeholder:text-white/40"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="image_url" className="text-white/80">
-              Image URL
-            </Label>
-            <Input
-              id="image_url"
-              value={formData.image_url}
-              onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-              className="border-white/20 bg-white/5 text-white"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="order_index" className="text-white/80">
-              Display Order
-            </Label>
-            <Input
-              id="order_index"
-              type="number"
-              value={formData.order_index}
-              onChange={(e) => setFormData({ ...formData, order_index: e.target.value })}
-              className="border-white/20 bg-white/5 text-white"
-            />
-          </div>
-
-          <div className="flex items-center gap-2">
+          <div className="flex items-center space-x-2">
             <Switch
-              id="is_published"
+              id="published"
               checked={formData.is_published}
               onCheckedChange={(checked) => setFormData({ ...formData, is_published: checked })}
             />
-            <Label htmlFor="is_published" className="mb-0 text-white/80">
-              Published
+            <Label htmlFor="published" className="mb-0 text-white/80">
+              Publish
             </Label>
           </div>
 
           <div className="flex gap-3 pt-4">
             <Button type="submit" className="flex-1">
-              {editingCourse ? "Update" : "Create"} Course
+              {editingProgram ? "Update" : "Create"} Program
             </Button>
             <Button type="button" variant="outline" onClick={resetForm}>
               Cancel
@@ -399,108 +561,139 @@ const AdminCourses = () => {
 
   return (
     <AdminLayout
-      title="Manage Courses"
-      description="Manage short courses and view purchases"
-      actions={
-        <>
-          <Button
-            variant="outline"
-            onClick={() => navigate("/admin/course-purchases")}
-            className="gap-2"
-          >
-            <Users className="h-5 w-5" />
-            View Purchases
-          </Button>
-          {newCourseDialog}
-        </>
-      }
+      title="Manage Programs"
+      description="Create and organize multi-session programs"
+      actions={newProgramDialog}
     >
-      {/* Stats */}
-      <div className="mb-10 grid grid-cols-1 gap-6 md:grid-cols-3">
-        <AdminStatsCard title="Total Courses" value={courses.length} icon={GraduationCap} />
+      {/* Stats Cards */}
+      <div className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-3">
+        <AdminStatsCard title="Total Programs" value={programs.length} icon={BookOpen} />
+        <AdminStatsCard
+          title="Published"
+          value={programs.filter((p) => p.is_published).length}
+          icon={Eye}
+          iconColor="#4ade80"
+          iconBgColor="rgba(74, 222, 128, 0.1)"
+        />
+        <AdminStatsCard
+          title="Drafts"
+          value={programs.filter((p) => !p.is_published).length}
+          icon={EyeOff}
+          iconColor="#facc15"
+          iconBgColor="rgba(250, 204, 21, 0.1)"
+        />
       </div>
 
       {/* Search */}
       <div className="mb-8">
-        <Input
-          placeholder="Search courses..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="max-w-sm border-white/20 bg-white/5 text-white placeholder:text-white/40"
-        />
+        <div className="relative w-full md:w-80">
+          <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 transform text-white/40" />
+          <Input
+            placeholder="Search programs..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="border-white/20 bg-white/5 pl-10 text-white placeholder:text-white/40"
+          />
+        </div>
       </div>
 
-      {/* Table */}
-      <AdminTable
-        headers={[
-          "Title",
-          "Slug",
-          "Duration",
-          "Price",
-          "Status",
-          { label: "Actions", width: "140px" },
-        ]}
-        emptyState={filteredCourses.length === 0 ? "No courses found" : undefined}
-      >
-        {filteredCourses.map((course) => (
-          <TableRow key={course.id} className={adminTableRowClass}>
-            <TableCell className={cn(adminTableCellClass, "font-medium text-white")}>
-              {course.title}
-            </TableCell>
-            <TableCell className={cn(adminTableCellClass, "text-foreground/70")}>
-              {course.slug}
-            </TableCell>
-            <TableCell className={cn(adminTableCellClass, "text-foreground/70")}>
-              {course.duration_days} days
-            </TableCell>
-            <TableCell className={cn(adminTableCellClass, "text-foreground/70")}>
-              {formatPrice(course.price_cents, course.currency)}
-            </TableCell>
-            <TableCell className={adminTableCellClass}>
-              <button
-                onClick={() => togglePublish(course)}
-                className={`rounded-full px-3 py-1 text-xs font-medium ${
-                  course.is_published
-                    ? "bg-green-500/20 text-green-400"
-                    : "bg-yellow-500/20 text-yellow-300"
-                }`}
-              >
-                {course.is_published ? "Published" : "Draft"}
-              </button>
-            </TableCell>
-            <TableCell className={adminTableCellClass}>
-              <div className="flex gap-2">
-                <Button
-                  variant="ghost"
-                  size="default"
-                  onClick={() => navigate(`/admin/course-lessons/${course.id}`)}
-                  className="hover:bg-white/10"
-                >
-                  <BookOpen className="h-5 w-5 text-[#E6DBC7]" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="default"
-                  onClick={() => handleEdit(course)}
-                  className="hover:bg-white/10"
-                >
-                  <Pencil className="h-5 w-5 text-[#E6DBC7]" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="default"
-                  onClick={() => handleDelete(course.id)}
-                  className="hover:bg-red-500/10"
-                >
-                  <Trash2 className="h-5 w-5 text-destructive" />
-                </Button>
-              </div>
-            </TableCell>
-          </TableRow>
-        ))}
-      </AdminTable>
+      {/* Programs Grid */}
+      <div className="grid gap-6">
+        {filteredPrograms.length === 0 ? (
+          <Card className="border-[#E6DBC7]/20 bg-background/40 backdrop-blur-xl">
+            <CardContent className="flex flex-col items-center justify-center py-16">
+              <BookOpen className="mb-4 h-12 w-12 text-[#E6DBC7]/40" />
+              <p className="text-center text-white/60">
+                {searchQuery
+                  ? "No programs match your search"
+                  : "No programs yet. Create your first program!"}
+              </p>
+            </CardContent>
+          </Card>
+        ) : (
+          filteredPrograms.map((program) => (
+            <Card
+              key={program.id}
+              className="border-[#E6DBC7]/20 bg-background/40 backdrop-blur-xl transition-all hover:border-[#E6DBC7]/40"
+            >
+              <CardContent className="p-6">
+                <div className="flex flex-col gap-6 md:flex-row">
+                  {program.image_url && (
+                    <div className="h-32 w-full flex-shrink-0 overflow-hidden rounded-lg md:w-48">
+                      <img
+                        src={program.image_url}
+                        alt={program.title}
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <div className="mb-2 flex items-start justify-between gap-4">
+                      <div>
+                        <h3 className="mb-1 text-xl font-medium text-white">{program.title}</h3>
+                        <p className="text-sm text-white/60">by {program.teacher_name}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge
+                          variant={program.is_published ? "default" : "secondary"}
+                          className={
+                            program.is_published
+                              ? "bg-green-500/20 text-green-300"
+                              : "bg-yellow-500/20 text-yellow-300"
+                          }
+                        >
+                          {program.is_published ? "Published" : "Draft"}
+                        </Badge>
+                      </div>
+                    </div>
+                    <p className="mb-4 line-clamp-2 text-sm text-white/70">
+                      {program.short_description}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-white/50">
+                        {program.lesson_count || 0} classes
+                      </span>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="ghost"
+                          size="default"
+                          onClick={() => togglePublish(program)}
+                          className="h-10 w-10 p-0 text-white/60 hover:bg-white/10 hover:text-white"
+                        >
+                          {program.is_published ? (
+                            <EyeOff className="h-5 w-5" />
+                          ) : (
+                            <Eye className="h-5 w-5" />
+                          )}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="default"
+                          onClick={() => handleEdit(program)}
+                          className="h-10 w-10 p-0 text-[#E6DBC7] hover:bg-white/10 hover:text-white"
+                        >
+                          <Pencil className="h-5 w-5" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="default"
+                          onClick={() => handleDelete(program.id)}
+                          className="h-10 w-10 p-0 text-red-400 hover:bg-red-500/10 hover:text-red-300"
+                        >
+                          <Trash2 className="h-5 w-5" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        )}
+      </div>
     </AdminLayout>
   );
 };
 
-export default AdminCourses;
+export default AdminPrograms;

@@ -50,9 +50,9 @@ const AdminDashboard = () => {
           description: "Upload and manage breathwork video classes",
         },
         {
-          title: "Programs",
+          title: "Courses",
           path: "/admin/programs",
-          description: "Create and organize class programs",
+          description: "Create and organize classes into multi-day courses",
         },
         {
           title: "Categories",

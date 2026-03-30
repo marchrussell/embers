@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { lazy, Suspense } from "react";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { ScrollToTop } from "@/components/ScrollToTop";
@@ -40,7 +40,7 @@ const LiveSessionRoom = lazy(() => import("./pages/app/LiveSessionRoom"));
 // Admin pages (lazy loaded)
 const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
 const AdminClasses = lazy(() => import("./pages/admin/Classes"));
-const AdminPrograms = lazy(() => import("./pages/admin/Programs"));
+const AdminPrograms = lazy(() => import("./pages/admin/Courses"));
 const AdminCategories = lazy(() => import("./pages/admin/Categories"));
 const AdminLiveSessions = lazy(() => import("./pages/admin/LiveSessions"));
 
