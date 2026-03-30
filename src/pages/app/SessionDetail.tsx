@@ -292,7 +292,7 @@ export default function SessionDetailModal({
                     </TabsTrigger>
                   </TabsList>
 
-                  <TabsContent value="description" className="mt-10 md:mt-12 flex flex-col justify-between">
+                  <TabsContent value="description" className="mt-8 flex flex-col justify-between">
                     {/* Description */}
                     <p className="text-[15px] font-light leading-[1.7] text-white/80 md:text-base">
                       {session.description}
@@ -334,7 +334,7 @@ export default function SessionDetailModal({
                     </div>
                   </TabsContent>
 
-                  <TabsContent value="explore" className="mt-10 md:mt-12">
+                  <TabsContent value="explore" className="mt-8">
                     <h3 className="mb-7 font-editorial text-[clamp(1.5rem,2.5vw,1.85rem)] leading-[1.2] text-white">
                       If you're wanting more support
                     </h3>
