@@ -47,7 +47,7 @@ export const ClassPlayerModal = ({
   const hasShownCompletion = useRef(false);
 
   const { data: classQueryData, isLoading: loading } = useQuery({
-    queryKey: ["class-player", classId],
+    queryKey: ["session-detail", classId],
     queryFn: async () => {
       const { data } = await supabase.from("classes").select("*").eq("id", classId!).single();
       if (!data) return null;
@@ -58,23 +58,23 @@ export const ClassPlayerModal = ({
         .eq("class_id", classId!);
       const cats = (junctionData || []).map((row: any) => row.categories).filter(Boolean);
 
-      let classCategories = cats;
+      let sessionCategories = cats;
       if (cats.length === 0 && data.category_id) {
         const { data: fallbackCat } = await supabase
           .from("categories")
           .select("*")
           .eq("id", data.category_id)
           .single();
-        if (fallbackCat) classCategories = [fallbackCat];
+        if (fallbackCat) sessionCategories = [fallbackCat];
       }
 
-      return { classData: data, classCategories };
+      return { session: data, sessionCategories };
     },
     enabled: !!classId && open,
   });
 
-  const classData = classQueryData?.classData ?? null;
-  const classCategories = classQueryData?.classCategories ?? [];
+  const classData = classQueryData?.session ?? null;
+  const classCategories = classQueryData?.sessionCategories ?? [];
 
   // Reset playback state when modal opens
   useEffect(() => {
@@ -98,13 +98,10 @@ export const ClassPlayerModal = ({
 
   // Initialize safety disclosure and audio when class data loads
   useEffect(() => {
-    console.log('[ClassPlayerModal] init effect:', { classDataId: classData?.id, open, skipSafetyModal, show_safety_reminder: classData?.show_safety_reminder });
     if (!classData || !open) return;
 
     const shouldShowSafety = !skipSafetyModal && (classData.show_safety_reminder || false);
     setShowSafetyDisclosure(shouldShowSafety);
-
-    console.log('[ClassPlayerModal] setting hasStarted=true, shouldShowSafety:', shouldShowSafety);
     if (!shouldShowSafety) {
       setHasStarted(true);
       setIsPlaying(true);
@@ -395,8 +392,6 @@ export const ClassPlayerModal = ({
       toast.success("Link copied to clipboard");
     }
   };
-
-  console.log('[ClassPlayerModal] render:', { open, hasStarted, showSafetyDisclosure, classId, classData: !!classData, loading });
 
   if (!open) return null;
 

@@ -76,8 +76,6 @@ export default function SessionDetailModal({
   const session = data?.session ?? null;
   const sessionCategories = data?.sessionCategories ?? [];
 
-  console.log('Session Detail Data:', data);
-
   // Reset player state when modal closes
   useEffect(() => {
     if (!open) setShowPlayer(false);
