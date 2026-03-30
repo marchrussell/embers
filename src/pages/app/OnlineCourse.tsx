@@ -143,7 +143,7 @@ const OnlineCourse = () => {
 
       {/* Classes List */}
       <div className="px-6 pb-24 pt-16 md:px-10 lg:px-12">
-        <div className="grid gap-10">
+        <div className="grid gap-4 md:gap-5">
           {lessons.map((lesson) => {
             const isLocked = !hasSubscription && !isAdmin && !isTestUser;
 
