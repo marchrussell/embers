@@ -142,7 +142,9 @@ export default function SessionDetailModal({
       <Dialog
         open={open && !showPlayer}
         onOpenChange={(isOpen) => {
+          console.log('[SessionDetail] onOpenChange:', { isOpen, showPlayer, open });
           if (!isOpen) {
+            console.log('[SessionDetail] calling onClose — showPlayer was:', showPlayer);
             onClose();
           }
         }}
@@ -196,8 +198,10 @@ export default function SessionDetailModal({
                     </h2>
                     <div className="space-y-0.5 text-sm font-light text-white/80 md:text-base">
                       {session.teacher_name && <p>{session.teacher_name}</p>}
-                      {session.duration_minutes != null && <p>{session.duration_minutes} min</p>}
-                      {session.technique && <p>{session.technique}</p>}
+                      <div className="flex items-center gap-2">
+                        {session.technique && <p>{session.technique}</p>}
+                        {session.duration_minutes != null && <p>• {session.duration_minutes} min</p>}
+                      </div>
                       {session.intensity && <p>{session.intensity}</p>}
                     </div>
                   </div>
@@ -308,12 +312,9 @@ export default function SessionDetailModal({
 
                             <div className="mt-4 space-y-4 border-t border-white/[0.08] pt-4">
                               {/* Practice safely */}
-                              <div className="flex gap-2.5">
-                                <span className="mt-0.5 text-xs text-white/40">1</span>
-                                <p className="text-[13px] font-light leading-relaxed text-white/70 md:text-sm">
-                                  Practice in a safe, comfortable space - never in water, while driving, or operating machinery. Consult your doctor if you have health conditions or concerns and do not practice breath holds or fast-paced breathing if pregnant, or if you have epilepsy, serious mental health conditions, or significant medical issues. Always listen to your body and move at your own pace.
-                                </p>
-                              </div>
+                              <p className="text-[13px] font-light leading-relaxed text-white/70 md:text-sm">
+                                Practice in a safe, comfortable space - never in water, while driving, or operating machinery. Consult your doctor if you have health conditions or concerns and do not practice breath holds or fast-paced breathing if pregnant, or if you have epilepsy, serious mental health conditions, or significant medical issues. Always listen to your body and move at your own pace.
+                              </p>
 
                               {/* Full disclosure link */}
                               <button
