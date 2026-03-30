@@ -72,9 +72,9 @@ const queryClient = new QueryClient({
     queries: {
       staleTime: 10 * 60 * 1000, // 10 minutes - data stays fresh longer
       gcTime: 30 * 60 * 1000, // 30 minutes - keep in cache longer
-      refetchOnWindowFocus: false, // Avoid unnecessary refetches
+      refetchOnWindowFocus: true, // Re-sync data when user returns to the tab
       refetchOnMount: false, // Use cached data when possible
-      refetchOnReconnect: false, // Don't refetch on reconnect
+      refetchOnReconnect: true, // Re-sync data after reconnecting
       retry: 1, // Reduce retry attempts for faster failure
     },
   },

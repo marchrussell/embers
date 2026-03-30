@@ -40,6 +40,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const isCheckingSubscriptionRef = useRef(false);
   const initialLoadRef = useRef(true);
   const authCheckedRef = useRef(false);
+  const safetyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const checkAdminRole = async (userId: string) => {
     try {
@@ -151,8 +152,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   useEffect(() => {
-    // Safety timeout - reduced to 3 seconds
-    const safetyTimeout = setTimeout(() => {
+    // Safety timeout - only guards against getSession() hanging, not slow DB checks
+    safetyTimeoutRef.current = setTimeout(() => {
       if (loading) {
         setLoading(false);
       }
@@ -211,6 +212,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     supabase.auth
       .getSession()
       .then(async ({ data: { session } }) => {
+        // getSession() resolved — clear the safety timeout so it doesn't fire
+        // mid-way through DB checks and cause isAdmin/hasSubscription to be false
+        // while loading becomes false, which would trigger incorrect redirects.
+        if (safetyTimeoutRef.current) {
+          clearTimeout(safetyTimeoutRef.current);
+          safetyTimeoutRef.current = null;
+        }
+
         setSession(session);
         setUser(session?.user ?? null);
         initialLoadRef.current = false;
@@ -253,7 +262,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       });
 
     return () => {
-      clearTimeout(safetyTimeout);
+      if (safetyTimeoutRef.current) clearTimeout(safetyTimeoutRef.current);
       subscription.unsubscribe();
     };
   }, []);

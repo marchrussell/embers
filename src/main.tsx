@@ -16,6 +16,13 @@ window.addEventListener("unhandledrejection", (event) => {
   }
 });
 
+// After a new deployment, old lazy-loaded chunk URLs (with stale content hashes) no longer
+// exist on the CDN. Vite fires this event when a dynamic import fails for that reason.
+// A hard reload fetches the fresh index.html and new chunk URLs, recovering automatically.
+window.addEventListener("vite:preloadError", () => {
+  window.location.reload();
+});
+
 const POSTHOG_KEY = import.meta.env.VITE_PUBLIC_POSTHOG_KEY as string;
 const POSTHOG_HOST = import.meta.env.VITE_PUBLIC_POSTHOG_HOST as string;
 
