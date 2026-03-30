@@ -78,6 +78,8 @@ export default function SessionDetailModal({
   const session = data?.session ?? null;
   const sessionCategories = data?.sessionCategories ?? [];
 
+  console.log('Session Detail Data:', data);
+
   // Reset player state when modal closes
   useEffect(() => {
     if (!open) setShowPlayer(false);
@@ -140,7 +142,7 @@ export default function SessionDetailModal({
   return (
     <>
       <Dialog
-        open={open}
+        open={open && !showPlayer}
         onOpenChange={(isOpen) => {
           if (!isOpen) {
             onClose();
