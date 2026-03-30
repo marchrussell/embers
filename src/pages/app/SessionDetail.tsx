@@ -138,13 +138,9 @@ export default function SessionDetailModal({
   return (
     <>
       <Dialog
-        open={open && !showPlayer}
+        open={open}
         onOpenChange={(isOpen) => {
-          console.log('[SessionDetail] onOpenChange:', { isOpen, showPlayer, open });
-          if (!isOpen) {
-            console.log('[SessionDetail] calling onClose — showPlayer was:', showPlayer);
-            onClose();
-          }
+          if (!isOpen) onClose();
         }}
       >
         <DialogContent

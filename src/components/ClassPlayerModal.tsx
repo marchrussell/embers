@@ -98,9 +98,11 @@ export const ClassPlayerModal = ({
 
   // Initialize safety disclosure and audio when class data loads
   useEffect(() => {
+    console.log('[ClassPlayerModal] init effect:', { classDataId: classData?.id, open, skipSafetyModal });
     if (!classData || !open) return;
 
     const shouldShowSafety = !skipSafetyModal && (classData.show_safety_reminder || false);
+    console.log('[ClassPlayerModal] setting shouldShowSafety:', shouldShowSafety);
     setShowSafetyDisclosure(shouldShowSafety);
     if (!shouldShowSafety) {
       setHasStarted(true);
@@ -392,6 +394,8 @@ export const ClassPlayerModal = ({
       toast.success("Link copied to clipboard");
     }
   };
+
+  console.log('[ClassPlayerModal] render:', { open, hasStarted, showSafetyDisclosure, classId, classData: !!classData, loading });
 
   if (!open) return null;
 
