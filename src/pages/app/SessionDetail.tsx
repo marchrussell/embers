@@ -198,7 +198,7 @@ export default function SessionDetailModal({
                     </h2>
                     <div className="space-y-0.5 text-sm font-light text-white/80 md:text-base">
                       {session.teacher_name && <p>{session.teacher_name}</p>}
-                      <div className="flex items-center">
+                      <div className="flex items-center gap-1.5">
                         {session.technique && <p>{session.technique}</p>}
                         {session.duration_minutes != null && <p> • {session.duration_minutes} min</p>}
                       </div>
