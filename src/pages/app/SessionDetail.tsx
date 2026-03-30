@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, ChevronDown, Heart, Play, Share } from "lucide-react";
+import { ArrowRight, Heart, Play, Share } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -7,7 +7,6 @@ import { ArcCardsModal } from "@/components/ArcCardsModal";
 import { ClassPlayerModal } from "@/components/ClassPlayerModal";
 import { OptimizedImage } from "@/components/OptimizedImage";
 import { Button } from "@/components/ui/button";
-import { Collapsible, CollapsibleContent } from "@/components/ui/collapsible";
 import {
   Dialog,
   DialogContent,
@@ -39,7 +38,6 @@ export default function SessionDetailModal({
   const [showPlayer, setShowPlayer] = useState(false);
   const [showSafetyModal, setShowSafetyModal] = useState(false);
   const [showFullSafetyDisclosure, setShowFullSafetyDisclosure] = useState(false);
-  const [safetyExpanded, setSafetyExpanded] = useState(false);
   const [showArcCardsModal, setShowArcCardsModal] = useState(false);
 
   const { data, isLoading: loading } = useQuery({
@@ -290,93 +288,48 @@ export default function SessionDetailModal({
                     </TabsTrigger>
                   </TabsList>
 
-                  <TabsContent value="description" className="mt-10 md:mt-12">
+                  <TabsContent value="description" className="mt-10 md:mt-12 flex flex-col justify-between">
                     {/* Description */}
                     <p className="text-[15px] font-light leading-[1.7] text-white/80 md:text-base">
                       {session.description}
                     </p>
 
-                    {/* Safety Card - Clickable with hover effect */}
-                    <div
-                      className="group relative mt-8 cursor-pointer overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.02] transition-all hover:border-white/[0.15] hover:shadow-[0_0_20px_rgba(255,255,255,0.03)]"
-                      onClick={() => setSafetyExpanded(!safetyExpanded)}
-                    >
-                      <Collapsible open={safetyExpanded} onOpenChange={setSafetyExpanded}>
-                        <div className="p-4 md:p-6">
-                          <div className="flex items-start gap-3">
-                            <span className="mt-0.5 flex-shrink-0 text-base text-white md:text-xl">
-                              ⚠
-                            </span>
-                            <div className="min-w-0 flex-1">
-                              <div className="flex items-center justify-between gap-2">
-                                <h4 className="text-sm font-light tracking-wide text-white md:text-base">
-                                  Safety Reminder
-                                </h4>
-                                <ChevronDown
-                                  className={`h-4 w-4 flex-shrink-0 text-white/50 transition-transform ${safetyExpanded ? "rotate-180" : ""}`}
-                                />
+                    {/* Safety Card */}
+                    <div className="group relative mt-8 overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.02]">
+                      <div className="p-4 md:p-6">
+                        <div className="flex items-start gap-3">
+                          <span className="mt-0.5 flex-shrink-0 text-base text-white md:text-xl">
+                            ⚠
+                          </span>
+                          <div className="min-w-0 flex-1">
+                            <h4 className="text-sm font-light tracking-wide text-white md:text-base">
+                              Safety Reminder
+                            </h4>
+
+                            <div className="mt-4 space-y-4 border-t border-white/[0.08] pt-4">
+                              {/* Practice safely */}
+                              <div className="flex gap-2.5">
+                                <span className="mt-0.5 text-xs text-white/40">1</span>
+                                <p className="text-[13px] font-light leading-relaxed text-white/70 md:text-sm">
+                                  Practice in a safe, comfortable space - never in water, while driving, or operating machinery. Consult your doctor if you have health conditions or concerns and do not practice breath holds or fast-paced breathing if pregnant, or if you have epilepsy, serious mental health conditions, or significant medical issues. Always listen to your body and move at your own pace.
+                                </p>
                               </div>
-                              <p className="mt-1.5 flex items-center gap-1.5 text-xs text-white/50 md:text-sm">
-                                <span>Tap to read guidelines</span>
+
+                              {/* Full disclosure link */}
+                              <button
+                                onClick={() => setShowFullSafetyDisclosure(true)}
+                                className="mt-2 flex items-center gap-1.5 text-[13px] font-medium text-white/90 underline underline-offset-2 transition-colors hover:text-white md:text-sm"
+                              >
+                                Read full Safety Disclosure
                                 <ArrowRight
                                   className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
                                   strokeWidth={2}
                                 />
-                              </p>
-
-                              <CollapsibleContent>
-                                <div className="mt-4 space-y-4 border-t border-white/[0.08] pt-4">
-                                  {/* Practice safely */}
-                                  <div className="flex gap-2.5">
-                                    <span className="mt-0.5 text-xs text-white/40">1</span>
-                                    <p className="text-[13px] font-light leading-relaxed text-white/70 md:text-sm">
-                                      Practice in a safe, comfortable space — never in water, while
-                                      driving, or operating machinery.
-                                    </p>
-                                  </div>
-
-                                  {/* Consult doctor */}
-                                  <div className="flex gap-2.5">
-                                    <span className="mt-0.5 text-xs text-white/40">2</span>
-                                    <p className="text-[13px] font-light leading-relaxed text-white/70 md:text-sm">
-                                      Consult your doctor if you have health conditions or concerns.
-                                    </p>
-                                  </div>
-
-                                  {/* Avoid if */}
-                                  <div className="flex gap-2.5">
-                                    <span className="mt-0.5 text-xs text-white/40">3</span>
-                                    <p className="text-[13px] font-light leading-relaxed text-white/70 md:text-sm">
-                                      Avoid breath holds or fast-paced breathing if pregnant, or if
-                                      you have epilepsy, serious mental health conditions, or
-                                      significant medical issues.
-                                    </p>
-                                  </div>
-
-                                  {/* Listen to body */}
-                                  <div className="flex gap-2.5">
-                                    <span className="mt-0.5 text-xs text-white/40">4</span>
-                                    <p className="text-[13px] font-light leading-relaxed text-white/70 md:text-sm">
-                                      Listen to your body and move at your own pace.
-                                    </p>
-                                  </div>
-
-                                  {/* Full disclosure link */}
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      setShowFullSafetyDisclosure(true);
-                                    }}
-                                    className="mt-2 block text-[13px] font-medium text-white/90 underline underline-offset-2 transition-colors hover:text-white md:text-sm"
-                                  >
-                                    Read full Safety Disclosure
-                                  </button>
-                                </div>
-                              </CollapsibleContent>
+                              </button>
                             </div>
                           </div>
                         </div>
-                      </Collapsible>
+                      </div>
                     </div>
                   </TabsContent>
 
