@@ -20,10 +20,15 @@ interface AdminCategory {
 const AdminDashboard = () => {
   const categories: AdminCategory[] = [
     {
-      name: "Content",
+      name: "Library & Course Content",
       icon: BookOpen,
       color: "#D4915A",
       items: [
+        {
+          title: "Categories",
+          path: "/admin/categories",
+          description: "Manage class categories and their images",
+        },
         {
           title: "Classes",
           path: "/admin/classes",
@@ -34,14 +39,38 @@ const AdminDashboard = () => {
           path: "/admin/programs",
           description: "Create and organize classes into multi-day courses",
         },
+      ],
+    },
+    {
+      name: "Live Content",
+      icon: BookOpen,
+      color: "#D4915A",
+      items: [
         {
-          title: "Categories",
-          path: "/admin/categories",
-          description: "Manage class categories and their images",
+          title: "Guest Teachers",
+          path: "/admin/guest-teachers",
+          description: "Manage upcoming guest session teachers",
+        },
+        {
+          title: "Live Sessions",
+          path: "/admin/live-sessions",
+          description: "Manage live breathwork sessions and Daily.co rooms",
         },
       ],
     },
     {
+      name: "Experiences",
+      icon: Calendar,
+      color: "#7BA68C",
+      items: [
+        {
+          title: "Event Bookings",
+          path: "/admin/event-bookings",
+          description: "View event bookings and attendee lists",
+        },
+      ],
+    },
+     {
       name: "Users & Applications",
       icon: Users,
       color: "#8B9DC3",
@@ -50,28 +79,6 @@ const AdminDashboard = () => {
           title: "App Users & Analytics",
           path: "/admin/users",
           description: "View users, subscriptions, and key metrics",
-        },
-        {
-          title: "Guest Teachers",
-          path: "/admin/guest-teachers",
-          description: "Manage upcoming guest session teachers",
-        },
-      ],
-    },
-    {
-      name: "Events",
-      icon: Calendar,
-      color: "#7BA68C",
-      items: [
-        {
-          title: "Live Sessions",
-          path: "/admin/live-sessions",
-          description: "Manage live breathwork sessions and Daily.co rooms",
-        },
-        {
-          title: "Event Bookings",
-          path: "/admin/event-bookings",
-          description: "View event bookings and attendee lists",
         },
       ],
     },
