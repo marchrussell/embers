@@ -1,11 +1,8 @@
 import { BookOpen, Calendar, Users } from "lucide-react";
-import { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAuth } from "@/contexts/AuthContext";
 
 interface AdminSection {
   title: string;
@@ -21,23 +18,6 @@ interface AdminCategory {
 }
 
 const AdminDashboard = () => {
-  const { isAdmin, loading } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!loading && !isAdmin) {
-      navigate("/");
-    }
-  }, [isAdmin, loading, navigate]);
-
-  if (loading) {
-    return <AdminSkeleton />;
-  }
-
-  if (!isAdmin) {
-    return <AdminSkeleton />;
-  }
-
   const categories: AdminCategory[] = [
     {
       name: "Content",

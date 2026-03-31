@@ -561,13 +561,13 @@ const AdminPrograms = () => {
 
   return (
     <AdminLayout
-      title="Manage Programs"
+      title="Manage Courses"
       description="Create and organize multi-session programs"
       actions={newProgramDialog}
     >
       {/* Stats Cards */}
       <div className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-3">
-        <AdminStatsCard title="Total Programs" value={programs.length} icon={BookOpen} />
+        <AdminStatsCard title="Total Courses" value={programs.length} icon={BookOpen} />
         <AdminStatsCard
           title="Published"
           value={programs.filter((p) => p.is_published).length}

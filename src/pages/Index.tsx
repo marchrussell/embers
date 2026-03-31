@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Pill } from "@/components/ui/pill";
 import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
 import { formatEventDate, getNextEventDate } from "@/lib/experienceDateUtils";
-import { experiencesData } from "@/lib/experiencesData";
+import { onlineExperiences } from "@/lib/experiencesData";
 
 const nervousSystemImg = getCloudImageUrl(CLOUD_IMAGES.nervousSystemReset, {
   width: 960,
@@ -293,7 +293,7 @@ const Index = () => {
 
             {/* Vertical Event Cards */}
             <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-6 md:grid-cols-3">
-              {experiencesData
+              {onlineExperiences
                 .filter(
                   (event) =>
                     event.id !== "breath-presence-inperson" && event.id !== "breathwork-to-dub"
