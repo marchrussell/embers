@@ -1424,7 +1424,7 @@ const AdminLiveSessions = () => {
                         </TableCell>
                         <TableCell>
                           <span className="flex items-center gap-1">
-                            <Users className="h-4 w-4" />
+                            <Users className="h-5 w-5" />
                             {session.attendee_count}
                           </span>
                         </TableCell>
@@ -1445,21 +1445,19 @@ const AdminLiveSessions = () => {
                               </Badge>
                               <Button
                                 variant="ghost"
-                                size="sm"
                                 onClick={() => handleGenerateGuestLink(session)}
                                 disabled={actionLoading === session.id}
                               >
-                                <RefreshCw className="h-4 w-4" />
+                                <RefreshCw className="h-5 w-5" />
                               </Button>
                             </div>
                           ) : (
                             <Button
                               variant="ghost"
-                              size="sm"
                               onClick={() => handleGenerateGuestLink(session)}
                               disabled={actionLoading === session.id}
                             >
-                              <Link2 className="mr-1 h-4 w-4" />
+                              <Link2 className="mr-1 h-5 w-5" />
                               Generate
                             </Button>
                           )}
@@ -1469,31 +1467,28 @@ const AdminLiveSessions = () => {
                             {session.status === "scheduled" && (
                               <Button
                                 variant="default"
-                                size="sm"
                                 onClick={() => handleStatusChange(session, "live")}
                                 disabled={actionLoading === session.id}
                               >
-                                <Play className="mr-1 h-4 w-4" />
+                                <Play className="mr-1 h-5 w-5" />
                                 Go Live
                               </Button>
                             )}
                             {session.status === "live" && (
                               <Button
                                 variant="destructive"
-                                size="sm"
                                 onClick={() => handleStatusChange(session, "ended")}
                                 disabled={actionLoading === session.id}
                               >
-                                <Square className="mr-1 h-4 w-4" />
+                                <Square className="mr-1 h-5 w-5" />
                                 End
                               </Button>
                             )}
                             <Button
                               variant="outline"
-                              size="sm"
                               onClick={() => window.open(`/live/${session.id}?role=host`, "_blank")}
                             >
-                              <Video className="mr-1 h-4 w-4" />
+                              <Video className="mr-1 h-5 w-5" />
                               {session.status === "scheduled" ? "Test" : "Join"}
                             </Button>
                             <Button
@@ -1501,7 +1496,7 @@ const AdminLiveSessions = () => {
                               size="icon"
                               onClick={() => handleCopyHostLink(session)}
                             >
-                              <Copy className="h-4 w-4" />
+                              <Copy className="h-5 w-5" />
                             </Button>
                             <Button
                               variant="ghost"
