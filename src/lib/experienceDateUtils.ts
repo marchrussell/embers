@@ -20,8 +20,8 @@ export interface EventSchedule {
   cta: string;
   ctaLink: string;
   image: string;
-  eventType: "free" | "paid" | "studio-member";
-  format: "Online" | "In-Person" | "Studio Membership Only" | "For Studio Members";
+  eventType: "free" | "paid" | "online-member";
+  format: "Online" | "In-Person" | "For Online Members";
   location?: string; // e.g., "Soho"
   venue?: string; // Full address
   price?: string; // e.g., "£20"

@@ -51,8 +51,8 @@ export const onlineExperiences: EventSchedule[] = [
     cta: "Enter Space",
     ctaLink: "",
     image: weeklyResetImg,
-    eventType: "studio-member",
-    format: "For Studio Members",
+    eventType: "online-member",
+    format: "For Online Members",
   },
   {
     id: "breath-presence-online",
@@ -70,8 +70,8 @@ export const onlineExperiences: EventSchedule[] = [
     cta: "Enter Space",
     ctaLink: "",
     image: monthlyBreathOnlineImg,
-    eventType: "studio-member",
-    format: "For Studio Members",
+    eventType: "online-member",
+    format: "For Online Members",
   },
 ]
 

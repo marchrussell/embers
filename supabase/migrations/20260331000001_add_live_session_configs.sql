@@ -1,8 +1,8 @@
--- Create live_session_configs table for managing recurring session type templates
+-- Create live_session_configs table for managing recurring session type templates.
+-- session_type is free text (no CHECK constraint) so new types can be created from the admin UI.
 CREATE TABLE public.live_session_configs (
   id UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
-  session_type TEXT NOT NULL UNIQUE
-    CHECK (session_type IN ('weekly-reset', 'monthly-presence', 'guest-session')),
+  session_type TEXT NOT NULL UNIQUE,
   title TEXT NOT NULL,
   subtitle TEXT,
   recurrence_type TEXT CHECK (recurrence_type IN ('weekly', 'nthWeekday')),
@@ -14,7 +14,7 @@ CREATE TABLE public.live_session_configs (
   duration TEXT,           -- e.g. "30 mins", "90 mins"
   recurrence_label TEXT,   -- human-readable label e.g. "Every Tuesday"
   cta_label TEXT,          -- e.g. "Enter Space"
-  event_type TEXT CHECK (event_type IN ('free', 'paid', 'studio-member')),
+  event_type TEXT CHECK (event_type IN ('free', 'paid', 'online-member')),
   format TEXT,
   is_active BOOLEAN NOT NULL DEFAULT true,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
@@ -45,7 +45,7 @@ EXECUTE FUNCTION public.update_updated_at_column();
 
 -- Seed data from existing hardcoded experiencesData.ts values
 INSERT INTO public.live_session_configs
-  (session_type, title, subtitle, recurrence_type, weekdays, time, timezone, duration, recurrence_label, cta_label, event_type, format)
+  (session_type, title, subtitle, recurrence_type, weekdays, weekday, nth, time, timezone, duration, recurrence_label, cta_label)
 VALUES
   (
     'weekly-reset',
@@ -53,44 +53,45 @@ VALUES
     'A live space to pause, settle your system, and realign mid-week.',
     'weekly',
     ARRAY[2],  -- Tuesday (0=Sun, 1=Mon, 2=Tue)
+    NULL,
+    NULL,
     '19:00',
     'GMT',
     '30 mins',
     'Every Tuesday',
     'Enter Space',
-    'studio-member',
-    'For Studio Members'
+    'online-member',
+    'For Online Members'
   ),
   (
     'monthly-presence',
     'Monthly Breath & Presence',
     'A longer, spacious session to soften tension and reconnect with yourself.',
     'nthWeekday',
-    NULL,      -- not used for nthWeekday
+    NULL,
+    0,         -- Sunday
+    2,         -- 2nd occurrence
     '19:30',
     'GMT',
     '90 mins',
     'Every 2nd Sunday',
     'Enter Space',
-    'studio-member',
-    'For Studio Members'
+    'online-member',
+    'For Online Members'
   ),
   (
     'guest-session',
     'Guest Session',
     'A special session with a guest teacher.',
-    NULL,      -- no fixed recurrence for guest sessions
+    NULL,
+    NULL,
+    NULL,
     NULL,
     NULL,
     'GMT',
     NULL,
     NULL,
     'Enter Space',
-    'studio-member',
-    'For Studio Members'
+    'online-member',
+    'For Online Members'
   );
-
--- Set nth and weekday for monthly-presence separately for clarity
-UPDATE public.live_session_configs
-SET weekday = 0, nth = 2  -- 2nd Sunday (0=Sun)
-WHERE session_type = 'monthly-presence';

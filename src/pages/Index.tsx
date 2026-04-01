@@ -302,7 +302,7 @@ const Index = () => {
                   const nextDate = getNextEventDate(event.recurrence, event.time);
                   const formattedDate = formatEventDate(nextDate, event.time);
                   const isOnline =
-                    event.format === "Online" || event.format === "Studio Membership Only";
+                    event.format === "Online" || event.format === "For Online Members";
 
                   return (
                     <Link

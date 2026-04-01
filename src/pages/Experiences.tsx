@@ -38,7 +38,7 @@ const Experiences = () => {
       return;
     }
     // For studio member events, open subscription modal
-    if (event.eventType === "studio-member") {
+    if (event.eventType === "online-member") {
       setIsSubscriptionModalOpen(true);
       return;
     }
@@ -161,7 +161,7 @@ const Experiences = () => {
                   const nextDate = getNextEventDate(event.recurrence, event.time);
                   const formattedDate = formatEventDate(nextDate, event.time);
                   const isOnline = event.format === "Online";
-                  const isStudioMember = event.format === "For Studio Members";
+                  const isStudioMember = event.format === "For Online Members";
                   const isFree = event.eventType === "free";
 
                   return (

@@ -47,14 +47,10 @@ const AdminDashboard = () => {
       color: "#D4915A",
       items: [
         {
-          title: "Guest Teachers",
-          path: "/admin/guest-teachers",
-          description: "Manage upcoming guest session teachers",
-        },
-        {
           title: "Live Sessions",
           path: "/admin/live-sessions",
-          description: "Manage live breathwork sessions and Daily.co rooms",
+          description:
+            "Manage all live session types — Weekly Reset, Monthly Presence, and Guest Sessions",
         },
       ],
     },

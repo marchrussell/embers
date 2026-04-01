@@ -46,7 +46,6 @@ const AdminCategories = lazy(() => import("./pages/admin/Categories"));
 const AdminLiveSessions = lazy(() => import("./pages/admin/LiveSessions"));
 
 const AdminUsers = lazy(() => import("./pages/admin/Users"));
-const AdminGuestTeachers = lazy(() => import("./pages/admin/GuestTeachers"));
 const AdminExperienceBookings = lazy(() => import("./pages/admin/ExperienceBookings"));
 
 // Onboarding (lazy loaded)
@@ -210,7 +209,6 @@ function AppContent() {
             <Route path="/admin/live-sessions" element={<AdminRoute><AdminLiveSessions /></AdminRoute>} />
 
             <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
-            <Route path="/admin/guest-teachers" element={<AdminRoute><AdminGuestTeachers /></AdminRoute>} />
             <Route path="/admin/event-bookings" element={<AdminRoute><AdminExperienceBookings /></AdminRoute>} />
 
             {/* 404 */}
