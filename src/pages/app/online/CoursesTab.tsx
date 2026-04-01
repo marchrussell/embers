@@ -28,12 +28,17 @@ const CoursesTab = () => {
                 className="relative flex animate-pulse flex-col overflow-hidden rounded-2xl border border-white/[0.08] lg:flex-row"
                 style={{ minHeight: "400px" }}
               >
-                <div className="h-[240px] bg-muted/20 lg:h-auto lg:w-[52%]" />
-                <div className="flex-1 space-y-4 bg-black/50 p-8">
-                  <div className="h-4 w-32 rounded bg-muted/30" />
-                  <div className="h-8 w-3/4 rounded bg-muted/30" />
-                  <div className="h-16 w-full rounded bg-muted/20" />
-                  <div className="mt-8 h-10 w-32 rounded-full bg-muted/30" />
+                <div className="h-[240px] shrink-0 bg-muted/20 lg:h-auto lg:min-h-full lg:w-[52%]" />
+                <div className="relative flex flex-1 flex-col justify-center bg-black/95 p-6 md:p-8 lg:bg-transparent lg:px-10 lg:py-10 lg:pl-6">
+                  <div className="mb-5 flex items-center gap-2">
+                    <div className="h-1.5 w-1.5 rounded-full bg-muted/30" />
+                    <div className="h-3 w-28 rounded bg-muted/30" />
+                  </div>
+                  <div className="mb-3 h-8 w-3/4 rounded bg-muted/30" />
+                  <div className="h-16 max-w-[340px] rounded bg-muted/20" />
+                  <div className="mt-8 flex justify-start lg:ml-auto lg:mr-8 lg:mt-10">
+                    <div className="h-9 w-28 rounded-full bg-muted/30" />
+                  </div>
                 </div>
               </div>
             ))}
