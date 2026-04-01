@@ -7,6 +7,7 @@ import {
   Link2,
   Loader2,
   Minus,
+  Pencil,
   Play,
   Plus,
   RefreshCw,
@@ -1503,7 +1504,7 @@ const AdminLiveSessions = () => {
                               size="icon"
                               onClick={() => openEditDialog(session)}
                             >
-                              <Plus className="h-4 w-4 rotate-45" />
+                              <Pencil className="h-4 w-4" />
                             </Button>
                             <Button
                               variant="ghost"
