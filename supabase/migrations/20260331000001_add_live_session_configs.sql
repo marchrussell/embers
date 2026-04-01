@@ -45,7 +45,7 @@ EXECUTE FUNCTION public.update_updated_at_column();
 
 -- Seed data from existing hardcoded experiencesData.ts values
 INSERT INTO public.live_session_configs
-  (session_type, title, subtitle, recurrence_type, weekdays, weekday, nth, time, timezone, duration, recurrence_label, cta_label)
+  (session_type, title, subtitle, recurrence_type, weekdays, weekday, nth, time, timezone, duration, recurrence_label, cta_label, event_type, format)
 VALUES
   (
     'weekly-reset',

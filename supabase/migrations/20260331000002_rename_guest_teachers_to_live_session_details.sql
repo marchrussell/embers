@@ -11,6 +11,10 @@ ALTER TABLE public.guest_teachers RENAME TO live_session_details;
 -- Rename the sequence if it exists (UUID PKs don't have sequences, but just in case)
 -- ALTER SEQUENCE IF EXISTS guest_teachers_id_seq RENAME TO live_session_details_id_seq;
 
+-- Rename the index on linked_session_id if it exists
+ALTER INDEX IF EXISTS guest_teachers_linked_session_id_idx
+  RENAME TO live_session_details_linked_session_id_idx;
+
 -- Recreate the trigger with the correct table name
 CREATE TRIGGER update_live_session_details_updated_at
 BEFORE UPDATE ON public.live_session_details
