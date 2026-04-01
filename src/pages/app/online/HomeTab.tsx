@@ -12,10 +12,10 @@ import StartHereCard from "./components/StartHereCard";
 import { useFeaturedSession } from "./hooks/useFeaturedSession";
 import { useQuickResets } from "./hooks/useQuickResets";
 import { useStartHereVisibility } from "./hooks/useStartHereVisibility";
-import { LiveSessionsData } from "./types";
+import { LiveSessionCardData } from "./types";
 
 interface HomeTabProps {
-  liveSessionsData: LiveSessionsData;
+  liveSessionsData: LiveSessionCardData[];
   hasSubscription: boolean;
   isAdmin: boolean;
   isTestUser: boolean;
@@ -224,35 +224,18 @@ const HomeTab = ({
           Nothing to keep up with. Just somewhere to come back to.
         </p>
         <div className="grid gap-6 md:grid-cols-3">
-          <CourseCard
-            title={liveSessionsData.weeklyReset.title}
-            subtitle={liveSessionsData.weeklyReset.subtitle}
-            description={liveSessionsData.weeklyReset.description}
-            image={liveSessionsData.weeklyReset.image}
-            badge={liveSessionsData.weeklyReset.isLive ? "Live Now" : undefined}
-            imagePosition="center 70%"
-            locked={!hasSubscription && !isAdmin && !isTestUser}
-            onClick={() => handleLiveCardClick("/online/live/weekly-reset")}
-          />
-          <CourseCard
-            title={liveSessionsData.monthlyPresence.title}
-            subtitle={liveSessionsData.monthlyPresence.subtitle}
-            description={liveSessionsData.monthlyPresence.description}
-            image={liveSessionsData.monthlyPresence.image}
-            badge={liveSessionsData.monthlyPresence.isLive ? "Live Now" : undefined}
-            locked={!hasSubscription && !isAdmin && !isTestUser}
-            onClick={() => handleLiveCardClick("/online/live/monthly-presence")}
-          />
-          <CourseCard
-            title={liveSessionsData.guestSession.title}
-            subtitle={liveSessionsData.guestSession.subtitle}
-            description={liveSessionsData.guestSession.description}
-            image={liveSessionsData.guestSession.image}
-            badge={liveSessionsData.guestSession.isLive ? "Live Now" : undefined}
-            imagePosition="center bottom"
-            locked={!hasSubscription && !isAdmin && !isTestUser}
-            onClick={() => handleLiveCardClick("/online/live/guest-session")}
-          />
+          {liveSessionsData.map((session) => (
+            <CourseCard
+              key={session.sessionType}
+              title={session.title}
+              subtitle={session.subtitle}
+              description={session.description}
+              image={session.image}
+              badge={session.isLive ? "Live Now" : undefined}
+              locked={!hasSubscription && !isAdmin && !isTestUser}
+              onClick={() => handleLiveCardClick(`/online/live/${session.sessionType}`)}
+            />
+          ))}
         </div>
       </section>
     </div>

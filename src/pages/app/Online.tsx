@@ -9,12 +9,9 @@ import OnlineHeader from "@/components/OnlineHeader";
 import { SafetyDisclosureModal } from "@/components/SafetyDisclosureModal";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
-import {
-  formatGuestSessionDate,
-  getNextThirdThursday,
-  parseUTCDateForDisplay,
-  useNextGuestTeacher,
-} from "@/hooks/useNextGuestTeacher";
+import { useLiveSessionConfigs } from "@/hooks/useLiveSessionConfigs";
+import { useNextGuestTeacher } from "@/hooks/useNextGuestTeacher";
+import { formatEventDate, getNextDateFromConfig } from "@/lib/experienceDateUtils";
 import {
   guestSessionImg,
   monthlyBreathOnlineImg as monthlyPresenceImg,
@@ -25,10 +22,17 @@ import Library from "./Library";
 import CoursesTab from "./online/CoursesTab";
 import HomeTab from "./online/HomeTab";
 import LiveTab from "./online/LiveTab";
-import { LiveSessionsData } from "./online/types";
+import { LiveSessionCardData } from "./online/types";
 import SessionDetailModal from "./SessionDetail";
 
 const VALID_TABS = ["home", "library", "courses", "live"];
+
+// Fallback images keyed by session_type slug
+const SESSION_TYPE_IMAGES: Record<string, string> = {
+  "weekly-reset": weeklyResetImg,
+  "monthly-presence": monthlyPresenceImg,
+  "guest-session": guestSessionImg,
+};
 
 const Online = () => {
   const {
@@ -51,62 +55,64 @@ const Online = () => {
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [shouldClearLibraryCategory, setShouldClearLibraryCategory] = useState(false);
 
+  const { data: configs = [] } = useLiveSessionConfigs();
   const { teacher: nextGuestTeacher } = useNextGuestTeacher();
 
   // Derive active tab from URL — URL is the single source of truth
   const tabParam = searchParams.get("tab");
   const activeTab = tabParam && VALID_TABS.includes(tabParam) ? tabParam : "home";
 
-  const liveSessionsData: LiveSessionsData = useMemo(
-    () => ({
-      weeklyReset: {
-        title: "Weekly Reset",
-        subtitle: "Live every Sunday • 7:00 PM GMT • 30 mins",
-        description: "A live space to pause, settle your system, and realign mid-week.",
-        image: weeklyResetImg,
-        nextDate: "Sunday, December 22",
+  const liveSessionsData: LiveSessionCardData[] = useMemo(() => {
+    return configs.map((config) => {
+      const nextDateObj = getNextDateFromConfig(config);
+      const nextDate = nextDateObj ? formatEventDate(nextDateObj, config.time ?? "") : null;
+
+      const subtitleParts = [
+        config.recurrence_label,
+        config.time ? `${config.time} ${config.timezone}` : null,
+        config.duration,
+      ].filter(Boolean);
+      const subtitle = subtitleParts.join(" · ");
+
+      const fallbackImage = SESSION_TYPE_IMAGES[config.session_type] ?? guestSessionImg;
+
+      const durationMinutes = config.duration
+        ? parseInt(config.duration) || 60
+        : 60;
+
+      // Enrich guest-session with live data from live_session_details
+      if (config.session_type === "guest-session" && nextGuestTeacher) {
+        return {
+          sessionType: config.session_type,
+          title: nextGuestTeacher.session_title || config.title,
+          subtitle,
+          description:
+            nextGuestTeacher.short_description ||
+            config.subtitle ||
+            "A unique session featuring a guest teacher with fresh perspectives.",
+          image: nextGuestTeacher.photo_url || fallbackImage,
+          nextDate,
+          isLive: false,
+          time: config.time,
+          durationMinutes,
+          teacherName: nextGuestTeacher.name,
+          teacherTitle: nextGuestTeacher.title,
+        };
+      }
+
+      return {
+        sessionType: config.session_type,
+        title: config.title,
+        subtitle,
+        description: config.subtitle ?? "",
+        image: fallbackImage,
+        nextDate,
         isLive: false,
-        hasReplay: true,
-        replayDate: "December 15, 2024",
-      },
-      monthlyPresence: {
-        title: "Monthly Breath & Presence",
-        subtitle: "First Saturday of each month • 10:00 AM GMT • 90 mins",
-        description: "A longer, spacious session to soften tension and reconnect with yourself.",
-        image: monthlyPresenceImg,
-        nextDate: "Saturday, January 4",
-        isLive: false,
-        hasReplay: true,
-        replayDate: "December 7, 2024",
-      },
-      guestSession: nextGuestTeacher
-        ? {
-            title: nextGuestTeacher.session_title,
-            subtitle: "3rd Thursday of every month • 7:30 PM GMT • 1 hour",
-            description:
-              nextGuestTeacher.short_description ||
-              `A unique session featuring ${nextGuestTeacher.name} with fresh perspectives.`,
-            image: nextGuestTeacher.photo_url || guestSessionImg,
-            nextDate: formatGuestSessionDate(parseUTCDateForDisplay(nextGuestTeacher.session_date)),
-            isLive: false,
-            hasReplay: false,
-            teacherName: nextGuestTeacher.name,
-            teacherTitle: nextGuestTeacher.title,
-          }
-        : {
-            title: "Guest Session",
-            subtitle: "3rd Thursday of every month • 7:30 PM GMT • 1 hour",
-            description: "A unique session featuring a guest teacher with fresh perspectives.",
-            image: guestSessionImg,
-            nextDate: formatGuestSessionDate(getNextThirdThursday()),
-            isLive: false,
-            hasReplay: false,
-            teacherName: "Guest Teacher",
-            teacherTitle: "",
-          },
-    }),
-    [nextGuestTeacher]
-  );
+        time: config.time,
+        durationMinutes,
+      };
+    });
+  }, [configs, nextGuestTeacher]);
 
   const handleTabChange = (tab: string) => {
     navigate(`/online?tab=${tab}`, { replace: true });

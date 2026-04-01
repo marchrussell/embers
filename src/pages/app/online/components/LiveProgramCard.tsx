@@ -5,11 +5,11 @@ import { GlowButton } from "@/components/ui/glow-button";
 import { IconButton } from "@/components/ui/icon-button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
-import { LiveSessionData } from "../types";
+import { LiveSessionCardData } from "../types";
 
 interface LiveProgramCardProps {
   sessionKey: string;
-  data: LiveSessionData;
+  data: LiveSessionCardData;
   onClick: () => void;
   onShare: (e: React.MouseEvent) => void;
   onDownloadICal: (e: React.MouseEvent) => void;

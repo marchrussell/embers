@@ -11,23 +11,18 @@ export interface Course {
   is_published: boolean;
 }
 
-export interface LiveSessionData {
+export interface LiveSessionCardData {
+  sessionType: string;
   title: string;
   subtitle: string;
   description: string;
   image: string;
-  nextDate: string;
+  nextDate: string | null;
   isLive: boolean;
-  hasReplay?: boolean;
-  replayDate?: string;
+  time: string | null;        // HH:MM 24h, e.g. "19:00"
+  durationMinutes: number;    // e.g. 30, 90 — defaults to 60
   teacherName?: string;
   teacherTitle?: string;
-}
-
-export interface LiveSessionsData {
-  weeklyReset: LiveSessionData;
-  monthlyPresence: LiveSessionData;
-  guestSession: LiveSessionData;
 }
 
 export interface LiveReplay {

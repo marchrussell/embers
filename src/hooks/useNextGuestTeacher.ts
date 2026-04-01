@@ -24,8 +24,9 @@ export function useNextGuestTeacher() {
     queryFn: async () => {
       const now = new Date().toISOString();
 
-      const { data, error: fetchError } = await supabase
-        .from("guest_teachers")
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data, error: fetchError } = await (supabase as any)
+        .from("live_session_details")
         .select("*")
         .eq("is_active", true)
         .gte("session_date", now)

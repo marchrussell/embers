@@ -1,6 +1,6 @@
 import { Calendar, Clock, Video } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import liveSessionCountdownBg from "@/assets/live-session-countdown-bg.png";
 import { Footer } from "@/components/Footer";
@@ -8,19 +8,37 @@ import { NavBar } from "@/components/NavBar";
 import OnlineFooter from "@/components/OnlineFooter";
 import OnlineHeader from "@/components/OnlineHeader";
 import { Button } from "@/components/ui/button";
+import { useLiveSessionConfigs } from "@/hooks/useLiveSessionConfigs";
 import {
   formatGuestSessionDate,
-  getNextThirdThursday,
   parseUTCDateForDisplay,
   useNextGuestTeacher,
 } from "@/hooks/useNextGuestTeacher";
+import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
+import { getNextDateFromConfig } from "@/lib/experienceDateUtils";
 import {
   guestSessionImg,
   monthlyBreathOnlineImg as monthlyPresenceImg,
   weeklyResetImg,
 } from "@/lib/experiencesData";
 
-interface LiveSessionData {
+const marchPortrait = getCloudImageUrl(CLOUD_IMAGES.march);
+
+// Fallback images keyed by session_type slug
+const SESSION_TYPE_IMAGES: Record<string, string> = {
+  "weekly-reset": weeklyResetImg,
+  "monthly-presence": monthlyPresenceImg,
+  "guest-session": guestSessionImg,
+};
+
+const DEFAULT_WHAT_TO_EXPECT = [
+  "A guided, voice-led practice",
+  "You can sit, lie down, or simply listen",
+  "Camera and microphone are not used",
+  "You're welcome to arrive late or leave early",
+];
+
+interface SessionDisplay {
   title: string;
   subtitle: string;
   description: string;
@@ -34,156 +52,120 @@ interface LiveSessionData {
   whatToExpect?: string[];
 }
 
-import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
-
-const marchPortrait = getCloudImageUrl(CLOUD_IMAGES.march);
-
-function getNextTuesdayDate(): Date {
-  const now = new Date();
-  const daysUntilTuesday = (2 - now.getDay() + 7) % 7 || 7;
-  const next = new Date(now);
-  next.setDate(now.getDate() + daysUntilTuesday);
-  next.setHours(19, 0, 0, 0);
-  return next;
-}
-
-function getNextFirstSaturdayDate(): Date {
-  const now = new Date();
-  let month = now.getMonth() + 1;
-  let year = now.getFullYear();
-  if (month > 11) {
-    month = 0;
-    year++;
-  }
-  const firstDay = new Date(year, month, 1);
-  const daysUntilSaturday = (6 - firstDay.getDay() + 7) % 7;
-  const firstSaturday = new Date(year, month, 1 + daysUntilSaturday);
-  firstSaturday.setHours(10, 0, 0, 0);
-  return firstSaturday;
-}
-
-const staticSessionsConfig: Record<string, Omit<LiveSessionData, "nextDate">> = {
-  "weekly-reset": {
-    title: "Weekly Reset",
-    subtitle: "Live every Tuesday",
-    description:
-      "A live weekly space with practices to pause, soothe your central nervous system, and come back home to yourself - wherever you are in the week.",
-    image: weeklyResetImg,
-    teacher: "March",
-    duration: "30 mins",
-    time: "7:00 PM GMT",
-  },
-  "monthly-presence": {
-    title: "Monthly Breath & Presence",
-    subtitle: "First Saturday of each month",
-    description: "A longer, spacious session to soften tension and reconnect with yourself.",
-    image: monthlyPresenceImg,
-    teacher: "March",
-    duration: "90 mins",
-    time: "10:00 AM GMT",
-  },
-};
-
 const LiveSession = () => {
   const { sessionId } = useParams<{ sessionId: string }>();
-  const navigate = useNavigate();
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
-  // Fetch next guest teacher for guest-session page
+  const { data: configs = [], isLoading: configsLoading } = useLiveSessionConfigs();
   const { teacher: nextGuestTeacher, loading: guestLoading } = useNextGuestTeacher();
 
-  // Build session config dynamically
-  const session: LiveSessionData | null = (() => {
-    if (!sessionId) return null;
+  const config = configs.find((c) => c.session_type === sessionId) ?? null;
+
+  const isLoading = configsLoading || (sessionId === "guest-session" && guestLoading);
+
+  // Compute the display date for this session
+  const nextDateObj = config ? getNextDateFromConfig(config) : null;
+  const computedNextDate = (() => {
+    if (sessionId === "guest-session" && nextGuestTeacher) {
+      return formatGuestSessionDate(parseUTCDateForDisplay(nextGuestTeacher.session_date));
+    }
+    return nextDateObj ? formatGuestSessionDate(nextDateObj) : null;
+  })();
+
+  // Build session display data from config + optional guest teacher details
+  const session: SessionDisplay | null = (() => {
+    if (!config) return null;
+
+    const fallbackImage = SESSION_TYPE_IMAGES[config.session_type] ?? guestSessionImg;
 
     if (sessionId === "guest-session") {
       if (nextGuestTeacher) {
         return {
-          title: nextGuestTeacher.session_title,
-          subtitle: "3rd Thursday of every month",
+          title: nextGuestTeacher.session_title || config.title,
+          subtitle: config.recurrence_label ?? "",
           description:
             nextGuestTeacher.short_description ||
-            "A unique session featuring a guest teacher with fresh perspectives and new practices to explore.",
-          image: nextGuestTeacher.photo_url || guestSessionImg,
-          nextDate: formatGuestSessionDate(parseUTCDateForDisplay(nextGuestTeacher.session_date)),
+            config.subtitle ||
+            "A unique session featuring a guest teacher with fresh perspectives.",
+          image: nextGuestTeacher.photo_url || fallbackImage,
+          nextDate: computedNextDate ?? "",
           teacher: nextGuestTeacher.name,
           teacherTitle: nextGuestTeacher.title,
           teacherImage: nextGuestTeacher.photo_url || undefined,
-          duration: "1 hour",
-          time: "7:30 PM GMT",
+          duration: config.duration ?? "1 hour",
+          time: config.time ? `${config.time} ${config.timezone}` : "",
           whatToExpect: nextGuestTeacher.what_to_expect,
         };
       }
-      // Fallback when no guest teacher is scheduled
       return {
-        title: "Guest Session",
-        subtitle: "3rd Thursday of every month",
-        description:
-          "A unique session featuring a guest teacher with fresh perspectives and new practices to explore.",
-        image: guestSessionImg,
-        nextDate: formatGuestSessionDate(getNextThirdThursday()),
+        title: config.title,
+        subtitle: config.recurrence_label ?? "",
+        description: config.subtitle ?? "A unique session featuring a guest teacher.",
+        image: fallbackImage,
+        nextDate: computedNextDate ?? "",
         teacher: "Guest Teacher",
-        duration: "1 hour",
-        time: "7:30 PM GMT",
+        duration: config.duration ?? "1 hour",
+        time: config.time ? `${config.time} ${config.timezone}` : "",
       };
     }
 
-    const config = staticSessionsConfig[sessionId];
-    if (!config) return null;
-    if (sessionId === "weekly-reset") {
-      return { ...config, nextDate: formatGuestSessionDate(getNextTuesdayDate()) };
-    }
-    if (sessionId === "monthly-presence") {
-      return { ...config, nextDate: formatGuestSessionDate(getNextFirstSaturdayDate()) };
-    }
-    return null;
+    return {
+      title: config.title,
+      subtitle: config.recurrence_label ?? "",
+      description: config.subtitle ?? "",
+      image: fallbackImage,
+      nextDate: computedNextDate ?? "",
+      teacher: "March",
+      duration: config.duration ?? "",
+      time: config.time ? `${config.time} ${config.timezone}` : "",
+    };
   })();
 
   // Calculate countdown to next session
   useEffect(() => {
-    if (!session) return;
+    if (!config) return;
 
     const calculateCountdown = () => {
-      const now = new Date();
-      let targetDate = new Date();
+      let targetDate: Date | null = null;
 
-      if (sessionId === "weekly-reset") {
-        // Tuesday is day 2 (0=Sunday, 1=Monday, 2=Tuesday, etc.)
-        const daysUntilTuesday = (2 - now.getDay() + 7) % 7 || 7;
-        targetDate = new Date(now);
-        targetDate.setDate(now.getDate() + daysUntilTuesday);
-        targetDate.setHours(19, 0, 0, 0);
-      } else if (sessionId === "monthly-presence") {
-        targetDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-        while (targetDate.getDay() !== 6) {
-          targetDate.setDate(targetDate.getDate() + 1);
-        }
-        targetDate.setHours(10, 0, 0, 0);
-      } else if (sessionId === "guest-session" && nextGuestTeacher) {
+      if (sessionId === "guest-session" && nextGuestTeacher) {
         targetDate = new Date(nextGuestTeacher.session_date);
       } else {
-        targetDate = getNextThirdThursday();
+        targetDate = getNextDateFromConfig(config);
       }
 
-      const diff = targetDate.getTime() - now.getTime();
+      if (!targetDate) {
+        setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        return;
+      }
+
+      const diff = targetDate.getTime() - Date.now();
 
       if (diff <= 0) {
         setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
         return;
       }
 
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-      setCountdown({ days, hours, minutes, seconds });
+      setCountdown({
+        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
+        seconds: Math.floor((diff % (1000 * 60)) / 1000),
+      });
     };
 
     calculateCountdown();
     const interval = setInterval(calculateCountdown, 1000);
     return () => clearInterval(interval);
-  }, [session, sessionId, nextGuestTeacher]);
+  }, [config, sessionId, nextGuestTeacher]);
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <p className="text-[#E6DBC7]/50">Loading...</p>
+      </div>
+    );
+  }
 
   if (!session) {
     return (
@@ -196,12 +178,7 @@ const LiveSession = () => {
   const isLive = countdown.days === 0 && countdown.hours === 0 && countdown.minutes <= 5;
   const teacherImage =
     session.teacherImage || (sessionId === "guest-session" ? session.image : marchPortrait);
-  const whatToExpectItems = session.whatToExpect || [
-    "A guided, voice-led practice",
-    "You can sit, lie down, or simply listen",
-    "Camera and microphone are not used",
-    "You're welcome to arrive late or leave early",
-  ];
+  const whatToExpectItems = session.whatToExpect || DEFAULT_WHAT_TO_EXPECT;
 
   return (
     <div className="min-h-screen bg-background">
@@ -353,26 +330,21 @@ const LiveSession = () => {
                   </div>
                 </div>
 
-                <p className="mb-2 font-light text-[#E6DBC7]/50">
-                  Next session: <span className="text-[#E6DBC7]/70">{session.nextDate}</span> at{" "}
-                  <span className="text-[#E6DBC7]/70">{session.time}</span>
-                </p>
-                <p className="text-md font-light text-[#E6DBC7]/35">
-                  When we go live, the session will open here — no separate link needed.
+                <p className="font-light text-[#E6DBC7]/40">
+                  {session.nextDate} at {session.time}
                 </p>
               </div>
             )}
           </div>
-
-          {/* Reassurance line */}
-          <p className="mt-6 text-center text-md font-light text-[#E6DBC7]/35">
-            If you miss this one, you can return next week — nothing to catch up on.
-          </p>
         </div>
       </div>
 
-      <OnlineFooter />
-      <Footer />
+      <div className="block md:hidden">
+        <OnlineFooter />
+      </div>
+      <div className="hidden md:block">
+        <Footer />
+      </div>
     </div>
   );
 };

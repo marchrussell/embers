@@ -12,7 +12,7 @@ type RawReplayRow = {
   start_time: string;
   end_time: string | null;
   recording_url: string | null;
-  guest_teachers:
+  live_session_details:
     | { name: string; photo_url: string | null }
     | { name: string; photo_url: string | null }[]
     | null;
@@ -38,7 +38,7 @@ export const useLiveReplays = () => {
           start_time,
           end_time,
           recording_url,
-          guest_teachers!linked_session_id(name, photo_url)
+          live_session_details!linked_session_id(name, photo_url)
         `
         )
         .not("recording_url", "is", null)
@@ -51,9 +51,9 @@ export const useLiveReplays = () => {
       if (error) throw error;
 
       return (data ?? []).map((row) => {
-        const teacher = Array.isArray(row.guest_teachers)
-          ? row.guest_teachers[0]
-          : row.guest_teachers;
+        const teacher = Array.isArray(row.live_session_details)
+          ? row.live_session_details[0]
+          : row.live_session_details;
         return {
           id: row.id,
           title: row.title,

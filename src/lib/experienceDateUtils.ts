@@ -210,3 +210,39 @@ export const WEEKDAYS = {
   FRIDAY: 5,
   SATURDAY: 6,
 } as const;
+
+// ── Live session config → next date ──────────────────────────────────────────
+
+interface LiveSessionConfigRecurrence {
+  recurrence_type: "weekly" | "nthWeekday" | null;
+  weekdays: number[] | null;
+  weekday: number | null;
+  nth: number | null;
+  time: string | null;
+}
+
+/**
+ * Computes the next occurrence date for a `live_session_configs` row by mapping
+ * its recurrence fields to a `RecurrenceRule` and delegating to `getNextEventDate`.
+ * Returns `null` when no fixed recurrence is defined.
+ */
+export function getNextDateFromConfig(config: LiveSessionConfigRecurrence): Date | null {
+  const time = config.time ?? "00:00";
+
+  if (config.recurrence_type === "weekly" && config.weekdays?.length) {
+    return getNextEventDate({ type: "weekly", weekdays: config.weekdays }, time);
+  }
+
+  if (
+    config.recurrence_type === "nthWeekday" &&
+    config.weekday != null &&
+    config.nth != null
+  ) {
+    return getNextEventDate(
+      { type: "nthWeekday", weekday: config.weekday, nth: config.nth },
+      time
+    );
+  }
+
+  return null;
+}

@@ -18,10 +18,10 @@ import {
 
 import LiveProgramCard from "./components/LiveProgramCard";
 import { AVAILABILITY_DAYS, useLiveReplays } from "./hooks/useLiveReplays";
-import { LiveReplay, LiveSessionsData } from "./types";
+import { LiveReplay, LiveSessionCardData } from "./types";
 
 interface LiveTabProps {
-  liveSessionsData: LiveSessionsData;
+  liveSessionsData: LiveSessionCardData[];
   hasSubscription: boolean;
   isAdmin: boolean;
   isTestUser: boolean;
@@ -70,26 +70,15 @@ const LiveTab = ({
     }
   };
 
-  const getCalendarEvent = (sessionKey: string): CalendarEvent => {
-    const session = liveSessionsData[sessionKey as keyof typeof liveSessionsData];
+  const getCalendarEvent = (session: LiveSessionCardData): CalendarEvent => {
     const now = new Date();
-
-    const timeMatch = session.subtitle.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
-    let hours = 19,
-      minutes = 0;
-    if (timeMatch) {
-      hours = parseInt(timeMatch[1]);
-      minutes = parseInt(timeMatch[2]);
-      if (timeMatch[3].toUpperCase() === "PM" && hours !== 12) hours += 12;
-      if (timeMatch[3].toUpperCase() === "AM" && hours === 12) hours = 0;
-    }
+    const [hours, minutes] = (session.time ?? "19:00").split(":").map(Number);
 
     const startDate = new Date(now);
     startDate.setHours(hours, minutes, 0, 0);
     if (startDate < now) startDate.setDate(startDate.getDate() + 7);
 
-    const duration = sessionKey === "weeklyReset" ? 30 : sessionKey === "monthlyPresence" ? 90 : 60;
-    const endDate = new Date(startDate.getTime() + duration * 60000);
+    const endDate = new Date(startDate.getTime() + session.durationMinutes * 60000);
 
     return {
       title: session.title,
@@ -100,25 +89,24 @@ const LiveTab = ({
     };
   };
 
-  const handleDownloadICal = (sessionKey: string) => {
-    const event = getCalendarEvent(sessionKey);
+  const handleDownloadICal = (session: LiveSessionCardData) => {
+    const event = getCalendarEvent(session);
     downloadICalFile(event, event.title.replace(/\s+/g, "-").toLowerCase());
     setOpenCalendarId(null);
   };
 
-  const handleGoogleCalendar = (sessionKey: string) => {
-    window.open(getGoogleCalendarUrl(getCalendarEvent(sessionKey)), "_blank");
+  const handleGoogleCalendar = (session: LiveSessionCardData) => {
+    window.open(getGoogleCalendarUrl(getCalendarEvent(session)), "_blank");
     setOpenCalendarId(null);
   };
 
-  const handleOutlookCalendar = (sessionKey: string) => {
-    window.open(getOutlookCalendarUrl(getCalendarEvent(sessionKey)), "_blank");
+  const handleOutlookCalendar = (session: LiveSessionCardData) => {
+    window.open(getOutlookCalendarUrl(getCalendarEvent(session)), "_blank");
     setOpenCalendarId(null);
   };
 
-  const handleShare = (sessionKey: string, e: React.MouseEvent) => {
+  const handleShare = (session: LiveSessionCardData, e: React.MouseEvent) => {
     e.stopPropagation();
-    const session = liveSessionsData[sessionKey as keyof typeof liveSessionsData];
     const shareUrl = `${window.location.origin}/online?tab=live`;
     const shareText = `Join March Russell for ${session.title} - ${session.description}`;
 
@@ -142,69 +130,31 @@ const LiveTab = ({
       </div>
 
       <div className="space-y-9 md:space-y-10 lg:space-y-12">
-        <LiveProgramCard
-          sessionKey="weeklyReset"
-          data={liveSessionsData.weeklyReset}
-          onClick={() => handleCardClick("/online/live/weekly-reset")}
-          onShare={(e) => handleShare("weeklyReset", e)}
-          onDownloadICal={(e) => {
-            e.stopPropagation();
-            handleDownloadICal("weeklyReset");
-          }}
-          onGoogleCalendar={(e) => {
-            e.stopPropagation();
-            handleGoogleCalendar("weeklyReset");
-          }}
-          onOutlookCalendar={(e) => {
-            e.stopPropagation();
-            handleOutlookCalendar("weeklyReset");
-          }}
-          isCalendarOpen={openCalendarId === "weeklyReset"}
-          onCalendarOpenChange={(open) => setOpenCalendarId(open ? "weeklyReset" : null)}
-        />
-
-        <LiveProgramCard
-          sessionKey="monthlyPresence"
-          data={liveSessionsData.monthlyPresence}
-          onClick={() => handleCardClick("/online/live/monthly-presence")}
-          onShare={(e) => handleShare("monthlyPresence", e)}
-          onDownloadICal={(e) => {
-            e.stopPropagation();
-            handleDownloadICal("monthlyPresence");
-          }}
-          onGoogleCalendar={(e) => {
-            e.stopPropagation();
-            handleGoogleCalendar("monthlyPresence");
-          }}
-          onOutlookCalendar={(e) => {
-            e.stopPropagation();
-            handleOutlookCalendar("monthlyPresence");
-          }}
-          isCalendarOpen={openCalendarId === "monthlyPresence"}
-          onCalendarOpenChange={(open) => setOpenCalendarId(open ? "monthlyPresence" : null)}
-        />
-
-        <LiveProgramCard
-          sessionKey="guestSession"
-          data={liveSessionsData.guestSession}
-          onClick={() => handleCardClick("/online/live/guest-session")}
-          onShare={(e) => handleShare("guestSession", e)}
-          onDownloadICal={(e) => {
-            e.stopPropagation();
-            handleDownloadICal("guestSession");
-          }}
-          onGoogleCalendar={(e) => {
-            e.stopPropagation();
-            handleGoogleCalendar("guestSession");
-          }}
-          onOutlookCalendar={(e) => {
-            e.stopPropagation();
-            handleOutlookCalendar("guestSession");
-          }}
-          isCalendarOpen={openCalendarId === "guestSession"}
-          onCalendarOpenChange={(open) => setOpenCalendarId(open ? "guestSession" : null)}
-          imageObjectPosition="bottom"
-        />
+        {liveSessionsData.map((session) => (
+          <LiveProgramCard
+            key={session.sessionType}
+            sessionKey={session.sessionType}
+            data={session}
+            onClick={() => handleCardClick(`/online/live/${session.sessionType}`)}
+            onShare={(e) => handleShare(session, e)}
+            onDownloadICal={(e) => {
+              e.stopPropagation();
+              handleDownloadICal(session);
+            }}
+            onGoogleCalendar={(e) => {
+              e.stopPropagation();
+              handleGoogleCalendar(session);
+            }}
+            onOutlookCalendar={(e) => {
+              e.stopPropagation();
+              handleOutlookCalendar(session);
+            }}
+            isCalendarOpen={openCalendarId === session.sessionType}
+            onCalendarOpenChange={(open) =>
+              setOpenCalendarId(open ? session.sessionType : null)
+            }
+          />
+        ))}
 
         {/* Live Replays Section */}
         <div className="mt-40">
