@@ -60,19 +60,17 @@ const glowButtonVariants = cva(
 );
 
 export interface GlowButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof glowButtonVariants> {}
+  extends React.ComponentProps<"button">, VariantProps<typeof glowButtonVariants> {}
 
-const GlowButton = React.forwardRef<HTMLButtonElement, GlowButtonProps>(
-  ({ className, variant, size, ...props }, ref) => {
-    return (
-      <button
-        className={cn(glowButtonVariants({ variant, size, className }))}
-        ref={ref}
-        {...props}
-      />
-    );
-  }
-);
+function GlowButton({ className, variant, size, ref, ...props }: GlowButtonProps) {
+  return (
+    <button
+      className={cn(glowButtonVariants({ variant, size, className }))}
+      ref={ref}
+      {...props}
+    />
+  );
+}
 GlowButton.displayName = "GlowButton";
 
 export { GlowButton, glowButtonVariants };

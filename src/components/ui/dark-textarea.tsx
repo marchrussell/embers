@@ -12,23 +12,21 @@ const variantClasses = {
   ghost: "bg-white/10 border-white/20 text-white placeholder:text-white/40 focus:border-white/40",
 };
 
-const DarkTextarea = React.forwardRef<HTMLTextAreaElement, DarkTextareaProps>(
-  ({ className, variant = "default", ...props }, ref) => {
-    return (
-      <textarea
-        className={cn(
-          "flex min-h-[80px] w-full resize-none rounded-xl border px-5 py-4 text-base ring-offset-background transition-colors",
-          "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
-          "disabled:cursor-not-allowed disabled:opacity-50",
-          variantClasses[variant],
-          className
-        )}
-        ref={ref}
-        {...props}
-      />
-    );
-  }
-);
+function DarkTextarea({ className, variant = "default", ref, ...props }: DarkTextareaProps) {
+  return (
+    <textarea
+      className={cn(
+        "flex min-h-[80px] w-full resize-none rounded-xl border px-5 py-4 text-base ring-offset-background transition-colors",
+        "focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
+        "disabled:cursor-not-allowed disabled:opacity-50",
+        variantClasses[variant],
+        className
+      )}
+      ref={ref}
+      {...props}
+    />
+  );
+}
 DarkTextarea.displayName = "DarkTextarea";
 
 export { DarkTextarea };
