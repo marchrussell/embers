@@ -6,7 +6,7 @@ import { SafetyDisclosureContent } from "@/components/SafetyDisclosureContent";
 import { ButtonLoadingSpinner } from "@/components/skeletons";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { ModalCloseButton } from "@/components/ui/modal-close-button";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -55,6 +55,27 @@ export const SafetyDisclosureModal = ({ isOpen, onAccept, userId }: SafetyDisclo
       onAccept();
     } catch (error: any) {
       clearTimeout(timeoutId);
+
+      // Supabase Realtime aborts in-flight fetches during auth state changes (e.g. SIGNED_IN
+      // on a second tab). This is transient — retry once before surfacing an error.
+      const isAbort =
+        error?.name === "AbortError" || error?.message?.toLowerCase().includes("aborted");
+      if (isAbort) {
+        try {
+          const { error: retryError } = await supabase
+            .from("profiles")
+            .update({ has_accepted_safety_disclosure: true })
+            .eq("id", userId);
+          if (retryError) throw retryError;
+          toast.success("Safety disclosure accepted");
+          onAccept();
+        } catch {
+          setLoading(false);
+          toast.error("Connection interrupted. Please try again.");
+        }
+        return;
+      }
+
       setLoading(false);
       toast.error(error.message || "Failed to save acceptance. Please try again.");
     }
@@ -66,6 +87,7 @@ export const SafetyDisclosureModal = ({ isOpen, onAccept, userId }: SafetyDisclo
         hideClose
         className="max-h-[90vh] w-[92vw] max-w-4xl overflow-y-auto rounded-xl border border-white/30 bg-black/75 p-0 backdrop-blur-xl"
       >
+        <DialogTitle className="sr-only">Safety Disclosure</DialogTitle>
         <ModalCloseButton onClose={() => {}} size="md" className="pointer-events-none opacity-0" />
         <div className="px-6 pb-10 pt-12 md:px-10 md:pt-16 lg:px-12">
           {/* Header */}
