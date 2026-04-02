@@ -21,6 +21,7 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   checkSubscription: () => Promise<void>;
   refreshOnboardingStatus: () => Promise<void>;
+  acceptSafetyDisclosure: () => void;
   openCustomerPortal: () => Promise<void>;
 }
 
@@ -95,6 +96,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setHasAcceptedSafetyDisclosure(false);
       return false;
     }
+  };
+
+  const acceptSafetyDisclosure = () => {
+    setHasAcceptedSafetyDisclosure(true);
   };
 
   // Expose refresh function for manual use
@@ -392,6 +397,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         signOut,
         checkSubscription,
         refreshOnboardingStatus,
+        acceptSafetyDisclosure,
         openCustomerPortal,
       }}
     >

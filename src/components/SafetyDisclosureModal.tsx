@@ -62,6 +62,8 @@ export const SafetyDisclosureModal = ({ isOpen, onAccept, userId }: SafetyDisclo
         error?.name === "AbortError" || error?.message?.toLowerCase().includes("aborted");
       if (isAbort) {
         try {
+          // Wait for Supabase Realtime to finish its reconnect cycle before retrying
+          await new Promise((resolve) => setTimeout(resolve, 300));
           const { error: retryError } = await supabase
             .from("profiles")
             .update({ has_accepted_safety_disclosure: true })

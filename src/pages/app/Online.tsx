@@ -40,7 +40,7 @@ const Online = () => {
     isAdmin,
     isTestUser,
     hasAcceptedSafetyDisclosure,
-    refreshOnboardingStatus,
+    acceptSafetyDisclosure,
     user,
     loading,
   } = useAuth();
@@ -49,8 +49,8 @@ const Online = () => {
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const showSafetyModal = !loading && !hasAcceptedSafetyDisclosure;
 
-  const handleSafetyAccept = async () => {
-    await refreshOnboardingStatus();
+  const handleSafetyAccept = () => {
+    acceptSafetyDisclosure();
   };
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [shouldClearLibraryCategory, setShouldClearLibraryCategory] = useState(false);
