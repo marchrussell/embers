@@ -3,6 +3,7 @@ import { Session, User } from "@supabase/supabase-js";
 import React, { createContext, useContext, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
+import { identifyUser, resetUser } from "@/lib/posthog";
 import { supabase } from "@/integrations/supabase/client";
 
 interface AuthContextType {
@@ -157,18 +158,57 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   useEffect(() => {
-    // Safety timeout - only guards against getSession() hanging, not slow DB checks
+    // Safety timeout — fallback in case neither INITIAL_SESSION nor getSession() resolves
     safetyTimeoutRef.current = setTimeout(() => {
       if (loading) {
         setLoading(false);
       }
     }, 3000);
 
-    // Set up auth state listener FIRST
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      // Skip if this is the initial load
+      // INITIAL_SESSION fires when the listener is registered with the session read
+      // directly from localStorage — no server round-trip. Handling it here (instead of
+      // relying on getSession()) ensures second-tab loads work even when getSession()
+      // races with another tab's concurrent token refresh.
+      if (event === "INITIAL_SESSION") {
+        if (safetyTimeoutRef.current) {
+          clearTimeout(safetyTimeoutRef.current);
+          safetyTimeoutRef.current = null;
+        }
+        initialLoadRef.current = false;
+        setSession(session);
+        setUser(session?.user ?? null);
+
+        if (session?.user && !authCheckedRef.current) {
+          authCheckedRef.current = true;
+          identifyUser(session.user.id, {
+            email: session.user.email,
+            created_at: session.user.created_at,
+          });
+          try {
+            await Promise.all([
+              checkAdminRole(session.user.id).catch(() => {}),
+              checkSubscription(session.user.id, session.access_token).catch(() => {}),
+              checkOnboardingStatus(session.user.id).catch(() => {}),
+            ]);
+          } catch {
+            // Individual checks handle their own state
+          }
+        } else if (!session?.user) {
+          setIsAdmin(false);
+          setIsTestUser(false);
+          setHasSubscription(false);
+          setHasMentorshipDiy(false);
+          setHasMentorshipGuided(false);
+          setHasCompletedOnboarding(false);
+        }
+        setLoading(false);
+        return;
+      }
+
+      // Skip all other events until INITIAL_SESSION has been processed
       if (initialLoadRef.current) return;
 
       // On token refresh, just update session/user — no need to re-run DB checks
@@ -184,22 +224,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (session?.user) {
         authCheckedRef.current = true;
         setLoading(true);
-
-        // Identify user in PostHog (dynamic import to defer analytics bundle)
-        import("@/lib/posthog").then(({ identifyUser }) =>
-          identifyUser(session.user.id, {
-            email: session.user.email,
-            created_at: session.user.created_at,
-          })
-        );
-
-        // Run checks in parallel
+        identifyUser(session.user.id, {
+          email: session.user.email,
+          created_at: session.user.created_at,
+        });
         await Promise.all([
           checkAdminRole(session.user.id),
           checkSubscription(session.user.id, session.access_token),
           checkOnboardingStatus(session.user.id),
         ]).catch(() => {});
-
         setLoading(false);
       } else {
         authCheckedRef.current = false;
@@ -213,42 +246,34 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
     });
 
-    // THEN check for existing session
+    // getSession() is a safety fallback for environments where INITIAL_SESSION
+    // may not fire. If INITIAL_SESSION already ran, initialLoadRef is false and
+    // this becomes a no-op.
     supabase.auth
       .getSession()
       .then(async ({ data: { session } }) => {
-        // getSession() resolved — clear the safety timeout so it doesn't fire
-        // mid-way through DB checks and cause isAdmin/hasSubscription to be false
-        // while loading becomes false, which would trigger incorrect redirects.
+        if (!initialLoadRef.current) return;
         if (safetyTimeoutRef.current) {
           clearTimeout(safetyTimeoutRef.current);
           safetyTimeoutRef.current = null;
         }
-
+        initialLoadRef.current = false;
         setSession(session);
         setUser(session?.user ?? null);
-        initialLoadRef.current = false;
-
         if (session?.user && !authCheckedRef.current) {
           authCheckedRef.current = true;
-
-          // Identify user in PostHog (dynamic import to defer analytics bundle)
-          import("@/lib/posthog").then(({ identifyUser }) =>
-            identifyUser(session.user.id, {
-              email: session.user.email,
-              created_at: session.user.created_at,
-            })
-          );
-
-          // Run all checks in parallel with individual error handling
+          identifyUser(session.user.id, {
+            email: session.user.email,
+            created_at: session.user.created_at,
+          });
           try {
             await Promise.all([
               checkAdminRole(session.user.id).catch(() => {}),
               checkSubscription(session.user.id, session.access_token).catch(() => {}),
               checkOnboardingStatus(session.user.id).catch(() => {}),
             ]);
-          } catch (err) {
-            // Ignore errors - individual checks handle their own state
+          } catch {
+            // Individual checks handle their own state
           }
         } else if (!session?.user) {
           setIsAdmin(false);
@@ -258,12 +283,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           setHasMentorshipGuided(false);
           setHasCompletedOnboarding(false);
         }
-
-        // ALWAYS set loading to false
         setLoading(false);
       })
       .catch(() => {
-        setLoading(false);
+        if (initialLoadRef.current) {
+          initialLoadRef.current = false;
+          setLoading(false);
+        }
       });
 
     return () => {
@@ -290,13 +316,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setSession(data.session);
       setUser(data.session.user);
 
-      // Identify user in PostHog (dynamic import to defer analytics bundle)
-      import("@/lib/posthog").then(({ identifyUser }) =>
-        identifyUser(data.session.user.id, {
-          email: data.session.user.email,
-          created_at: data.session.user.created_at,
-        })
-      );
+      identifyUser(data.session.user.id, {
+        email: data.session.user.email,
+        created_at: data.session.user.created_at,
+      });
     }
   };
 
@@ -332,7 +355,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
 
       // Reset PostHog user
-      import("@/lib/posthog").then(({ resetUser }) => resetUser());
+      resetUser();
 
       // Always clear local state
       setIsAdmin(false);
@@ -345,7 +368,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setSession(null);
     } catch (error) {
       // Reset PostHog user even on error
-      import("@/lib/posthog").then(({ resetUser }) => resetUser());
+      resetUser();
 
       // Clear state even on error
       setIsAdmin(false);
