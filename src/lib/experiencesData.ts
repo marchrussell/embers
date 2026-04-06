@@ -19,17 +19,17 @@ const AUFI_ADDRESS = "AUFI, 20 Eastcastle St, London W1W 8DB";
 
 export const onlineExperiences: EventSchedule[] = [
   {
-    id: "unwind-rest",
-    title: "Unwind & Rest",
-    subtitle: "Short nightly resets to settle your mind and ease your body.",
+    id: "guest-session",
+    title: "Guest Session",
+    subtitle: "A special session with a guest teacher.",
     recurrence: {
-      type: "weekly",
-      weekdays: [WEEKDAYS.MONDAY],
+      type: "nthDay",
+      day: 4, // Thursday
     },
     time: "20:45",
     timezone: "GMT",
     duration: "15 mins",
-    recurrenceLabel: "Every Monday",
+    recurrenceLabel: "Every Thursday of the month",
     cta: "Join on Instagram",
     ctaLink: "https://www.instagram.com/embers.io",
     image: unwindResetImg,
@@ -42,12 +42,12 @@ export const onlineExperiences: EventSchedule[] = [
     subtitle: "A live space to pause, settle your system, and realign mid-week.",
     recurrence: {
       type: "weekly",
-      weekdays: [WEEKDAYS.TUESDAY],
+      weekdays: [WEEKDAYS.SUNDAY],
     },
     time: "19:00",
     timezone: "GMT",
     duration: "30 mins",
-    recurrenceLabel: "Every Tuesday",
+    recurrenceLabel: "Live every Sunday",
     cta: "Enter Space",
     ctaLink: "",
     image: weeklyResetImg,
@@ -60,13 +60,13 @@ export const onlineExperiences: EventSchedule[] = [
     subtitle: "A longer, spacious session to soften tension and reconnect with yourself.",
     recurrence: {
       type: "nthWeekday",
-      weekday: WEEKDAYS.SUNDAY,
-      nth: 2, // 2nd Sunday
+      weekday: WEEKDAYS.SATURDAY,
+      nth: 1, // 1st Saturday
     },
-    time: "19:30",
+    time: "10:00",
     timezone: "GMT",
     duration: "90 mins",
-    recurrenceLabel: "Every 2nd Sunday",
+    recurrenceLabel: "First Saturday of the month",
     cta: "Enter Space",
     ctaLink: "",
     image: monthlyBreathOnlineImg,
