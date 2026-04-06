@@ -181,7 +181,6 @@ const AdminPrograms = () => {
       image_url: formData.image_url,
       category_id: null,
       is_published: formData.is_published,
-      lesson_count: selectedClasses.length,
       duration_days: formData.duration_days ? parseInt(formData.duration_days) : null,
     };
 
