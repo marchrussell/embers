@@ -158,23 +158,31 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   useEffect(() => {
+    const log = (...args: unknown[]) => console.debug("[auth]", ...args);
+
     // Runs the three DB checks in parallel. Defined inside the effect so it doesn't
     // need to be listed as a dependency (it's only called from within this effect).
     const runAuthChecks = async (userId: string, accessToken?: string) => {
+      log("runAuthChecks start", { userId });
       await Promise.all([
         checkAdminRole(userId).catch(() => {}),
         checkSubscription(userId, accessToken).catch(() => {}),
         checkOnboardingStatus(userId).catch(() => {}),
       ]);
+      log("runAuthChecks done");
     };
+
     // Safety timeout — last-resort fallback if neither INITIAL_SESSION nor getSession() resolves
     safetyTimeoutRef.current = setTimeout(() => {
+      log("safety timeout fired — forcing loading=false");
       setLoading(false);
     }, 3000);
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
+      log("onAuthStateChange", event, { hasSession: !!session, userId: session?.user?.id });
+
       // INITIAL_SESSION fires when the listener is registered with the session read
       // directly from localStorage — no server round-trip. Handling it here (instead of
       // relying on getSession()) ensures second-tab loads work even when getSession()
@@ -189,6 +197,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setUser(session?.user ?? null);
 
         if (session?.user && !authCheckedRef.current) {
+          log("INITIAL_SESSION: user found, running auth checks");
           authCheckedRef.current = true;
           identifyUser(session.user.id, {
             email: session.user.email,
@@ -196,17 +205,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           });
           await runAuthChecks(session.user.id, session.access_token);
         } else if (!session?.user) {
+          log("INITIAL_SESSION: no session — clearing auth state");
           clearAuthState();
+        } else {
+          log("INITIAL_SESSION: authCheckedRef already true, skipping checks");
         }
         setLoading(false);
         return;
       }
 
       // Skip all other events until INITIAL_SESSION has been processed
-      if (initialLoadRef.current) return;
+      if (initialLoadRef.current) {
+        log("skipping event — initialLoad not complete yet");
+        return;
+      }
 
       // On token refresh, just update session/user — no need to re-run DB checks
       if (event === "TOKEN_REFRESHED") {
+        log("TOKEN_REFRESHED: updating session/user only");
         setSession(session);
         setUser(session?.user ?? null);
         return;
@@ -216,6 +232,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(session?.user ?? null);
 
       if (session?.user) {
+        log("SIGNED_IN: running auth checks");
         authCheckedRef.current = true;
         setLoading(true);
         identifyUser(session.user.id, {
@@ -225,6 +242,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         await runAuthChecks(session.user.id, session.access_token);
         setLoading(false);
       } else {
+        log("SIGNED_OUT: clearing auth state");
         authCheckedRef.current = false;
         clearAuthState();
         setLoading(false);
@@ -238,9 +256,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // fresh session after its own token refresh.
     const handleStorageEvent = async (event: StorageEvent) => {
       if (!event.key?.endsWith("-auth-token")) return;
+      log("storage event", { key: event.key, hasNewValue: !!event.newValue });
 
       if (!event.newValue) {
-        // Another tab signed out
+        log("storage: sign-out detected from another tab");
         setUser(null);
         setSession(null);
         clearAuthState();
@@ -254,13 +273,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       try {
         const parsed = JSON.parse(event.newValue);
         if (parsed?.access_token && parsed?.refresh_token) {
+          log("storage: calling setSession with tokens from another tab");
           await supabase.auth.setSession({
             access_token: parsed.access_token,
             refresh_token: parsed.refresh_token,
           });
+        } else {
+          log("storage: parsed value missing access_token or refresh_token", Object.keys(parsed ?? {}));
         }
-      } catch {
-        // Ignore malformed localStorage values
+      } catch (err) {
+        log("storage: failed to parse newValue", err);
       }
     };
 
@@ -272,7 +294,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     supabase.auth
       .getSession()
       .then(async ({ data: { session } }) => {
+        log("getSession resolved", { hasSession: !!session, initialLoadPending: initialLoadRef.current });
         if (!initialLoadRef.current) return;
+        log("getSession fallback active — INITIAL_SESSION did not fire");
         if (safetyTimeoutRef.current) {
           clearTimeout(safetyTimeoutRef.current);
           safetyTimeoutRef.current = null;
@@ -292,7 +316,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
         setLoading(false);
       })
-      .catch(() => {
+      .catch((err) => {
+        log("getSession error", err);
         if (initialLoadRef.current) {
           initialLoadRef.current = false;
           setLoading(false);
