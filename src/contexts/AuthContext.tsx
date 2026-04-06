@@ -293,7 +293,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             refresh_token: parsed.refresh_token,
           });
         } else {
-          log("storage: parsed value missing access_token or refresh_token", Object.keys(parsed ?? {}));
+          log(
+            "storage: parsed value missing access_token or refresh_token",
+            Object.keys(parsed ?? {})
+          );
         }
       } catch (err) {
         log("storage: failed to parse newValue", err);
@@ -308,7 +311,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     supabase.auth
       .getSession()
       .then(async ({ data: { session } }) => {
-        log("getSession resolved", { hasSession: !!session, initialLoadPending: initialLoadRef.current });
+        log("getSession resolved", {
+          hasSession: !!session,
+          initialLoadPending: initialLoadRef.current,
+        });
         if (!initialLoadRef.current) return;
         log("getSession fallback active — INITIAL_SESSION did not fire");
         if (safetyTimeoutRef.current) {

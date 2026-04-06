@@ -47,11 +47,7 @@ export interface IconButtonProps
 
 function IconButton({ className, variant, size, ref, ...props }: IconButtonProps) {
   return (
-    <button
-      className={cn(iconButtonVariants({ variant, size, className }))}
-      ref={ref}
-      {...props}
-    />
+    <button className={cn(iconButtonVariants({ variant, size, className }))} ref={ref} {...props} />
   );
 }
 IconButton.displayName = "IconButton";

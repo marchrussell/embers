@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { lazy, Suspense } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
 import { AdminRoute } from "@/components/AdminRoute";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
@@ -202,14 +202,63 @@ function AppContent() {
             <Route path="/live/:sessionId" element={<LiveSessionRoom />} />
 
             {/* Admin routes */}
-            <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
-            <Route path="/admin/classes" element={<AdminRoute><AdminClasses /></AdminRoute>} />
-            <Route path="/admin/programs" element={<AdminRoute><AdminPrograms /></AdminRoute>} />
-            <Route path="/admin/categories" element={<AdminRoute><AdminCategories /></AdminRoute>} />
-            <Route path="/admin/live-sessions" element={<AdminRoute><AdminLiveSessions /></AdminRoute>} />
+            <Route
+              path="/admin"
+              element={
+                <AdminRoute>
+                  <AdminDashboard />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/classes"
+              element={
+                <AdminRoute>
+                  <AdminClasses />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/programs"
+              element={
+                <AdminRoute>
+                  <AdminPrograms />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/categories"
+              element={
+                <AdminRoute>
+                  <AdminCategories />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/live-sessions"
+              element={
+                <AdminRoute>
+                  <AdminLiveSessions />
+                </AdminRoute>
+              }
+            />
 
-            <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
-            <Route path="/admin/event-bookings" element={<AdminRoute><AdminExperienceBookings /></AdminRoute>} />
+            <Route
+              path="/admin/users"
+              element={
+                <AdminRoute>
+                  <AdminUsers />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/event-bookings"
+              element={
+                <AdminRoute>
+                  <AdminExperienceBookings />
+                </AdminRoute>
+              }
+            />
 
             {/* 404 */}
             <Route path="*" element={<NotFound />} />

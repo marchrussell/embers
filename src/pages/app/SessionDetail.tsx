@@ -194,7 +194,9 @@ export default function SessionDetailModal({
                       {session.teacher_name && <p>{session.teacher_name}</p>}
                       <div className="flex items-center gap-1.5">
                         {session.technique && <p>{session.technique}</p>}
-                        {session.duration_minutes != null && <p> • {session.duration_minutes} min</p>}
+                        {session.duration_minutes != null && (
+                          <p> • {session.duration_minutes} min</p>
+                        )}
                       </div>
                       {session.intensity && <p>{session.intensity}</p>}
                     </div>
@@ -307,7 +309,12 @@ export default function SessionDetailModal({
                             <div className="mt-4 space-y-4 border-t border-white/[0.08] pt-4">
                               {/* Practice safely */}
                               <p className="text-[13px] font-light leading-relaxed text-white/70 md:text-sm">
-                                Practice in a safe, comfortable space - never in water, while driving, or operating machinery. Consult your doctor if you have health conditions or concerns and do not practice breath holds or fast-paced breathing if pregnant, or if you have epilepsy, serious mental health conditions, or significant medical issues. Always listen to your body and move at your own pace.
+                                Practice in a safe, comfortable space - never in water, while
+                                driving, or operating machinery. Consult your doctor if you have
+                                health conditions or concerns and do not practice breath holds or
+                                fast-paced breathing if pregnant, or if you have epilepsy, serious
+                                mental health conditions, or significant medical issues. Always
+                                listen to your body and move at your own pace.
                               </p>
 
                               {/* Full disclosure link */}

@@ -8,7 +8,11 @@ import { Dialog, DialogPortal } from "@/components/ui/dialog";
 import { GlowButton } from "@/components/ui/glow-button";
 import { supabase } from "@/integrations/supabase/client";
 import { analytics } from "@/lib/posthog";
-import { SUBSCRIPTION_BENEFITS, SUBSCRIPTION_DISPLAY_PRICES, SUBSCRIPTION_PRICES } from "@/lib/stripePrices";
+import {
+  SUBSCRIPTION_BENEFITS,
+  SUBSCRIPTION_DISPLAY_PRICES,
+  SUBSCRIPTION_PRICES,
+} from "@/lib/stripePrices";
 
 interface SubscriptionModalProps {
   open: boolean;

@@ -40,7 +40,11 @@ function ContextMenuSubTrigger({
 }
 ContextMenuSubTrigger.displayName = ContextMenuPrimitive.SubTrigger.displayName;
 
-function ContextMenuSubContent({ className, ref, ...props }: React.ComponentProps<typeof ContextMenuPrimitive.SubContent>) {
+function ContextMenuSubContent({
+  className,
+  ref,
+  ...props
+}: React.ComponentProps<typeof ContextMenuPrimitive.SubContent>) {
   return (
     <ContextMenuPrimitive.SubContent
       ref={ref}
@@ -54,7 +58,11 @@ function ContextMenuSubContent({ className, ref, ...props }: React.ComponentProp
 }
 ContextMenuSubContent.displayName = ContextMenuPrimitive.SubContent.displayName;
 
-function ContextMenuContent({ className, ref, ...props }: React.ComponentProps<typeof ContextMenuPrimitive.Content>) {
+function ContextMenuContent({
+  className,
+  ref,
+  ...props
+}: React.ComponentProps<typeof ContextMenuPrimitive.Content>) {
   return (
     <ContextMenuPrimitive.Portal>
       <ContextMenuPrimitive.Content
@@ -118,7 +126,12 @@ function ContextMenuCheckboxItem({
 }
 ContextMenuCheckboxItem.displayName = ContextMenuPrimitive.CheckboxItem.displayName;
 
-function ContextMenuRadioItem({ className, children, ref, ...props }: React.ComponentProps<typeof ContextMenuPrimitive.RadioItem>) {
+function ContextMenuRadioItem({
+  className,
+  children,
+  ref,
+  ...props
+}: React.ComponentProps<typeof ContextMenuPrimitive.RadioItem>) {
   return (
     <ContextMenuPrimitive.RadioItem
       ref={ref}
@@ -148,14 +161,22 @@ function ContextMenuLabel({
   return (
     <ContextMenuPrimitive.Label
       ref={ref}
-      className={cn("px-2 py-1.5 text-sm font-semibold text-foreground", inset && "pl-8", className)}
+      className={cn(
+        "px-2 py-1.5 text-sm font-semibold text-foreground",
+        inset && "pl-8",
+        className
+      )}
       {...props}
     />
   );
 }
 ContextMenuLabel.displayName = ContextMenuPrimitive.Label.displayName;
 
-function ContextMenuSeparator({ className, ref, ...props }: React.ComponentProps<typeof ContextMenuPrimitive.Separator>) {
+function ContextMenuSeparator({
+  className,
+  ref,
+  ...props
+}: React.ComponentProps<typeof ContextMenuPrimitive.Separator>) {
   return (
     <ContextMenuPrimitive.Separator
       ref={ref}

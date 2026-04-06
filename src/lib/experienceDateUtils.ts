@@ -233,15 +233,8 @@ export function getNextDateFromConfig(config: LiveSessionConfigRecurrence): Date
     return getNextEventDate({ type: "weekly", weekdays: config.weekdays }, time);
   }
 
-  if (
-    config.recurrence_type === "nthWeekday" &&
-    config.weekday != null &&
-    config.nth != null
-  ) {
-    return getNextEventDate(
-      { type: "nthWeekday", weekday: config.weekday, nth: config.nth },
-      time
-    );
+  if (config.recurrence_type === "nthWeekday" && config.weekday != null && config.nth != null) {
+    return getNextEventDate({ type: "nthWeekday", weekday: config.weekday, nth: config.nth }, time);
   }
 
   return null;

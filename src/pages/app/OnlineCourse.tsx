@@ -54,7 +54,9 @@ const OnlineCourse = () => {
 
       const { data: classesData, error: classesError } = await supabase
         .from("classes")
-        .select("id, title, description, short_description, duration_minutes, order_index, image_url, teacher_name")
+        .select(
+          "id, title, description, short_description, duration_minutes, order_index, image_url, teacher_name"
+        )
         .eq("program_id", programData.id)
         .order("order_index");
 
@@ -68,7 +70,7 @@ const OnlineCourse = () => {
     enabled: !!slug,
   });
 
-  console.log('Course Data:', data);
+  console.log("Course Data:", data);
 
   useEffect(() => {
     if (isError) toast.error("Unable to load course");

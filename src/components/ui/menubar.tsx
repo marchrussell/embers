@@ -28,7 +28,11 @@ function Menubar({ className, ref, ...props }: React.ComponentProps<typeof Menub
 }
 Menubar.displayName = MenubarPrimitive.Root.displayName;
 
-function MenubarTrigger({ className, ref, ...props }: React.ComponentProps<typeof MenubarPrimitive.Trigger>) {
+function MenubarTrigger({
+  className,
+  ref,
+  ...props
+}: React.ComponentProps<typeof MenubarPrimitive.Trigger>) {
   return (
     <MenubarPrimitive.Trigger
       ref={ref}
@@ -66,7 +70,11 @@ function MenubarSubTrigger({
 }
 MenubarSubTrigger.displayName = MenubarPrimitive.SubTrigger.displayName;
 
-function MenubarSubContent({ className, ref, ...props }: React.ComponentProps<typeof MenubarPrimitive.SubContent>) {
+function MenubarSubContent({
+  className,
+  ref,
+  ...props
+}: React.ComponentProps<typeof MenubarPrimitive.SubContent>) {
   return (
     <MenubarPrimitive.SubContent
       ref={ref}
@@ -154,7 +162,12 @@ function MenubarCheckboxItem({
 }
 MenubarCheckboxItem.displayName = MenubarPrimitive.CheckboxItem.displayName;
 
-function MenubarRadioItem({ className, children, ref, ...props }: React.ComponentProps<typeof MenubarPrimitive.RadioItem>) {
+function MenubarRadioItem({
+  className,
+  children,
+  ref,
+  ...props
+}: React.ComponentProps<typeof MenubarPrimitive.RadioItem>) {
   return (
     <MenubarPrimitive.RadioItem
       ref={ref}
@@ -191,7 +204,11 @@ function MenubarLabel({
 }
 MenubarLabel.displayName = MenubarPrimitive.Label.displayName;
 
-function MenubarSeparator({ className, ref, ...props }: React.ComponentProps<typeof MenubarPrimitive.Separator>) {
+function MenubarSeparator({
+  className,
+  ref,
+  ...props
+}: React.ComponentProps<typeof MenubarPrimitive.Separator>) {
   return (
     <MenubarPrimitive.Separator
       ref={ref}

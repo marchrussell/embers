@@ -10,7 +10,12 @@ const SelectGroup = SelectPrimitive.Group;
 
 const SelectValue = SelectPrimitive.Value;
 
-function SelectTrigger({ className, children, ref, ...props }: React.ComponentProps<typeof SelectPrimitive.Trigger>) {
+function SelectTrigger({
+  className,
+  children,
+  ref,
+  ...props
+}: React.ComponentProps<typeof SelectPrimitive.Trigger>) {
   return (
     <SelectPrimitive.Trigger
       ref={ref}
@@ -29,7 +34,11 @@ function SelectTrigger({ className, children, ref, ...props }: React.ComponentPr
 }
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 
-function SelectScrollUpButton({ className, ref, ...props }: React.ComponentProps<typeof SelectPrimitive.ScrollUpButton>) {
+function SelectScrollUpButton({
+  className,
+  ref,
+  ...props
+}: React.ComponentProps<typeof SelectPrimitive.ScrollUpButton>) {
   return (
     <SelectPrimitive.ScrollUpButton
       ref={ref}
@@ -42,7 +51,11 @@ function SelectScrollUpButton({ className, ref, ...props }: React.ComponentProps
 }
 SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName;
 
-function SelectScrollDownButton({ className, ref, ...props }: React.ComponentProps<typeof SelectPrimitive.ScrollDownButton>) {
+function SelectScrollDownButton({
+  className,
+  ref,
+  ...props
+}: React.ComponentProps<typeof SelectPrimitive.ScrollDownButton>) {
   return (
     <SelectPrimitive.ScrollDownButton
       ref={ref}
@@ -92,7 +105,11 @@ function SelectContent({
 }
 SelectContent.displayName = SelectPrimitive.Content.displayName;
 
-function SelectLabel({ className, ref, ...props }: React.ComponentProps<typeof SelectPrimitive.Label>) {
+function SelectLabel({
+  className,
+  ref,
+  ...props
+}: React.ComponentProps<typeof SelectPrimitive.Label>) {
   return (
     <SelectPrimitive.Label
       ref={ref}
@@ -103,7 +120,12 @@ function SelectLabel({ className, ref, ...props }: React.ComponentProps<typeof S
 }
 SelectLabel.displayName = SelectPrimitive.Label.displayName;
 
-function SelectItem({ className, children, ref, ...props }: React.ComponentProps<typeof SelectPrimitive.Item>) {
+function SelectItem({
+  className,
+  children,
+  ref,
+  ...props
+}: React.ComponentProps<typeof SelectPrimitive.Item>) {
   return (
     <SelectPrimitive.Item
       ref={ref}
@@ -125,7 +147,11 @@ function SelectItem({ className, children, ref, ...props }: React.ComponentProps
 }
 SelectItem.displayName = SelectPrimitive.Item.displayName;
 
-function SelectSeparator({ className, ref, ...props }: React.ComponentProps<typeof SelectPrimitive.Separator>) {
+function SelectSeparator({
+  className,
+  ref,
+  ...props
+}: React.ComponentProps<typeof SelectPrimitive.Separator>) {
   return (
     <SelectPrimitive.Separator
       ref={ref}

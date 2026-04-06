@@ -18,7 +18,7 @@ export const guestSessionImg = getCloudImageUrl(CLOUD_IMAGES.unwindReset);
 const AUFI_ADDRESS = "AUFI, 20 Eastcastle St, London W1W 8DB";
 
 export const onlineExperiences: EventSchedule[] = [
-{
+  {
     id: "unwind-rest",
     title: "Unwind & Rest",
     subtitle: "Short nightly resets to settle your mind and ease your body.",
@@ -35,7 +35,7 @@ export const onlineExperiences: EventSchedule[] = [
     image: unwindResetImg,
     eventType: "free",
     format: "Online",
-   },
+  },
   {
     id: "weekly-reset",
     title: "Weekly Reset",
@@ -73,8 +73,7 @@ export const onlineExperiences: EventSchedule[] = [
     eventType: "online-member",
     format: "For Online Members",
   },
-]
-
+];
 
 export const experiencesData: EventSchedule[] = [
   {

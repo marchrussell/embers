@@ -76,14 +76,12 @@ const Online = () => {
 
       const fallbackImage = SESSION_TYPE_IMAGES[config.session_type] ?? guestSessionImg;
 
-      const durationMinutes = config.duration
-        ? parseInt(config.duration) || 60
-        : 60;
+      const durationMinutes = config.duration ? parseInt(config.duration) || 60 : 60;
 
       // Enrich guest-session with live data from live_session_details
       if (config.session_type === "guest-session" && nextGuestTeacher) {
-        console.log('guest-session session type', config);
-        console.log('Enriching guest session with teacher:', nextGuestTeacher);
+        console.log("guest-session session type", config);
+        console.log("Enriching guest session with teacher:", nextGuestTeacher);
         return {
           sessionType: config.session_type,
           title: nextGuestTeacher.session_title || config.title,

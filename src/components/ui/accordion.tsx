@@ -6,12 +6,21 @@ import { cn } from "@/lib/utils";
 
 const Accordion = AccordionPrimitive.Root;
 
-function AccordionItem({ className, ref, ...props }: React.ComponentProps<typeof AccordionPrimitive.Item>) {
+function AccordionItem({
+  className,
+  ref,
+  ...props
+}: React.ComponentProps<typeof AccordionPrimitive.Item>) {
   return <AccordionPrimitive.Item ref={ref} className={cn("border-b", className)} {...props} />;
 }
 AccordionItem.displayName = "AccordionItem";
 
-function AccordionTrigger({ className, children, ref, ...props }: React.ComponentProps<typeof AccordionPrimitive.Trigger>) {
+function AccordionTrigger({
+  className,
+  children,
+  ref,
+  ...props
+}: React.ComponentProps<typeof AccordionPrimitive.Trigger>) {
   return (
     <AccordionPrimitive.Header className="flex">
       <AccordionPrimitive.Trigger
@@ -30,7 +39,12 @@ function AccordionTrigger({ className, children, ref, ...props }: React.Componen
 }
 AccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName;
 
-function AccordionContent({ className, children, ref, ...props }: React.ComponentProps<typeof AccordionPrimitive.Content>) {
+function AccordionContent({
+  className,
+  children,
+  ref,
+  ...props
+}: React.ComponentProps<typeof AccordionPrimitive.Content>) {
   return (
     <AccordionPrimitive.Content
       ref={ref}

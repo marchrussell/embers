@@ -979,10 +979,7 @@ const AdminLiveSessions = () => {
         };
 
         if (existingDetails) {
-          await db
-            .from("live_session_details")
-            .update(detailsPayload)
-            .eq("id", existingDetails.id);
+          await db.from("live_session_details").update(detailsPayload).eq("id", existingDetails.id);
         } else {
           await db.from("live_session_details").insert(detailsPayload);
         }
@@ -1162,9 +1159,7 @@ const AdminLiveSessions = () => {
             <Textarea
               placeholder="A brief description for this session..."
               value={detailsForm.short_description}
-              onChange={(e) =>
-                setDetailsForm((p) => ({ ...p, short_description: e.target.value }))
-              }
+              onChange={(e) => setDetailsForm((p) => ({ ...p, short_description: e.target.value }))}
             />
           </div>
 
@@ -1264,7 +1259,9 @@ const AdminLiveSessions = () => {
             <Label>Session Type *</Label>
             <Select
               value={sessionForm.session_type}
-              onValueChange={(v) => setSessionForm((p) => ({ ...p, session_type: v as SessionType }))}
+              onValueChange={(v) =>
+                setSessionForm((p) => ({ ...p, session_type: v as SessionType }))
+              }
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select a type" />
@@ -1348,7 +1345,7 @@ const AdminLiveSessions = () => {
           <div className="mb-4 flex items-center justify-between gap-4">
             {/* Filter tabs */}
             <div className="flex gap-2">
-              {(["all", ...configs.map((c) => c.session_type)]).map((type) => (
+              {["all", ...configs.map((c) => c.session_type)].map((type) => (
                 <button
                   key={type}
                   onClick={() => setTypeFilter(type)}
@@ -1529,11 +1526,10 @@ const AdminLiveSessions = () => {
         <TabsContent value="session-types">
           <div className="mb-6 flex items-center justify-between">
             <p className="text-sm text-muted-foreground">
-              Configure recurring session types. New types appear as options when creating instances.
+              Configure recurring session types. New types appear as options when creating
+              instances.
             </p>
-            <CreateConfigDialog
-              onCreated={(config) => setConfigs((prev) => [...prev, config])}
-            />
+            <CreateConfigDialog onCreated={(config) => setConfigs((prev) => [...prev, config])} />
           </div>
           {configsLoading ? (
             <AdminContentSkeleton showStats={false} variant="cards" />
@@ -1558,18 +1554,14 @@ const AdminLiveSessions = () => {
                         config={config}
                         onSaved={(updated) =>
                           setConfigs((prev) =>
-                            prev.map((c) =>
-                              c.session_type === updated.session_type ? updated : c
-                            )
+                            prev.map((c) => (c.session_type === updated.session_type ? updated : c))
                           )
                         }
                       />
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-1 text-sm text-muted-foreground">
-                    {config.subtitle && (
-                      <p className="line-clamp-2 text-xs">{config.subtitle}</p>
-                    )}
+                    {config.subtitle && <p className="line-clamp-2 text-xs">{config.subtitle}</p>}
                     {config.recurrence_label && (
                       <p>
                         <span className="font-medium text-foreground/70">Recurrence:</span>{" "}

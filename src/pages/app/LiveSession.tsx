@@ -287,9 +287,7 @@ const LiveSession = () => {
               </div>
             ) : (
               <div className="relative z-10 p-8 text-center">
-                <p className="mb-6 font-light text-[#E6DBC7]/40">
-                  Next live gathering begins in
-                </p>
+                <p className="mb-6 font-light text-[#E6DBC7]/40">Next live gathering begins in</p>
 
                 {/* Countdown */}
                 <div className="mb-12 flex items-center justify-center gap-4 md:gap-8">

@@ -12,7 +12,11 @@ import { GlowButton } from "@/components/ui/glow-button";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { analytics } from "@/lib/posthog";
-import { SUBSCRIPTION_BENEFITS, SUBSCRIPTION_DISPLAY_PRICES, SUBSCRIPTION_PRICES } from "@/lib/stripePrices";
+import {
+  SUBSCRIPTION_BENEFITS,
+  SUBSCRIPTION_DISPLAY_PRICES,
+  SUBSCRIPTION_PRICES,
+} from "@/lib/stripePrices";
 
 const Onboarding = () => {
   const [safetyAccepted, setSafetyAccepted] = useState(false);
@@ -136,7 +140,10 @@ const Onboarding = () => {
                 <div className="space-y-4 sm:space-y-5">
                   {SUBSCRIPTION_BENEFITS.map((benefit) => (
                     <div key={benefit} className="flex items-start gap-3">
-                      <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-white" strokeWidth={1.5} />
+                      <Check
+                        className="mt-0.5 h-5 w-5 flex-shrink-0 text-white"
+                        strokeWidth={1.5}
+                      />
                       <p className="text-sm font-light leading-relaxed text-white/90 sm:text-base">
                         {benefit}
                       </p>
@@ -177,7 +184,8 @@ const Onboarding = () => {
                         </span>
                       </div>
                       <p className="mb-6 text-sm font-light text-white/50">
-                        7-day free trial, then {SUBSCRIPTION_DISPLAY_PRICES.annual.unitAmountFormatted}/year
+                        7-day free trial, then{" "}
+                        {SUBSCRIPTION_DISPLAY_PRICES.annual.unitAmountFormatted}/year
                       </p>
                     </div>
 
@@ -205,7 +213,8 @@ const Onboarding = () => {
                       <span className="ml-1 text-sm text-white/60">/month</span>
                     </div>
                     <p className="mb-6 text-sm font-light text-white/50">
-                      7-day free trial, then {SUBSCRIPTION_DISPLAY_PRICES.monthly.unitAmountFormatted}/month
+                      7-day free trial, then{" "}
+                      {SUBSCRIPTION_DISPLAY_PRICES.monthly.unitAmountFormatted}/month
                     </p>
 
                     <GlowButton
@@ -271,7 +280,7 @@ const Onboarding = () => {
 
           <Button
             onClick={completeOnboarding}
-            className="w-full rounded-full border-2 border-white bg-white/5 font-light text-white backdrop-blur-md transition-all hover:bg-white/10 py-6 text-sm"
+            className="w-full rounded-full border-2 border-white bg-white/5 py-6 text-sm font-light text-white backdrop-blur-md transition-all hover:bg-white/10"
             disabled={!safetyAccepted || loading}
           >
             {loading ? <ButtonLoadingSpinner /> : "Continue to Library"}

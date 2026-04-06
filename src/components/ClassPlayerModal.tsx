@@ -98,11 +98,15 @@ export const ClassPlayerModal = ({
 
   // Initialize safety disclosure and audio when class data loads
   useEffect(() => {
-    console.log('[ClassPlayerModal] init effect:', { classDataId: classData?.id, open, skipSafetyModal });
+    console.log("[ClassPlayerModal] init effect:", {
+      classDataId: classData?.id,
+      open,
+      skipSafetyModal,
+    });
     if (!classData || !open) return;
 
     const shouldShowSafety = !skipSafetyModal && (classData.show_safety_reminder || false);
-    console.log('[ClassPlayerModal] setting shouldShowSafety:', shouldShowSafety);
+    console.log("[ClassPlayerModal] setting shouldShowSafety:", shouldShowSafety);
     setShowSafetyDisclosure(shouldShowSafety);
     if (!shouldShowSafety) {
       setHasStarted(true);
@@ -395,7 +399,14 @@ export const ClassPlayerModal = ({
     }
   };
 
-  console.log('[ClassPlayerModal] render:', { open, hasStarted, showSafetyDisclosure, classId, classData: !!classData, loading });
+  console.log("[ClassPlayerModal] render:", {
+    open,
+    hasStarted,
+    showSafetyDisclosure,
+    classId,
+    classData: !!classData,
+    loading,
+  });
 
   if (!open) return null;
 
@@ -408,7 +419,7 @@ export const ClassPlayerModal = ({
           if (!isOpen) handleClose();
         }}
       >
-        <DialogContent className="max-w-2xl rounded-xl border border-white/30 bg-black/75 backdrop-blur-xl z-[100]">
+        <DialogContent className="z-[100] max-w-2xl rounded-xl border border-white/30 bg-black/75 backdrop-blur-xl">
           <DialogHeader>
             <DialogTitle className="font-editorial text-4xl text-[#E6DBC7]">
               Breathwork Safety
@@ -442,7 +453,7 @@ export const ClassPlayerModal = ({
         }}
       >
         <DialogContent
-          className="relative h-[95vh] w-[98%] max-w-6xl overflow-hidden rounded-xl border border-white/30 bg-black/75 p-0 backdrop-blur-xl md:h-auto md:w-[95%] z-[100]"
+          className="relative z-[100] h-[95vh] w-[98%] max-w-6xl overflow-hidden rounded-xl border border-white/30 bg-black/75 p-0 backdrop-blur-xl md:h-auto md:w-[95%]"
           hideClose
         >
           <DialogTitle className="sr-only">{classData?.title || "Audio Player"}</DialogTitle>

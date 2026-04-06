@@ -56,7 +56,9 @@ const About = () => {
                 >
                   <div className="absolute inset-0 bg-black/60 backdrop-blur-2xl" />
                   <div className="relative z-10 space-y-4 p-6 text-base leading-relaxed text-foreground/90">
-                    <p className="font-editorial text-lg text-[#E6DBC7]">Hey, welcome to this space.</p>
+                    <p className="font-editorial text-lg text-[#E6DBC7]">
+                      Hey, welcome to this space.
+                    </p>
                     <p>
                       Everything we seek already lives within us. This studio is an invitation to
                       experience that for yourself.
@@ -214,9 +216,8 @@ const About = () => {
               </h2>
               <p className="text-base leading-relaxed text-foreground/90 md:text-lg">
                 Music is a passion of mine and I believe it's such a powerful tool for breathwork
-                sessions. We work closely with music producers to create bespoke music
-                specifically designed for each session, enhancing your journey and deepening the
-                experience.
+                sessions. We work closely with music producers to create bespoke music specifically
+                designed for each session, enhancing your journey and deepening the experience.
               </p>
             </div>
 
@@ -228,8 +229,8 @@ const About = () => {
               <div className="space-y-4 text-base leading-relaxed text-foreground/90 md:text-lg">
                 <p>
                   Start with whatever calls you. There's no wrong way to begin. Some people prefer
-                  to follow a structured program, while others choose sessions intuitively based
-                  on how they're feeling in the moment.
+                  to follow a structured program, while others choose sessions intuitively based on
+                  how they're feeling in the moment.
                 </p>
                 <p>
                   Take your time with each session. Each one builds on the last, and your only job

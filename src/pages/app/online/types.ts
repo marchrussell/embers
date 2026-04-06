@@ -19,8 +19,8 @@ export interface LiveSessionCardData {
   image: string;
   nextDate: string | null;
   isLive: boolean;
-  time: string | null;        // HH:MM 24h, e.g. "19:00"
-  durationMinutes: number;    // e.g. 30, 90 — defaults to 60
+  time: string | null; // HH:MM 24h, e.g. "19:00"
+  durationMinutes: number; // e.g. 30, 90 — defaults to 60
   teacherName?: string;
   teacherTitle?: string;
 }

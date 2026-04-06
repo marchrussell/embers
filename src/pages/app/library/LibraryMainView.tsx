@@ -110,7 +110,7 @@ const LibraryMainView = memo(
                           <div
                             key={category.id}
                             onClick={() => onCategorySelect(category)}
-                            className={`group relative cursor-pointer overflow-hidden rounded-2xl border border-[#E6DBC7]/15 shadow-glow transition-all hover:border-[#E6DBC7]/25 h-72 ${
+                            className={`group relative h-72 cursor-pointer overflow-hidden rounded-2xl border border-[#E6DBC7]/15 shadow-glow transition-all hover:border-[#E6DBC7]/25 ${
                               isLastOdd ? "col-span-2" : ""
                             }`}
                           >
@@ -252,7 +252,7 @@ const LibraryMainView = memo(
                 <p className="mb-2 text-lg font-light leading-relaxed md:text-xl">
                   Looking for deeper, guided support?
                 </p>
-                <p className="mb-6 text-base font-light leading-relaxed  md:text-lg">
+                <p className="mb-6 text-base font-light leading-relaxed md:text-lg">
                   For those wanting a more personalised, relational process, ARC mentorship is
                   available by application.
                 </p>

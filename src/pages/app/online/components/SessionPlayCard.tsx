@@ -78,7 +78,9 @@ const SessionPlayCard = memo(
             </div>
 
             {/* Favourite + Play buttons */}
-            <div className={`flex flex-shrink-0 items-center gap-2 md:gap-3 ${mobileStacked ? "self-end sm:self-center" : ""}`}>
+            <div
+              className={`flex flex-shrink-0 items-center gap-2 md:gap-3 ${mobileStacked ? "self-end sm:self-center" : ""}`}
+            >
               {sessionId && (
                 <button
                   onClick={(e) => {

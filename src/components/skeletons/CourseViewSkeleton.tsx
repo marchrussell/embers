@@ -40,7 +40,7 @@ export const CourseViewSkeleton = () => {
                   <Skeleton className="h-5 w-3/4 bg-[#E6DBC7]/15" />
                   <Skeleton className="h-4 w-full bg-[#E6DBC7]/10" />
                   <Skeleton className="h-4 w-2/3 bg-[#E6DBC7]/10" />
-                  <Skeleton className="h-3 w-1/3 bg-[#E6DBC7]/8" />
+                  <Skeleton className="bg-[#E6DBC7]/8 h-3 w-1/3" />
                 </div>
 
                 {/* Action buttons */}

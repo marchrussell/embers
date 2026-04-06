@@ -460,9 +460,7 @@ const AdminPrograms = () => {
           <div className="space-y-4 rounded-lg border border-white/20 p-5">
             <div>
               <Label className="text-white/80">Course Classes ({selectedClasses.length})</Label>
-              <p className="mt-1 text-sm text-white/50">
-                Select and order classes for this course
-              </p>
+              <p className="mt-1 text-sm text-white/50">Select and order classes for this course</p>
             </div>
 
             <Input

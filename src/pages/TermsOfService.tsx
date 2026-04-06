@@ -35,9 +35,9 @@ const TermsOfService = () => {
               <a href="https://www.marchrussell.com" className="underline hover:text-[#E6DBC7]">
                 www.marchrussell.com
               </a>
-              , our mobile and web applications (the "App"), Embers Studio membership, digital courses,
-              live events, and all related content, materials, and features (collectively, the
-              "Services").
+              , our mobile and web applications (the "App"), Embers Studio membership, digital
+              courses, live events, and all related content, materials, and features (collectively,
+              the "Services").
             </p>
 
             <p>

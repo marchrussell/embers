@@ -7,7 +7,11 @@ import { cn } from "@/lib/utils";
 
 const ToastProvider = ToastPrimitives.Provider;
 
-function ToastViewport({ className, ref, ...props }: React.ComponentProps<typeof ToastPrimitives.Viewport>) {
+function ToastViewport({
+  className,
+  ref,
+  ...props
+}: React.ComponentProps<typeof ToastPrimitives.Viewport>) {
   return (
     <ToastPrimitives.Viewport
       ref={ref}
@@ -53,7 +57,11 @@ function Toast({
 }
 Toast.displayName = ToastPrimitives.Root.displayName;
 
-function ToastAction({ className, ref, ...props }: React.ComponentProps<typeof ToastPrimitives.Action>) {
+function ToastAction({
+  className,
+  ref,
+  ...props
+}: React.ComponentProps<typeof ToastPrimitives.Action>) {
   return (
     <ToastPrimitives.Action
       ref={ref}
@@ -67,7 +75,11 @@ function ToastAction({ className, ref, ...props }: React.ComponentProps<typeof T
 }
 ToastAction.displayName = ToastPrimitives.Action.displayName;
 
-function ToastClose({ className, ref, ...props }: React.ComponentProps<typeof ToastPrimitives.Close>) {
+function ToastClose({
+  className,
+  ref,
+  ...props
+}: React.ComponentProps<typeof ToastPrimitives.Close>) {
   return (
     <ToastPrimitives.Close
       ref={ref}
@@ -84,14 +96,26 @@ function ToastClose({ className, ref, ...props }: React.ComponentProps<typeof To
 }
 ToastClose.displayName = ToastPrimitives.Close.displayName;
 
-function ToastTitle({ className, ref, ...props }: React.ComponentProps<typeof ToastPrimitives.Title>) {
+function ToastTitle({
+  className,
+  ref,
+  ...props
+}: React.ComponentProps<typeof ToastPrimitives.Title>) {
   return (
-    <ToastPrimitives.Title ref={ref} className={cn("text-sm font-semibold", className)} {...props} />
+    <ToastPrimitives.Title
+      ref={ref}
+      className={cn("text-sm font-semibold", className)}
+      {...props}
+    />
   );
 }
 ToastTitle.displayName = ToastPrimitives.Title.displayName;
 
-function ToastDescription({ className, ref, ...props }: React.ComponentProps<typeof ToastPrimitives.Description>) {
+function ToastDescription({
+  className,
+  ref,
+  ...props
+}: React.ComponentProps<typeof ToastPrimitives.Description>) {
   return (
     <ToastPrimitives.Description
       ref={ref}

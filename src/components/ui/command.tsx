@@ -34,7 +34,11 @@ const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
   );
 };
 
-function CommandInput({ className, ref, ...props }: React.ComponentProps<typeof CommandPrimitive.Input>) {
+function CommandInput({
+  className,
+  ref,
+  ...props
+}: React.ComponentProps<typeof CommandPrimitive.Input>) {
   return (
     <div className="flex items-center border-b border-white/10 px-4" cmdk-input-wrapper="">
       <Search className="mr-3 h-5 w-5 shrink-0 text-white/40" />
@@ -52,7 +56,11 @@ function CommandInput({ className, ref, ...props }: React.ComponentProps<typeof 
 
 CommandInput.displayName = CommandPrimitive.Input.displayName;
 
-function CommandList({ className, ref, ...props }: React.ComponentProps<typeof CommandPrimitive.List>) {
+function CommandList({
+  className,
+  ref,
+  ...props
+}: React.ComponentProps<typeof CommandPrimitive.List>) {
   return (
     <CommandPrimitive.List
       ref={ref}
@@ -76,7 +84,11 @@ function CommandEmpty({ ref, ...props }: React.ComponentProps<typeof CommandPrim
 
 CommandEmpty.displayName = CommandPrimitive.Empty.displayName;
 
-function CommandGroup({ className, ref, ...props }: React.ComponentProps<typeof CommandPrimitive.Group>) {
+function CommandGroup({
+  className,
+  ref,
+  ...props
+}: React.ComponentProps<typeof CommandPrimitive.Group>) {
   return (
     <CommandPrimitive.Group
       ref={ref}
@@ -91,7 +103,11 @@ function CommandGroup({ className, ref, ...props }: React.ComponentProps<typeof 
 
 CommandGroup.displayName = CommandPrimitive.Group.displayName;
 
-function CommandSeparator({ className, ref, ...props }: React.ComponentProps<typeof CommandPrimitive.Separator>) {
+function CommandSeparator({
+  className,
+  ref,
+  ...props
+}: React.ComponentProps<typeof CommandPrimitive.Separator>) {
   return (
     <CommandPrimitive.Separator
       ref={ref}
@@ -102,7 +118,11 @@ function CommandSeparator({ className, ref, ...props }: React.ComponentProps<typ
 }
 CommandSeparator.displayName = CommandPrimitive.Separator.displayName;
 
-function CommandItem({ className, ref, ...props }: React.ComponentProps<typeof CommandPrimitive.Item>) {
+function CommandItem({
+  className,
+  ref,
+  ...props
+}: React.ComponentProps<typeof CommandPrimitive.Item>) {
   return (
     <CommandPrimitive.Item
       ref={ref}

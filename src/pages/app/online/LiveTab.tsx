@@ -150,9 +150,7 @@ const LiveTab = ({
               handleOutlookCalendar(session);
             }}
             isCalendarOpen={openCalendarId === session.sessionType}
-            onCalendarOpenChange={(open) =>
-              setOpenCalendarId(open ? session.sessionType : null)
-            }
+            onCalendarOpenChange={(open) => setOpenCalendarId(open ? session.sessionType : null)}
           />
         ))}
 

@@ -43,9 +43,7 @@ function AlertTitle({ className, ref, ...props }: React.ComponentProps<"h5">) {
 AlertTitle.displayName = "AlertTitle";
 
 function AlertDescription({ className, ref, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div ref={ref} className={cn("text-sm [&_p]:leading-relaxed", className)} {...props} />
-  );
+  return <div ref={ref} className={cn("text-sm [&_p]:leading-relaxed", className)} {...props} />;
 }
 AlertDescription.displayName = "AlertDescription";
 

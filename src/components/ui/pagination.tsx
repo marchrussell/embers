@@ -15,9 +15,7 @@ const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
 Pagination.displayName = "Pagination";
 
 function PaginationContent({ className, ref, ...props }: React.ComponentProps<"ul">) {
-  return (
-    <ul ref={ref} className={cn("flex flex-row items-center gap-1", className)} {...props} />
-  );
+  return <ul ref={ref} className={cn("flex flex-row items-center gap-1", className)} {...props} />;
 }
 PaginationContent.displayName = "PaginationContent";
 

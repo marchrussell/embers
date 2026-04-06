@@ -14,7 +14,11 @@ function Avatar({ className, ref, ...props }: React.ComponentProps<typeof Avatar
 }
 Avatar.displayName = AvatarPrimitive.Root.displayName;
 
-function AvatarImage({ className, ref, ...props }: React.ComponentProps<typeof AvatarPrimitive.Image>) {
+function AvatarImage({
+  className,
+  ref,
+  ...props
+}: React.ComponentProps<typeof AvatarPrimitive.Image>) {
   return (
     <AvatarPrimitive.Image
       ref={ref}
@@ -25,7 +29,11 @@ function AvatarImage({ className, ref, ...props }: React.ComponentProps<typeof A
 }
 AvatarImage.displayName = AvatarPrimitive.Image.displayName;
 
-function AvatarFallback({ className, ref, ...props }: React.ComponentProps<typeof AvatarPrimitive.Fallback>) {
+function AvatarFallback({
+  className,
+  ref,
+  ...props
+}: React.ComponentProps<typeof AvatarPrimitive.Fallback>) {
   return (
     <AvatarPrimitive.Fallback
       ref={ref}

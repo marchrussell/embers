@@ -64,11 +64,7 @@ export interface GlowButtonProps
 
 function GlowButton({ className, variant, size, ref, ...props }: GlowButtonProps) {
   return (
-    <button
-      className={cn(glowButtonVariants({ variant, size, className }))}
-      ref={ref}
-      {...props}
-    />
+    <button className={cn(glowButtonVariants({ variant, size, className }))} ref={ref} {...props} />
   );
 }
 GlowButton.displayName = "GlowButton";

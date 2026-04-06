@@ -66,7 +66,7 @@ const AdminDashboard = () => {
         },
       ],
     },
-     {
+    {
       name: "Users & Applications",
       icon: Users,
       color: "#8B9DC3",
