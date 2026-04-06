@@ -60,6 +60,11 @@ const AdminDashboard = () => {
       color: "#7BA68C",
       items: [
         {
+          title: "In-Person Experiences",
+          path: "/admin/experiences",
+          description: "Create and manage recurring in-person experience configurations",
+        },
+        {
           title: "Event Bookings",
           path: "/admin/event-bookings",
           description: "View event bookings and attendee lists",

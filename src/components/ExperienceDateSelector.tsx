@@ -8,19 +8,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
-import { RecurrenceRule } from "@/lib/experienceDateUtils";
-import {
-  EVENT_CAPACITY_CONFIG,
-  formatTime,
-  getUpcomingEventDates,
-  ScheduledEventDate,
-} from "@/lib/experienceSchedule2026";
+import { formatTime, ScheduledEventDate } from "@/lib/experienceSchedule2026";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const db = supabase as any;
 
 interface Props {
   eventId: string;
   eventTitle: string;
-  recurrence: RecurrenceRule;
-  time: string;
+  time: string; // fallback time from config if date row has no override
   onDateSelect: (date: ScheduledEventDate | null) => void;
   selectedDate: ScheduledEventDate | null;
 }
@@ -30,19 +26,46 @@ interface BookingCount {
   quantity: number;
 }
 
+interface ExperienceDateRow {
+  id: string;
+  experience_type: string;
+  date: string;
+  time: string | null;
+  is_cancelled: boolean;
+  max_capacity: number;
+}
+
+function formatDateToReadable(date: Date): string {
+  return date.toLocaleDateString("en-GB", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
 export function EventDateSelector({
   eventId,
   eventTitle,
-  recurrence,
   time,
   onDateSelect,
   selectedDate,
 }: Props) {
+  const today = new Date().toISOString().split("T")[0];
+
   const { data: availableDates = [], isLoading: loading } = useQuery<ScheduledEventDate[]>({
-    queryKey: ["event-bookings", eventId, recurrence, time],
+    queryKey: ["experience-dates", eventId],
     queryFn: async () => {
-      const config = EVENT_CAPACITY_CONFIG[eventId] || { isOnline: true, maxCapacity: 9999 };
-      const dates = getUpcomingEventDates(recurrence, time, config.isOnline, 24);
+      const { data: dbDates } = await db
+        .from("experience_dates")
+        .select("*")
+        .eq("experience_type", eventId)
+        .eq("is_cancelled", false)
+        .gte("date", today)
+        .order("date", { ascending: true })
+        .limit(24);
+
+      const rows: ExperienceDateRow[] = dbDates ?? [];
 
       const { data: bookings } = await supabase
         .from("event_bookings")
@@ -56,8 +79,22 @@ export function EventDateSelector({
           counts[booking.event_date] = (counts[booking.event_date] || 0) + booking.quantity;
       });
 
-      return dates
-        .map((date) => ({ ...date, spotsRemaining: date.maxCapacity - (counts[date.date] || 0) }))
+      return rows
+        .map((row) => {
+          const d = new Date(row.date + "T00:00:00");
+          const resolvedTime = row.time ?? time;
+          const maxCapacity = row.max_capacity;
+          const spotsRemaining = maxCapacity - (counts[row.date] || 0);
+          return {
+            date: row.date,
+            displayDate: formatDateToReadable(d),
+            time: resolvedTime,
+            dayOfWeek: d.toLocaleDateString("en-GB", { weekday: "short" }),
+            isOnline: maxCapacity >= 9999,
+            maxCapacity,
+            spotsRemaining,
+          } satisfies ScheduledEventDate;
+        })
         .filter((date) => date.spotsRemaining > 0);
     },
     enabled: !!eventId,
@@ -113,3 +150,6 @@ export function EventDateSelector({
     </Select>
   );
 }
+
+// Re-export for backward compat
+export type { Props as EventDateSelectorProps };

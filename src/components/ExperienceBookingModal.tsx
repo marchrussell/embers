@@ -11,15 +11,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Label } from "@/components/ui/label";
 import { ModalCloseButton } from "@/components/ui/modal-close-button";
 import { supabase } from "@/integrations/supabase/client";
-import { RecurrenceRule } from "@/lib/experienceDateUtils";
-import { EVENT_CAPACITY_CONFIG, ScheduledEventDate } from "@/lib/experienceSchedule2026";
+import { ScheduledEventDate } from "@/lib/experienceSchedule2026";
 import { analytics } from "@/lib/posthog";
 
 interface EventData {
   id: string;
   title: string;
   subtitle: string;
-  recurrence: RecurrenceRule;
   time: string;
   price?: number; // Price in pence/cents
 }
@@ -72,8 +70,9 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
   const [selectedDate, setSelectedDate] = useState<ScheduledEventDate | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const config = event ? EVENT_CAPACITY_CONFIG[event.id] : null;
-  const maxTickets = config?.isOnline ? 10 : Math.min(15, selectedDate?.spotsRemaining || 15);
+  const maxTickets = selectedDate
+    ? Math.min(selectedDate.maxCapacity, selectedDate.spotsRemaining ?? selectedDate.maxCapacity)
+    : 1;
   const eventPrice = event ? EVENT_PRICES[event.id] || 0 : 0;
 
   useEffect(() => {
@@ -223,7 +222,6 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
               <EventDateSelector
                 eventId={event.id}
                 eventTitle={event.title}
-                recurrence={event.recurrence}
                 time={event.time}
                 selectedDate={selectedDate}
                 onDateSelect={setSelectedDate}

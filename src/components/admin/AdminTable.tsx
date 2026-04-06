@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { Children, ReactNode } from "react";
 
 import { TableRowSkeleton } from "@/components/skeletons/TableRowSkeleton";
 import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -48,7 +48,7 @@ export const AdminTable = ({ children, headers, emptyState, isLoading }: AdminTa
         <TableBody>
           {isLoading ? (
             <TableRowSkeleton columns={headers.length} rows={5} />
-          ) : emptyState ? (
+          ) : Children.count(children) === 0 && emptyState ? (
             <TableRow>
               <td colSpan={headers.length} className="py-12 text-center text-foreground/60">
                 {emptyState}

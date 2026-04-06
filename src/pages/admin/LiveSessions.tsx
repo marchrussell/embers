@@ -54,6 +54,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { NTH_LABELS, WEEKDAY_LABELS } from "./adminScheduleUtils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any;
@@ -118,14 +119,6 @@ const SESSION_TYPE_COLORS: Record<string, string> = {
 const getTypeColor = (type: string) =>
   SESSION_TYPE_COLORS[type] ?? "bg-muted text-muted-foreground border-border";
 
-const WEEKDAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-const NTH_LABELS: Record<number, string> = {
-  1: "1st",
-  2: "2nd",
-  3: "3rd",
-  4: "4th",
-};
 
 const DEFAULT_WHAT_TO_EXPECT = [
   "A guided, voice-led practice",

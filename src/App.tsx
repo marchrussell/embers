@@ -47,6 +47,7 @@ const AdminLiveSessions = lazy(() => import("./pages/admin/LiveSessions"));
 
 const AdminUsers = lazy(() => import("./pages/admin/Users"));
 const AdminExperienceBookings = lazy(() => import("./pages/admin/ExperienceBookings"));
+const AdminExperiences = lazy(() => import("./pages/admin/Experiences"));
 
 // Onboarding (lazy loaded)
 const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
@@ -256,6 +257,14 @@ function AppContent() {
               element={
                 <AdminRoute>
                   <AdminExperienceBookings />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/experiences"
+              element={
+                <AdminRoute>
+                  <AdminExperiences />
                 </AdminRoute>
               }
             />

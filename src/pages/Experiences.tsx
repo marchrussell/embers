@@ -12,6 +12,8 @@ import { TermsMicrocopy } from "@/components/TermsMicrocopy";
 import { GlowButton } from "@/components/ui/glow-button";
 import { IconButton } from "@/components/ui/icon-button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useQuery } from "@tanstack/react-query";
+
 import {
   CalendarEvent,
   downloadICalFile,
@@ -19,10 +21,68 @@ import {
   getOutlookCalendarUrl,
 } from "@/lib/calendarUtils";
 import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
-import { formatEventDate, getNextEventDate } from "@/lib/experienceDateUtils";
-import { EventSchedule, experiencesData } from "@/lib/experiencesData";
+import { formatEventDate, getNextEventDate, RecurrenceRule } from "@/lib/experienceDateUtils";
+import { EventSchedule } from "@/lib/experiencesData";
+import { supabase } from "@/integrations/supabase/client";
 
 const moreWaysToPracticeImg = getCloudImageUrl(CLOUD_IMAGES.moreWaysToPractice);
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const db = supabase as any;
+
+interface DbExperienceConfig {
+  experience_type: string;
+  title: string;
+  subtitle: string | null;
+  recurrence_type: "nthWeekday" | "weekly" | "nthDay" | null;
+  weekday: number | null;
+  nth: number | null;
+  weekdays: number[] | null;
+  nth_day: number | null;
+  time: string | null;
+  timezone: string;
+  duration: string | null;
+  recurrence_label: string | null;
+  cta_label: string | null;
+  cta_link: string | null;
+  event_type: string | null;
+  format: string | null;
+  location: string | null;
+  venue: string | null;
+  price: string | null;
+  image_url: string | null;
+}
+
+function toRecurrenceRule(row: DbExperienceConfig): RecurrenceRule | null {
+  if (row.recurrence_type === "nthWeekday" && row.weekday != null && row.nth != null)
+    return { type: "nthWeekday", weekday: row.weekday, nth: row.nth };
+  if (row.recurrence_type === "weekly")
+    return { type: "weekly", weekdays: row.weekdays ?? [] };
+  if (row.recurrence_type === "nthDay" && row.nth_day != null)
+    return { type: "nthDay", day: row.nth_day };
+  return null;
+}
+
+function dbToEventSchedule(row: DbExperienceConfig): EventSchedule {
+  return {
+    id: row.experience_type,
+    title: row.title,
+    subtitle: row.subtitle ?? "",
+    recurrence: toRecurrenceRule(row) ?? { type: "nthWeekday", weekday: 3, nth: 1 },
+    time: row.time ?? "20:00",
+    timezone: row.timezone,
+    duration: row.duration ?? "",
+    recurrenceLabel: row.recurrence_label ?? "",
+    cta: row.cta_label ?? "Book",
+    ctaLink: row.cta_link ?? "",
+    image: row.image_url ?? "",
+    eventType: (row.event_type ?? "paid") as EventSchedule["eventType"],
+    format: row.format ?? "",
+    location: row.location ?? "",
+    venue: row.venue ?? "",
+    price: row.price ?? "",
+  };
+}
 
 const Experiences = () => {
   const navigate = useNavigate();
@@ -30,6 +90,19 @@ const Experiences = () => {
   const [selectedEvent, setSelectedEvent] = useState<EventSchedule | null>(null);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
+
+  const { data: experiences = [] } = useQuery<EventSchedule[]>({
+    queryKey: ["experience_configs_public"],
+    queryFn: async () => {
+      const { data, error } = await db
+        .from("experience_configs")
+        .select("*")
+        .eq("is_active", true)
+        .order("created_at", { ascending: true });
+      if (error) throw error;
+      return (data as DbExperienceConfig[]).map(dbToEventSchedule);
+    },
+  });
 
   const handleBookEvent = (event: EventSchedule) => {
     // For Instagram live events, just open the link
@@ -61,7 +134,7 @@ const Experiences = () => {
   }, []);
 
   // Generate calendar event details from event data
-  const getCalendarEvent = (event: (typeof experiencesData)[0]): CalendarEvent => {
+  const getCalendarEvent = (event: EventSchedule): CalendarEvent => {
     const nextDate = getNextEventDate(event.recurrence, event.time);
     const [hours, minutes] = event.time.split(":").map(Number);
 
@@ -85,26 +158,26 @@ const Experiences = () => {
     };
   };
 
-  const handleDownloadICal = (event: (typeof experiencesData)[0]) => {
+  const handleDownloadICal = (event: EventSchedule) => {
     const calendarEvent = getCalendarEvent(event);
     const filename = event.title.replace(/\s+/g, "-").toLowerCase();
     downloadICalFile(calendarEvent, filename);
     setOpenCalendarId(null);
   };
 
-  const handleGoogleCalendar = (event: (typeof experiencesData)[0]) => {
+  const handleGoogleCalendar = (event: EventSchedule) => {
     const calendarEvent = getCalendarEvent(event);
     window.open(getGoogleCalendarUrl(calendarEvent), "_blank");
     setOpenCalendarId(null);
   };
 
-  const handleOutlookCalendar = (event: (typeof experiencesData)[0]) => {
+  const handleOutlookCalendar = (event: EventSchedule) => {
     const calendarEvent = getCalendarEvent(event);
     window.open(getOutlookCalendarUrl(calendarEvent), "_blank");
     setOpenCalendarId(null);
   };
 
-  const handleShare = (event: (typeof experiencesData)[0]) => {
+  const handleShare = (event: EventSchedule) => {
     const shareUrl = `${window.location.origin}/experiences#${event.id}`;
     const shareText = `Join March Russell for ${event.title} - ${event.subtitle}`;
 
@@ -152,7 +225,7 @@ const Experiences = () => {
               </p>
             </div>
             <div className="mx-auto max-w-[1600px] space-y-9 md:space-y-10 lg:space-y-12">
-              {experiencesData
+              {experiences
                 .filter((event) => {
                   const nextDate = getNextEventDate(event.recurrence, event.time);
                   return nextDate !== null;
@@ -389,7 +462,6 @@ const Experiences = () => {
               id: selectedEvent.id,
               title: selectedEvent.title,
               subtitle: selectedEvent.subtitle,
-              recurrence: selectedEvent.recurrence,
               time: selectedEvent.time,
             }}
           />
