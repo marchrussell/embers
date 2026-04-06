@@ -56,7 +56,6 @@ const OnlineCourse = () => {
         .from("classes")
         .select("id, title, description, short_description, duration_minutes, order_index, image_url, teacher_name")
         .eq("program_id", programData.id)
-        .eq("is_published", true)
         .order("order_index");
 
       if (classesError) throw classesError;

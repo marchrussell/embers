@@ -9,7 +9,6 @@ BEGIN
   SET lesson_count = (
     SELECT COUNT(*) FROM classes
     WHERE program_id = COALESCE(NEW.program_id, OLD.program_id)
-    AND is_published = true
   )
   WHERE id = COALESCE(NEW.program_id, OLD.program_id);
   RETURN NEW;
@@ -26,5 +25,5 @@ EXECUTE FUNCTION update_program_lesson_count();
 UPDATE programs p
 SET lesson_count = (
   SELECT COUNT(*) FROM classes c
-  WHERE c.program_id = p.id AND c.is_published = true
+  WHERE c.program_id = p.id
 );
