@@ -13,8 +13,6 @@ interface AuthContextType {
   isAdmin: boolean;
   isTestUser: boolean;
   hasSubscription: boolean;
-  hasMentorshipDiy: boolean;
-  hasMentorshipGuided: boolean;
   hasCompletedOnboarding: boolean;
   hasAcceptedSafetyDisclosure: boolean;
   signIn: (email: string, password: string) => Promise<void>;
@@ -35,8 +33,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isTestUser, setIsTestUser] = useState(false);
   const [hasSubscription, setHasSubscription] = useState(false);
-  const [hasMentorshipDiy, setHasMentorshipDiy] = useState(false);
-  const [hasMentorshipGuided, setHasMentorshipGuided] = useState(false);
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
   const [hasAcceptedSafetyDisclosure, setHasAcceptedSafetyDisclosure] = useState(false);
   const isCheckingSubscriptionRef = useRef(false);
@@ -54,22 +50,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (error || !data) {
         setIsAdmin(false);
         setIsTestUser(false);
-        setHasMentorshipDiy(false);
-        setHasMentorshipGuided(false);
         return false;
       }
 
       const roles = new Set(data.map((r: any) => r.role));
       setIsAdmin(roles.has("admin"));
       setIsTestUser(roles.has("test_user"));
-      setHasMentorshipDiy(roles.has("mentorship_diy") || roles.has("mentorship_guided"));
-      setHasMentorshipGuided(roles.has("mentorship_guided"));
       return true;
     } catch (err) {
       setIsAdmin(false);
       setIsTestUser(false);
-      setHasMentorshipDiy(false);
-      setHasMentorshipGuided(false);
       return false;
     }
   };
@@ -157,12 +147,29 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  // Resets all derived auth state (roles, subscription, onboarding).
+  // Called on sign-out and cross-tab sign-out detection.
+  const clearAuthState = () => {
+    setIsAdmin(false);
+    setIsTestUser(false);
+    setHasSubscription(false);
+    setHasCompletedOnboarding(false);
+    setHasAcceptedSafetyDisclosure(false);
+  };
+
   useEffect(() => {
-    // Safety timeout — fallback in case neither INITIAL_SESSION nor getSession() resolves
+    // Runs the three DB checks in parallel. Defined inside the effect so it doesn't
+    // need to be listed as a dependency (it's only called from within this effect).
+    const runAuthChecks = async (userId: string, accessToken?: string) => {
+      await Promise.all([
+        checkAdminRole(userId).catch(() => {}),
+        checkSubscription(userId, accessToken).catch(() => {}),
+        checkOnboardingStatus(userId).catch(() => {}),
+      ]);
+    };
+    // Safety timeout — last-resort fallback if neither INITIAL_SESSION nor getSession() resolves
     safetyTimeoutRef.current = setTimeout(() => {
-      if (loading) {
-        setLoading(false);
-      }
+      setLoading(false);
     }, 3000);
 
     const {
@@ -187,22 +194,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             email: session.user.email,
             created_at: session.user.created_at,
           });
-          try {
-            await Promise.all([
-              checkAdminRole(session.user.id).catch(() => {}),
-              checkSubscription(session.user.id, session.access_token).catch(() => {}),
-              checkOnboardingStatus(session.user.id).catch(() => {}),
-            ]);
-          } catch {
-            // Individual checks handle their own state
-          }
+          await runAuthChecks(session.user.id, session.access_token);
         } else if (!session?.user) {
-          setIsAdmin(false);
-          setIsTestUser(false);
-          setHasSubscription(false);
-          setHasMentorshipDiy(false);
-          setHasMentorshipGuided(false);
-          setHasCompletedOnboarding(false);
+          clearAuthState();
         }
         setLoading(false);
         return;
@@ -228,23 +222,49 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           email: session.user.email,
           created_at: session.user.created_at,
         });
-        await Promise.all([
-          checkAdminRole(session.user.id),
-          checkSubscription(session.user.id, session.access_token),
-          checkOnboardingStatus(session.user.id),
-        ]).catch(() => {});
+        await runAuthChecks(session.user.id, session.access_token);
         setLoading(false);
       } else {
         authCheckedRef.current = false;
-        setIsAdmin(false);
-        setIsTestUser(false);
-        setHasSubscription(false);
-        setHasMentorshipDiy(false);
-        setHasMentorshipGuided(false);
-        setHasCompletedOnboarding(false);
+        clearAuthState();
         setLoading(false);
       }
     });
+
+    // Cross-tab auth sync via storage events.
+    // The storage event fires in other tabs when localStorage changes — not in the
+    // tab that wrote it. This covers the case where INITIAL_SESSION fires with null
+    // (expired token, refresh race with another tab) and that tab later writes a
+    // fresh session after its own token refresh.
+    const handleStorageEvent = async (event: StorageEvent) => {
+      if (!event.key?.endsWith("-auth-token")) return;
+
+      if (!event.newValue) {
+        // Another tab signed out
+        setUser(null);
+        setSession(null);
+        clearAuthState();
+        authCheckedRef.current = false;
+        setLoading(false);
+        return;
+      }
+
+      // Another tab wrote a new/refreshed session. setSession() triggers SIGNED_IN
+      // in onAuthStateChange, which calls runAuthChecks and sets all auth state.
+      try {
+        const parsed = JSON.parse(event.newValue);
+        if (parsed?.access_token && parsed?.refresh_token) {
+          await supabase.auth.setSession({
+            access_token: parsed.access_token,
+            refresh_token: parsed.refresh_token,
+          });
+        }
+      } catch {
+        // Ignore malformed localStorage values
+      }
+    };
+
+    window.addEventListener("storage", handleStorageEvent);
 
     // getSession() is a safety fallback for environments where INITIAL_SESSION
     // may not fire. If INITIAL_SESSION already ran, initialLoadRef is false and
@@ -266,22 +286,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             email: session.user.email,
             created_at: session.user.created_at,
           });
-          try {
-            await Promise.all([
-              checkAdminRole(session.user.id).catch(() => {}),
-              checkSubscription(session.user.id, session.access_token).catch(() => {}),
-              checkOnboardingStatus(session.user.id).catch(() => {}),
-            ]);
-          } catch {
-            // Individual checks handle their own state
-          }
+          await runAuthChecks(session.user.id, session.access_token);
         } else if (!session?.user) {
-          setIsAdmin(false);
-          setIsTestUser(false);
-          setHasSubscription(false);
-          setHasMentorshipDiy(false);
-          setHasMentorshipGuided(false);
-          setHasCompletedOnboarding(false);
+          clearAuthState();
         }
         setLoading(false);
       })
@@ -295,8 +302,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return () => {
       if (safetyTimeoutRef.current) clearTimeout(safetyTimeoutRef.current);
       subscription.unsubscribe();
+      window.removeEventListener("storage", handleStorageEvent);
     };
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Removed auto-refresh to prevent session lock issues
   // Subscription is checked on login and can be manually refreshed if needed
@@ -354,29 +362,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         throw error;
       }
 
-      // Reset PostHog user
       resetUser();
-
-      // Always clear local state
-      setIsAdmin(false);
-      setIsTestUser(false);
-      setHasSubscription(false);
-      setHasMentorshipDiy(false);
-      setHasMentorshipGuided(false);
-      setHasCompletedOnboarding(false);
+      clearAuthState();
       setUser(null);
       setSession(null);
     } catch (error) {
-      // Reset PostHog user even on error
       resetUser();
-
-      // Clear state even on error
-      setIsAdmin(false);
-      setIsTestUser(false);
-      setHasSubscription(false);
-      setHasMentorshipDiy(false);
-      setHasMentorshipGuided(false);
-      setHasCompletedOnboarding(false);
+      clearAuthState();
       setUser(null);
       setSession(null);
       throw error;
@@ -411,8 +403,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         isAdmin,
         isTestUser,
         hasSubscription,
-        hasMentorshipDiy,
-        hasMentorshipGuided,
         hasCompletedOnboarding,
         hasAcceptedSafetyDisclosure,
         signIn,
