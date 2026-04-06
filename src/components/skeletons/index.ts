@@ -29,7 +29,7 @@ export { SessionCardSkeleton } from "./SessionCardSkeleton";
 
 // Player skeletons
 export { ClassPlayerSkeleton } from "./ClassPlayerSkeleton";
-export { CoursePlayerSkeleton } from "./CoursePlayerSkeleton";
+export { CourseViewSkeleton } from "./CourseViewSkeleton";
 export { SessionPlayerSkeleton } from "./SessionPlayerSkeleton";
 
 // Modal/content skeletons

@@ -8,7 +8,7 @@ import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { NavBar } from "@/components/NavBar";
 import OnlineFooter from "@/components/OnlineFooter";
 import OnlineHeader from "@/components/OnlineHeader";
-import { CoursePlayerSkeleton } from "@/components/skeletons";
+import { CourseViewSkeleton } from "@/components/skeletons";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { analytics } from "@/lib/posthog";
@@ -87,7 +87,7 @@ const OnlineCourse = () => {
   };
 
   if (loading) {
-    return <CoursePlayerSkeleton />;
+    return <CourseViewSkeleton />;
   }
 
   if (!course) {
