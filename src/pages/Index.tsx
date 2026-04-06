@@ -82,11 +82,11 @@ const Index = () => {
         </section>
 
         {/* Phone Mockups Section */}
-        <section className="bg-background pb-16 pt-24 md:pb-24 md:pt-32 lg:pb-32 lg:pt-48">
-          <div className="mx-auto w-full px-5 md:px-12 lg:px-20">
+        <section className="bg-background">
+          <div className="mx-auto w-full pt-12 px-5 md:px-12 lg:px-20 pb-20">
             <div>
               {/* Micro-heading above mockups - centered */}
-              <div className="px-5 pb-8 text-center sm:px-8 sm:pb-10 md:px-16 md:pb-12">
+              <div className="px-5 pb-8 text-center sm:px-8 sm:pb-10 md:px-16 md:py-20">
                 <p
                   className="text-center font-sans leading-[1.6] text-white"
                   style={{
@@ -148,7 +148,7 @@ const Index = () => {
         </section>
 
         {/* Mental Reset Course Card - White-lined curved box */}
-        <section className="w-full bg-background px-6 py-12 md:px-8 md:py-16 lg:px-12 lg:py-20">
+        <section className="w-full bg-background px-6 py-16 md:px-8 md:py-20 lg:px-12 lg:py-36">
           <div className="mx-auto max-w-[1400px] overflow-hidden rounded-2xl border border-white/50 shadow-glow-strong">
             <div className="grid min-h-[280px] sm:min-h-[320px] md:min-h-[380px] md:grid-cols-2">
               {/* Left: Image */}
@@ -220,7 +220,7 @@ const Index = () => {
         </section>
 
         {/* ========== EXPERIENCES ========== */}
-        <section className="relative overflow-hidden bg-background pb-16 md:py-28 lg:py-48">
+        <section className="relative overflow-hidden bg-background py-16 md:py-24 lg:py-32">
           <div className="relative z-10 mx-auto max-w-[1400px] px-6 md:px-10 lg:px-12">
             {/* Section Header - Centered */}
             <div className="mb-10 text-center md:mb-14">
@@ -320,8 +320,6 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Spacer after Contact Section */}
-        <div className="h-12 bg-background md:h-16 lg:h-20" />
       </main>
 
       <TermsMicrocopy />
