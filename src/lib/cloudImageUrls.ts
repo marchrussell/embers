@@ -101,6 +101,9 @@ export const CLOUD_IMAGES = {
   softeningTension: "9yrw19mqpxn-1772567950813.webp",
   triangleBreathing: "s4gtteeras-1773335509049.webp",
   sleepTransition: "os2kvez50f8-1772472742856.webp",
+
+  // Course images in program-images bucket
+  mentalReset: "ld5cp5y5xzk-1774964287293.webp",
 } as const;
 
 /**

@@ -14,10 +14,14 @@ import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
 import { formatEventDate, getNextEventDate } from "@/lib/experienceDateUtils";
 import { onlineExperiences } from "@/lib/experiencesData";
 
-const nervousSystemImg = getCloudImageUrl(CLOUD_IMAGES.nervousSystemReset, {
-  width: 960,
-  quality: 85,
-});
+const mentalResetImg = getCloudImageUrl(
+  CLOUD_IMAGES.mentalReset,
+  {
+    width: 960,
+    quality: 85,
+  },
+  "program-images"
+);
 
 const Index = () => {
   const location = useLocation();
@@ -143,15 +147,15 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Nervous System Program Card - White-lined curved box */}
+        {/* Mental Reset Course Card - White-lined curved box */}
         <section className="w-full bg-background px-6 py-12 md:px-8 md:py-16 lg:px-12 lg:py-20">
           <div className="mx-auto max-w-[1400px] overflow-hidden rounded-2xl border border-white/50 shadow-glow-strong">
             <div className="grid min-h-[280px] sm:min-h-[320px] md:min-h-[380px] md:grid-cols-2">
               {/* Left: Image */}
               <div className="relative min-h-[160px] sm:min-h-[180px] md:min-h-[380px]">
                 <OptimizedImage
-                  src={nervousSystemImg}
-                  alt="Nervous system program"
+                  src={mentalResetImg}
+                  alt="Mental Reset Course"
                   className="absolute inset-0 h-full w-full object-cover"
                   style={{
                     objectPosition: "center 65%",
@@ -176,7 +180,7 @@ const Index = () => {
                     fontWeight: 400,
                   }}
                 >
-                  Nervous System Reset
+                  Mental Reset
                 </h3>
                 <p
                   className="mb-5 font-light uppercase tracking-[0.1em] text-[#EC9037] sm:mb-6"
@@ -184,7 +188,7 @@ const Index = () => {
                     fontSize: "clamp(0.7rem, 0.8vw, 0.85rem)",
                   }}
                 >
-                  14-Day Course
+                  10-Day Course
                 </p>
                 <p
                   className="mb-5 text-white/90 sm:mb-6"
@@ -193,13 +197,12 @@ const Index = () => {
                     lineHeight: 1.65,
                   }}
                 >
-                  A guided 14-day reset designed to calm responses, soften emotional reactivity, and
-                  support your nervous system back toward balance.
+                  A guided reset to clear mental noise, reduce overstimulation, and restore clarity.
                 </p>
 
                 <Button
                   onClick={() => {
-                    window.open("/online", "_blank");
+                    window.open("/online/program/mental-reset", "_blank");
                   }}
                   className="inline-flex w-fit items-center justify-center rounded-full border border-white bg-transparent text-white transition-all hover:bg-white/10"
                   style={{
