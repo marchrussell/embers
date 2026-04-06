@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Label } from "@/components/ui/label";
 import { ModalCloseButton } from "@/components/ui/modal-close-button";
 import { supabase } from "@/integrations/supabase/client";
-import { ScheduledEventDate } from "@/lib/experienceSchedule2026";
+import { ScheduledEventDate } from "@/lib/experienceDateUtils";
 import { analytics } from "@/lib/posthog";
 
 interface EventData {
@@ -221,7 +221,6 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
               </Label>
               <EventDateSelector
                 eventId={event.id}
-                eventTitle={event.title}
                 time={event.time}
                 selectedDate={selectedDate}
                 onDateSelect={setSelectedDate}

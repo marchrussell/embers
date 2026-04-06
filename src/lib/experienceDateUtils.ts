@@ -211,6 +211,24 @@ export const WEEKDAYS = {
   SATURDAY: 6,
 } as const;
 
+export interface ScheduledEventDate {
+  date: string; // ISO date string (YYYY-MM-DD)
+  displayDate: string; // Human readable
+  time: string; // HH:MM
+  dayOfWeek: string;
+  spotsRemaining?: number;
+  isOnline: boolean;
+  maxCapacity: number;
+}
+
+export function formatTime(time: string): string {
+  const [hours, minutes] = time.split(":").map(Number);
+  const period = hours >= 12 ? "PM" : "AM";
+  const displayHours = hours % 12 || 12;
+  const displayMinutes = minutes.toString().padStart(2, "0");
+  return `${displayHours}:${displayMinutes} ${period}`;
+}
+
 // ── Live session config → next date ──────────────────────────────────────────
 
 interface LiveSessionConfigRecurrence {

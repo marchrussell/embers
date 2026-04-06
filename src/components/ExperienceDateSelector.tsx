@@ -8,14 +8,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
-import { formatTime, ScheduledEventDate } from "@/lib/experienceSchedule2026";
+import { formatTime, ScheduledEventDate } from "@/lib/experienceDateUtils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any;
 
 interface Props {
   eventId: string;
-  eventTitle: string;
   time: string; // fallback time from config if date row has no override
   onDateSelect: (date: ScheduledEventDate | null) => void;
   selectedDate: ScheduledEventDate | null;
@@ -46,7 +45,6 @@ function formatDateToReadable(date: Date): string {
 
 export function EventDateSelector({
   eventId,
-  eventTitle,
   time,
   onDateSelect,
   selectedDate,
