@@ -188,29 +188,33 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       // relying on getSession()) ensures second-tab loads work even when getSession()
       // races with another tab's concurrent token refresh.
       if (event === "INITIAL_SESSION") {
-        if (safetyTimeoutRef.current) {
-          clearTimeout(safetyTimeoutRef.current);
-          safetyTimeoutRef.current = null;
-        }
-        initialLoadRef.current = false;
-        setSession(session);
-        setUser(session?.user ?? null);
-
-        if (session?.user && !authCheckedRef.current) {
-          log("INITIAL_SESSION: user found, running auth checks");
-          authCheckedRef.current = true;
-          identifyUser(session.user.id, {
-            email: session.user.email,
-            created_at: session.user.created_at,
-          });
-          await runAuthChecks(session.user.id, session.access_token);
-        } else if (!session?.user) {
-          log("INITIAL_SESSION: no session — clearing auth state");
-          clearAuthState();
+        if (session?.user) {
+          // Valid session found in localStorage — handle immediately.
+          if (safetyTimeoutRef.current) {
+            clearTimeout(safetyTimeoutRef.current);
+            safetyTimeoutRef.current = null;
+          }
+          initialLoadRef.current = false;
+          setSession(session);
+          setUser(session.user);
+          if (!authCheckedRef.current) {
+            log("INITIAL_SESSION: user found, running auth checks");
+            authCheckedRef.current = true;
+            identifyUser(session.user.id, {
+              email: session.user.email,
+              created_at: session.user.created_at,
+            });
+            await runAuthChecks(session.user.id, session.access_token);
+          } else {
+            log("INITIAL_SESSION: authCheckedRef already true, skipping checks");
+          }
+          setLoading(false);
         } else {
-          log("INITIAL_SESSION: authCheckedRef already true, skipping checks");
+          // Null session — access token is likely expired.
+          // Don't mark initial load complete; let getSession() perform the server-side refresh.
+          // The safety timeout (already running) will unblock loading if getSession() also fails.
+          log("INITIAL_SESSION: no session — deferring to getSession() for token refresh recovery");
         }
-        setLoading(false);
         return;
       }
 
@@ -220,11 +224,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return;
       }
 
-      // On token refresh, just update session/user — no need to re-run DB checks
+      // On token refresh, update session/user. If INITIAL_SESSION fired with null
+      // (expired token), auth checks haven't run yet — run them now with the fresh token.
       if (event === "TOKEN_REFRESHED") {
-        log("TOKEN_REFRESHED: updating session/user only");
+        log("TOKEN_REFRESHED: updating session/user");
         setSession(session);
         setUser(session?.user ?? null);
+        if (session?.user && !authCheckedRef.current) {
+          log("TOKEN_REFRESHED: first auth — running checks");
+          authCheckedRef.current = true;
+          identifyUser(session.user.id, {
+            email: session.user.email,
+            created_at: session.user.created_at,
+          });
+          await runAuthChecks(session.user.id, session.access_token);
+        }
         return;
       }
 
