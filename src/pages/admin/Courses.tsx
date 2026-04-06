@@ -42,12 +42,14 @@ interface Class {
   duration_minutes: number | null;
 }
 
+// Courses references Programs table in Supabase, but we call it Courses in the UI for clarity to admins creating courses. Each course can have multiple classes (sessions).
+
 const AdminPrograms = () => {
   const { isAdmin, loading } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingProgram, setEditingProgram] = useState<Program | null>(null);
+  const [editingCourse, setEditingCourse] = useState<Program | null>(null);
   const [selectedClasses, setSelectedClasses] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const [classSearchQuery, setClassSearchQuery] = useState("");
@@ -69,7 +71,7 @@ const AdminPrograms = () => {
     }
   }, [isAdmin, loading, navigate]);
 
-  const { data: programs = [] } = useQuery<Program[]>({
+  const { data: courses = [] } = useQuery<Program[]>({
     queryKey: ["admin-programs"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -183,11 +185,11 @@ const AdminPrograms = () => {
       duration_days: formData.duration_days ? parseInt(formData.duration_days) : null,
     };
 
-    if (editingProgram) {
+    if (editingCourse) {
       const { error } = await supabase
         .from("programs")
         .update(programData)
-        .eq("id", editingProgram.id);
+        .eq("id", editingCourse.id);
 
       if (error) {
         toast({
@@ -196,7 +198,7 @@ const AdminPrograms = () => {
           variant: "destructive",
         });
       } else {
-        await updateProgramClasses(editingProgram.id);
+        await updateCourseClasses(editingCourse.id);
         toast({ title: "Program updated successfully" });
         queryClient.invalidateQueries({ queryKey: ["admin-programs"] });
         resetForm();
@@ -211,7 +213,7 @@ const AdminPrograms = () => {
           variant: "destructive",
         });
       } else {
-        if (data) await updateProgramClasses(data.id);
+        if (data) await updateCourseClasses(data.id);
         toast({ title: "Program created successfully" });
         queryClient.invalidateQueries({ queryKey: ["admin-programs"] });
         resetForm();
@@ -219,7 +221,7 @@ const AdminPrograms = () => {
     }
   };
 
-  const updateProgramClasses = async (programId: string) => {
+  const updateCourseClasses = async (programId: string) => {
     await supabase.from("classes").update({ program_id: null }).eq("program_id", programId);
 
     for (let i = 0; i < selectedClasses.length; i++) {
@@ -231,54 +233,54 @@ const AdminPrograms = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this program?")) return;
+    if (!confirm("Are you sure you want to delete this course?")) return;
 
     const { error } = await supabase.from("programs").delete().eq("id", id);
 
     if (error) {
       toast({
-        title: "Error deleting program",
+        title: "Error deleting course",
         description: error.message,
         variant: "destructive",
       });
     } else {
-      toast({ title: "Program deleted successfully" });
+      toast({ title: "Course deleted successfully" });
       queryClient.invalidateQueries({ queryKey: ["admin-programs"] });
     }
   };
 
-  const handleEdit = async (program: Program) => {
-    setEditingProgram(program);
+  const handleEdit = async (course: Program) => {
+    setEditingCourse(course);
     setFormData({
-      title: program.title,
-      slug: program.slug || "",
-      short_description: program.short_description || "",
-      description: program.description || "",
-      teacher_name: program.teacher_name || "March Russell",
-      image_url: program.image_url || "",
-      is_published: program.is_published,
-      duration_days: program.duration_days?.toString() || "",
+      title: course.title,
+      slug: course.slug || "",
+      short_description: course.short_description || "",
+      description: course.description || "",
+      teacher_name: course.teacher_name || "March Russell",
+      image_url: course.image_url || "",
+      is_published: course.is_published,
+      duration_days: course.duration_days?.toString() || "",
     });
 
     const { data } = await supabase
       .from("classes")
       .select("id")
-      .eq("program_id", program.id)
+      .eq("program_id", course.id)
       .order("order_index");
 
     setSelectedClasses(data?.map((c) => c.id) || []);
     setIsDialogOpen(true);
   };
 
-  const togglePublish = async (program: Program) => {
+  const togglePublish = async (course: Program) => {
     const { error } = await supabase
       .from("programs")
-      .update({ is_published: !program.is_published })
-      .eq("id", program.id);
+      .update({ is_published: !course.is_published })
+      .eq("id", course.id);
 
     if (error) {
       toast({
-        title: "Error updating program",
+        title: "Error updating course",
         description: error.message,
         variant: "destructive",
       });
@@ -300,7 +302,7 @@ const AdminPrograms = () => {
     });
     setSelectedClasses([]);
     setClassSearchQuery("");
-    setEditingProgram(null);
+    setEditingCourse(null);
     setIsDialogOpen(false);
   };
 
@@ -324,17 +326,17 @@ const AdminPrograms = () => {
     setSelectedClasses(newSelectedClasses);
   };
 
-  const filteredPrograms = programs.filter(
-    (program) =>
-      program.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      program.teacher_name?.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredCourses = courses.filter(
+    (course) =>
+      course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      course.teacher_name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const newProgramDialog = (
+  const newCourseDialog = (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
         <Button onClick={() => resetForm()} className="gap-2">
-          <Plus className="h-5 w-5" /> New Program
+          <Plus className="h-5 w-5" /> New Course
         </Button>
       </DialogTrigger>
       <DialogContent
@@ -343,7 +345,7 @@ const AdminPrograms = () => {
       >
         <DialogHeader>
           <DialogTitle className="text-2xl text-[#E6DBC7]">
-            {editingProgram ? "Edit Program" : "Create New Program"}
+            {editingCourse ? "Edit Course" : "Create New Course"}
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="mt-4 space-y-6 pb-6">
@@ -430,7 +432,7 @@ const AdminPrograms = () => {
           </div>
           <div className="space-y-2">
             <Label htmlFor="image" className="text-white/80">
-              Program Image *
+              Course Image *
             </Label>
             <div className="space-y-2">
               {formData.image_url && (
@@ -452,15 +454,15 @@ const AdminPrograms = () => {
                 className="border-white/20 bg-white/5 text-white"
                 required={!formData.image_url}
               />
-              <p className="text-xs text-white/50">Upload an image for this program (max 5MB)</p>
+              <p className="text-xs text-white/50">Upload an image for this course (max 5MB)</p>
             </div>
           </div>
 
           <div className="space-y-4 rounded-lg border border-white/20 p-5">
             <div>
-              <Label className="text-white/80">Program Classes ({selectedClasses.length})</Label>
+              <Label className="text-white/80">Course Classes ({selectedClasses.length})</Label>
               <p className="mt-1 text-sm text-white/50">
-                Select and order classes for this program
+                Select and order classes for this course
               </p>
             </div>
 
@@ -485,20 +487,18 @@ const AdminPrograms = () => {
                           <Button
                             type="button"
                             variant="ghost"
-                            size="sm"
                             onClick={() => moveClass(index, "up")}
                             disabled={index === 0}
-                            className="h-7 w-7 p-0 text-white/60 hover:text-white"
+                            className="h-6 w-6 p-0 text-white/60 hover:text-white"
                           >
                             ↑
                           </Button>
                           <Button
                             type="button"
                             variant="ghost"
-                            size="sm"
                             onClick={() => moveClass(index, "down")}
                             disabled={index === selectedClasses.length - 1}
-                            className="h-7 w-7 p-0 text-white/60 hover:text-white"
+                            className="h-6 w-6 p-0 text-white/60 hover:text-white"
                           >
                             ↓
                           </Button>
@@ -524,7 +524,7 @@ const AdminPrograms = () => {
                       type="checkbox"
                       checked={selectedClasses.includes(classItem.id)}
                       onChange={() => toggleClass(classItem.id)}
-                      className="h-4 w-4"
+                      className="h-6 w-6"
                     />
                     <span className="flex-1 text-white">{classItem.title}</span>
                     <span className="text-sm text-white/50">
@@ -548,7 +548,7 @@ const AdminPrograms = () => {
 
           <div className="flex gap-3 pt-4">
             <Button type="submit" className="flex-1">
-              {editingProgram ? "Update" : "Create"} Program
+              {editingCourse ? "Update" : "Create"} Course
             </Button>
             <Button type="button" variant="outline" onClick={resetForm}>
               Cancel
@@ -562,22 +562,22 @@ const AdminPrograms = () => {
   return (
     <AdminLayout
       title="Manage Courses"
-      description="Create and organize multi-session programs"
-      actions={newProgramDialog}
+      description="Create and organize multi-session courses"
+      actions={newCourseDialog}
     >
       {/* Stats Cards */}
       <div className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-3">
-        <AdminStatsCard title="Total Courses" value={programs.length} icon={BookOpen} />
+        <AdminStatsCard title="Total Courses" value={courses.length} icon={BookOpen} />
         <AdminStatsCard
           title="Published"
-          value={programs.filter((p) => p.is_published).length}
+          value={courses.filter((c) => c.is_published).length}
           icon={Eye}
           iconColor="#4ade80"
           iconBgColor="rgba(74, 222, 128, 0.1)"
         />
         <AdminStatsCard
           title="Drafts"
-          value={programs.filter((p) => !p.is_published).length}
+          value={courses.filter((c) => !c.is_published).length}
           icon={EyeOff}
           iconColor="#facc15"
           iconBgColor="rgba(250, 204, 21, 0.1)"
@@ -589,7 +589,7 @@ const AdminPrograms = () => {
         <div className="relative w-full md:w-80">
           <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 transform text-white/40" />
           <Input
-            placeholder="Search programs..."
+            placeholder="Search courses..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="border-white/20 bg-white/5 pl-10 text-white placeholder:text-white/40"
@@ -597,32 +597,32 @@ const AdminPrograms = () => {
         </div>
       </div>
 
-      {/* Programs Grid */}
+      {/* Courses Grid */}
       <div className="grid gap-6">
-        {filteredPrograms.length === 0 ? (
+        {filteredCourses.length === 0 ? (
           <Card className="border-[#E6DBC7]/20 bg-background/40 backdrop-blur-xl">
             <CardContent className="flex flex-col items-center justify-center py-16">
               <BookOpen className="mb-4 h-12 w-12 text-[#E6DBC7]/40" />
               <p className="text-center text-white/60">
                 {searchQuery
-                  ? "No programs match your search"
-                  : "No programs yet. Create your first program!"}
+                  ? "No courses match your search"
+                  : "No courses yet. Create your first course!"}
               </p>
             </CardContent>
           </Card>
         ) : (
-          filteredPrograms.map((program) => (
+          filteredCourses.map((course) => (
             <Card
-              key={program.id}
+              key={course.id}
               className="border-[#E6DBC7]/20 bg-background/40 backdrop-blur-xl transition-all hover:border-[#E6DBC7]/40"
             >
               <CardContent className="p-6">
                 <div className="flex flex-col gap-6 md:flex-row">
-                  {program.image_url && (
+                  {course.image_url && (
                     <div className="h-32 w-full flex-shrink-0 overflow-hidden rounded-lg md:w-48">
                       <img
-                        src={program.image_url}
-                        alt={program.title}
+                        src={course.image_url}
+                        alt={course.title}
                         className="h-full w-full object-cover"
                         loading="lazy"
                       />
@@ -631,37 +631,37 @@ const AdminPrograms = () => {
                   <div className="min-w-0 flex-1">
                     <div className="mb-2 flex items-start justify-between gap-4">
                       <div>
-                        <h3 className="mb-1 text-xl font-medium text-white">{program.title}</h3>
-                        <p className="text-sm text-white/60">by {program.teacher_name}</p>
+                        <h3 className="mb-1 text-xl font-medium text-white">{course.title}</h3>
+                        <p className="text-sm text-white/60">by {course.teacher_name}</p>
                       </div>
                       <div className="flex items-center gap-2">
                         <Badge
-                          variant={program.is_published ? "default" : "secondary"}
+                          variant={course.is_published ? "default" : "secondary"}
                           className={
-                            program.is_published
+                            course.is_published
                               ? "bg-green-500/20 text-green-300"
                               : "bg-yellow-500/20 text-yellow-300"
                           }
                         >
-                          {program.is_published ? "Published" : "Draft"}
+                          {course.is_published ? "Published" : "Draft"}
                         </Badge>
                       </div>
                     </div>
                     <p className="mb-4 line-clamp-2 text-sm text-white/70">
-                      {program.short_description}
+                      {course.short_description}
                     </p>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-white/50">
-                        {program.lesson_count || 0} classes
+                        {course.lesson_count || 0} classes
                       </span>
                       <div className="flex gap-2">
                         <Button
                           variant="ghost"
                           size="default"
-                          onClick={() => togglePublish(program)}
+                          onClick={() => togglePublish(course)}
                           className="h-10 w-10 p-0 text-white/60 hover:bg-white/10 hover:text-white"
                         >
-                          {program.is_published ? (
+                          {course.is_published ? (
                             <EyeOff className="h-5 w-5" />
                           ) : (
                             <Eye className="h-5 w-5" />
@@ -670,7 +670,7 @@ const AdminPrograms = () => {
                         <Button
                           variant="ghost"
                           size="default"
-                          onClick={() => handleEdit(program)}
+                          onClick={() => handleEdit(course)}
                           className="h-10 w-10 p-0 text-[#E6DBC7] hover:bg-white/10 hover:text-white"
                         >
                           <Pencil className="h-5 w-5" />
@@ -678,7 +678,7 @@ const AdminPrograms = () => {
                         <Button
                           variant="ghost"
                           size="default"
-                          onClick={() => handleDelete(program.id)}
+                          onClick={() => handleDelete(course.id)}
                           className="h-10 w-10 p-0 text-red-400 hover:bg-red-500/10 hover:text-red-300"
                         >
                           <Trash2 className="h-5 w-5" />
