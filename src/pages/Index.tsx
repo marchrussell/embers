@@ -3,9 +3,7 @@ import { Suspense, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import { Footer } from "@/components/Footer";
-import {
-  SubscriptionModal,
-} from "@/components/modals/LazyModals";
+import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { NavBar } from "@/components/NavBar";
 import { OptimizedImage } from "@/components/OptimizedImage";
 import { PhoneMockups } from "@/components/PhoneMockups";
@@ -79,58 +77,38 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Second Screen - Embers Studio */}
-        <section
-          className="relative flex min-h-[100dvh] flex-col justify-end overflow-hidden"
-          style={{
-            backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.6)), url("${getCloudImageUrl(CLOUD_IMAGES.heroBreathworkWide, { width: 1920, quality: 80 })}")`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
-          {/* Bottom Text and Pills */}
-          <div className="px-5 pb-8 sm:px-8 sm:pb-10 md:px-16 md:pb-12">
-            <p
-              className="font-editorial leading-[1.5] text-white"
-              style={{
-                fontSize: "clamp(2rem, 3vw, 3rem)",
-                fontWeight: 300,
-                textShadow: "0 2px 12px rgba(0,0,0,0.5)",
-              }}
-            >
-              Embers Studio is a place to come back to the body.
-              <br className="hidden md:block" /> Through breath, movement, and sensory practice, it
-              creates space for the nervous system to settle, perception to soften, and experience
-              to open.
-            </p>
-            <div className="mt-10 flex flex-wrap gap-2 md:gap-3">
-              {[
-                "Calm the Nervous System",
-                "Sharpen Attention",
-                "Restore Energy",
-                "Sleep More Deeply",
-              ].map((label) => (
-                <Pill key={label} variant="dark">
-                  {label}
-                </Pill>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* Phone Mockups Section */}
         <section className="bg-background pb-16 pt-24 md:pb-24 md:pt-32 lg:pb-32 lg:pt-48">
           <div className="mx-auto w-full px-5 md:px-12 lg:px-20">
             <div>
               {/* Micro-heading above mockups - centered */}
-              <p
-                className="mb-10 text-center font-medium uppercase tracking-[0.12em] text-white/50 md:mb-12"
-                style={{
-                  fontSize: "clamp(0.7rem, 0.8vw, 0.8rem)",
-                }}
-              >
-                A look inside your new practice home
-              </p>
+              <div className="px-5 pb-8 text-center sm:px-8 sm:pb-10 md:px-16 md:pb-12">
+                <p
+                  className="text-center font-sans leading-[1.6] text-white"
+                  style={{
+                    fontSize: "clamp(0.95rem, 1.5vw, 1.15rem)",
+                    fontWeight: 400,
+                    textShadow: "0 2px 12px rgba(0,0,0,0.5)",
+                  }}
+                >
+                  Embers Studio is a place to come back to the body.
+                  <br className="hidden md:block" /> Through breath, movement, and sensory practice,
+                  it creates space for the nervous system to settle, perception to soften, and
+                  experience to open.
+                </p>
+                <div className="mt-10 flex flex-wrap justify-center gap-2 md:gap-3">
+                  {[
+                    "Calm the Nervous System",
+                    "Sharpen Attention",
+                    "Restore Energy",
+                    "Sleep More Deeply",
+                  ].map((label) => (
+                    <Pill key={label} variant="dark">
+                      {label}
+                    </Pill>
+                  ))}
+                </div>
+              </div>
 
               {/* Phone Mockups - centered */}
               <PhoneMockups />
@@ -145,16 +123,16 @@ const Index = () => {
                 Your nervous system becomes your anchor — not your obstacle.
               </p>
             </div>
-            {/* Light pills below mockups */}
+            {/* Pills below mockups */}
             <div className="mt-12 flex flex-col items-center gap-4 md:mt-16 md:gap-6">
-              <div className="flex flex-wrap justify-center gap-4 md:gap-10">
+              <div className="flex flex-wrap gap-4">
                 {["Daily Resets", "Sleep Stories", "Courses"].map((label) => (
                   <Pill key={label} variant="dark">
                     {label}
                   </Pill>
                 ))}
               </div>
-              <div className="flex flex-wrap justify-center gap-4 md:gap-10">
+              <div className="flex flex-wrap gap-4">
                 {["Workshops + Guest Experts", "Live Gathering"].map((label) => (
                   <Pill key={label} variant="dark">
                     {label}
