@@ -69,6 +69,8 @@ const OnlineCourse = () => {
     enabled: !!slug,
   });
 
+  console.log('Course Data:', data);
+
   useEffect(() => {
     if (isError) toast.error("Unable to load course");
   }, [isError]);
