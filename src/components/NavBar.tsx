@@ -238,7 +238,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                   className="flex items-center gap-2.5 rounded-full border border-[#E6DBC7]/30 px-5 py-2.5 text-sm font-light text-[#E6DBC7] transition-colors duration-300 hover:border-[#E6DBC7]/50 hover:bg-white/[0.03]"
                 >
                   <User className="h-5 w-5" />
-                  <span>{displayName}</span>
+                  <span>{displayName.replace(/^./, char => char.toUpperCase())}</span>
                 </Link>
               ) : (
                 <button
