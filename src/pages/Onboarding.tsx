@@ -8,14 +8,16 @@ import { ButtonLoadingSpinner } from "@/components/skeletons";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { GlowButton } from "@/components/ui/glow-button";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { analytics } from "@/lib/posthog";
-import { SUBSCRIPTION_PRICES } from "@/lib/stripePrices";
+import { SUBSCRIPTION_BENEFITS, SUBSCRIPTION_DISPLAY_PRICES, SUBSCRIPTION_PRICES } from "@/lib/stripePrices";
 
 const Onboarding = () => {
   const [safetyAccepted, setSafetyAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingPlan, setLoadingPlan] = useState<"annual" | "monthly" | null>(null);
   const {
     user,
     hasSubscription,
@@ -33,11 +35,12 @@ const Onboarding = () => {
 
     // Force subscription check on mount to ensure latest status
     checkSubscription();
-  }, [user]);
+  }, [user, navigate, checkSubscription]);
 
   const handleSubscribe = async (priceId: string) => {
-    setLoading(true);
+    if (loadingPlan) return;
     const plan = priceId === SUBSCRIPTION_PRICES.ANNUAL ? "annual" : "monthly";
+    setLoadingPlan(plan);
     analytics.subscriptionStarted(plan);
     try {
       const { data, error } = await supabase.functions.invoke("create-checkout", {
@@ -50,10 +53,9 @@ const Onboarding = () => {
         // Open in same window to preserve auth session
         window.location.href = data.url;
       }
-    } catch (error: any) {
-      toast.error(error.message || "Failed to create checkout session");
-    } finally {
-      setLoading(false);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to create checkout session");
+      setLoadingPlan(null);
     }
   };
 
@@ -110,96 +112,127 @@ const Onboarding = () => {
   // This page should normally only be reached through direct navigation or if payment flow was incomplete
   if (!hasSubscription) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background p-4">
-        <Card className="w-full max-w-3xl border-[#E6DBC7]/20 bg-background/40 backdrop-blur-xl">
-          <CardHeader className="px-4 pt-8 text-center md:pt-12">
-            <CardTitle className="mb-3 font-editorial text-4xl font-light text-[#E6DBC7] md:mb-4 md:text-5xl lg:text-6xl">
-              MARCH
-            </CardTitle>
-            <p className="text-xl font-light text-foreground/80 md:text-2xl">
-              Become a member today!
-            </p>
-          </CardHeader>
-          <CardContent className="space-y-4 px-4 pb-8 md:px-6 md:pb-12">
-            {/* Annual Plan */}
-            <div className="relative rounded-xl border border-[#E6DBC7]/40 bg-background/20 p-5 backdrop-blur-sm transition-all hover:border-[#E6DBC7]/60 md:rounded-2xl md:p-6">
-              <div className="absolute -top-2.5 right-4 md:-top-3 md:right-6">
-                <span className="rounded-full bg-[#E6DBC7] px-3 py-0.5 text-[10px] font-medium tracking-wide text-[#1A1F2C] md:px-4 md:py-1 md:text-xs">
-                  BEST VALUE
-                </span>
-              </div>
-              <div className="mb-4">
-                <div className="mb-1 text-2xl font-light text-[#E6DBC7] md:text-3xl">Annual</div>
-                <div className="text-sm font-light text-foreground/70 md:text-base">
-                  £79.99 (£6.67/month)
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="w-full max-w-[1200px] overflow-hidden rounded-[28px] border border-white/20 bg-black/75 backdrop-blur-xl">
+          <div className="flex flex-col lg:flex-row">
+            {/* Left side - Branding & Benefits */}
+            <div className="flex flex-col justify-center bg-black/50 p-12 md:p-16 lg:w-1/2 lg:p-20">
+              <div className="mx-auto w-full max-w-lg">
+                <div className="mb-8 space-y-5 text-center sm:mb-10">
+                  <p className="text-base font-light italic leading-loose tracking-wide text-white/70 sm:text-lg">
+                    Where your nervous system rests.
+                    <br />
+                    And your senses awaken.
+                  </p>
+                  <div className="flex items-center justify-center gap-4">
+                    <div className="h-px w-10 bg-white/25" />
+                    <span className="font-bold uppercase tracking-[0.3em] text-white/50 sm:text-xs">
+                      Join Embers
+                    </span>
+                    <div className="h-px w-10 bg-white/25" />
+                  </div>
+                </div>
+
+                <div className="space-y-4 sm:space-y-5">
+                  {SUBSCRIPTION_BENEFITS.map((benefit) => (
+                    <div key={benefit} className="flex items-start gap-3">
+                      <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-white" strokeWidth={1.5} />
+                      <p className="text-sm font-light leading-relaxed text-white/90 sm:text-base">
+                        {benefit}
+                      </p>
+                    </div>
+                  ))}
                 </div>
               </div>
-              <Button
-                onClick={() => handleSubscribe("price_1SNBxPGBlPMRpwZ6q1Xb52iA")}
-                className="w-full rounded-full border-2 border-white bg-white/5 py-5 text-sm font-light text-white backdrop-blur-md transition-all hover:bg-white/10 md:py-6 md:text-base"
-                size="lg"
-                disabled={loading}
-              >
-                {loading ? <ButtonLoadingSpinner /> : "Try Free & Subscribe"}
-              </Button>
             </div>
 
-            {/* Monthly Plan */}
-            <div className="rounded-xl border border-[#E6DBC7]/20 bg-background/10 p-5 backdrop-blur-sm transition-all hover:border-[#E6DBC7]/40 md:rounded-2xl md:p-6">
-              <div className="mb-4">
-                <div className="mb-1 text-2xl font-light text-[#E6DBC7] md:text-3xl">Monthly</div>
-                <div className="text-sm font-light text-foreground/70 md:text-base">
-                  £9.99/month
+            {/* Right side - Pricing Plans */}
+            <div className="flex flex-col justify-center bg-black/50 p-12 md:p-16 lg:w-1/2 lg:p-20">
+              <div className="mx-auto w-full max-w-lg">
+                <div className="space-y-6">
+                  {/* Annual Plan */}
+                  <div
+                    className="relative rounded-lg border-2 border-white bg-white/5 p-7 backdrop-blur-md hover:bg-white/10 sm:p-9"
+                    style={{
+                      boxShadow:
+                        "0 0 16px rgba(255, 255, 255, 0.3), 0 0 32px rgba(255, 255, 255, 0.15)",
+                    }}
+                  >
+                    <div className="absolute -right-3 -top-3">
+                      <div className="rounded-sm bg-white px-3 py-1.5 shadow-lg">
+                        <span className="text-[10px] font-medium tracking-wider text-black sm:text-xs">
+                          BEST VALUE
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="pr-12">
+                      <h3 className="mb-3 font-editorial text-xl text-white sm:text-2xl">Annual</h3>
+                      <div className="mb-2">
+                        <span className="text-xl font-light text-white sm:text-2xl">
+                          {SUBSCRIPTION_DISPLAY_PRICES.annual.unitAmountFormatted}
+                        </span>
+                        <span className="ml-2 text-sm text-white/60">
+                          ({SUBSCRIPTION_DISPLAY_PRICES.annual.monthlyEquivalent}/month)
+                        </span>
+                      </div>
+                      <p className="mb-6 text-sm font-light text-white/50">
+                        7-day free trial, then {SUBSCRIPTION_DISPLAY_PRICES.annual.unitAmountFormatted}/year
+                      </p>
+                    </div>
+
+                    <GlowButton
+                      variant="whiteSolid"
+                      className="w-full"
+                      onClick={() => handleSubscribe(SUBSCRIPTION_PRICES.ANNUAL)}
+                      disabled={!!loadingPlan}
+                    >
+                      {loadingPlan === "annual" ? (
+                        <ButtonLoadingSpinner size="lg" />
+                      ) : (
+                        "Start your 7-day free trial"
+                      )}
+                    </GlowButton>
+                  </div>
+
+                  {/* Monthly Plan */}
+                  <div className="relative rounded-lg border border-white/25 bg-black/20 p-7 backdrop-blur-md hover:border-white/40 hover:bg-white/5 sm:p-9">
+                    <h3 className="mb-3 font-editorial text-xl text-white sm:text-2xl">Monthly</h3>
+                    <div className="mb-2">
+                      <span className="text-xl font-light text-white sm:text-2xl">
+                        {SUBSCRIPTION_DISPLAY_PRICES.monthly.unitAmountFormatted}
+                      </span>
+                      <span className="ml-1 text-sm text-white/60">/month</span>
+                    </div>
+                    <p className="mb-6 text-sm font-light text-white/50">
+                      7-day free trial, then {SUBSCRIPTION_DISPLAY_PRICES.monthly.unitAmountFormatted}/month
+                    </p>
+
+                    <GlowButton
+                      variant="white"
+                      className="w-full"
+                      onClick={() => handleSubscribe(SUBSCRIPTION_PRICES.MONTHLY)}
+                      disabled={!!loadingPlan}
+                    >
+                      {loadingPlan === "monthly" ? (
+                        <ButtonLoadingSpinner size="lg" />
+                      ) : (
+                        "Start your 7-day free trial"
+                      )}
+                    </GlowButton>
+                  </div>
+                </div>
+
+                <div className="mt-10">
+                  <p className="text-center text-xs font-light leading-relaxed text-white/40 sm:text-sm">
+                    You will be automatically charged after your 7-day free trial ends unless you
+                    cancel before then. Cancel anytime during the trial at no charge.
+                  </p>
                 </div>
               </div>
-              <Button
-                onClick={() => handleSubscribe("price_1SNBx3GBlPMRpwZ6Cic7AcTl")}
-                className="w-full rounded-full border-2 border-[#E6DBC7]/40 bg-transparent py-5 text-sm font-light text-[#E6DBC7] transition-all hover:bg-white/5 md:py-6 md:text-base"
-                size="lg"
-                disabled={loading}
-              >
-                {loading ? <ButtonLoadingSpinner /> : "Try Free & Subscribe"}
-              </Button>
             </div>
-
-            <div className="space-y-3 pt-6">
-              <div className="flex items-center gap-3">
-                <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-[#E6DBC7]" />
-                <p className="text-xs font-light text-foreground/70 md:text-base">
-                  Unlimited access to exclusive breathwork classes.
-                </p>
-              </div>
-              <div className="flex items-center gap-3">
-                <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-[#E6DBC7]" />
-                <p className="text-xs font-light text-foreground/70 md:text-base">
-                  Cancel anytime. Your subscription automatically renews until cancelled.
-                </p>
-              </div>
-            </div>
-
-            <p className="pt-4 text-center text-[10px] font-light text-foreground/60 md:pt-6 md:text-xs">
-              Embers Studio is free for anyone who can't afford it.
-              <br />
-              Please email support@embersstudio.io to receive access.
-            </p>
-
-            <div className="pt-4 text-center">
-              <a
-                href="/privacy-policy"
-                className="text-[10px] text-foreground/60 underline hover:text-foreground/80 md:text-xs"
-              >
-                Privacy Policy
-              </a>
-              <span className="mx-2 text-foreground/40">•</span>
-              <a
-                href="/terms-of-service"
-                className="text-[10px] text-foreground/60 underline hover:text-foreground/80 md:text-xs"
-              >
-                Terms of Service
-              </a>
-            </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     );
   }

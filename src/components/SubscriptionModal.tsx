@@ -8,37 +8,19 @@ import { Dialog, DialogPortal } from "@/components/ui/dialog";
 import { GlowButton } from "@/components/ui/glow-button";
 import { supabase } from "@/integrations/supabase/client";
 import { analytics } from "@/lib/posthog";
-import { SUBSCRIPTION_PRICES } from "@/lib/stripePrices";
+import { SUBSCRIPTION_BENEFITS, SUBSCRIPTION_DISPLAY_PRICES, SUBSCRIPTION_PRICES } from "@/lib/stripePrices";
 
 interface SubscriptionModalProps {
   open: boolean;
   onClose: () => void;
 }
 
-const PRICES = {
-  monthly: {
-    unitAmountFormatted: "£25",
-  },
-  annual: {
-    unitAmountFormatted: "£180",
-    monthlyEquivalent: "£15",
-  },
-};
-
-const BENEFITS = [
-  "Unlimited access to the full Embers practice library",
-  "Breathwork, meditation, and nervous system regulation",
-  "Short daily resets and deeper guided sessions",
-  "Weekly live sessions and guest workshops",
-  "7-day free trial — cancel anytime",
-];
-
 export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => {
   const [loadingPlan, setLoadingPlan] = useState<"annual" | "monthly" | null>(null);
 
-  const monthlyPrice = PRICES.monthly.unitAmountFormatted;
-  const annualPrice = PRICES.annual.unitAmountFormatted;
-  const annualMonthlyEquivalent = PRICES.annual.monthlyEquivalent;
+  const monthlyPrice = SUBSCRIPTION_DISPLAY_PRICES.monthly.unitAmountFormatted;
+  const annualPrice = SUBSCRIPTION_DISPLAY_PRICES.annual.unitAmountFormatted;
+  const annualMonthlyEquivalent = SUBSCRIPTION_DISPLAY_PRICES.annual.monthlyEquivalent;
   const monthlyPriceId = SUBSCRIPTION_PRICES.MONTHLY;
   const annualPriceId = SUBSCRIPTION_PRICES.ANNUAL;
 
@@ -110,7 +92,7 @@ export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => 
                 </div>
 
                 <div className="space-y-4 sm:space-y-5">
-                  {BENEFITS.map((benefit) => (
+                  {SUBSCRIPTION_BENEFITS.map((benefit) => (
                     <div key={benefit} className="flex items-start gap-3">
                       <Check
                         className="mt-0.5 h-5 w-5 flex-shrink-0 text-white"

@@ -25,3 +25,16 @@ export const LIVE_SUBSCRIPTION_PRICES = {
 export const SUBSCRIPTION_PRICES = isTestMode ? TEST_SUBSCRIPTION_PRICES : LIVE_SUBSCRIPTION_PRICES;
 
 export const RISE_ARC_PRICES = "";
+
+export const SUBSCRIPTION_DISPLAY_PRICES = {
+  monthly: { unitAmountFormatted: "£25" },
+  annual: { unitAmountFormatted: "£180", monthlyEquivalent: "£15" },
+} as const;
+
+export const SUBSCRIPTION_BENEFITS = [
+  "Unlimited access to the full Embers practice library",
+  "Breathwork, meditation, and nervous system regulation",
+  "Short daily resets and deeper guided sessions",
+  "Weekly live sessions and guest workshops",
+  "7-day free trial — cancel anytime",
+] as const;
