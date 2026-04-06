@@ -77,7 +77,7 @@ function dbToEventSchedule(row: DbExperienceConfig): EventSchedule {
     ctaLink: row.cta_link ?? "",
     image: row.image_url ?? "",
     eventType: (row.event_type ?? "paid") as EventSchedule["eventType"],
-    format: row.format ?? "",
+    format: (row.format ?? "In-Person") as EventSchedule["format"],
     location: row.location ?? "",
     venue: row.venue ?? "",
     price: row.price ?? "",

@@ -281,7 +281,7 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
-                {!config?.isOnline && selectedDate?.spotsRemaining && (
+                {!selectedDate?.isOnline && selectedDate?.spotsRemaining && (
                   <p className="mt-3 text-sm text-white/60">
                     {selectedDate.spotsRemaining} spots remaining
                   </p>
