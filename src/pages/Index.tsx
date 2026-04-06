@@ -4,14 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 
 import { Footer } from "@/components/Footer";
 import {
-  ClassPlayerModal,
-  ContactFormModal,
-  ContactTeamsModal,
-  NewsletterModal,
-  RiseArcIntroModal,
   SubscriptionModal,
-  TestimonialsModal,
-  VaseBreathModal,
 } from "@/components/modals/LazyModals";
 import { NavBar } from "@/components/NavBar";
 import { OptimizedImage } from "@/components/OptimizedImage";
@@ -31,14 +24,6 @@ const nervousSystemImg = getCloudImageUrl(CLOUD_IMAGES.nervousSystemReset, {
 const Index = () => {
   const location = useLocation();
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
-  const [showVaseBreathModal, setShowVaseBreathModal] = useState(false);
-  const [showTestimonialsModal, setShowTestimonialsModal] = useState(false);
-  const [showContactModal, setShowContactModal] = useState(false);
-  const [showTeamsModal, setShowTeamsModal] = useState(false);
-  const [showNewsletterModal, setShowNewsletterModal] = useState(false);
-  const [showArcIntroModal, setShowArcIntroModal] = useState(false);
-  const [showClassPlayer, setShowClassPlayer] = useState(false);
-  const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
 
   useEffect(() => {
     if (location.state?.openSubscription) {
@@ -53,20 +38,6 @@ const Index = () => {
         <SubscriptionModal
           open={showSubscriptionModal}
           onClose={() => setShowSubscriptionModal(false)}
-        />
-
-        <TestimonialsModal open={showTestimonialsModal} onOpenChange={setShowTestimonialsModal} />
-
-        <ContactFormModal open={showContactModal} onOpenChange={setShowContactModal} />
-
-        <ContactTeamsModal open={showTeamsModal} onOpenChange={setShowTeamsModal} />
-
-        <RiseArcIntroModal open={showArcIntroModal} onOpenChange={setShowArcIntroModal} />
-
-        <VaseBreathModal
-          open={showVaseBreathModal}
-          onOpenChange={setShowVaseBreathModal}
-          onOpenSubscription={() => setShowSubscriptionModal(true)}
         />
       </Suspense>
 
@@ -370,14 +341,6 @@ const Index = () => {
 
         {/* Spacer after Contact Section */}
         <div className="h-12 bg-background md:h-16 lg:h-20" />
-
-        <NewsletterModal open={showNewsletterModal} onOpenChange={setShowNewsletterModal} />
-
-        <ClassPlayerModal
-          classId={selectedClassId}
-          open={showClassPlayer}
-          onClose={() => setShowClassPlayer(false)}
-        />
       </main>
 
       <TermsMicrocopy />
