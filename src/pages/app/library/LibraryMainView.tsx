@@ -248,11 +248,11 @@ const LibraryMainView = memo(
               </div>
 
               {/* ARC Mentorship CTA */}
-              <div className="mx-auto mb-16 mt-24 max-w-2xl px-6 text-center">
-                <p className="mb-2 text-lg font-light leading-relaxed md:text-xl">
+              <div className="mx-auto max-w-xl px-6 text-center">
+                <p className="mb-2 text-lg font-semibold leading-relaxed md:text-xl">
                   Looking for deeper, guided support?
                 </p>
-                <p className="mb-6 text-base font-light leading-relaxed md:text-lg">
+                <p className="mb-6 font-light leading-relaxed">
                   For those wanting a more personalised, relational process, ARC mentorship is
                   available by application.
                 </p>
