@@ -1,4 +1,4 @@
-import { ChevronLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { memo } from "react";
 
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
@@ -61,7 +61,7 @@ const CategoryView = memo(
             className="absolute left-6 top-6 flex items-center gap-1 text-[#E6DBC7]/80 transition-colors hover:text-[#E6DBC7] md:left-10 lg:left-12"
             aria-label="Back to Library"
           >
-            <ChevronLeft className="h-5 w-5" />
+            <ArrowLeft className="h-5 w-5" />
             <span className="text-sm font-light tracking-wide">Library</span>
           </button>
 
