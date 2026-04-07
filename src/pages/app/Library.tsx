@@ -152,7 +152,7 @@ const Library = ({
   const handleBack = () => {
     setSelectedCategory(null);
     if (searchParams.get("category")) {
-      navigate("/library", { replace: true });
+      navigate(isEmbedded ? "/online?tab=library" : "/library", { replace: true });
     }
   };
 

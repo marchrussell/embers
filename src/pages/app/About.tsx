@@ -100,7 +100,7 @@ const About = () => {
               </div>
 
               {/* Text column */}
-              <div className="space-y-6 leading-relaxed text-foreground/90 lg:col-span-3 text-base md:text-lg">
+              <div className="space-y-6 text-base leading-relaxed text-foreground/90 md:text-lg lg:col-span-3">
                 <p className="font-editorial text-[#E6DBC7] lg:text-3xl">
                   Hey, welcome to this space.
                 </p>
