@@ -157,9 +157,7 @@ const Online = () => {
           </TabsContent>
         </Tabs>
 
-        <div className="block md:hidden">
-          <OnlineFooter />
-        </div>
+        <OnlineFooter />
       </div>
 
       <div className="hidden md:block">
