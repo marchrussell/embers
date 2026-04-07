@@ -2,8 +2,9 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
+import { User } from "@supabase/supabase-js";
 
-export const useAccountSettings = (userId?: string) => {
+export const useAccountSettings = (user?: User) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
 
@@ -80,16 +81,15 @@ export const useAccountSettings = (userId?: string) => {
       return;
     }
 
-    if (!userId) {
-      toast.error("You must be signed in to submit feedback");
-      return;
-    }
-
     setIsSubmittingFeedback(true);
     try {
-      const { error } = await supabase.from("feedback").insert({
-        user_id: userId,
-        message: feedback.trim(),
+      const { error } = await supabase.functions.invoke("send-contact-email", {
+        body: {
+          name: user?.user_metadata?.full_name || user?.email || "Embers User",
+          email: user?.email || "noreply@embersstudio.io",
+          message: feedback.trim(),
+          type: "contact",
+        },
       });
 
       if (error) throw error;
@@ -97,7 +97,7 @@ export const useAccountSettings = (userId?: string) => {
       toast.success("Thank you! Your feedback has been submitted.");
       setFeedback("");
       onSuccess?.();
-    } catch (error: any) {
+    } catch (error) {
       console.error("Feedback submission error:", error);
       toast.error("Failed to submit feedback. Please try again.");
     } finally {

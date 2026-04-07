@@ -81,7 +81,7 @@ const Profile = () => {
     handlePasswordChange,
     handleEmailChange,
     handleFeedbackSubmit,
-  } = useAccountSettings(user?.id);
+  } = useAccountSettings(user ?? undefined);
 
   // Redirect to auth if not logged in
   useEffect(() => {

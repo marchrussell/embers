@@ -20,16 +20,15 @@ export const FeedbackSection = () => {
       return;
     }
 
-    if (!user?.id) {
-      toast.error("You must be signed in to submit feedback");
-      return;
-    }
-
     setIsSubmitting(true);
     try {
-      const { error } = await supabase.from("feedback").insert({
-        user_id: user.id,
-        message: feedback.trim(),
+      const { error } = await supabase.functions.invoke("send-contact-email", {
+        body: {
+          name: user?.user_metadata?.full_name || user?.email || "Embers User",
+          email: user?.email || "noreply@embersstudio.io",
+          message: feedback.trim(),
+          type: "contact",
+        },
       });
 
       if (error) throw error;
@@ -37,7 +36,7 @@ export const FeedbackSection = () => {
       toast.success("Thank you! Your feedback has been submitted.");
       setFeedback("");
       setOpen(false);
-    } catch (error: any) {
+    } catch (error) {
       console.error("Feedback submission error:", error);
       toast.error("Failed to submit feedback. Please try again.");
     } finally {
