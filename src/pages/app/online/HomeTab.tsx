@@ -1,8 +1,9 @@
-import { ChevronLeft, ChevronRight, Lock } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Lock } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
+import { Button } from "@/components/ui/button";
 import { IconButton } from "@/components/ui/icon-button";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 
@@ -238,6 +239,12 @@ const HomeTab = ({
             />
           ))}
         </div>
+        <Button
+          className="mt-6 w-fit rounded-full border border-[#E6DBC7]/60 bg-transparent px-12 py-3 text-sm font-light text-[#E6DBC7] transition-all hover:border-[#E6DBC7] hover:bg-white/5 md:text-base"
+          onClick={() => navigate("/online?tab=live")}
+        >
+          See All <ArrowRight className="h-5 w-5" />
+        </Button>
       </section>
     </div>
   );
