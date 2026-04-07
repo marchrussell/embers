@@ -52,13 +52,13 @@ VALUES
     'Weekly Reset',
     'A live space to pause, settle your system, and realign mid-week.',
     'weekly',
-    ARRAY[2],  -- Tuesday (0=Sun, 1=Mon, 2=Tue)
+    ARRAY[3],  -- Wednesday (0=Sun, 1=Mon, 2=Tue, 3=Wed)
     NULL,
     NULL,
     '19:00',
     'GMT',
     '30 mins',
-    'Every Tuesday',
+    'Every Wednesday',
     'Enter Space',
     'online-member',
     'For Online Members'

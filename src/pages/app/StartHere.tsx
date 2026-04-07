@@ -120,7 +120,7 @@ const StartHere = () => {
             </h2>
           </div>
           <p className="mb-10 ml-7 text-xs font-light text-[#E6DBC7]/50 sm:ml-10 sm:text-sm md:mb-12 md:text-base">
-            A live session every Tuesday to reset and reconnect
+            A live session every Wednesday to reset and reconnect
           </p>
 
           {/* Weekly Reset Card - now using shared component */}

@@ -114,7 +114,7 @@ export const WeeklyResetCard = ({
             </p>
             <p className="mb-6 flex items-center gap-1 text-xs font-light text-[#D4A574] md:text-sm">
               <Clock className="h-3.5 w-3.5" />
-              Every Tuesday, 7pm GMT
+              Every Wednesday, 7pm GMT
             </p>
 
             {/* Copy and Calendar icons */}

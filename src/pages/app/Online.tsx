@@ -80,17 +80,14 @@ const Online = () => {
 
       // Enrich guest-session with live data from live_session_details
       if (config.session_type === "guest-session" && nextGuestTeacher) {
-        console.log("guest-session session type", config);
-        console.log("Enriching guest session with teacher:", nextGuestTeacher);
         return {
           sessionType: config.session_type,
-          title: nextGuestTeacher.session_title || config.title,
+          title: config.title,
           subtitle,
           description:
-            nextGuestTeacher.short_description ||
             config.subtitle ||
             "A unique session featuring a guest teacher with fresh perspectives.",
-          image: nextGuestTeacher.photo_url || fallbackImage,
+          image: fallbackImage,
           nextDate,
           isLive: false,
           time: config.time,

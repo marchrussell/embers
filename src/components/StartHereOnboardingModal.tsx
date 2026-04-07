@@ -112,7 +112,7 @@ const StartHereOnboardingModal = ({
                       ? "Live now — join the session"
                       : weeklyResetStatus === "replay"
                         ? "Watch the latest replay"
-                        : "Every Tuesday at 7pm GMT"}
+                        : "Every Wednesday at 7pm GMT"}
                   </p>
                 </div>
                 <div className="pr-2">
