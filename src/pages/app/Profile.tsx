@@ -275,7 +275,7 @@ const Profile = () => {
         {/* Header */}
         <div className="px-6 pt-16 md:pt-24">
           {/* Welcome Message with Back Button */}
-          <div className="mb-12 flex items-center justify-between md:mb-16">
+          <div className="my-8 flex items-center justify-between">
             <h1 className="font-editorial text-3xl text-[#E6DBC7] md:text-4xl">
               Welcome {capitalizedFirstName}
             </h1>
@@ -290,8 +290,8 @@ const Profile = () => {
           </div>
 
           {/* Progress Section */}
-          <div className="mb-10 border-b border-[#E6DBC7]/10 pb-8 md:mb-12 md:pb-10">
-            <h2 className="mb-6 text-sm font-light uppercase tracking-[0.2em] text-[#E6DBC7]/60 md:mb-8">
+          <div className="my-12 mb-10 border-b border-[#E6DBC7]/10 pb-10">
+            <h2 className="mb-6 text-sm font-light uppercase tracking-[0.2em] text-[#E6DBC7]/60 md:my-8">
               Your Progress
             </h2>
             <div className="mb-8 grid grid-cols-2 gap-x-6 gap-y-8 md:mb-10 md:gap-x-10 md:gap-y-10">

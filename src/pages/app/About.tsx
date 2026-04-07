@@ -20,7 +20,7 @@ const About = () => {
     <div className="flex min-h-screen flex-col bg-background">
       <NavBar />
 
-      <main className="flex-1 pb-16 pt-36 md:pb-24 md:pt-24">
+      <main className="flex-1 pb-16 pt-36 md:pb-24 md:pt-20">
         <div className="mx-auto max-w-[1600px] px-6 md:px-10 lg:px-16 xl:px-24">
           {/* Header row */}
           <div className="mb-12 mt-20 flex items-center justify-between">
@@ -28,7 +28,7 @@ const About = () => {
               Welcome
             </h1>
             <button
-              onClick={() => navigate(-1)}
+              onClick={() => navigate("/online/profile")}
               className="inline-flex shrink-0 items-center gap-2 text-sm tracking-wide text-[#E6DBC7]/70 transition-colors hover:text-[#E6DBC7] md:text-base"
             >
               <ArrowLeft className="h-5 w-5" />
@@ -77,7 +77,7 @@ const About = () => {
                       I'm right here with you. Reach out anytime with questions, reflections, or
                       requests. Like you, I'm learning too - a curious explorer.
                     </p>
-                    <p className="mt-6">
+                    <p>
                       Thank you for giving yourself this space, and for being here on this journey
                       with me.
                     </p>
@@ -100,35 +100,26 @@ const About = () => {
               </div>
 
               {/* Text column */}
-              <div className="space-y-6 text-lg leading-relaxed text-foreground/90 lg:col-span-3 lg:text-xl">
-                <p className="font-editorial text-2xl text-[#E6DBC7] lg:text-3xl">
+              <div className="space-y-6 leading-relaxed text-foreground/90 lg:col-span-3 text-base md:text-lg">
+                <p className="font-editorial text-[#E6DBC7] lg:text-3xl">
                   Hey, welcome to this space.
                 </p>
                 <p>
-                  Everything we seek already lives within us. This studio is an invitation to
-                  experience that for yourself.
+                  Everything we seek already lives within us.This studio is an invitation to
+                  remember that.
+                </p>
+                <p>There’s nothing here to fix. Just something to gently return to.</p>
+                <p>
+                  These practices are here to help you slow down, listen, and come back to yourself
+                  - gently, in your own way.
                 </p>
                 <p>
-                  Here, we'll explore how to care for our inner world, not by forcing change, but by
-                  meeting ourselves with warmth, understanding, presence, and connection.
+                  I’m right here with you.Reach out anytime with questions, reflections, or
+                  requests.
                 </p>
-                <p>
-                  Try letting go of the word "heal." Nothing here needs fixing. Every feeling, every
-                  pattern, every reaction is a signal - your body's way of communicating. I hope
-                  these practices help you listen, understand, and return to a sense of wholeness.
-                </p>
-                <p>
-                  I'm right here with you. Reach out anytime with questions, reflections, or
-                  requests. Like you, I'm learning too - a curious explorer.
-                </p>
-                <div className="space-y-2 pt-4">
-                  <p>
-                    Thank you for giving yourself this space, and for being here on this journey
-                    with me.
-                  </p>
-                  <p>Big love,</p>
-                  <p className="font-editorial text-xl text-[#E6DBC7]">March x</p>
-                </div>
+                <p>Like you, I’m learning too, a curious explorer.</p>
+                <p>Thank you for being here.</p>
+                <p>Big love, March x</p>
               </div>
             </div>
           </div>
@@ -138,40 +129,6 @@ const About = () => {
         <div className="mx-auto max-w-[1600px] px-6 md:px-10 lg:px-16 xl:px-24">
           {/* All content sections stacked with dividers */}
           <div className="mb-16 md:mb-32">
-            {/* Breathwork Safety Section */}
-            <div className="border-t border-muted-foreground/20 py-10 md:py-14">
-              <h2 className="mb-6 font-editorial text-2xl text-[#E6DBC7] md:mb-8 md:text-3xl">
-                Breathwork Safety
-              </h2>
-              <div className="space-y-4 text-base leading-relaxed text-foreground/90 md:space-y-5 md:text-lg">
-                <p>
-                  The breathing classes and techniques in this app are not suitable for everyone.
-                  We're all unique, with different nervous systems, health histories, and needs — so
-                  please take things at your own pace.
-                </p>
-                <p>
-                  Before diving in, read through the session descriptions carefully and familiarize
-                  yourself with the Safety Disclosure below. If you're unsure whether breathwork is
-                  right for you, please reach out to your doctor or healthcare provider.
-                </p>
-                <p>
-                  And of course, I'm always here if you want to drop me a message with any questions
-                  or concerns. Your safety and wellbeing come first.
-                </p>
-                <p className="pt-2">
-                  <strong className="text-[#E6DBC7]">
-                    Please read the full Safety Disclosure:
-                  </strong>
-                </p>
-                <Link
-                  to="/safety-disclosure"
-                  className="inline-block text-sm text-[#E6DBC7] underline transition-colors hover:text-[#E6DBC7]/80"
-                >
-                  View Safety Disclosure
-                </Link>
-              </div>
-            </div>
-
             {/* About the App Section */}
             <div className="border-t border-muted-foreground/20 py-10 md:py-14">
               <h2 className="mb-6 font-editorial text-2xl text-[#E6DBC7] md:mb-8 md:text-3xl">
@@ -221,6 +178,40 @@ const About = () => {
               </p>
             </div>
 
+            {/* Breathwork Safety Section */}
+            <div className="border-t border-muted-foreground/20 py-10 md:py-14">
+              <h2 className="mb-6 font-editorial text-2xl text-[#E6DBC7] md:mb-8 md:text-3xl">
+                Breathwork Safety
+              </h2>
+              <div className="space-y-4 text-base leading-relaxed text-foreground/90 md:space-y-5 md:text-lg">
+                <p>
+                  The breathing classes and techniques in this app are not suitable for everyone.
+                  We're all unique, with different nervous systems, health histories, and needs — so
+                  please take things at your own pace.
+                </p>
+                <p>
+                  Before diving in, read through the session descriptions carefully and familiarize
+                  yourself with the Safety Disclosure below. If you're unsure whether breathwork is
+                  right for you, please reach out to your doctor or healthcare provider.
+                </p>
+                <p>
+                  And of course, I'm always here if you want to drop me a message with any questions
+                  or concerns. Your safety and wellbeing come first.
+                </p>
+                <p className="pt-2">
+                  <strong className="text-[#E6DBC7]">
+                    Please read the full Safety Disclosure:
+                  </strong>
+                </p>
+                <Link
+                  to="/safety-disclosure"
+                  className="inline-block text-[#E6DBC7] underline transition-colors hover:text-[#E6DBC7]/80"
+                >
+                  View Safety Disclosure
+                </Link>
+              </div>
+            </div>
+
             {/* Your Journey Section */}
             <div className="border-t border-muted-foreground/20 py-10 md:py-14">
               <h2 className="mb-6 font-editorial text-2xl text-[#E6DBC7] md:mb-8 md:text-3xl">
@@ -244,8 +235,7 @@ const About = () => {
               <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-2 lg:gap-16">
                 <div className="space-y-4">
                   <p className="text-base text-foreground/70 md:text-lg">
-                    For any questions or support, please reach out through the contact form on our
-                    main website or reach out to March on{" "}
+                    For any questions or support, please reach out to March on{" "}
                     <a
                       href="mailto:support@embersstudio.io"
                       className="text-[#E6DBC7] underline transition-colors hover:text-[#E6DBC7]/80"
