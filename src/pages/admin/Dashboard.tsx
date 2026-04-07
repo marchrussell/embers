@@ -88,7 +88,7 @@ const AdminDashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-8 py-24">
-        <div className="mb-20">
+        <div className="mt-12 mb-20">
           <h1 className="mb-6 font-editorial text-5xl font-light text-[#E6DBC7] md:text-6xl">
             Admin Dashboard
           </h1>
