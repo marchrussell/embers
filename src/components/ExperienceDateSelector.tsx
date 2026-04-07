@@ -43,12 +43,7 @@ function formatDateToReadable(date: Date): string {
   });
 }
 
-export function EventDateSelector({
-  eventId,
-  time,
-  onDateSelect,
-  selectedDate,
-}: Props) {
+export function EventDateSelector({ eventId, time, onDateSelect, selectedDate }: Props) {
   const today = new Date().toISOString().split("T")[0];
 
   const { data: availableDates = [], isLoading: loading } = useQuery<ScheduledEventDate[]>({

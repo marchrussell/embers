@@ -56,8 +56,7 @@ interface DbExperienceConfig {
 function toRecurrenceRule(row: DbExperienceConfig): RecurrenceRule | null {
   if (row.recurrence_type === "nthWeekday" && row.weekday != null && row.nth != null)
     return { type: "nthWeekday", weekday: row.weekday, nth: row.nth };
-  if (row.recurrence_type === "weekly")
-    return { type: "weekly", weekdays: row.weekdays ?? [] };
+  if (row.recurrence_type === "weekly") return { type: "weekly", weekdays: row.weekdays ?? [] };
   if (row.recurrence_type === "nthDay" && row.nth_day != null)
     return { type: "nthDay", day: row.nth_day };
   return null;

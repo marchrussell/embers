@@ -2,7 +2,13 @@ import { Calendar, CalendarDays, Loader2, MapPin, Plus, RefreshCw } from "lucide
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { AdminLayout, AdminStatsCard, AdminTable, adminTableCellClass, adminTableRowClass } from "@/components/admin";
+import {
+  AdminLayout,
+  AdminStatsCard,
+  AdminTable,
+  adminTableCellClass,
+  adminTableRowClass,
+} from "@/components/admin";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,7 +39,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -81,7 +94,6 @@ interface ExperienceDate {
 }
 
 type ExperienceFormState = Omit<ExperienceConfig, "id">;
-
 
 const emptyForm: ExperienceFormState = {
   experience_type: "",
@@ -150,7 +162,10 @@ function generateDateRange(config: ExperienceConfig, from: Date, to: Date): stri
       const iso = date.toISOString().split("T")[0];
       if (iso >= fromISO && iso <= toISO) dates.push(iso);
       month++;
-      if (month > 11) { month = 0; year++; }
+      if (month > 11) {
+        month = 0;
+        year++;
+      }
     }
   } else if (config.recurrence_type === "weekly" && config.weekdays?.length) {
     const d = new Date(from);
@@ -172,7 +187,10 @@ function generateDateRange(config: ExperienceConfig, from: Date, to: Date): stri
       const iso = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
       if (iso >= fromISO && iso <= toISO) dates.push(iso);
       month++;
-      if (month > 11) { month = 0; year++; }
+      if (month > 11) {
+        month = 0;
+        year++;
+      }
     }
   }
 
@@ -509,11 +527,7 @@ const CreateExperienceDialog = ({ onCreated }: CreateExperienceDialogProps) => {
         max_capacity: form.max_capacity,
       };
 
-      const { data, error } = await db
-        .from("experience_configs")
-        .insert(payload)
-        .select()
-        .single();
+      const { data, error } = await db.from("experience_configs").insert(payload).select().single();
 
       if (error) throw error;
 
@@ -624,10 +638,7 @@ const EditExperienceDialog = ({ config, onSaved }: EditExperienceDialogProps) =>
         max_capacity: form.max_capacity,
       };
 
-      const { error } = await db
-        .from("experience_configs")
-        .update(payload)
-        .eq("id", config.id);
+      const { error } = await db.from("experience_configs").update(payload).eq("id", config.id);
 
       if (error) throw error;
 
@@ -885,7 +896,7 @@ const ManageDatesDialog = ({ config }: ManageDatesDialogProps) => {
                     className={`border-b border-white/10 ${d.date < today ? "opacity-40" : ""}`}
                   >
                     <TableCell
-                      className={`py-3 text-sm ${d.is_cancelled ? "line-through text-foreground/40" : "text-[#E6DBC7]"}`}
+                      className={`py-3 text-sm ${d.is_cancelled ? "text-foreground/40 line-through" : "text-[#E6DBC7]"}`}
                     >
                       {formatDate(d.date)}
                     </TableCell>
@@ -950,11 +961,7 @@ const ManageDatesDialog = ({ config }: ManageDatesDialogProps) => {
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
             <div className="space-y-1">
               <Label className="text-xs text-foreground/60">Date</Label>
-              <Input
-                type="date"
-                value={addDate}
-                onChange={(e) => setAddDate(e.target.value)}
-              />
+              <Input type="date" value={addDate} onChange={(e) => setAddDate(e.target.value)} />
             </div>
             <div className="space-y-1">
               <Label className="text-xs text-foreground/60">Time override</Label>
@@ -971,7 +978,9 @@ const ManageDatesDialog = ({ config }: ManageDatesDialogProps) => {
                 type="number"
                 min={1}
                 value={addCapacity}
-                onChange={(e) => setAddCapacity(e.target.value ? Number(e.target.value) : config.max_capacity)}
+                onChange={(e) =>
+                  setAddCapacity(e.target.value ? Number(e.target.value) : config.max_capacity)
+                }
               />
             </div>
             <div className="space-y-1">
@@ -1035,9 +1044,7 @@ const AdminExperiences = () => {
     <AdminLayout
       title="In-Person Experiences"
       description="Manage recurring in-person experience configurations"
-      actions={
-        <CreateExperienceDialog onCreated={(c) => setConfigs((prev) => [...prev, c])} />
-      }
+      actions={<CreateExperienceDialog onCreated={(c) => setConfigs((prev) => [...prev, c])} />}
     >
       {/* Stats */}
       <div className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -1072,9 +1079,7 @@ const AdminExperiences = () => {
                 <p className="font-mono text-xs text-foreground/50">{config.experience_type}</p>
               </div>
             </TableCell>
-            <TableCell className={adminTableCellClass}>
-              {config.recurrence_label ?? "—"}
-            </TableCell>
+            <TableCell className={adminTableCellClass}>{config.recurrence_label ?? "—"}</TableCell>
             <TableCell className={adminTableCellClass}>
               {config.time ?? "—"} {config.timezone}
             </TableCell>

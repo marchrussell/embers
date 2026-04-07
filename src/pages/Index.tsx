@@ -290,8 +290,8 @@ const Index = () => {
                           {event.subtitle}
                         </p>
                         <p className="text-[11px] font-medium tracking-wide text-white/50">
-                          {event.recurrenceLabel} 
-                        </p> 
+                          {event.recurrenceLabel}
+                        </p>
                       </div>
                     </div>
                   </Link>

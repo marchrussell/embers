@@ -119,7 +119,6 @@ const SESSION_TYPE_COLORS: Record<string, string> = {
 const getTypeColor = (type: string) =>
   SESSION_TYPE_COLORS[type] ?? "bg-muted text-muted-foreground border-border";
 
-
 const DEFAULT_WHAT_TO_EXPECT = [
   "A guided, voice-led practice",
   "You can sit, lie down, or simply listen",
