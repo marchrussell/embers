@@ -1,25 +1,5 @@
 project_id = "qnqbmxjlqufzrqxptqsd"
 
-[auth.email.template.recovery]
-subject = "Embers Studio: Reset Your Password"
-content_path = "./templates/recovery.html"
-
-[auth.email.template.confirmation]
-subject = "Welcome to Embers Studio – Confirm Your Email"
-content_path = "./templates/confirmation.html"
-
-[auth.email.template.magic_link]
-subject = "Embers Studio: Your Sign-in Link"
-content_path = "./templates/magic_link.html"
-
-[auth.email.template.email_change]
-subject = "Embers Studio: Confirm Your Email Change"
-content_path = "./templates/email_change.html"
-
-[auth.email.template.invite]
-subject = "You're Invited to Embers Studio"
-content_path = "./templates/invite.html"
-
 [functions.create-checkout]
 verify_jwt = false
 
@@ -38,16 +18,10 @@ verify_jwt = false
 [functions.send-contact-email]
 verify_jwt = false
 
-[functions.create-course-checkout]
-verify_jwt = false
-
 [functions.send-event-reminders]
 verify_jwt = false
 
 [functions.create-event-payment]
-verify_jwt = false
-
-[functions.verify-event-payment]
 verify_jwt = false
 
 [functions.daily-create-room]

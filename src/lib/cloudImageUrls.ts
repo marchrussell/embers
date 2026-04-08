@@ -26,7 +26,7 @@ export const getCloudImageUrl = (
 ): string => {
   const { width, height, quality = 80, format = "webp", resize = "cover" } = options;
 
-  const baseUrl = `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${imagePath}`;
+  const baseUrl = `${SUPABASE_URL}/storage/v1/render/image/public/${bucket}/${imagePath}`;
 
   // Build transformation parameters
   const params = new URLSearchParams();
@@ -34,7 +34,7 @@ export const getCloudImageUrl = (
   if (height) params.append("height", height.toString());
   params.append("quality", quality.toString());
   params.append("format", format);
-  params.append("resize", resize);
+  if (width && height) params.append("resize", resize);
 
   return `${baseUrl}?${params.toString()}`;
 };

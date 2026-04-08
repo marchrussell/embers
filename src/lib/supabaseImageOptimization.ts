@@ -26,6 +26,12 @@ export const getOptimizedImageUrl = (
 
   const { width, height, quality = 80, format = "webp", resize = "cover" } = options;
 
+  // Swap to the render/image endpoint which supports transformations
+  const renderUrl = publicUrl.replace(
+    "/storage/v1/object/public/",
+    "/storage/v1/render/image/public/"
+  );
+
   // Build transformation parameters
   const params = new URLSearchParams();
 
@@ -33,11 +39,11 @@ export const getOptimizedImageUrl = (
   if (height) params.append("height", height.toString());
   params.append("quality", quality.toString());
   params.append("format", format);
-  params.append("resize", resize);
+  if (width && height) params.append("resize", resize);
 
   // Add transformation parameters to URL
-  const separator = publicUrl.includes("?") ? "&" : "?";
-  return `${publicUrl}${separator}${params.toString()}`;
+  const separator = renderUrl.includes("?") ? "&" : "?";
+  return `${renderUrl}${separator}${params.toString()}`;
 };
 
 /**
