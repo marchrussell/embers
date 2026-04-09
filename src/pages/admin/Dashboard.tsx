@@ -65,9 +65,9 @@ const AdminDashboard = () => {
           description: "Create and manage recurring in-person experience configurations",
         },
         {
-          title: "Event Bookings",
-          path: "/admin/event-bookings",
-          description: "View event bookings and attendee lists",
+          title: "Experience Bookings",
+          path: "/admin/experience-bookings",
+          description: "View experience bookings and attendee lists",
         },
       ],
     },

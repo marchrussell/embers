@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
 
-interface EventBooking {
+interface ExperienceBooking {
   id: string;
   experience_type: string | null;
   experience_date: string | null;
@@ -50,8 +50,8 @@ const EVENT_TITLES: Record<string, string> = {
   "unwind-rest": "Unwind & Rest (IG Live)",
 };
 
-const EventBookings = () => {
-  const [bookings, setBookings] = useState<EventBooking[]>([]);
+const ExperienceBookings = () => {
+  const [bookings, setBookings] = useState<ExperienceBooking[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedEventType, setSelectedEventType] = useState<string>("all");
   const [selectedDate, setSelectedDate] = useState<string>("all");
@@ -75,7 +75,7 @@ const EventBookings = () => {
 
       if (error) throw error;
 
-      const bookingsData = (data || []) as EventBooking[];
+      const bookingsData = (data || []) as ExperienceBooking[];
       setBookings(bookingsData);
 
       const eventTypes = [
@@ -348,4 +348,4 @@ const EventBookings = () => {
   );
 };
 
-export default EventBookings;
+export default ExperienceBookings;

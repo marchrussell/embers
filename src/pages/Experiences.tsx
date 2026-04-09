@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import { Calendar, Share } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -12,8 +13,7 @@ import { TermsMicrocopy } from "@/components/TermsMicrocopy";
 import { GlowButton } from "@/components/ui/glow-button";
 import { IconButton } from "@/components/ui/icon-button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { useQuery } from "@tanstack/react-query";
-
+import { supabase } from "@/integrations/supabase/client";
 import {
   CalendarEvent,
   downloadICalFile,
@@ -23,7 +23,6 @@ import {
 import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
 import { formatEventDate, getNextEventDate, RecurrenceRule } from "@/lib/experienceDateUtils";
 import { EventSchedule } from "@/lib/experiencesData";
-import { supabase } from "@/integrations/supabase/client";
 
 const moreWaysToPracticeImg = getCloudImageUrl(CLOUD_IMAGES.moreWaysToPractice);
 
@@ -193,7 +192,7 @@ const Experiences = () => {
   };
 
   return (
-    <ErrorBoundary>
+    <ErrorBoundary> 
       <div className="flex min-h-screen flex-col bg-black">
         <NavBar />
 
