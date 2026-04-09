@@ -150,7 +150,7 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
               <Label className="mb-4 block text-[15px] font-medium tracking-wide text-white/90">
                 Select a Date
               </Label>
-              <Suspense fallback={<SkeletonBox className="h-10 w-full rounded-lg" />}>
+              <Suspense fallback={<SkeletonBox className="h-10 w-full rounded-lg bg-white/10" />}>
                 <EventDateSelector
                   eventId={event.id}
                   time={event.time}
