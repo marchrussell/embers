@@ -7,7 +7,7 @@ export interface ImageTransformOptions {
   width?: number;
   height?: number;
   quality?: number; // 1-100
-  format?: "webp" | "avif" | "origin";
+  format?: "origin";
   resize?: "cover" | "contain" | "fill";
 }
 
@@ -24,7 +24,12 @@ export const getOptimizedImageUrl = (
     return publicUrl;
   }
 
-  const { width, height, quality = 80, format = "webp", resize = "cover" } = options;
+  // If already a render URL (e.g. from getCloudImageUrl), don't re-process — prevents duplicate params
+  if (publicUrl.includes("/storage/v1/render/image/")) {
+    return publicUrl;
+  }
+
+  const { width, height, quality = 80, resize = "cover" } = options;
 
   // Swap to the render/image endpoint which supports transformations
   const renderUrl = publicUrl.replace(
@@ -38,7 +43,6 @@ export const getOptimizedImageUrl = (
   if (width) params.append("width", width.toString());
   if (height) params.append("height", height.toString());
   params.append("quality", quality.toString());
-  params.append("format", format);
   if (width && height) params.append("resize", resize);
 
   // Add transformation parameters to URL

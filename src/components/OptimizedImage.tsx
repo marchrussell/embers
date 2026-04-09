@@ -40,7 +40,6 @@ export const OptimizedImage = ({
   // Get optimized image URL
   const optimizedSrc = getOptimizedImageUrl(src, {
     quality: 80,
-    format: "webp",
     ...optimizationOptions,
   });
 

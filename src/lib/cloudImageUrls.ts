@@ -5,14 +5,16 @@
  * with automatic CDN transformation for responsive, optimized delivery.
  */
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+// Use VITE_SUPABASE_STORAGE_URL if set (useful for local dev to point storage at production
+// while keeping auth/DB local). Falls back to VITE_SUPABASE_URL.
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_STORAGE_URL || import.meta.env.VITE_SUPABASE_URL;
 const BUCKET_NAME = "site-images";
 
 export interface CloudImageOptions {
   width?: number;
   height?: number;
   quality?: number; // 1-100, default 80
-  format?: "webp" | "avif" | "origin";
+  format?: "origin";
   resize?: "cover" | "contain" | "fill";
 }
 
@@ -24,16 +26,14 @@ export const getCloudImageUrl = (
   options: CloudImageOptions = {},
   bucket = BUCKET_NAME
 ): string => {
-  const { width, height, quality = 80, format = "webp", resize = "cover" } = options;
+  const { width, height, quality = 80, resize = "cover" } = options;
 
   const baseUrl = `${SUPABASE_URL}/storage/v1/render/image/public/${bucket}/${imagePath}`;
 
-  // Build transformation parameters
   const params = new URLSearchParams();
   if (width) params.append("width", width.toString());
   if (height) params.append("height", height.toString());
   params.append("quality", quality.toString());
-  params.append("format", format);
   if (width && height) params.append("resize", resize);
 
   return `${baseUrl}?${params.toString()}`;
@@ -105,22 +105,3 @@ export const CLOUD_IMAGES = {
   // Course images in program-images bucket
   mentalReset: "ld5cp5y5xzk-1774964287293.webp",
 } as const;
-
-/**
- * Helper to check if Cloud images are available
- * Falls back to local assets if not uploaded yet
- */
-export const useCloudImage = (
-  cloudPath: string,
-  localFallback: string,
-  options: CloudImageOptions = {}
-): { src: string; srcSet?: string } => {
-  // Always try Cloud first (images should be uploaded)
-  const cloudUrl = getCloudImageUrl(cloudPath, options);
-  const srcSet = getCloudImageSrcSet(cloudPath, options);
-
-  return {
-    src: cloudUrl,
-    srcSet,
-  };
-};

@@ -161,7 +161,6 @@ const Index = () => {
                   }}
                   optimizationOptions={{
                     quality: 85,
-                    format: "webp",
                     width: 960,
                     height: 500,
                   }}
