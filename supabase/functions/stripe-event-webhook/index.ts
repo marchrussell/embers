@@ -80,7 +80,6 @@ serve(async (req) => {
           eventLocation,
           userId,
           quantity,
-          signatureData,
           attendeeName,
           attendeeEmail
         } = session.metadata;
@@ -102,7 +101,6 @@ serve(async (req) => {
             total_amount: session.amount_total || 0,
             stripe_payment_intent_id: session.payment_intent as string,
             payment_status: 'paid',
-            signature_data: signatureData,
             has_accepted_safety: true,
             attendee_name: attendeeName,
             attendee_email: attendeeEmail,

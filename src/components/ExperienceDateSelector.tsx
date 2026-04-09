@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 import {
   Select,
@@ -46,60 +46,56 @@ function formatDateToReadable(date: Date): string {
 export function EventDateSelector({ eventId, time, onDateSelect, selectedDate }: Props) {
   const today = new Date().toISOString().split("T")[0];
 
-  const { data: availableDates = [], isLoading: loading } = useQuery<ScheduledEventDate[]>({
-    queryKey: ["experience-dates", eventId],
+  const { data: availableDates } = useSuspenseQuery<ScheduledEventDate[]>({
+    queryKey: ["experience-dates", eventId, today],
     queryFn: async () => {
-      const { data: dbDates } = await db
-        .from("experience_dates")
-        .select("*")
-        .eq("experience_type", eventId)
-        .eq("is_cancelled", false)
-        .gte("date", today)
-        .order("date", { ascending: true })
-        .limit(24);
+      try {
+        const { data: dbDates } = await db
+          .from("experience_dates")
+          .select("*")
+          .eq("experience_type", eventId)
+          .eq("is_cancelled", false)
+          .gte("date", today)
+          .order("date", { ascending: true })
+          .limit(24);
 
-      const rows: ExperienceDateRow[] = dbDates ?? [];
+        const rows: ExperienceDateRow[] = dbDates ?? [];
 
-      const { data: bookings } = await supabase
-        .from("event_bookings")
-        .select("event_date, quantity")
-        .eq("event_type", eventId)
-        .eq("payment_status", "paid");
+        const counts: Record<string, number> = {};
+        try {
+          const { data: bookings } = await supabase
+            .from("event_bookings")
+            .select("event_date, quantity")
+            .eq("event_type", eventId)
+            .eq("payment_status", "paid");
+          ((bookings as unknown as BookingCount[] | null) ?? []).forEach((b) => {
+            if (b.event_date) counts[b.event_date] = (counts[b.event_date] || 0) + b.quantity;
+          });
+        } catch {
+          // booking count errors don't block dates from showing
+        }
 
-      const counts: Record<string, number> = {};
-      ((bookings as unknown as BookingCount[] | null) ?? []).forEach((booking) => {
-        if (booking.event_date)
-          counts[booking.event_date] = (counts[booking.event_date] || 0) + booking.quantity;
-      });
-
-      return rows
-        .map((row) => {
-          const d = new Date(row.date + "T00:00:00");
-          const resolvedTime = row.time ?? time;
-          const maxCapacity = row.max_capacity;
-          const spotsRemaining = maxCapacity - (counts[row.date] || 0);
-          return {
-            date: row.date,
-            displayDate: formatDateToReadable(d),
-            time: resolvedTime,
-            dayOfWeek: d.toLocaleDateString("en-GB", { weekday: "short" }),
-            isOnline: maxCapacity >= 9999,
-            maxCapacity,
-            spotsRemaining,
-          } satisfies ScheduledEventDate;
-        })
-        .filter((date) => date.spotsRemaining > 0);
+        return rows
+          .map((row) => {
+            const d = new Date(row.date + "T00:00:00");
+            const maxCapacity = row.max_capacity;
+            const spotsRemaining = maxCapacity - (counts[row.date] || 0);
+            return {
+              date: row.date,
+              displayDate: formatDateToReadable(d),
+              time: row.time ?? time,
+              dayOfWeek: d.toLocaleDateString("en-GB", { weekday: "short" }),
+              isOnline: maxCapacity >= 9999,
+              maxCapacity,
+              spotsRemaining,
+            } satisfies ScheduledEventDate;
+          })
+          .filter((date) => date.spotsRemaining > 0);
+      } catch {
+        return [];
+      }
     },
-    enabled: !!eventId,
   });
-
-  if (loading) {
-    return (
-      <div className="w-full rounded-lg border border-white/20 bg-white/5 p-3 text-sm text-white/50">
-        Loading available dates...
-      </div>
-    );
-  }
 
   if (availableDates.length === 0) {
     return (

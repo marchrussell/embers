@@ -40,7 +40,6 @@ serve(async (req) => {
       eventTime,
       eventLocation,
       quantity, 
-      signatureData, 
       attendeeName, 
       attendeeEmail,
       priceInPence 
@@ -48,7 +47,7 @@ serve(async (req) => {
     
     logStep("Request body parsed", { eventType, eventDate, quantity, attendeeName, eventLocation });
 
-    if (!eventType || !eventDate || !quantity || !signatureData || !attendeeName || !attendeeEmail) {
+    if (!eventType || !eventDate || !quantity || !attendeeName || !attendeeEmail) {
       throw new Error("Missing required fields");
     }
 
@@ -86,7 +85,6 @@ serve(async (req) => {
           quantity: quantity,
           total_amount: 0,
           payment_status: 'paid', // Free = confirmed
-          signature_data: signatureData,
           has_accepted_safety: true,
           attendee_name: attendeeName,
           attendee_email: attendeeEmail,
@@ -136,7 +134,6 @@ serve(async (req) => {
         eventLocation: eventLocation || '',
         userId: user.id,
         quantity: quantity.toString(),
-        signatureData,
         attendeeName,
         attendeeEmail,
       },

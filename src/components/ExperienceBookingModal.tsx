@@ -1,9 +1,9 @@
 import { Minus, Plus } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { EventDateSelector } from "@/components/ExperienceDateSelector";
-import { ButtonLoadingSpinner } from "@/components/skeletons";
+import { ButtonLoadingSpinner, SkeletonBox } from "@/components/skeletons";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DarkInput } from "@/components/ui/dark-input";
@@ -65,10 +65,8 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
   const [attendeeName, setAttendeeName] = useState("");
   const [attendeeEmail, setAttendeeEmail] = useState("");
   const [hasAccepted, setHasAccepted] = useState(false);
-  const [isDrawing, setIsDrawing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState<ScheduledEventDate | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const maxTickets = selectedDate
     ? Math.min(selectedDate.maxCapacity, selectedDate.spotsRemaining ?? selectedDate.maxCapacity)
@@ -83,77 +81,11 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
       setAttendeeEmail("");
       setHasAccepted(false);
       setSelectedDate(null);
-      clearSignature();
     }
   }, [open]);
 
-  const startDrawing = (e: React.MouseEvent | React.TouchEvent) => {
-    setIsDrawing(true);
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const rect = canvas.getBoundingClientRect();
-    const x = "touches" in e ? e.touches[0].clientX - rect.left : e.clientX - rect.left;
-    const y = "touches" in e ? e.touches[0].clientY - rect.top : e.clientY - rect.top;
-
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-  };
-
-  const draw = (e: React.MouseEvent | React.TouchEvent) => {
-    if (!isDrawing) return;
-    e.preventDefault();
-
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const rect = canvas.getBoundingClientRect();
-    const x = "touches" in e ? e.touches[0].clientX - rect.left : e.clientX - rect.left;
-    const y = "touches" in e ? e.touches[0].clientY - rect.top : e.clientY - rect.top;
-
-    ctx.strokeStyle = "#000";
-    ctx.lineWidth = 2;
-    ctx.lineCap = "round";
-    ctx.lineTo(x, y);
-    ctx.stroke();
-  };
-
-  const stopDrawing = () => {
-    setIsDrawing(false);
-  };
-
-  const clearSignature = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-  };
-
   const handleProceedToPayment = async () => {
     if (!event || !selectedDate) return;
-
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const signatureData = canvas.toDataURL();
-
-    // Check if signature is empty
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const isSignatureEmpty = !imageData.data.some((channel) => channel !== 0);
-
-    if (isSignatureEmpty) {
-      toast.error("Please provide your signature");
-      return;
-    }
 
     setLoading(true);
 
@@ -173,7 +105,6 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
           eventTime: selectedDate.time,
           eventLocation,
           quantity,
-          signatureData,
           attendeeName,
           attendeeEmail,
           priceInPence: eventPrice,
@@ -219,12 +150,14 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
               <Label className="mb-4 block text-[15px] font-medium tracking-wide text-white/90">
                 Select a Date
               </Label>
-              <EventDateSelector
-                eventId={event.id}
-                time={event.time}
-                selectedDate={selectedDate}
-                onDateSelect={setSelectedDate}
-              />
+              <Suspense fallback={<SkeletonBox className="h-10 w-full rounded-lg" />}>
+                <EventDateSelector
+                  eventId={event.id}
+                  time={event.time}
+                  selectedDate={selectedDate}
+                  onDateSelect={setSelectedDate}
+                />
+              </Suspense>
             </div>
 
             <div>
@@ -321,7 +254,7 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
                 id="accept"
                 checked={hasAccepted}
                 onCheckedChange={(checked) => setHasAccepted(checked === true)}
-                className="mt-0.5 border-white/40 data-[state=checked]:bg-white data-[state=checked]:text-black"
+                className="mt-0.5 border-white/40 p-2 data-[state=checked]:bg-white data-[state=checked]:text-black"
               />
               <label
                 htmlFor="accept"
@@ -329,36 +262,6 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
               >
                 I have read and agree to the safety disclosure above
               </label>
-            </div>
-
-            <div>
-              <Label className="mb-3 block text-base font-medium text-white/90">
-                Your Signature
-              </Label>
-              <div className="overflow-hidden rounded-2xl border border-white/20 bg-white">
-                <canvas
-                  ref={canvasRef}
-                  width={500}
-                  height={180}
-                  className="w-full touch-none"
-                  style={{ maxHeight: "140px" }}
-                  onMouseDown={startDrawing}
-                  onMouseMove={draw}
-                  onMouseUp={stopDrawing}
-                  onMouseLeave={stopDrawing}
-                  onTouchStart={startDrawing}
-                  onTouchMove={draw}
-                  onTouchEnd={stopDrawing}
-                />
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={clearSignature}
-                className="mt-2 text-sm text-white/60 hover:bg-transparent hover:text-white"
-              >
-                Clear Signature
-              </Button>
             </div>
 
             <div className="flex flex-col gap-3 pt-2 md:flex-row">
