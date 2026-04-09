@@ -262,11 +262,11 @@ serve(async (req) => {
             .join(' ');
 
           const { data: booking, error: bookingError } = await supabaseClient
-            .from('event_bookings')
+            .from('experiences_bookings')
             .insert({
               user_id: userId,
-              event_type: eventType,
-              event_date: eventDate,
+              experience_type: eventType,
+              experience_date: eventDate,
               quantity: parseInt(quantity),
               total_amount: session.amount_total || 0,
               stripe_payment_intent_id: session.payment_intent as string,

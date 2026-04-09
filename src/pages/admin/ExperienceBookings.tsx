@@ -25,8 +25,8 @@ import { supabase } from "@/integrations/supabase/client";
 
 interface EventBooking {
   id: string;
-  event_type: string | null;
-  event_date: string | null;
+  experience_type: string | null;
+  experience_date: string | null;
   attendee_name: string;
   attendee_email: string;
   quantity: number;
@@ -66,8 +66,9 @@ const EventBookings = () => {
   const fetchBookings = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
-        .from("event_bookings")
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data, error } = await (supabase as any)
+        .from("experiences_bookings")
         .select("*")
         .eq("payment_status", "paid")
         .order("created_at", { ascending: false });
@@ -78,26 +79,26 @@ const EventBookings = () => {
       setBookings(bookingsData);
 
       const eventTypes = [
-        ...new Set(bookingsData.map((b) => b.event_type).filter(Boolean)),
+        ...new Set(bookingsData.map((b) => b.experience_type).filter(Boolean)),
       ] as string[];
-      const dates = [...new Set(bookingsData.map((b) => b.event_date).filter(Boolean))] as string[];
+      const dates = [...new Set(bookingsData.map((b) => b.experience_date).filter(Boolean))] as string[];
 
       setUniqueEventTypes(eventTypes);
       setUniqueDates(dates.sort());
 
       const stats: Record<string, DateStats> = {};
       bookingsData.forEach((booking) => {
-        if (booking.event_date) {
-          if (!stats[booking.event_date]) {
-            stats[booking.event_date] = {
-              date: booking.event_date,
-              displayDate: formatDateDisplay(booking.event_date),
+        if (booking.experience_date) {
+          if (!stats[booking.experience_date]) {
+            stats[booking.experience_date] = {
+              date: booking.experience_date,
+              displayDate: formatDateDisplay(booking.experience_date),
               totalBookings: 0,
               totalTickets: 0,
             };
           }
-          stats[booking.event_date].totalBookings += 1;
-          stats[booking.event_date].totalTickets += booking.quantity;
+          stats[booking.experience_date].totalBookings += 1;
+          stats[booking.experience_date].totalTickets += booking.quantity;
         }
       });
       setDateStats(Object.values(stats).sort((a, b) => a.date.localeCompare(b.date)));
@@ -124,8 +125,8 @@ const EventBookings = () => {
   };
 
   const filteredBookings = bookings.filter((booking) => {
-    if (selectedEventType !== "all" && booking.event_type !== selectedEventType) return false;
-    if (selectedDate !== "all" && booking.event_date !== selectedDate) return false;
+    if (selectedEventType !== "all" && booking.experience_type !== selectedEventType) return false;
+    if (selectedDate !== "all" && booking.experience_date !== selectedDate) return false;
     return true;
   });
 
@@ -143,8 +144,8 @@ const EventBookings = () => {
     const rows = filteredBookings.map((b) => [
       b.attendee_name,
       b.attendee_email,
-      EVENT_TITLES[b.event_type || ""] || b.event_type || "Unknown",
-      b.event_date || "N/A",
+      EVENT_TITLES[b.experience_type || ""] || b.experience_type || "Unknown",
+      b.experience_date || "N/A",
       b.quantity.toString(),
       `£${(b.total_amount / 100).toFixed(2)}`,
       b.stripe_payment_intent_id || "N/A",
@@ -159,7 +160,7 @@ const EventBookings = () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `event-bookings-${new Date().toISOString().split("T")[0]}.csv`;
+    link.download = `experience-bookings-${new Date().toISOString().split("T")[0]}.csv`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -168,7 +169,7 @@ const EventBookings = () => {
   };
 
   return (
-    <AdminLayout title="Event Bookings" description="View and manage event attendee bookings">
+    <AdminLayout title="Experience Bookings" description="View and manage experience attendee bookings">
       {/* Stats Cards */}
       <div className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-3">
         <AdminStatsCard title="Total Bookings" value={bookings.length} icon={Users} />
@@ -321,10 +322,10 @@ const EventBookings = () => {
                       </TableCell>
                       <TableCell className="text-white/80">{booking.attendee_email}</TableCell>
                       <TableCell className="text-sm text-white/80">
-                        {EVENT_TITLES[booking.event_type || ""] || booking.event_type || "Unknown"}
+                        {EVENT_TITLES[booking.experience_type || ""] || booking.experience_type || "Unknown"}
                       </TableCell>
                       <TableCell className="text-white/80">
-                        {booking.event_date ? formatDateDisplay(booking.event_date) : "N/A"}
+                        {booking.experience_date ? formatDateDisplay(booking.experience_date) : "N/A"}
                       </TableCell>
                       <TableCell className="text-white">{booking.quantity}</TableCell>
                       <TableCell className="text-white">

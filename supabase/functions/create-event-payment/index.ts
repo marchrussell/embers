@@ -77,11 +77,11 @@ serve(async (req) => {
       );
 
       const { data: booking, error: bookingError } = await supabaseAdmin
-        .from('event_bookings')
+        .from('experiences_bookings')
         .insert({
           user_id: user.id,
-          event_type: eventType,
-          event_date: eventDate,
+          experience_type: eventType,
+          experience_date: eventDate,
           quantity: quantity,
           total_amount: 0,
           payment_status: 'paid', // Free = confirmed

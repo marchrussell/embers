@@ -21,7 +21,7 @@ interface Props {
 }
 
 interface BookingCount {
-  event_date: string | null;
+  experience_date: string | null;
   quantity: number;
 }
 
@@ -63,13 +63,13 @@ export function EventDateSelector({ eventId, time, onDateSelect, selectedDate }:
 
         const counts: Record<string, number> = {};
         try {
-          const { data: bookings } = await supabase
-            .from("event_bookings")
-            .select("event_date, quantity")
-            .eq("event_type", eventId)
+          const { data: bookings } = await db
+            .from("experiences_bookings")
+            .select("experience_date, quantity")
+            .eq("experience_type", eventId)
             .eq("payment_status", "paid");
           ((bookings as unknown as BookingCount[] | null) ?? []).forEach((b) => {
-            if (b.event_date) counts[b.event_date] = (counts[b.event_date] || 0) + b.quantity;
+            if (b.experience_date) counts[b.experience_date] = (counts[b.experience_date] || 0) + b.quantity;
           });
         } catch {
           // booking count errors don't block dates from showing

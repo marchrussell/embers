@@ -33,12 +33,12 @@ serve(async (req) => {
 
     // Find bookings for events happening in 24-26 hours that haven't had reminders sent
     const { data: bookings, error: fetchError } = await supabase
-      .from("event_bookings")
+      .from("experiences_bookings")
       .select("*")
       .eq("payment_status", "completed")
       .is("reminder_sent_at", null)
-      .gte("event_date", tomorrow.toISOString())
-      .lte("event_date", tomorrowPlus2h.toISOString());
+      .gte("experience_date", tomorrow.toISOString())
+      .lte("experience_date", tomorrowPlus2h.toISOString());
 
     if (fetchError) {
       console.error("Error fetching bookings:", fetchError);
@@ -52,13 +52,13 @@ serve(async (req) => {
     for (const booking of bookings || []) {
       try {
         // Parse event date for display
-        const eventDate = new Date(booking.event_date);
+        const eventDate = new Date(booking.experience_date);
         const formattedDate = eventDate.toLocaleDateString('en-GB', {
           day: '2-digit',
           month: '2-digit',
           year: 'numeric'
         }).replace(/\//g, ' • ');
-        
+
         const formattedTime = eventDate.toLocaleTimeString('en-GB', {
           hour: 'numeric',
           minute: '2-digit',
@@ -66,14 +66,14 @@ serve(async (req) => {
           timeZone: 'Europe/London'
         }).toUpperCase() + ' GMT';
 
-        // Determine location based on event type
+        // Determine location based on experience type
         let location = 'Online';
-        if (booking.event_type?.includes('In-Person') || booking.event_type?.includes('Dub')) {
+        if (booking.experience_type?.includes('In-Person') || booking.experience_type?.includes('Dub')) {
           location = 'AUFI, 20 Eastcastle St, London W1W 8DB';
         }
 
         const emailHtml = eventReminderEmail(booking.attendee_name, {
-          eventTitle: booking.event_type || 'MARCH Event',
+          eventTitle: booking.experience_type || 'MARCH Event',
           eventDate: formattedDate,
           eventTime: formattedTime,
           location,
@@ -84,7 +84,7 @@ serve(async (req) => {
         const { error: emailError } = await resend.emails.send({
           from: "MARCH <events@marchrussell.com>",
           to: [booking.attendee_email],
-          subject: `Reminder: ${booking.event_type || 'Your Session'} is Tomorrow`,
+          subject: `Reminder: ${booking.experience_type || 'Your Session'} is Tomorrow`,
           html: emailHtml,
         });
 
@@ -96,7 +96,7 @@ serve(async (req) => {
 
         // Mark reminder as sent
         const { error: updateError } = await supabase
-          .from("event_bookings")
+          .from("experiences_bookings")
           .update({ reminder_sent_at: new Date().toISOString() })
           .eq("id", booking.id);
 
@@ -104,7 +104,7 @@ serve(async (req) => {
           console.error(`Failed to update reminder status for ${booking.id}:`, updateError);
         }
 
-        console.log(`✅ Reminder sent to ${booking.attendee_email} for ${booking.event_type}`);
+        console.log(`✅ Reminder sent to ${booking.attendee_email} for ${booking.experience_type}`);
         results.push({ id: booking.id, status: 'sent', email: booking.attendee_email });
 
       } catch (err: unknown) {
