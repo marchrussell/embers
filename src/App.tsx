@@ -253,7 +253,7 @@ function AppContent() {
               }
             />
             <Route
-              path="/admin/event-bookings"
+              path="/admin/experience-bookings"
               element={
                 <AdminRoute>
                   <AdminExperienceBookings />
