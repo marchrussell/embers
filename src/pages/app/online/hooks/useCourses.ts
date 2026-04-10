@@ -1,11 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { supabase } from "@/integrations/supabase/client";
 
 import { Course } from "../types";
 
 export const useCourses = () => {
-  const { data: courses = [], isLoading } = useQuery<Course[]>({
+  const { data: courses } = useSuspenseQuery<Course[]>({
     queryKey: ["courses"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -19,5 +19,5 @@ export const useCourses = () => {
     },
   });
 
-  return { courses, isLoading };
+  return { courses };
 };

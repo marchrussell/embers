@@ -1,6 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowLeft, LogOut } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -28,6 +28,7 @@ import { useAccountSettings } from "@/hooks/useAccountSettings";
 import { useDataDeletion } from "@/hooks/useDataDeletion";
 import { useDataExport } from "@/hooks/useDataExport";
 import { supabase } from "@/integrations/supabase/client";
+import { User } from "@supabase/supabase-js";
 
 interface ProfileData {
   full_name: string | null;
@@ -49,8 +50,13 @@ const defaultStats: StatsData = {
   memberSince: "",
 };
 
-const Profile = () => {
-  const { user, signOut, loading: authLoading } = useAuth();
+interface ProfileContentProps {
+  userId: string;
+  user: User;
+  signOut: () => Promise<void>;
+}
+
+const ProfileContent = ({ userId, user, signOut }: ProfileContentProps) => {
   const navigate = useNavigate();
   const [showSafetyModal, setShowSafetyModal] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
@@ -81,39 +87,31 @@ const Profile = () => {
     handlePasswordChange,
     handleEmailChange,
     handleFeedbackSubmit,
-  } = useAccountSettings(user ?? undefined);
+  } = useAccountSettings(user);
 
-  // Redirect to auth if not logged in
-  useEffect(() => {
-    if (!authLoading && !user) {
-      navigate("/auth");
-    }
-  }, [user, authLoading, navigate]);
-
-  const { data: userProfile, isLoading: isLoadingProfile } = useQuery<ProfileData | null>({
-    queryKey: ["profile", user?.id],
+  const { data: userProfile } = useSuspenseQuery<ProfileData | null>({
+    queryKey: ["profile", userId],
     queryFn: async () => {
       const { data } = await supabase
         .from("profiles")
         .select("full_name")
-        .eq("id", user!.id)
+        .eq("id", userId)
         .maybeSingle();
       return data as ProfileData | null;
     },
-    enabled: !!user?.id,
   });
 
-  const { data: stats = defaultStats } = useQuery<StatsData>({
-    queryKey: ["profile-stats", user?.id],
+  const { data: stats } = useSuspenseQuery<StatsData>({
+    queryKey: ["profile-stats", userId],
     queryFn: async () => {
       const { data: progressData, error } = await supabase
         .from("user_progress")
         .select("completed_at, last_position_seconds, class_id")
-        .eq("user_id", user!.id)
+        .eq("user_id", userId)
         .eq("completed", true)
         .order("completed_at", { ascending: true });
 
-      const memberSince = user?.created_at
+      const memberSince = user.created_at
         ? new Date(user.created_at).toLocaleDateString("en-GB", {
             day: "numeric",
             month: "long",
@@ -191,7 +189,6 @@ const Profile = () => {
 
       return { totalSessions, totalMinutes, currentStreak, longestStreak, memberSince };
     },
-    enabled: !!user?.id,
   });
 
   const openCustomerPortal = async () => {
@@ -235,12 +232,9 @@ const Profile = () => {
   const handleSignOut = async () => {
     try {
       console.log("Starting sign out...");
-      // Navigate FIRST to avoid ProtectedRoute redirect to /auth
       navigate("/online", { replace: true });
-      // Then sign out
       await signOut();
       toast.success("Signed out successfully");
-      // Scroll to top of library
       setTimeout(() => window.scrollTo(0, 0), 100);
     } catch (error: any) {
       console.error("Sign out exception:", error);
@@ -258,12 +252,8 @@ const Profile = () => {
     }
   };
 
-  const firstName = userProfile?.full_name?.split(" ")[0] || user?.email?.split("@")[0] || "User";
+  const firstName = userProfile?.full_name?.split(" ")[0] || user.email?.split("@")[0] || "User";
   const capitalizedFirstName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
-
-  if (isLoadingProfile) {
-    return <ProfileSkeleton />;
-  }
 
   return (
     <>
@@ -411,7 +401,7 @@ const Profile = () => {
 
           {/* Logged in as */}
           <div className="mt-4 text-center text-xs font-light text-[#E6DBC7]/60 md:mt-6 md:text-base">
-            Logged in as {user?.email}
+            Logged in as {user.email}
           </div>
 
           {/* Terms Microcopy */}
@@ -433,7 +423,7 @@ const Profile = () => {
         <ChangeEmailDialog
           open={showEmailDialog}
           onOpenChange={setShowEmailDialog}
-          currentEmail={user?.email || ""}
+          currentEmail={user.email || ""}
           newEmail={newEmail}
           setNewEmail={setNewEmail}
           onSubmit={() => handleEmailChange(() => setShowEmailDialog(false))}
@@ -512,6 +502,23 @@ const Profile = () => {
         </Dialog>
       </div>
     </>
+  );
+};
+
+const Profile = () => {
+  const { user, signOut, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!authLoading && !user) navigate("/auth");
+  }, [user, authLoading, navigate]);
+
+  if (authLoading || !user) return <ProfileSkeleton />;
+
+  return (
+    <Suspense fallback={<ProfileSkeleton />}>
+      <ProfileContent userId={user.id} user={user} signOut={signOut} />
+    </Suspense>
   );
 };
 

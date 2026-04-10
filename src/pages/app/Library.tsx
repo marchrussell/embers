@@ -1,6 +1,14 @@
 // Library page - Categories: CALM, ENERGY, TRANSFORM, SLEEP, RESILIENCE & CAPACITY
 import { useQuery } from "@tanstack/react-query";
-import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import {
+  ReactElement,
+  Suspense,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { ArcCardsModal } from "@/components/ArcCardsModal";
@@ -13,6 +21,7 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavourites } from "@/hooks/useFavourites";
 import { supabase } from "@/integrations/supabase/client";
+import { User } from "@supabase/supabase-js";
 
 import CategoryView from "./library/CategoryView";
 import { useFavouriteSessions } from "./library/hooks/useFavouriteSessions";
@@ -29,12 +38,25 @@ interface LibraryProps {
   shouldClearCategory?: boolean;
 }
 
-const Library = ({
-  isEmbedded = false,
+interface LibraryContentProps {
+  user: User | null;
+  hasSubscription: boolean;
+  isAdmin: boolean;
+  isTestUser: boolean;
+  isEmbedded: boolean;
+  onClearCategory?: () => void;
+  shouldClearCategory: boolean;
+}
+
+const LibraryContent = ({
+  user,
+  hasSubscription,
+  isAdmin,
+  isTestUser,
+  isEmbedded,
   onClearCategory,
-  shouldClearCategory = false,
-}: LibraryProps) => {
-  const { user, hasSubscription, isAdmin, isTestUser, loading: authLoading } = useAuth();
+  shouldClearCategory,
+}: LibraryContentProps) => {
   const { favouriteIds } = useFavourites();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -67,11 +89,8 @@ const Library = ({
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
 
-  const { categoriesWithSessions, isLoading: isLoadingData } = useLibraryData({
-    hasSubscription,
-    isAdmin,
-    isTestUser,
-  });
+  // useSuspenseQuery — suspends until data is ready (no isLoading needed)
+  const { categoriesWithSessions } = useLibraryData({ hasSubscription, isAdmin, isTestUser });
   const { favouriteSessions } = useFavouriteSessions({
     favouriteIds,
     hasSubscription,
@@ -135,7 +154,7 @@ const Library = ({
         nervousSystemProgramRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
       }, 500);
     }
-  }, [searchParams, isLoadingData]);
+  }, [searchParams]);
 
   // Navigate away after consuming session param — setState is in lazy initializer above
   if (searchParams.get("session")) {
@@ -161,13 +180,8 @@ const Library = ({
     setSelectedSessionId(sessionId);
   };
 
-  // Loading skeleton — respect isEmbedded
-  if (authLoading || isLoadingData) {
-    return isEmbedded ? <LibraryEmbeddedSkeleton /> : <LibraryPageSkeleton />;
-  }
-
   // View selection
-  let viewContent;
+  let viewContent: ReactElement;
   if (activeCategory) {
     viewContent = (
       <CategoryView
@@ -200,7 +214,7 @@ const Library = ({
         user={user}
         isEmbedded={isEmbedded}
         hasSubscription={hasSubscription}
-        isLoading={isLoadingData}
+        isLoading={false}
         onCategorySelect={setSelectedCategory}
         onSessionClick={handleSessionClick}
         onSubscriptionRequired={() => setShowSubscriptionModal(true)}
@@ -245,6 +259,32 @@ const Library = ({
       {viewContent}
       {modals}
     </>
+  );
+};
+
+const Library = ({
+  isEmbedded = false,
+  onClearCategory,
+  shouldClearCategory = false,
+}: LibraryProps) => {
+  const { user, hasSubscription, isAdmin, isTestUser, loading: authLoading } = useAuth();
+
+  const skeleton = isEmbedded ? <LibraryEmbeddedSkeleton /> : <LibraryPageSkeleton />;
+
+  if (authLoading) return skeleton;
+
+  return (
+    <Suspense fallback={skeleton}>
+      <LibraryContent
+        user={user}
+        hasSubscription={hasSubscription}
+        isAdmin={isAdmin}
+        isTestUser={isTestUser}
+        isEmbedded={isEmbedded}
+        onClearCategory={onClearCategory}
+        shouldClearCategory={shouldClearCategory}
+      />
+    </Suspense>
   );
 };
 

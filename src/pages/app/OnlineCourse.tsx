@@ -1,7 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
-import { Suspense, useEffect, useState } from "react";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { Suspense, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "sonner";
 
 import { Footer } from "@/components/Footer";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
@@ -28,25 +27,25 @@ interface ClassItem {
   teacher_name: string | null;
 }
 
-const OnlineCourse = () => {
-  const { slug } = useParams<{ slug: string }>();
-  const navigate = useNavigate();
-  const { hasSubscription, isAdmin, isTestUser } = useAuth();
+interface CourseContentProps {
+  slug: string;
+  hasSubscription: boolean;
+  isAdmin: boolean;
+  isTestUser: boolean;
+}
 
+const CourseContent = ({ slug, hasSubscription, isAdmin, isTestUser }: CourseContentProps) => {
+  const navigate = useNavigate();
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
 
-  const {
-    data,
-    isLoading: loading,
-    isError,
-  } = useQuery({
+  const { data } = useSuspenseQuery({
     queryKey: ["course", slug],
     queryFn: async () => {
       const { data: programData, error: programError } = await supabase
         .from("programs")
         .select("*")
-        .eq("slug", slug!)
+        .eq("slug", slug)
         .eq("is_published", true)
         .single();
 
@@ -67,30 +66,19 @@ const OnlineCourse = () => {
         lessons: (classesData ?? []) as ClassItem[],
       };
     },
-    enabled: !!slug,
   });
 
-  console.log("Course Data:", data);
-
-  useEffect(() => {
-    if (isError) toast.error("Unable to load course");
-  }, [isError]);
-
-  const course = data?.course ?? null;
-  const lessons = data?.lessons ?? [];
+  const course = data.course;
+  const lessons = data.lessons;
 
   const handleLessonClick = (lessonId: string) => {
     if (!hasSubscription && !isAdmin && !isTestUser) {
       setShowSubscriptionModal(true);
     } else {
-      if (course) analytics.courseStarted(course.id, course.title);
+      analytics.courseStarted(course.id, course.title);
       setSelectedSessionId(lessonId);
     }
   };
-
-  if (loading) {
-    return <CourseViewSkeleton />;
-  }
 
   if (!course) {
     return (
@@ -192,6 +180,24 @@ const OnlineCourse = () => {
         onClose={() => setSelectedSessionId(null)}
       />
     </div>
+  );
+};
+
+const OnlineCourse = () => {
+  const { slug } = useParams<{ slug: string }>();
+  const { hasSubscription, isAdmin, isTestUser } = useAuth();
+
+  if (!slug) return null;
+
+  return (
+    <Suspense fallback={<CourseViewSkeleton />}>
+      <CourseContent
+        slug={slug}
+        hasSubscription={hasSubscription}
+        isAdmin={isAdmin}
+        isTestUser={isTestUser}
+      />
+    </Suspense>
   );
 };
 

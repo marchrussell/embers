@@ -1,12 +1,13 @@
+import { Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { GlowButton } from "@/components/ui/glow-button";
 
 import { useCourses } from "./hooks/useCourses";
 
-const CoursesTab = () => {
+const CoursesTabContent = () => {
   const navigate = useNavigate();
-  const { courses, isLoading } = useCourses();
+  const { courses } = useCourses();
 
   return (
     <div className="pb-64 pt-8 md:pt-[150px]">
@@ -20,32 +21,7 @@ const CoursesTab = () => {
       </div>
 
       <div className="space-y-9 md:space-y-10 lg:space-y-12">
-        {isLoading && (
-          <div className="space-y-8">
-            {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="relative flex animate-pulse flex-col overflow-hidden rounded-2xl border border-white/[0.08] lg:flex-row"
-                style={{ minHeight: "400px" }}
-              >
-                <div className="h-[240px] shrink-0 bg-muted/20 lg:h-auto lg:min-h-full lg:w-[52%]" />
-                <div className="relative flex flex-1 flex-col justify-center bg-black/95 p-6 md:p-8 lg:bg-transparent lg:px-10 lg:py-10 lg:pl-6">
-                  <div className="mb-5 flex items-center gap-2">
-                    <div className="h-1.5 w-1.5 rounded-full bg-muted/30" />
-                    <div className="h-3 w-28 rounded bg-muted/30" />
-                  </div>
-                  <div className="mb-3 h-8 w-3/4 rounded bg-muted/30" />
-                  <div className="h-16 max-w-[340px] rounded bg-muted/20" />
-                  <div className="mt-8 flex justify-start lg:ml-auto lg:mr-8 lg:mt-10">
-                    <div className="h-9 w-28 rounded-full bg-muted/30" />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {!isLoading && courses.length === 0 && (
+        {courses.length === 0 && (
           <div className="py-24 text-center">
             <p className="text-xl text-[#E6DBC7]/60">Courses coming soon</p>
           </div>
@@ -112,5 +88,38 @@ const CoursesTab = () => {
     </div>
   );
 };
+
+const CoursesSkeleton = () => (
+  <div className="pb-64 pt-8 md:pt-[150px]">
+    <div className="space-y-8">
+      {[1, 2, 3].map((i) => (
+        <div
+          key={i}
+          className="relative flex animate-pulse flex-col overflow-hidden rounded-2xl border border-white/[0.08] lg:flex-row"
+          style={{ minHeight: "400px" }}
+        >
+          <div className="h-[240px] shrink-0 bg-muted/20 lg:h-auto lg:min-h-full lg:w-[52%]" />
+          <div className="relative flex flex-1 flex-col justify-center bg-black/95 p-6 md:p-8 lg:bg-transparent lg:px-10 lg:py-10 lg:pl-6">
+            <div className="mb-5 flex items-center gap-2">
+              <div className="h-1.5 w-1.5 rounded-full bg-muted/30" />
+              <div className="h-3 w-28 rounded bg-muted/30" />
+            </div>
+            <div className="mb-3 h-8 w-3/4 rounded bg-muted/30" />
+            <div className="h-16 max-w-[340px] rounded bg-muted/20" />
+            <div className="mt-8 flex justify-start lg:ml-auto lg:mr-8 lg:mt-10">
+              <div className="h-9 w-28 rounded-full bg-muted/30" />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const CoursesTab = () => (
+  <Suspense fallback={<CoursesSkeleton />}>
+    <CoursesTabContent />
+  </Suspense>
+);
 
 export default CoursesTab;
