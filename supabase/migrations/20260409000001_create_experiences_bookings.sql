@@ -1,7 +1,3 @@
--- Drop legacy tables if they exist (only present in local/dev environments, never in production)
-DROP TABLE IF EXISTS public.event_bookings CASCADE;
-DROP TABLE IF EXISTS public.events CASCADE;
-
 -- Create experiences_bookings table
 CREATE TABLE public.experiences_bookings (
   id UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
