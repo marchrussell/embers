@@ -164,7 +164,7 @@ const AdminCategories = () => {
       });
     } else {
       toast({ title: "Category deleted successfully" });
-      fetchCategories();
+       queryClient.invalidateQueries({ queryKey: ["admin-categories"] });
     }
   };
 
