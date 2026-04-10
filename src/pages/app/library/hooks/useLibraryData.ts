@@ -1,22 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 
-import energyCategoryImage from "@/assets/energy-ocean-sunset.jpg";
 import { supabase } from "@/integrations/supabase/client";
 
 import { LibraryCategory, LibrarySession } from "../types";
-
-const CATEGORY_ORDER = ["CALM", "ENERGY", "TRANSFORM", "SLEEP", "RESILIENCE & CAPACITY"];
-
-const CATEGORY_DESCRIPTIONS: Record<string, string> = {
-  CALM: "Find Your Center. Organize your nervous system and restore a sense of peace.",
-  ENERGY: "Activate your body's natural currents and feel life move through you.",
-  SLEEP:
-    "Train your nervous system to downregulate naturally. Start here when you're tired but wired and need real restoration.",
-  TRANSFORM:
-    "Transform your state. Reset your nervous system in minutes. Short practices effective for stress relief and overwhelm.",
-  "RESILIENCE & CAPACITY":
-    "Build lasting resilience and expand your capacity. Guided practices to deepen your practice and strengthen your inner resources.",
-};
 
 interface UseLibraryDataParams {
   hasSubscription: boolean;
@@ -28,7 +15,6 @@ interface UseLibraryDataReturn {
   categoriesWithSessions: LibraryCategory[];
   classesByCategory: Record<string, LibrarySession[]>;
   categories: any[];
-  isLoading: boolean;
 }
 
 export const useLibraryData = ({
@@ -36,107 +22,66 @@ export const useLibraryData = ({
   isAdmin,
   isTestUser,
 }: UseLibraryDataParams): UseLibraryDataReturn => {
-  const [categories, setCategories] = useState<any[]>([]);
-  const [classesByCategory, setClassesByCategory] = useState<Record<string, LibrarySession[]>>({});
-  const [isLoading, setIsLoading] = useState(true);
+  const { data } = useSuspenseQuery({
+    queryKey: ["library-data", hasSubscription, isAdmin, isTestUser],
+    queryFn: async () => {
+      const { data: categoriesData } = await supabase
+        .from("categories")
+        .select("*")
+        .order("order_index", { nullsFirst: false });
 
-  // NOTE: Fetch data IMMEDIATELY - don't wait for auth to complete.
-  // The locked state of sessions will update when auth completes (via dependency array).
-  useEffect(() => {
-    let isMounted = true;
+      const { data: classesData } = await supabase
+        .from("classes")
+        .select("*, requires_subscription, created_at")
+        .eq("is_published", true)
+        .order("order_index");
 
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        // Fetch categories
-        const { data: categoriesData } = await supabase
-          .from("categories")
-          .select("*")
-          .order("name");
+      const categories = categoriesData ?? [];
 
-        if (!isMounted) return;
-
-        if (categoriesData) {
-          setCategories(categoriesData);
-
-          // Fetch classes for each category
-          const { data: classesData } = await supabase
-            .from("classes")
-            .select("*, requires_subscription, created_at")
-            .eq("is_published", true)
-            .order("order_index");
-
-          if (!isMounted) return;
-
-          if (classesData) {
-            const grouped = classesData.reduce(
-              (acc: Record<string, LibrarySession[]>, classItem) => {
-                if (classItem.category_id) {
-                  if (!acc[classItem.category_id]) {
-                    acc[classItem.category_id] = [];
-                  }
-                  acc[classItem.category_id].push({
-                    id: classItem.id,
-                    title: classItem.title,
-                    description: classItem.description || classItem.short_description,
-                    duration: classItem.duration_minutes,
-                    teacher: classItem.teacher_name,
-                    image: classItem.image_url,
-                    locked:
-                      classItem.requires_subscription &&
-                      !hasSubscription &&
-                      !isAdmin &&
-                      !isTestUser,
-                    created_at: classItem.created_at,
-                    technique: classItem.technique,
-                    intensity: classItem.intensity,
-                    order_index: classItem.order_index,
-                  });
-                }
-                return acc;
-              },
-              {}
-            );
-
-            setClassesByCategory(grouped);
+      const classesByCategory: Record<string, LibrarySession[]> = (classesData ?? []).reduce(
+        (acc: Record<string, LibrarySession[]>, classItem) => {
+          if (classItem.category_id) {
+            if (!acc[classItem.category_id]) acc[classItem.category_id] = [];
+            acc[classItem.category_id].push({
+              id: classItem.id,
+              title: classItem.title,
+              description: classItem.description || classItem.short_description,
+              duration: classItem.duration_minutes,
+              teacher: classItem.teacher_name,
+              image: classItem.image_url,
+              locked:
+                classItem.requires_subscription && !hasSubscription && !isAdmin && !isTestUser,
+              created_at: classItem.created_at,
+              technique: classItem.technique,
+              intensity: classItem.intensity,
+              order_index: classItem.order_index,
+            });
           }
-        }
-      } catch (error) {
-        console.error("Library: Error fetching data:", error);
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      }
-    };
+          return acc;
+        },
+        {}
+      );
 
-    fetchData();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [hasSubscription, isAdmin, isTestUser]);
+      return { categories, classesByCategory };
+    },
+    staleTime: 10 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+  });
 
   const categoriesWithSessions = useMemo<LibraryCategory[]>(() => {
-    const sorted = [...categories].sort((a, b) => {
-      const indexA = CATEGORY_ORDER.indexOf(a.name);
-      const indexB = CATEGORY_ORDER.indexOf(b.name);
-      return (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
-    });
+    const { categories, classesByCategory } = data;
+    return categories.map((cat) => ({
+      id: cat.id,
+      name: cat.name,
+      description: cat.description,
+      image: cat.image_url,
+      sessions: classesByCategory[cat.id] || [],
+    }));
+  }, [data]);
 
-    return sorted.map((cat) => {
-      const description = CATEGORY_DESCRIPTIONS[cat.name] ?? cat.description;
-      const image = cat.name === "ENERGY" ? energyCategoryImage : cat.image_url;
-
-      return {
-        id: cat.id,
-        name: cat.name,
-        description,
-        image,
-        sessions: classesByCategory[cat.id] || [],
-      };
-    });
-  }, [categories, classesByCategory]);
-
-  return { categoriesWithSessions, classesByCategory, categories, isLoading };
+  return {
+    categoriesWithSessions,
+    classesByCategory: data.classesByCategory,
+    categories: data.categories,
+  };
 };

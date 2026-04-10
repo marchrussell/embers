@@ -31,6 +31,7 @@ interface Category {
   name: string;
   description: string | null;
   image_url: string | null;
+  order_index: number | null;
 }
 
 const AdminCategories = () => {
@@ -42,6 +43,7 @@ const AdminCategories = () => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
+    order_index: "",
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -57,7 +59,10 @@ const AdminCategories = () => {
   }, []);
 
   const fetchCategories = async () => {
-    const { data, error } = await supabase.from("categories").select("*").order("name");
+    const { data, error } = await supabase
+      .from("categories")
+      .select("*")
+      .order("order_index", { nullsFirst: false });
 
     if (error) {
       toast({
@@ -117,6 +122,7 @@ const AdminCategories = () => {
       name: formData.name,
       description: formData.description || null,
       image_url: imageUrl,
+      order_index: formData.order_index !== "" ? parseInt(formData.order_index, 10) : null,
     };
 
     if (editingCategory) {
@@ -175,6 +181,7 @@ const AdminCategories = () => {
     setFormData({
       name: category.name,
       description: category.description || "",
+      order_index: category.order_index !== null ? String(category.order_index) : "",
     });
     setImagePreview(category.image_url);
     setImageFile(null);
@@ -185,6 +192,7 @@ const AdminCategories = () => {
     setFormData({
       name: "",
       description: "",
+      order_index: "",
     });
     setEditingCategory(null);
     setImageFile(null);
@@ -209,6 +217,20 @@ const AdminCategories = () => {
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="mt-4 space-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="order_index" className="text-white/80">
+              Display Order
+            </Label>
+            <Input
+              id="order_index"
+              type="number"
+              min={1}
+              value={formData.order_index}
+              onChange={(e) => setFormData({ ...formData, order_index: e.target.value })}
+              placeholder="e.g. 1"
+              className="border-white/20 bg-white/5 text-white placeholder:text-white/40"
+            />
+          </div>
           <div className="space-y-2">
             <Label htmlFor="name" className="text-white/80">
               Name *
@@ -282,7 +304,7 @@ const AdminCategories = () => {
 
       {/* Table */}
       <AdminTable
-        headers={["Image", "Name", "Description", { label: "Actions", width: "120px" }]}
+        headers={["Image", "Order", "Name", "Description", { label: "Actions", width: "120px" }]}
         emptyState={
           categories.length === 0 ? "No categories yet. Create your first category!" : undefined
         }
@@ -302,6 +324,9 @@ const AdminCategories = () => {
                   No image
                 </div>
               )}
+            </TableCell>
+            <TableCell className={cn(adminTableCellClass, "text-foreground/70")}>
+              {category.order_index ?? "-"}
             </TableCell>
             <TableCell className={cn(adminTableCellClass, "font-medium text-white")}>
               {category.name}
