@@ -1,3 +1,4 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FolderOpen, Pencil, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -37,7 +38,7 @@ interface Category {
 const AdminCategories = () => {
   const { isAdmin, loading } = useAuth();
   const navigate = useNavigate();
-  const [categories, setCategories] = useState<Category[]>([]);
+  const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [formData, setFormData] = useState({
@@ -54,26 +55,17 @@ const AdminCategories = () => {
     }
   }, [isAdmin, loading, navigate]);
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  const fetchCategories = async () => {
-    const { data, error } = await supabase
-      .from("categories")
-      .select("*")
-      .order("order_index", { nullsFirst: false });
-
-    if (error) {
-      toast({
-        title: "Error fetching categories",
-        description: error.message,
-        variant: "destructive",
-      });
-    } else {
-      setCategories(data || []);
-    }
-  };
+  const { data: categories = [] } = useQuery<Category[]>({
+    queryKey: ["admin-categories"],
+    queryFn: async (): Promise<Category[]> => {
+      const { data, error } = await supabase
+        .from("categories")
+        .select("*")
+        .order("order_index", { nullsFirst: false });
+      if (error) throw error;
+      return (data ?? []) as Category[];
+    },
+  });
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -139,7 +131,7 @@ const AdminCategories = () => {
         });
       } else {
         toast({ title: "Category updated successfully" });
-        fetchCategories();
+        queryClient.invalidateQueries({ queryKey: ["admin-categories"] });
         resetForm();
       }
     } else {
@@ -153,7 +145,7 @@ const AdminCategories = () => {
         });
       } else {
         toast({ title: "Category created successfully" });
-        fetchCategories();
+        queryClient.invalidateQueries({ queryKey: ["admin-categories"] });
         resetForm();
       }
     }
