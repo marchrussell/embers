@@ -10,11 +10,11 @@ import {
   getGoogleCalendarUrl,
   getOutlookCalendarUrl,
 } from "@/lib/calendarUtils";
-import {
-  guestSessionImg,
-  monthlyBreathOnlineImg as monthlyPresenceImg,
-  weeklyResetImg,
-} from "@/lib/experiencesData";
+import { experienceImages } from "@/lib/cloudImageUrls";
+
+const guestSessionImg = experienceImages.guestSession;
+const monthlyPresenceImg = experienceImages.monthlyBreathOnline;
+const weeklyResetImg = experienceImages.weeklyReset;
 
 import LiveProgramCard from "./components/LiveProgramCard";
 import { AVAILABILITY_DAYS, useLiveReplays } from "./hooks/useLiveReplays";

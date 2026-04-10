@@ -11,12 +11,12 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLiveSessionConfigs } from "@/hooks/useLiveSessionConfigs";
 import { useNextGuestTeacher } from "@/hooks/useNextGuestTeacher";
-import { formatEventDate, getNextDateFromConfig } from "@/lib/experienceDateUtils";
-import {
-  guestSessionImg,
-  monthlyBreathOnlineImg as monthlyPresenceImg,
-  weeklyResetImg,
-} from "@/lib/experiencesData";
+import { experienceImages } from "@/lib/cloudImageUrls";
+import { formatExperienceDate, getNextDateFromConfig } from "@/lib/experienceDateUtils";
+
+const guestSessionImg = experienceImages.guestSession;
+const monthlyPresenceImg = experienceImages.monthlyBreathOnline;
+const weeklyResetImg = experienceImages.weeklyReset;
 
 import Library from "./Library";
 import CoursesTab from "./online/CoursesTab";
@@ -65,7 +65,7 @@ const Online = () => {
   const liveSessionsData: LiveSessionCardData[] = useMemo(() => {
     return configs.map((config) => {
       const nextDateObj = getNextDateFromConfig(config);
-      const nextDate = nextDateObj ? formatEventDate(nextDateObj, config.time ?? "") : null;
+      const nextDate = nextDateObj ? formatExperienceDate(nextDateObj, config.time ?? "") : null;
 
       const subtitleParts = [
         config.recurrence_label,

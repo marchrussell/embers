@@ -8,7 +8,7 @@ export type RecurrenceRule =
   | { type: "weekly"; weekdays: number[] } // e.g., every Monday & Tuesday
   | { type: "nthDay"; day: number }; // e.g., 1st of every month
 
-export interface EventSchedule {
+export interface ExperienceSchedule {
   id: string;
   title: string;
   subtitle: string;
@@ -51,7 +51,7 @@ function getNthWeekdayOfMonth(year: number, month: number, weekday: number, nth:
  * Get the next occurrence of a recurring event
  * Events start from February 2025
  */
-export function getNextEventDate(recurrence: RecurrenceRule, time: string): Date | null {
+export function getNextExperienceDate(recurrence: RecurrenceRule, time: string): Date | null {
   try {
     const now = new Date();
     const [hours, minutes] = time.split(":").map(Number);
@@ -126,7 +126,7 @@ export function getNextEventDate(recurrence: RecurrenceRule, time: string): Date
  * Format a date in the style: DD • MM • YYYY — HH:MM GMT
  * With medium bullet points
  */
-export function formatEventDate(date: Date | null, time: string): string {
+export function formatExperienceDate(date: Date | null, time: string): string {
   if (!date) {
     return "Next event date to be announced";
   }
@@ -145,7 +145,7 @@ export function formatEventDate(date: Date | null, time: string): string {
     // Using bullet operator (U+2219) - medium size
     return `${day} ∙ ${month} ∙ ${year} — ${displayHours}:${displayMinutes} ${period} GMT`;
   } catch (error) {
-    return "Next event date to be announced";
+    return "Next experience date to be announced";
   }
 }
 
@@ -162,9 +162,9 @@ export function getShortDayName(date: Date | null): string {
  * Format with day name: Sun ∙ 12 ∙ Jan — 7:30 PM GMT
  * With medium bullet points
  */
-export function formatEventDateWithDay(date: Date | null, time: string): string {
+export function formatExperienceDateWithDay(date: Date | null, time: string): string {
   if (!date) {
-    return "Next event date to be announced";
+    return "Next experience date to be announced";
   }
 
   try {
@@ -196,7 +196,7 @@ export function formatEventDateWithDay(date: Date | null, time: string): string 
 
     return `${dayName} ∙ ${day} ∙ ${monthName} — ${displayHours}:${displayMinutes} ${period} GMT`;
   } catch (error) {
-    return "Next event date to be announced";
+    return "Next experience date to be announced";
   }
 }
 
@@ -211,7 +211,7 @@ export const WEEKDAYS = {
   SATURDAY: 6,
 } as const;
 
-export interface ScheduledEventDate {
+export interface ScheduledExperienceDate {
   date: string; // ISO date string (YYYY-MM-DD)
   displayDate: string; // Human readable
   time: string; // HH:MM
@@ -248,11 +248,14 @@ export function getNextDateFromConfig(config: LiveSessionConfigRecurrence): Date
   const time = config.time ?? "00:00";
 
   if (config.recurrence_type === "weekly" && config.weekdays?.length) {
-    return getNextEventDate({ type: "weekly", weekdays: config.weekdays }, time);
+    return getNextExperienceDate({ type: "weekly", weekdays: config.weekdays }, time);
   }
 
   if (config.recurrence_type === "nthWeekday" && config.weekday != null && config.nth != null) {
-    return getNextEventDate({ type: "nthWeekday", weekday: config.weekday, nth: config.nth }, time);
+    return getNextExperienceDate(
+      { type: "nthWeekday", weekday: config.weekday, nth: config.nth },
+      time
+    );
   }
 
   return null;

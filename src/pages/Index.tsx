@@ -10,8 +10,31 @@ import { PhoneMockups } from "@/components/PhoneMockups";
 import { TermsMicrocopy } from "@/components/TermsMicrocopy";
 import { Button } from "@/components/ui/button";
 import { Pill } from "@/components/ui/pill";
-import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
-import { onlineExperiences } from "@/lib/experiencesData";
+import { CLOUD_IMAGES, experienceImages, getCloudImageUrl } from "@/lib/cloudImageUrls";
+
+const onlineExperiences = [
+  {
+    id: "guest-session",
+    title: "Guest Session",
+    subtitle: "A special session with a guest teacher.",
+    recurrenceLabel: "Every Thursday of the month",
+    image: experienceImages.guestSession,
+  },
+  {
+    id: "weekly-reset",
+    title: "Weekly Reset",
+    subtitle: "A live space to pause, settle your system, and realign mid-week.",
+    recurrenceLabel: "Live every Sunday",
+    image: experienceImages.weeklyReset,
+  },
+  {
+    id: "breath-presence-online",
+    title: "Monthly Breath & Presence",
+    subtitle: "A longer, spacious session to soften tension and reconnect with yourself.",
+    recurrenceLabel: "First Saturday of the month",
+    image: experienceImages.monthlyBreathOnline,
+  },
+];
 
 const mentalResetImg = getCloudImageUrl(
   CLOUD_IMAGES.mentalReset,

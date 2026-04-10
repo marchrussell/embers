@@ -81,7 +81,9 @@ const ExperienceBookings = () => {
       const eventTypes = [
         ...new Set(bookingsData.map((b) => b.experience_type).filter(Boolean)),
       ] as string[];
-      const dates = [...new Set(bookingsData.map((b) => b.experience_date).filter(Boolean))] as string[];
+      const dates = [
+        ...new Set(bookingsData.map((b) => b.experience_date).filter(Boolean)),
+      ] as string[];
 
       setUniqueEventTypes(eventTypes);
       setUniqueDates(dates.sort());
@@ -169,7 +171,10 @@ const ExperienceBookings = () => {
   };
 
   return (
-    <AdminLayout title="Experience Bookings" description="View and manage experience attendee bookings">
+    <AdminLayout
+      title="Experience Bookings"
+      description="View and manage experience attendee bookings"
+    >
       {/* Stats Cards */}
       <div className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-3">
         <AdminStatsCard title="Total Bookings" value={bookings.length} icon={Users} />
@@ -322,10 +327,14 @@ const ExperienceBookings = () => {
                       </TableCell>
                       <TableCell className="text-white/80">{booking.attendee_email}</TableCell>
                       <TableCell className="text-sm text-white/80">
-                        {EVENT_TITLES[booking.experience_type || ""] || booking.experience_type || "Unknown"}
+                        {EVENT_TITLES[booking.experience_type || ""] ||
+                          booking.experience_type ||
+                          "Unknown"}
                       </TableCell>
                       <TableCell className="text-white/80">
-                        {booking.experience_date ? formatDateDisplay(booking.experience_date) : "N/A"}
+                        {booking.experience_date
+                          ? formatDateDisplay(booking.experience_date)
+                          : "N/A"}
                       </TableCell>
                       <TableCell className="text-white">{booking.quantity}</TableCell>
                       <TableCell className="text-white">

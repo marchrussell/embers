@@ -14,13 +14,12 @@ import {
   parseUTCDateForDisplay,
   useNextGuestTeacher,
 } from "@/hooks/useNextGuestTeacher";
-import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
+import { CLOUD_IMAGES, experienceImages, getCloudImageUrl } from "@/lib/cloudImageUrls";
 import { getNextDateFromConfig } from "@/lib/experienceDateUtils";
-import {
-  guestSessionImg,
-  monthlyBreathOnlineImg as monthlyPresenceImg,
-  weeklyResetImg,
-} from "@/lib/experiencesData";
+
+const guestSessionImg = experienceImages.guestSession;
+const monthlyPresenceImg = experienceImages.monthlyBreathOnline;
+const weeklyResetImg = experienceImages.weeklyReset;
 
 const marchPortrait = getCloudImageUrl(CLOUD_IMAGES.march);
 

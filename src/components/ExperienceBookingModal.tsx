@@ -11,29 +11,29 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Label } from "@/components/ui/label";
 import { ModalCloseButton } from "@/components/ui/modal-close-button";
 import { supabase } from "@/integrations/supabase/client";
-import { ScheduledEventDate } from "@/lib/experienceDateUtils";
+import { ScheduledExperienceDate } from "@/lib/experienceDateUtils";
 import { analytics } from "@/lib/posthog";
 
-interface EventData {
+interface ExperienceData {
   id: string;
   title: string;
   subtitle: string;
   time: string;
-  price?: number; // Price in pence/cents
+  price: number; // Price in pence
 }
 
 interface Props {
-  event: EventData | null;
+  event: ExperienceData | null;
   open: boolean;
   onClose: () => void;
 }
 
 const SAFETY_DISCLOSURE = `
-# Safety Disclosure for Breathwork Session
+Safety Disclosure for Breathwork Session
 
 By participating in this breathwork session, I acknowledge the following:
 
-1. **Physical Considerations**: Breathwork can induce powerful physical and emotional responses. I understand that I should not participate if I:
+1. Physical Considerations: Breathwork can induce powerful physical and emotional responses. I understand that I should not participate if I:
    - Am pregnant
    - Have a history of cardiovascular disease, including angina or heart attack
    - Have high blood pressure
@@ -42,22 +42,12 @@ By participating in this breathwork session, I acknowledge the following:
    - Have severe mental illness
    - Am taking heavy medication
 
-2. **Personal Responsibility**: I take full responsibility for my well-being during and after the session.
+2. Personal Responsibility: I take full responsibility for my well-being during and after the session.
 
-3. **Right to Stop**: I understand I can stop at any time if I feel uncomfortable.
+3. Right to Stop: I understand I can stop at any time if I feel uncomfortable.
 
-4. **Medical Disclaimer**: This session is not a substitute for medical or psychological care.
-
-By signing below, I confirm I have read and agree to these terms.
+4. Medical Disclaimer: This session is not a substitute for medical or psychological care.
 `;
-
-// Event prices in pence (GBP)
-const EVENT_PRICES: Record<string, number> = {
-  "breath-presence-online": 1500, // £15
-  "breath-presence-inperson": 2500, // £25
-  "breathwork-to-dub": 3000, // £30
-  "unwind-rest": 0, // Free (IG Live)
-};
 
 export function ExperienceBookingModal({ event, open, onClose }: Props) {
   const [step, setStep] = useState(1);
@@ -66,12 +56,11 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
   const [attendeeEmail, setAttendeeEmail] = useState("");
   const [hasAccepted, setHasAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<ScheduledEventDate | null>(null);
+  const [selectedDate, setSelectedDate] = useState<ScheduledExperienceDate | null>(null);
 
   const maxTickets = selectedDate
     ? Math.min(selectedDate.maxCapacity, selectedDate.spotsRemaining ?? selectedDate.maxCapacity)
     : 1;
-  const eventPrice = event ? EVENT_PRICES[event.id] || 0 : 0;
 
   useEffect(() => {
     if (open) {
@@ -107,7 +96,7 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
           quantity,
           attendeeName,
           attendeeEmail,
-          priceInPence: eventPrice,
+          priceInPence: event.price,
         },
       });
 
@@ -127,8 +116,8 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
 
   if (!event) return null;
 
-  const totalPrice = (eventPrice / 100) * quantity;
-  const isFreeEvent = eventPrice === 0;
+  const totalPrice = (event.price / 100) * quantity;
+  const isFreeEvent = event.price === 0;
 
   return (
     <Dialog open={open} onOpenChange={onClose}>

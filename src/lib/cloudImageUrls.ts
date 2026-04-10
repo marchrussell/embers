@@ -105,3 +105,13 @@ export const CLOUD_IMAGES = {
   // Course images in program-images bucket
   mentalReset: "ld5cp5y5xzk-1774964287293.webp",
 } as const;
+
+// Pre-resolved experience image URLs
+export const experienceImages = {
+  guestSession: getCloudImageUrl(CLOUD_IMAGES.unwindReset),
+  monthlyBreathOnline: getCloudImageUrl(CLOUD_IMAGES.monthlyBreath),
+  weeklyReset: getCloudImageUrl(CLOUD_IMAGES.weeklyReset),
+  unwindReset: getCloudImageUrl(CLOUD_IMAGES.unwindReset),
+  breathPresenceInPerson: getCloudImageUrl(CLOUD_IMAGES.breathPresence),
+  breathworkToDub: getCloudImageUrl(CLOUD_IMAGES.breathWorkToDub),
+} as const;

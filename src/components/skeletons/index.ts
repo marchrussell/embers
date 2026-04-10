@@ -21,6 +21,8 @@ export { ProfileSkeleton } from "./ProfileSkeleton";
 // Card skeletons
 export { CategoryCardSkeleton } from "./CategoryCardSkeleton";
 export { EventCardSkeleton } from "./EventCardSkeleton";
+export { ExperienceCardSkeleton } from "./ExperienceCardSkeleton";
+export { ExperiencesSkeleton } from "./ExperiencesSkeleton";
 export { FeaturedSessionSkeleton } from "./FeaturedSessionSkeleton";
 export { LessonCardSkeleton } from "./LessonCardSkeleton";
 export { ModuleCardSkeleton } from "./ModuleCardSkeleton";

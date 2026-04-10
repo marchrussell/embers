@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
-import { formatTime, ScheduledEventDate } from "@/lib/experienceDateUtils";
+import { formatTime, ScheduledExperienceDate } from "@/lib/experienceDateUtils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any;
@@ -16,8 +16,8 @@ const db = supabase as any;
 interface Props {
   eventId: string;
   time: string; // fallback time from config if date row has no override
-  onDateSelect: (date: ScheduledEventDate | null) => void;
-  selectedDate: ScheduledEventDate | null;
+  onDateSelect: (date: ScheduledExperienceDate | null) => void;
+  selectedDate: ScheduledExperienceDate | null;
 }
 
 interface BookingCount {
@@ -46,7 +46,7 @@ function formatDateToReadable(date: Date): string {
 export function EventDateSelector({ eventId, time, onDateSelect, selectedDate }: Props) {
   const today = new Date().toISOString().split("T")[0];
 
-  const { data: availableDates } = useSuspenseQuery<ScheduledEventDate[]>({
+  const { data: availableDates } = useSuspenseQuery<ScheduledExperienceDate[]>({
     queryKey: ["experience-dates", eventId, today],
     queryFn: async () => {
       try {
@@ -69,7 +69,8 @@ export function EventDateSelector({ eventId, time, onDateSelect, selectedDate }:
             .eq("experience_type", eventId)
             .eq("payment_status", "paid");
           ((bookings as unknown as BookingCount[] | null) ?? []).forEach((b) => {
-            if (b.experience_date) counts[b.experience_date] = (counts[b.experience_date] || 0) + b.quantity;
+            if (b.experience_date)
+              counts[b.experience_date] = (counts[b.experience_date] || 0) + b.quantity;
           });
         } catch {
           // booking count errors don't block dates from showing
@@ -88,7 +89,7 @@ export function EventDateSelector({ eventId, time, onDateSelect, selectedDate }:
               isOnline: maxCapacity >= 9999,
               maxCapacity,
               spotsRemaining,
-            } satisfies ScheduledEventDate;
+            } satisfies ScheduledExperienceDate;
           })
           .filter((date) => date.spotsRemaining > 0);
       } catch {
