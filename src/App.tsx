@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { lazy, Suspense } from "react";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import { AdminRoute } from "@/components/AdminRoute";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
@@ -108,8 +108,8 @@ function AppContent() {
   return (
     <>
       <ScrollToTop />
-      <Suspense fallback={<PageSkeleton />}>
-        <div className="duration-300 animate-in fade-in">
+      <div className="duration-300 animate-in fade-in">
+        <Suspense fallback={<PageSkeleton />}>
           <Routes>
             {/* Public routes */}
             <Route path="/" element={<Index />} />
@@ -272,8 +272,8 @@ function AppContent() {
             {/* 404 */}
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </div>
-      </Suspense>
+        </Suspense>
+      </div>
       {/* <CommandPalette /> */}
       <Toaster />
       <Sonner />

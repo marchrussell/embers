@@ -1,8 +1,8 @@
+import { User } from "@supabase/supabase-js";
 import { useState } from "react";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
-import { User } from "@supabase/supabase-js";
 
 export const useAccountSettings = (user?: User) => {
   const [isUpdating, setIsUpdating] = useState(false);

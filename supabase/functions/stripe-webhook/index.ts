@@ -3,13 +3,13 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 import { Resend } from "https://esm.sh/resend@4.0.0";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 
-import { fireLoopsEvent, upsertLoopsContact } from "../_shared/loops.ts";
 import {
   eventBookingAdminNotificationEmail,
   eventBookingConfirmationEmail,
   generateICalContent,
   ICalEventDetails,
 } from "../_shared/email-templates.ts";
+import { fireLoopsEvent, upsertLoopsContact } from "../_shared/loops.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",

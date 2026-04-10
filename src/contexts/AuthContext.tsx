@@ -3,8 +3,8 @@ import { Session, User } from "@supabase/supabase-js";
 import React, { createContext, useContext, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
-import { identifyUser, resetUser } from "@/lib/posthog";
 import { supabase } from "@/integrations/supabase/client";
+import { identifyUser, resetUser } from "@/lib/posthog";
 
 interface AuthContextType {
   user: User | null;
@@ -247,14 +247,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (session?.user) {
         log("SIGNED_IN: running auth checks");
+        // Only show loading state on first authentication — re-auth events (e.g.
+        // cross-tab sign-in triggering SIGNED_IN via setSession) should refresh
+        // auth data silently without flashing a loading screen.
+        const isFirstAuth = !authCheckedRef.current;
         authCheckedRef.current = true;
-        setLoading(true);
+        if (isFirstAuth) setLoading(true);
         identifyUser(session.user.id, {
           email: session.user.email,
           created_at: session.user.created_at,
         });
         await runAuthChecks(session.user.id, session.access_token);
-        setLoading(false);
+        if (isFirstAuth) setLoading(false);
       } else {
         log("SIGNED_OUT: clearing auth state");
         authCheckedRef.current = false;
