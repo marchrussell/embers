@@ -1,3 +1,4 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import {
   ChevronDown,
@@ -16,7 +17,7 @@ import {
   Users,
   Video,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { AdminLayout } from "@/components/admin";
@@ -210,7 +211,7 @@ const ConfigEditDialog = ({ config, onSaved }: ConfigEditDialogProps) => {
           Edit
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[90vh] max-w-xl overflow-y-auto">
+      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Edit {config.title} Config</DialogTitle>
         </DialogHeader>
@@ -514,7 +515,7 @@ const CreateConfigDialog = ({ onCreated }: CreateConfigDialogProps) => {
           New Session Type
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[90vh] max-w-xl overflow-y-auto">
+      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Create Session Type</DialogTitle>
         </DialogHeader>
@@ -725,19 +726,62 @@ const CreateConfigDialog = ({ onCreated }: CreateConfigDialogProps) => {
 const AdminLiveSessions = () => {
   const { user, isAdmin } = useAuth();
 
+  const queryClient = useQueryClient();
+
   // Instances state
-  const [sessions, setSessions] = useState<LiveSession[]>([]);
-  const [sessionDetails, setSessionDetails] = useState<Map<string, LiveSessionDetails>>(new Map());
-  const [isLoading, setIsLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [editingSession, setEditingSession] = useState<LiveSession | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [typeFilter, setTypeFilter] = useState<SessionType | "all">("all");
 
-  // Session configs state
-  const [configs, setConfigs] = useState<LiveSessionConfig[]>([]);
-  const [configsLoading, setConfigsLoading] = useState(true);
+  // Session configs
+  const { data: configs = [], isLoading: configsLoading } = useQuery<LiveSessionConfig[]>({
+    queryKey: ["admin-live-session-configs"],
+    queryFn: async (): Promise<LiveSessionConfig[]> => {
+      const { data, error } = await db
+        .from("live_session_configs")
+        .select("*")
+        .order("session_type");
+      if (error) throw error;
+      return (data as unknown as LiveSessionConfig[]) ?? [];
+    },
+    enabled: !!isAdmin,
+  });
+
+  // Sessions + details
+  const { data: sessionsData = { sessions: [], sessionDetails: new Map() }, isLoading } = useQuery<{
+    sessions: LiveSession[];
+    sessionDetails: Map<string, LiveSessionDetails>;
+  }>({
+    queryKey: ["admin-live-sessions"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("live_sessions")
+        .select("*")
+        .order("start_time", { ascending: false });
+      if (error) throw error;
+      const sessionList = (data ?? []) as unknown as LiveSession[];
+      const detailsMap = new Map<string, LiveSessionDetails>();
+      if (sessionList.length > 0) {
+        const { data: detailsData } = await db
+          .from("live_session_details")
+          .select("*")
+          .in(
+            "linked_session_id",
+            sessionList.map((s) => s.id)
+          );
+        ((detailsData ?? []) as LiveSessionDetails[]).forEach((d) => {
+          detailsMap.set(d.linked_session_id, d);
+        });
+      }
+      return { sessions: sessionList, sessionDetails: detailsMap };
+    },
+    enabled: !!isAdmin,
+  });
+
+  const sessions = sessionsData.sessions;
+  const sessionDetails = sessionsData.sessionDetails;
 
   // Instance form state
   const emptyForm = {
@@ -788,60 +832,6 @@ const AdminLiveSessions = () => {
     setDetailsForm(emptyDetails);
     setShowDetails(false);
   };
-
-  // Fetch configs
-  useEffect(() => {
-    if (!isAdmin) return;
-    const fetch = async () => {
-      const { data, error } = await db
-        .from("live_session_configs")
-        .select("*")
-        .order("session_type");
-      if (error) {
-        toast.error("Failed to load session configs");
-      } else {
-        setConfigs((data as unknown as LiveSessionConfig[]) ?? []);
-      }
-      setConfigsLoading(false);
-    };
-    fetch();
-  }, [isAdmin]);
-
-  // Fetch sessions + details
-  const fetchSessions = async () => {
-    const { data, error } = await supabase
-      .from("live_sessions")
-      .select("*")
-      .order("start_time", { ascending: false });
-
-    if (error) {
-      console.error("Error fetching sessions:", error);
-      toast.error("Failed to load sessions");
-      return;
-    }
-
-    const sessionList = (data ?? []) as unknown as LiveSession[];
-    setSessions(sessionList);
-
-    if (sessionList.length > 0) {
-      const ids = sessionList.map((s) => s.id);
-      const { data: detailsData } = await db
-        .from("live_session_details")
-        .select("*")
-        .in("linked_session_id", ids);
-
-      const map = new Map<string, LiveSessionDetails>();
-      ((detailsData ?? []) as LiveSessionDetails[]).forEach((d) => {
-        map.set(d.linked_session_id, d);
-      });
-      setSessionDetails(map);
-    }
-  };
-
-  useEffect(() => {
-    if (!isAdmin) return;
-    fetchSessions().finally(() => setIsLoading(false));
-  }, [isAdmin]);
 
   const openEditDialog = (session: LiveSession) => {
     setEditingSession(session);
@@ -979,7 +969,7 @@ const AdminLiveSessions = () => {
       }
 
       resetDialog();
-      await fetchSessions();
+      await queryClient.invalidateQueries({ queryKey: ["admin-live-sessions"] });
     } catch (err) {
       console.error("Error saving session:", err);
       toast.error(err instanceof Error ? err.message : "Failed to save session");
@@ -997,8 +987,18 @@ const AdminLiveSessions = () => {
         .update({ status: newStatus })
         .eq("id", session.id);
       if (error) throw error;
-      setSessions((prev) =>
-        prev.map((s) => (s.id === session.id ? { ...s, status: newStatus } : s))
+      queryClient.setQueryData<{
+        sessions: LiveSession[];
+        sessionDetails: Map<string, LiveSessionDetails>;
+      }>(["admin-live-sessions"], (prev) =>
+        prev
+          ? {
+              ...prev,
+              sessions: prev.sessions.map((s) =>
+                s.id === session.id ? { ...s, status: newStatus } : s
+              ),
+            }
+          : prev
       );
       toast.success(`Session ${newStatus === "live" ? "started" : "ended"}`);
     } catch (err) {
@@ -1019,7 +1019,7 @@ const AdminLiveSessions = () => {
       if (linkError) throw linkError;
       await navigator.clipboard.writeText(data.guestJoinUrl);
       toast.success("Guest link copied to clipboard");
-      await fetchSessions();
+      await queryClient.invalidateQueries({ queryKey: ["admin-live-sessions"] });
     } catch (err) {
       toast.error("Failed to generate guest link");
     } finally {
@@ -1039,11 +1039,14 @@ const AdminLiveSessions = () => {
     try {
       const { error } = await supabase.from("live_sessions").delete().eq("id", session.id);
       if (error) throw error;
-      setSessions((prev) => prev.filter((s) => s.id !== session.id));
-      setSessionDetails((prev) => {
-        const next = new Map(prev);
+      queryClient.setQueryData<{
+        sessions: LiveSession[];
+        sessionDetails: Map<string, LiveSessionDetails>;
+      }>(["admin-live-sessions"], (prev) => {
+        if (!prev) return prev;
+        const next = new Map(prev.sessionDetails);
         next.delete(session.id);
-        return next;
+        return { sessions: prev.sessions.filter((s) => s.id !== session.id), sessionDetails: next };
       });
       toast.success("Session deleted");
     } catch (err) {
@@ -1239,7 +1242,7 @@ const AdminLiveSessions = () => {
         </Button>
       </DialogTrigger>
       <DialogContent
-        className="max-h-[90vh] max-w-xl overflow-y-auto"
+        className="max-h-[90vh] max-w-2xl overflow-y-auto"
         onInteractOutside={handleCloseAttempt}
         onEscapeKeyDown={handleCloseAttempt}
       >
@@ -1522,7 +1525,14 @@ const AdminLiveSessions = () => {
               Configure recurring session types. New types appear as options when creating
               instances.
             </p>
-            <CreateConfigDialog onCreated={(config) => setConfigs((prev) => [...prev, config])} />
+            <CreateConfigDialog
+              onCreated={(config) =>
+                queryClient.setQueryData<LiveSessionConfig[]>(
+                  ["admin-live-session-configs"],
+                  (prev) => [...(prev ?? []), config]
+                )
+              }
+            />
           </div>
           {configsLoading ? (
             <AdminContentSkeleton showStats={false} variant="cards" />
@@ -1546,8 +1556,12 @@ const AdminLiveSessions = () => {
                       <ConfigEditDialog
                         config={config}
                         onSaved={(updated) =>
-                          setConfigs((prev) =>
-                            prev.map((c) => (c.session_type === updated.session_type ? updated : c))
+                          queryClient.setQueryData<LiveSessionConfig[]>(
+                            ["admin-live-session-configs"],
+                            (prev) =>
+                              (prev ?? []).map((c) =>
+                                c.session_type === updated.session_type ? updated : c
+                              )
                           )
                         }
                       />

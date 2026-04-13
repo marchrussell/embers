@@ -1,3 +1,4 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Pencil, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -57,9 +58,8 @@ interface Course {
 const AdminCourseLessons = () => {
   const { isAdmin, loading } = useAuth();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { courseId } = useParams<{ courseId: string }>();
-  const [course, setCourse] = useState<Course | null>(null);
-  const [lessons, setLessons] = useState<Lesson[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingLesson, setEditingLesson] = useState<Lesson | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -79,44 +79,33 @@ const AdminCourseLessons = () => {
     }
   }, [isAdmin, loading, navigate]);
 
-  useEffect(() => {
-    if (courseId) {
-      fetchCourse();
-      fetchLessons();
-    }
-  }, [courseId]);
+  const { data: course } = useQuery({
+    queryKey: ["admin-course", courseId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("courses")
+        .select("id, title, slug")
+        .eq("id", courseId)
+        .single();
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!courseId,
+  });
 
-  const fetchCourse = async () => {
-    const { data, error } = await supabase
-      .from("courses")
-      .select("id, title, slug")
-      .eq("id", courseId)
-      .single();
-
-    if (error) {
-      toast({ title: "Error fetching course", description: error.message, variant: "destructive" });
-    } else {
-      setCourse(data);
-    }
-  };
-
-  const fetchLessons = async () => {
-    const { data, error } = await supabase
-      .from("course_lessons")
-      .select("*")
-      .eq("course_id", courseId)
-      .order("order_index", { ascending: true });
-
-    if (error) {
-      toast({
-        title: "Error fetching lessons",
-        description: error.message,
-        variant: "destructive",
-      });
-    } else {
-      setLessons(data || []);
-    }
-  };
+  const { data: lessons = [] } = useQuery<Lesson[]>({
+    queryKey: ["admin-course-lessons", courseId],
+    queryFn: async (): Promise<Lesson[]> => {
+      const { data, error } = await supabase
+        .from("course_lessons")
+        .select("*")
+        .eq("course_id", courseId)
+        .order("order_index", { ascending: true });
+      if (error) throw error;
+      return (data ?? []) as Lesson[];
+    },
+    enabled: !!courseId,
+  });
 
   const handleMediaUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -209,7 +198,7 @@ const AdminCourseLessons = () => {
         });
       } else {
         toast({ title: "Lesson updated successfully" });
-        fetchLessons();
+        queryClient.invalidateQueries({ queryKey: ["admin-course-lessons", courseId] });
         resetForm();
       }
     } else {
@@ -223,7 +212,7 @@ const AdminCourseLessons = () => {
         });
       } else {
         toast({ title: "Lesson created successfully" });
-        fetchLessons();
+        queryClient.invalidateQueries({ queryKey: ["admin-course-lessons", courseId] });
         resetForm();
       }
     }
@@ -238,7 +227,7 @@ const AdminCourseLessons = () => {
       toast({ title: "Error deleting lesson", description: error.message, variant: "destructive" });
     } else {
       toast({ title: "Lesson deleted successfully" });
-      fetchLessons();
+      queryClient.invalidateQueries({ queryKey: ["admin-course-lessons", courseId] });
     }
   };
 
@@ -265,7 +254,7 @@ const AdminCourseLessons = () => {
     if (error) {
       toast({ title: "Error updating lesson", description: error.message, variant: "destructive" });
     } else {
-      fetchLessons();
+      queryClient.invalidateQueries({ queryKey: ["admin-course-lessons", courseId] });
     }
   };
 

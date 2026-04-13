@@ -1,5 +1,6 @@
+import { useQuery } from "@tanstack/react-query";
 import { Calendar, Download, RefreshCw, Ticket, Users } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { AdminLayout, AdminStatsCard } from "@/components/admin";
@@ -51,66 +52,55 @@ const EVENT_TITLES: Record<string, string> = {
 };
 
 const ExperienceBookings = () => {
-  const [bookings, setBookings] = useState<ExperienceBooking[]>([]);
-  const [loading, setLoading] = useState(true);
   const [selectedEventType, setSelectedEventType] = useState<string>("all");
   const [selectedDate, setSelectedDate] = useState<string>("all");
-  const [dateStats, setDateStats] = useState<DateStats[]>([]);
-  const [uniqueEventTypes, setUniqueEventTypes] = useState<string[]>([]);
-  const [uniqueDates, setUniqueDates] = useState<string[]>([]);
 
-  useEffect(() => {
-    fetchBookings();
-  }, []);
-
-  const fetchBookings = async () => {
-    try {
-      setLoading(true);
+  const {
+    data: bookings = [],
+    isLoading: loading,
+    refetch,
+  } = useQuery<ExperienceBooking[]>({
+    queryKey: ["admin-experience-bookings"],
+    queryFn: async (): Promise<ExperienceBooking[]> => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data, error } = await (supabase as any)
         .from("experiences_bookings")
         .select("*")
         .eq("payment_status", "paid")
         .order("created_at", { ascending: false });
-
       if (error) throw error;
+      return (data ?? []) as ExperienceBooking[];
+    },
+  });
 
-      const bookingsData = (data || []) as ExperienceBooking[];
-      setBookings(bookingsData);
+  const uniqueEventTypes = useMemo(
+    () => [...new Set(bookings.map((b) => b.experience_type).filter(Boolean))] as string[],
+    [bookings]
+  );
 
-      const eventTypes = [
-        ...new Set(bookingsData.map((b) => b.experience_type).filter(Boolean)),
-      ] as string[];
-      const dates = [
-        ...new Set(bookingsData.map((b) => b.experience_date).filter(Boolean)),
-      ] as string[];
+  const uniqueDates = useMemo(
+    () => [...new Set(bookings.map((b) => b.experience_date).filter(Boolean))].sort() as string[],
+    [bookings]
+  );
 
-      setUniqueEventTypes(eventTypes);
-      setUniqueDates(dates.sort());
-
-      const stats: Record<string, DateStats> = {};
-      bookingsData.forEach((booking) => {
-        if (booking.experience_date) {
-          if (!stats[booking.experience_date]) {
-            stats[booking.experience_date] = {
-              date: booking.experience_date,
-              displayDate: formatDateDisplay(booking.experience_date),
-              totalBookings: 0,
-              totalTickets: 0,
-            };
-          }
-          stats[booking.experience_date].totalBookings += 1;
-          stats[booking.experience_date].totalTickets += booking.quantity;
+  const dateStats = useMemo<DateStats[]>(() => {
+    const stats: Record<string, DateStats> = {};
+    bookings.forEach((booking) => {
+      if (booking.experience_date) {
+        if (!stats[booking.experience_date]) {
+          stats[booking.experience_date] = {
+            date: booking.experience_date,
+            displayDate: formatDateDisplay(booking.experience_date),
+            totalBookings: 0,
+            totalTickets: 0,
+          };
         }
-      });
-      setDateStats(Object.values(stats).sort((a, b) => a.date.localeCompare(b.date)));
-    } catch (error) {
-      console.error("Error fetching bookings:", error);
-      toast.error("Failed to load bookings");
-    } finally {
-      setLoading(false);
-    }
-  };
+        stats[booking.experience_date].totalBookings += 1;
+        stats[booking.experience_date].totalTickets += booking.quantity;
+      }
+    });
+    return Object.values(stats).sort((a, b) => a.date.localeCompare(b.date));
+  }, [bookings]);
 
   const formatDateDisplay = (dateStr: string): string => {
     try {
@@ -238,7 +228,7 @@ const ExperienceBookings = () => {
         </Button>
 
         <Button
-          onClick={fetchBookings}
+          onClick={() => refetch()}
           variant="outline"
           className="gap-2 border-white/20 text-white hover:bg-white/10"
           disabled={loading}

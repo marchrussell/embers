@@ -1,3 +1,4 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Calendar, CalendarDays, Loader2, MapPin, Plus, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -551,12 +552,12 @@ const CreateExperienceDialog = ({ onCreated }: CreateExperienceDialogProps) => {
           New Experience
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
+      <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>New In-Person Experience</DialogTitle>
         </DialogHeader>
         <ExperienceFormFields form={form} setForm={setForm} mode="create" />
-        <div className="flex justify-end gap-2 border-t border-border pt-4">
+        <div className="flex justify-end gap-2 border-t border-border pt-6">
           <Button variant="outline" onClick={() => setOpen(false)}>
             Cancel
           </Button>
@@ -660,12 +661,12 @@ const EditExperienceDialog = ({ config, onSaved }: EditExperienceDialogProps) =>
           Edit
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
+      <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Edit {config.title}</DialogTitle>
         </DialogHeader>
         <ExperienceFormFields form={form} setForm={setForm} mode="edit" />
-        <div className="flex justify-end gap-2 border-t border-border pt-4">
+        <div className="flex justify-end gap-2 border-t border-border pt-6">
           <Button variant="outline" onClick={() => setOpen(false)}>
             Cancel
           </Button>
@@ -873,7 +874,7 @@ const ManageDatesDialog = ({ config }: ManageDatesDialogProps) => {
             <Loader2 className="h-6 w-6 animate-spin text-foreground/40" />
           </div>
         ) : dates.length === 0 ? (
-          <p className="py-8 text-center text-sm text-foreground/50">
+          <p className="py-12 text-center text-sm text-foreground/50">
             No dates yet. Use "Generate next 6 months" or add dates manually below.
           </p>
         ) : (
@@ -1010,27 +1011,29 @@ const ManageDatesDialog = ({ config }: ManageDatesDialogProps) => {
 
 const AdminExperiences = () => {
   const { isAdmin } = useAuth();
-  const [configs, setConfigs] = useState<ExperienceConfig[]>([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!isAdmin) return;
-    db.from("experience_configs")
-      .select("*")
-      .order("created_at", { ascending: true })
-      .then(({ data, error }: { data: ExperienceConfig[] | null; error: unknown }) => {
-        if (error) toast.error("Failed to load experiences");
-        else setConfigs(data ?? []);
-        setLoading(false);
-      });
-  }, [isAdmin]);
+  const { data: configs = [], isLoading: loading } = useQuery<ExperienceConfig[]>({
+    queryKey: ["admin-experiences"],
+    queryFn: async (): Promise<ExperienceConfig[]> => {
+      const { data, error } = await db
+        .from("experience_configs")
+        .select("*")
+        .order("created_at", { ascending: true });
+      if (error) throw error;
+      return (data ?? []) as ExperienceConfig[];
+    },
+    enabled: !!isAdmin,
+  });
 
   const handleDelete = async (id: string) => {
     try {
       const { error } = await db.from("experience_configs").delete().eq("id", id);
       if (error) throw error;
-      setConfigs((prev) => prev.filter((c) => c.id !== id));
+      queryClient.setQueryData<ExperienceConfig[]>(["admin-experiences"], (prev) =>
+        (prev ?? []).filter((c) => c.id !== id)
+      );
       toast.success("Experience deleted");
     } catch (err) {
       console.error("Error deleting experience:", err);
@@ -1044,7 +1047,16 @@ const AdminExperiences = () => {
     <AdminLayout
       title="In-Person Experiences"
       description="Manage recurring in-person experience configurations"
-      actions={<CreateExperienceDialog onCreated={(c) => setConfigs((prev) => [...prev, c])} />}
+      actions={
+        <CreateExperienceDialog
+          onCreated={(c) =>
+            queryClient.setQueryData<ExperienceConfig[]>(["admin-experiences"], (prev) => [
+              ...(prev ?? []),
+              c,
+            ])
+          }
+        />
+      }
     >
       {/* Stats */}
       <div className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -1074,7 +1086,7 @@ const AdminExperiences = () => {
         {configs.map((config) => (
           <TableRow key={config.id} className={adminTableRowClass}>
             <TableCell className={adminTableCellClass}>
-              <div>
+              <div className="p-6">
                 <p className="font-medium text-[#E6DBC7]">{config.title}</p>
                 <p className="font-mono text-xs text-foreground/50">{config.experience_type}</p>
               </div>
@@ -1102,7 +1114,9 @@ const AdminExperiences = () => {
                 <EditExperienceDialog
                   config={config}
                   onSaved={(updated) =>
-                    setConfigs((prev) => prev.map((c) => (c.id === updated.id ? updated : c)))
+                    queryClient.setQueryData<ExperienceConfig[]>(["admin-experiences"], (prev) =>
+                      (prev ?? []).map((c) => (c.id === updated.id ? updated : c))
+                    )
                   }
                 />
                 <Button

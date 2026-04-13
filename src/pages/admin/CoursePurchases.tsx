@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { ArrowLeft, CheckCircle, Eye, Mail, RefreshCw, Search, ShoppingBag } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -18,7 +19,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useAuth } from "@/contexts/AuthContext";
-import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Purchase {
@@ -53,9 +53,7 @@ interface LessonProgress {
 const AdminCoursePurchases = () => {
   const { isAdmin, loading } = useAuth();
   const navigate = useNavigate();
-  const [purchases, setPurchases] = useState<Purchase[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [refreshing, setRefreshing] = useState(false);
   const [selectedPurchase, setSelectedPurchase] = useState<Purchase | null>(null);
   const [userProgress, setUserProgress] = useState<LessonProgress[]>([]);
   const [showProgressModal, setShowProgressModal] = useState(false);
@@ -66,48 +64,34 @@ const AdminCoursePurchases = () => {
     }
   }, [isAdmin, loading, navigate]);
 
-  useEffect(() => {
-    fetchPurchases();
-  }, []);
+  const {
+    data: purchases = [],
+    isLoading: refreshing,
+    refetch,
+  } = useQuery<Purchase[]>({
+    queryKey: ["admin-course-purchases"],
+    queryFn: async (): Promise<Purchase[]> => {
+      const { data: purchasesData, error: purchasesError } = await supabase
+        .from("user_course_purchases")
+        .select(`*, course:courses(title, slug)`)
+        .order("purchased_at", { ascending: false });
 
-  const fetchPurchases = async () => {
-    setRefreshing(true);
+      if (purchasesError) throw purchasesError;
 
-    const { data: purchasesData, error: purchasesError } = await supabase
-      .from("user_course_purchases")
-      .select(
-        `
-        *,
-        course:courses(title, slug)
-      `
-      )
-      .order("purchased_at", { ascending: false });
+      const userIds = [...new Set(purchasesData?.map((p) => p.user_id) || [])];
+      const { data: profilesData } = await supabase
+        .from("profiles")
+        .select("id, email, full_name")
+        .in("id", userIds);
 
-    if (purchasesError) {
-      toast({
-        title: "Error fetching purchases",
-        description: purchasesError.message,
-        variant: "destructive",
-      });
-      setRefreshing(false);
-      return;
-    }
-
-    const userIds = [...new Set(purchasesData?.map((p) => p.user_id) || [])];
-    const { data: profilesData } = await supabase
-      .from("profiles")
-      .select("id, email, full_name")
-      .in("id", userIds);
-
-    const purchasesWithProfiles =
-      purchasesData?.map((purchase) => ({
-        ...purchase,
-        profile: profilesData?.find((p) => p.id === purchase.user_id),
-      })) || [];
-
-    setPurchases(purchasesWithProfiles);
-    setRefreshing(false);
-  };
+      return (
+        purchasesData?.map((purchase) => ({
+          ...purchase,
+          profile: profilesData?.find((p) => p.id === purchase.user_id),
+        })) || []
+      );
+    },
+  });
 
   const viewUserProgress = async (purchase: Purchase) => {
     setSelectedPurchase(purchase);
@@ -217,7 +201,7 @@ const AdminCoursePurchases = () => {
             />
           </div>
           <Button
-            onClick={fetchPurchases}
+            onClick={() => refetch()}
             disabled={refreshing}
             variant="outline"
             className="gap-2 border-white/20 text-white hover:bg-white/10"

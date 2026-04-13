@@ -164,7 +164,7 @@ const AdminCategories = () => {
       });
     } else {
       toast({ title: "Category deleted successfully" });
-       queryClient.invalidateQueries({ queryKey: ["admin-categories"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-categories"] });
     }
   };
 
@@ -200,7 +200,7 @@ const AdminCategories = () => {
         </Button>
       </DialogTrigger>
       <DialogContent
-        className="max-w-md rounded-xl border border-white/20 bg-black/60 backdrop-blur-xl"
+        className="max-w-xl rounded-xl border border-white/20 bg-black/60 backdrop-blur-xl"
         hideClose
       >
         <DialogHeader>
@@ -208,7 +208,7 @@ const AdminCategories = () => {
             {editingCategory ? "Edit Category" : "Create New Category"}
           </DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="mt-4 space-y-6">
+        <form onSubmit={handleSubmit} className="mt-6 space-y-6">
           <div className="space-y-2">
             <Label htmlFor="order_index" className="text-white/80">
               Display Order
@@ -312,7 +312,7 @@ const AdminCategories = () => {
                   loading="lazy"
                 />
               ) : (
-                <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-[#E6DBC7]/10 text-xs text-foreground/50">
+                <div className="flex h-16 w-16 items-center justify-center rounded-lg px-10 text-xs text-foreground/50">
                   No image
                 </div>
               )}

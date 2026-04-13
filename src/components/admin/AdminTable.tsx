@@ -32,7 +32,7 @@ export const AdminTable = ({ children, headers, emptyState, isLoading }: AdminTa
               <TableHead
                 key={index}
                 className={cn(
-                  "py-4 text-sm font-normal text-[#E6DBC7]",
+                  "p-6 text-sm font-normal text-[#E6DBC7]",
                   header.align === "right" && "text-right",
                   header.align === "center" && "text-center",
                   header.width,

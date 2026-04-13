@@ -589,7 +589,7 @@ const AdminClasses = () => {
             {editingClass ? "Edit Class" : "Create New Class"}
           </DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="mt-4 space-y-6">
+        <form onSubmit={handleSubmit} className="mt-6 space-y-6">
           <div className="space-y-2">
             <Label htmlFor="title" className="text-white/80">
               Title *
@@ -852,7 +852,7 @@ const AdminClasses = () => {
             </p>
           </div>
 
-          <div className="space-y-4 border-t border-border pt-4">
+          <div className="space-y-4 border-t border-border pt-6">
             <h3 className="text-lg font-semibold">Safety Note</h3>
             <div>
               <Label htmlFor="safety_note">Custom Safety Note (Optional)</Label>
@@ -869,7 +869,7 @@ const AdminClasses = () => {
                 below)
               </p>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 pt-6">
               <Switch
                 id="show_safety_reminder"
                 checked={formData.show_safety_reminder}
@@ -893,14 +893,6 @@ const AdminClasses = () => {
               Publish
             </Label>
           </div>
-          {/* <div className="flex items-center space-x-2">
-                  <Switch
-                    id="requires_subscription"
-                    checked={formData.requires_subscription}
-                    onCheckedChange={(checked) => setFormData({ ...formData, requires_subscription: checked })}
-                  />
-                  <Label htmlFor="requires_subscription" className="mb-0">Requires Subscription (Lock for non-subscribers)</Label>
-                </div> */}
           <div className="flex items-center space-x-2">
             <Switch
               id="is_quick_reset"
@@ -950,10 +942,10 @@ const AdminClasses = () => {
       </div>
 
       {/* Category Tabs */}
-      <div className="my-6 flex flex-wrap gap-2">
+      <div className="my-6 flex flex-wrap gap-6">
         <button
           onClick={() => setSelectedCategory("all")}
-          className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+          className={`rounded-full px-6 py-1.5 text-sm font-medium transition-colors ${
             selectedCategory === "all"
               ? "bg-[#E6DBC7] text-black"
               : "bg-white/5 text-white/60 hover:bg-white/10"
@@ -984,13 +976,13 @@ const AdminClasses = () => {
         <Table>
           <TableHeader>
             <TableRow className="border-b border-[#E6DBC7]/10 hover:bg-transparent">
-              <TableHead className="py-4 text-sm font-normal text-[#E6DBC7]">Title</TableHead>
-              <TableHead className="py-4 text-sm font-normal text-[#E6DBC7]">Category</TableHead>
-              <TableHead className="py-4 text-sm font-normal text-[#E6DBC7]">Duration</TableHead>
-              <TableHead className="py-4 text-sm font-normal text-[#E6DBC7]">Intensity</TableHead>
-              <TableHead className="py-4 text-sm font-normal text-[#E6DBC7]">Status</TableHead>
-              <TableHead className="py-4 text-sm font-normal text-[#E6DBC7]">Access</TableHead>
-              <TableHead className="py-4 text-right text-sm font-normal text-[#E6DBC7]">
+              <TableHead className="p-6 text-sm font-normal text-[#E6DBC7]">Title</TableHead>
+              <TableHead className="p-6 text-sm font-normal text-[#E6DBC7]">Category</TableHead>
+              <TableHead className="p-6 text-sm font-normal text-[#E6DBC7]">Duration</TableHead>
+              <TableHead className="p-6 text-sm font-normal text-[#E6DBC7]">Intensity</TableHead>
+              <TableHead className="p-6 text-sm font-normal text-[#E6DBC7]">Status</TableHead>
+              <TableHead className="p-6 text-sm font-normal text-[#E6DBC7]">Access</TableHead>
+              <TableHead className="p-6 text-right text-sm font-normal text-[#E6DBC7]">
                 Actions
               </TableHead>
             </TableRow>

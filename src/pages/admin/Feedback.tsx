@@ -1,3 +1,4 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { CheckCircle, Circle, Mail, MessageSquare, Trash2, User as UserIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -37,8 +38,7 @@ interface FeedbackItem {
 const AdminFeedback = () => {
   const navigate = useNavigate();
   const { isAdmin, loading, user } = useAuth();
-  const [feedback, setFeedback] = useState<FeedbackItem[]>([]);
-  const [loadingFeedback, setLoadingFeedback] = useState(true);
+  const queryClient = useQueryClient();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedFeedback, setSelectedFeedback] = useState<FeedbackItem | null>(null);
 
@@ -48,47 +48,26 @@ const AdminFeedback = () => {
     }
   }, [isAdmin, loading, navigate]);
 
-  useEffect(() => {
-    if (isAdmin) {
-      fetchFeedback();
-    }
-  }, [isAdmin]);
-
-  const fetchFeedback = async () => {
-    try {
-      setLoadingFeedback(true);
-
-      // Fetch feedback
+  const { data: feedback = [], isLoading: loadingFeedback } = useQuery<FeedbackItem[]>({
+    queryKey: ["admin-feedback"],
+    queryFn: async (): Promise<FeedbackItem[]> => {
       const { data: feedbackData, error: feedbackError } = await supabase
         .from("feedback")
         .select("id, user_id, message, created_at, actioned, actioned_at, actioned_by")
         .order("created_at", { ascending: false });
 
       if (feedbackError) throw feedbackError;
+      if (!feedbackData || feedbackData.length === 0) return [];
 
-      if (!feedbackData || feedbackData.length === 0) {
-        setFeedback([]);
-        return;
-      }
-
-      // Get unique user IDs
       const userIds = [...new Set(feedbackData.map((item) => item.user_id))];
-
-      // Fetch profiles for these users
-      const { data: profilesData, error: profilesError } = await supabase
+      const { data: profilesData } = await supabase
         .from("profiles")
         .select("id, email, full_name, first_name, last_name")
         .in("id", userIds);
 
-      if (profilesError) {
-        console.error("Error fetching profiles:", profilesError);
-      }
-
-      // Create a map of user profiles
       const profilesMap = new Map(profilesData?.map((profile) => [profile.id, profile]) || []);
 
-      // Merge feedback with profile data
-      const formattedFeedback = feedbackData.map((item) => {
+      return feedbackData.map((item) => {
         const profile = profilesMap.get(item.user_id);
         return {
           id: item.id,
@@ -106,15 +85,9 @@ const AdminFeedback = () => {
           actioned_by: item.actioned_by,
         };
       });
-
-      setFeedback(formattedFeedback);
-    } catch (error: any) {
-      console.error("Error fetching feedback:", error);
-      toast.error("Failed to load feedback");
-    } finally {
-      setLoadingFeedback(false);
-    }
-  };
+    },
+    enabled: !!isAdmin,
+  });
 
   const handleToggleActioned = async (feedbackId: string, currentStatus: boolean) => {
     try {
@@ -129,8 +102,8 @@ const AdminFeedback = () => {
 
       if (error) throw error;
 
-      setFeedback((prev) =>
-        prev.map((item) =>
+      queryClient.setQueryData<FeedbackItem[]>(["admin-feedback"], (prev) =>
+        (prev ?? []).map((item) =>
           item.id === feedbackId
             ? {
                 ...item,
@@ -157,7 +130,9 @@ const AdminFeedback = () => {
 
       if (error) throw error;
 
-      setFeedback((prev) => prev.filter((item) => item.id !== selectedFeedback.id));
+      queryClient.setQueryData<FeedbackItem[]>(["admin-feedback"], (prev) =>
+        (prev ?? []).filter((item) => item.id !== selectedFeedback.id)
+      );
       toast.success("Feedback deleted");
       setDeleteDialogOpen(false);
       setSelectedFeedback(null);

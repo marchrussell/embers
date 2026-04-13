@@ -1,3 +1,4 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Calendar, Clock, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -25,7 +26,7 @@ const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", 
 const AdminAvailability = () => {
   const { isAdmin, loading } = useAuth();
   const navigate = useNavigate();
-  const [slots, setSlots] = useState<AvailabilitySlot[]>([]);
+  const queryClient = useQueryClient();
   const [newSlot, setNewSlot] = useState({
     day_of_week: 1,
     start_time: "09:00",
@@ -38,23 +39,18 @@ const AdminAvailability = () => {
     }
   }, [isAdmin, loading, navigate]);
 
-  useEffect(() => {
-    fetchSlots();
-  }, []);
-
-  const fetchSlots = async () => {
-    const { data, error } = await supabase
-      .from("availability_slots")
-      .select("*")
-      .order("day_of_week")
-      .order("start_time");
-
-    if (error) {
-      toast({ title: "Error fetching availability", variant: "destructive" });
-    } else {
-      setSlots(data || []);
-    }
-  };
+  const { data: slots = [] } = useQuery<AvailabilitySlot[]>({
+    queryKey: ["admin-availability"],
+    queryFn: async (): Promise<AvailabilitySlot[]> => {
+      const { data, error } = await supabase
+        .from("availability_slots")
+        .select("*")
+        .order("day_of_week")
+        .order("start_time");
+      if (error) throw error;
+      return (data ?? []) as AvailabilitySlot[];
+    },
+  });
 
   const handleAddSlot = async () => {
     const { error } = await supabase.from("availability_slots").insert([newSlot]);
@@ -63,7 +59,7 @@ const AdminAvailability = () => {
       toast({ title: "Error adding slot", description: error.message, variant: "destructive" });
     } else {
       toast({ title: "Availability slot added" });
-      fetchSlots();
+      queryClient.invalidateQueries({ queryKey: ["admin-availability"] });
       setNewSlot({ day_of_week: 1, start_time: "09:00", end_time: "17:00" });
     }
   };
@@ -77,7 +73,7 @@ const AdminAvailability = () => {
     if (error) {
       toast({ title: "Error updating slot", variant: "destructive" });
     } else {
-      fetchSlots();
+      queryClient.invalidateQueries({ queryKey: ["admin-availability"] });
     }
   };
 
@@ -88,7 +84,7 @@ const AdminAvailability = () => {
       toast({ title: "Error deleting slot", variant: "destructive" });
     } else {
       toast({ title: "Slot deleted" });
-      fetchSlots();
+      queryClient.invalidateQueries({ queryKey: ["admin-availability"] });
     }
   };
 

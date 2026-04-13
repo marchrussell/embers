@@ -1,5 +1,6 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Download, Mail, Search, UserCheck, Users, UserX } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import {
@@ -39,53 +40,29 @@ interface Subscriber {
 
 const NewsletterSubscribers = () => {
   const { isAdmin } = useAuth();
-  const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
-  const [filteredSubscribers, setFilteredSubscribers] = useState<Subscriber[]>([]);
+  const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState<"all" | "active" | "inactive">("all");
   const [selectedSubscriber, setSelectedSubscriber] = useState<Subscriber | null>(null);
   const [deactivateDialogOpen, setDeactivateDialogOpen] = useState(false);
 
-  useEffect(() => {
-    if (isAdmin) {
-      fetchSubscribers();
-    }
-  }, [isAdmin]);
-
-  useEffect(() => {
-    filterSubscribers();
-  }, [searchQuery, activeFilter, subscribers]);
-
-  const fetchSubscribers = async () => {
-    try {
-      setIsLoading(true);
+  const { data: subscribers = [], isLoading } = useQuery<Subscriber[]>({
+    queryKey: ["admin-newsletter-subscribers"],
+    queryFn: async (): Promise<Subscriber[]> => {
       const { data, error } = await supabase
         .from("newsletter_subscribers")
         .select("*")
         .order("subscribed_at", { ascending: false });
-
       if (error) throw error;
-      setSubscribers(data || []);
-    } catch (error: any) {
-      console.error("Error fetching subscribers:", error);
-      toast.error("Failed to load subscribers");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      return (data ?? []) as Subscriber[];
+    },
+    enabled: !!isAdmin,
+  });
 
-  const filterSubscribers = () => {
+  const filteredSubscribers = useMemo(() => {
     let filtered = subscribers;
-
-    // Filter by active status
-    if (activeFilter === "active") {
-      filtered = filtered.filter((sub) => sub.active);
-    } else if (activeFilter === "inactive") {
-      filtered = filtered.filter((sub) => !sub.active);
-    }
-
-    // Filter by search query
+    if (activeFilter === "active") filtered = filtered.filter((sub) => sub.active);
+    else if (activeFilter === "inactive") filtered = filtered.filter((sub) => !sub.active);
     if (searchQuery) {
       filtered = filtered.filter(
         (sub) =>
@@ -93,9 +70,8 @@ const NewsletterSubscribers = () => {
           sub.name?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
-
-    setFilteredSubscribers(filtered);
-  };
+    return filtered;
+  }, [subscribers, activeFilter, searchQuery]);
 
   const handleDeactivate = async (subscriber: Subscriber) => {
     setSelectedSubscriber(subscriber);
@@ -114,7 +90,7 @@ const NewsletterSubscribers = () => {
       if (error) throw error;
 
       toast.success("Subscriber deactivated successfully");
-      fetchSubscribers();
+      queryClient.invalidateQueries({ queryKey: ["admin-newsletter-subscribers"] });
     } catch (error: any) {
       console.error("Error deactivating subscriber:", error);
       toast.error("Failed to deactivate subscriber");
@@ -134,7 +110,7 @@ const NewsletterSubscribers = () => {
       if (error) throw error;
 
       toast.success("Subscriber reactivated successfully");
-      fetchSubscribers();
+      queryClient.invalidateQueries({ queryKey: ["admin-newsletter-subscribers"] });
     } catch (error: any) {
       console.error("Error reactivating subscriber:", error);
       toast.error("Failed to reactivate subscriber");

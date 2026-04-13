@@ -79,28 +79,6 @@ const Index = () => {
 
           {/* Subtle dark overlay to reduce glare */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/5 to-black/10" />
-
-          {/* Bottom Text - Full Width, 3 Lines */}
-          <div className="absolute bottom-8 left-5 right-5 z-10 sm:bottom-10 sm:left-8 sm:right-6 md:bottom-12 md:left-16 md:right-8">
-            <p
-              className="font-editorial leading-[1.15] text-white drop-shadow-[0_4px_8px_rgba(0,0,0,0.7)]"
-              style={{
-                textShadow: "0 2px 12px rgba(0,0,0,0.5)",
-                fontSize: "clamp(2.4rem, 3.5vw, 3.5rem)",
-                fontWeight: 300,
-              }}
-            >
-              Where your nervous system resets - and your senses awaken
-              <Link to="/online" className="group inline-flex items-baseline">
-                <span
-                  className="ml-4 inline-block font-editorial transition-transform duration-300 group-hover:translate-x-2"
-                  style={{ fontSize: "clamp(2.4rem, 3.5vw, 3.5rem)", fontWeight: 300 }}
-                >
-                  →
-                </span>
-              </Link>
-            </p>
-          </div>
         </section>
 
         {/* Phone Mockups Section */}
@@ -111,16 +89,22 @@ const Index = () => {
               <div className="px-5 pb-8 text-center sm:px-8 sm:pb-10 md:px-16 md:py-20">
                 <p
                   className="text-center font-sans leading-[1.6] text-white"
-                  style={{
-                    fontSize: "clamp(0.95rem, 1.5vw, 1.15rem)",
-                    fontWeight: 400,
-                    textShadow: "0 2px 12px rgba(0,0,0,0.5)",
-                  }}
+                  // style={{
+                  //   fontSize: "clamp(0.95rem, 1.5vw, 1.15rem)",
+                  //   fontWeight: 400,
+                  //   textShadow: "0 2px 12px rgba(0,0,0,0.5)",
+                  // }}
                 >
-                  Embers Studio is a place to come back to the body.
-                  <br className="hidden md:block" /> Through breath, movement, and sensory practice,
-                  it creates space for the nervous system to settle, perception to soften, and
-                  experience to open.
+                  <span className="text-[24px] font-bold">
+                    Embers Studio is a place to come back to the body.
+                  </span>
+                  <br className="hidden md:block" />
+                  <br className="hidden md:block" />
+                  <span className="text-[18px]">
+                    Through breath, movement, and sensory practice, it creates space for the nervous
+                    system to settle, <br className="hidden md:block" /> perception to soften, and
+                    experience to open.
+                  </span>
                 </p>
                 <div className="mt-10 flex flex-wrap justify-center gap-2 md:gap-3">
                   {[
@@ -138,6 +122,29 @@ const Index = () => {
 
               {/* Phone Mockups - centered */}
               <PhoneMockups />
+
+              {/* Bottom Text - Full Width, 3 Lines */}
+              <div className="absolute bottom-8 left-5 right-5 z-10 sm:bottom-10 sm:left-8 sm:right-6 md:bottom-12 md:left-16 md:right-8">
+                <p
+                  className="font-editorial leading-[1.15] text-white drop-shadow-[0_4px_8px_rgba(0,0,0,0.7)]"
+                  style={{
+                    textShadow: "0 2px 12px rgba(0,0,0,0.5)",
+                    fontSize: "clamp(2.4rem, 3.5vw, 3.5rem)",
+                    fontWeight: 300,
+                  }}
+                >
+                  Where your nervous system resets - and your senses awaken
+                  {/* to add gradient  */}
+                  <Link to="/online" className="group inline-flex items-baseline">
+                    <span
+                      className="ml-4 inline-block font-editorial transition-transform duration-300 group-hover:translate-x-2"
+                      style={{ fontSize: "clamp(2.4rem, 3.5vw, 3.5rem)", fontWeight: 300 }}
+                    >
+                      →
+                    </span>
+                  </Link>
+                </p>
+              </div>
 
               {/* Closing Line - moved here under mockups */}
               <p
