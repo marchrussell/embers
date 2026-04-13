@@ -274,7 +274,6 @@ function AppContent() {
           </Routes>
         </Suspense>
       </div>
-      {/* <CommandPalette /> */}
       <Toaster />
       <Sonner />
     </>
