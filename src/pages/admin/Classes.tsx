@@ -3,7 +3,13 @@ import { BookOpen, Pencil, Plus, Star, Trash2, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { AdminLayout, AdminStatsCard } from "@/components/admin";
+import {
+  AdminLayout,
+  AdminStatsCard,
+  AdminTable,
+  adminTableCellClass,
+  adminTableRowClass,
+} from "@/components/admin";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -22,14 +28,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { TableCell, TableRow } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
@@ -972,126 +971,117 @@ const AdminClasses = () => {
       </div>
 
       {/* Table */}
-      <div className="overflow-hidden rounded-xl border border-[#E6DBC7]/20 bg-background/40 backdrop-blur-xl">
-        <Table>
-          <TableHeader>
-            <TableRow className="border-b border-[#E6DBC7]/10 hover:bg-transparent">
-              <TableHead className="p-6 text-sm font-normal text-[#E6DBC7]">Title</TableHead>
-              <TableHead className="p-6 text-sm font-normal text-[#E6DBC7]">Category</TableHead>
-              <TableHead className="p-6 text-sm font-normal text-[#E6DBC7]">Duration</TableHead>
-              <TableHead className="p-6 text-sm font-normal text-[#E6DBC7]">Intensity</TableHead>
-              <TableHead className="p-6 text-sm font-normal text-[#E6DBC7]">Status</TableHead>
-              <TableHead className="p-6 text-sm font-normal text-[#E6DBC7]">Access</TableHead>
-              <TableHead className="p-6 text-right text-sm font-normal text-[#E6DBC7]">
-                Actions
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredClasses.map((classItem) => (
-              <TableRow
-                key={classItem.id}
-                className="border-b border-[#E6DBC7]/10 hover:bg-white/5"
-              >
-                <TableCell className="py-4 font-medium text-white">
-                  <div className="flex items-center gap-2">
-                    {classItem.title}
-                    {classItem.start_here_position && (
-                      <span className="rounded bg-blue-500/20 px-1.5 py-0.5 text-[10px] font-medium text-blue-300">
-                        Start {classItem.start_here_position}
-                      </span>
-                    )}
-                    {featuredClassId === classItem.id && (
-                      <span className="rounded bg-purple-500/20 px-1.5 py-0.5 text-[10px] font-medium text-purple-300">
-                        Featured
-                      </span>
-                    )}
-                    {classItem.is_quick_reset && (
-                      <span className="rounded bg-yellow-500/20 px-1.5 py-0.5 text-[10px] font-medium text-yellow-300">
-                        Quick Reset
-                      </span>
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell className="py-4 text-foreground/70">
-                  {classItem.categories?.map((c) => c.name).join(", ") || "-"}
-                </TableCell>
-                <TableCell className="py-4 text-foreground/70">
-                  {classItem.duration_minutes ? `${classItem.duration_minutes} min` : "-"}
-                </TableCell>
-                <TableCell className="py-4 text-foreground/70">
-                  {classItem.intensity || "-"}
-                </TableCell>
-                <TableCell className="py-4">
-                  <button
-                    onClick={() => togglePublish(classItem)}
-                    className={`rounded-full px-3 py-1 text-xs font-medium ${
-                      classItem.is_published
-                        ? "bg-green-500/20 text-green-400"
-                        : "bg-yellow-500/20 text-yellow-300"
-                    }`}
-                  >
-                    {classItem.is_published ? "Published" : "Draft"}
-                  </button>
-                </TableCell>
-                <TableCell className="py-4">
-                  <span
-                    className={`rounded-full px-3 py-1 text-xs font-medium ${
-                      classItem.requires_subscription
-                        ? "bg-orange-500/20 text-orange-400"
-                        : "bg-green-500/20 text-green-400"
-                    }`}
-                  >
-                    {classItem.requires_subscription ? "Locked" : "Free"}
+      <AdminTable
+        headers={[
+          "Title",
+          "Category",
+          "Duration",
+          "Intensity",
+          "Status",
+          "Access",
+          { label: "Actions", align: "right" },
+        ]}
+        emptyState="No classes found."
+      >
+        {filteredClasses.map((classItem) => (
+          <TableRow key={classItem.id} className={adminTableRowClass}>
+            <TableCell className={`${adminTableCellClass} font-medium text-white`}>
+              <div className="flex items-center gap-2">
+                {classItem.title}
+                {classItem.start_here_position && (
+                  <span className="rounded bg-blue-500/20 px-1.5 py-0.5 text-[10px] font-medium text-blue-300">
+                    Start {classItem.start_here_position}
                   </span>
-                </TableCell>
-                <TableCell className="py-4">
-                  <div className="flex justify-end gap-2">
-                    <Button
-                      variant="ghost"
-                      size="default"
-                      onClick={() => toggleQuickReset(classItem)}
-                      title="Toggle Quick Reset"
-                      className="hover:bg-white/10"
-                    >
-                      <Zap
-                        className={`h-5 w-5 ${classItem.is_quick_reset ? "fill-yellow-400 text-yellow-400" : "text-yellow-400"}`}
-                      />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="default"
-                      onClick={() => setAsFeatured(classItem)}
-                      title="Set as featured class"
-                      className="hover:bg-white/10"
-                    >
-                      <Star
-                        className={`h-5 w-5 ${featuredClassId === classItem.id ? "fill-[#E8C547] text-[#E8C547]" : "text-[#E8C547]"}`}
-                      />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="default"
-                      onClick={() => handleEdit(classItem)}
-                      className="hover:bg-white/10"
-                    >
-                      <Pencil className="h-5 w-5 text-[#E6DBC7]" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="default"
-                      onClick={() => handleDelete(classItem.id)}
-                      className="hover:bg-red-500/10"
-                    >
-                      <Trash2 className="h-5 w-5 text-destructive" />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+                )}
+                {featuredClassId === classItem.id && (
+                  <span className="rounded bg-purple-500/20 px-1.5 py-0.5 text-[10px] font-medium text-purple-300">
+                    Featured
+                  </span>
+                )}
+                {classItem.is_quick_reset && (
+                  <span className="rounded bg-yellow-500/20 px-1.5 py-0.5 text-[10px] font-medium text-yellow-300">
+                    Quick Reset
+                  </span>
+                )}
+              </div>
+            </TableCell>
+            <TableCell className={`${adminTableCellClass} text-foreground/70`}>
+              {classItem.categories?.map((c) => c.name).join(", ") || "-"}
+            </TableCell>
+            <TableCell className={`${adminTableCellClass} text-foreground/70`}>
+              {classItem.duration_minutes ? `${classItem.duration_minutes} min` : "-"}
+            </TableCell>
+            <TableCell className={`${adminTableCellClass} text-foreground/70`}>
+              {classItem.intensity || "-"}
+            </TableCell>
+            <TableCell className={adminTableCellClass}>
+              <button
+                onClick={() => togglePublish(classItem)}
+                className={`rounded-full px-3 py-1 text-xs font-medium ${
+                  classItem.is_published
+                    ? "bg-green-500/20 text-green-400"
+                    : "bg-yellow-500/20 text-yellow-300"
+                }`}
+              >
+                {classItem.is_published ? "Published" : "Draft"}
+              </button>
+            </TableCell>
+            <TableCell className={adminTableCellClass}>
+              <span
+                className={`rounded-full px-3 py-1 text-xs font-medium ${
+                  classItem.requires_subscription
+                    ? "bg-orange-500/20 text-orange-400"
+                    : "bg-green-500/20 text-green-400"
+                }`}
+              >
+                {classItem.requires_subscription ? "Locked" : "Free"}
+              </span>
+            </TableCell>
+            <TableCell className={adminTableCellClass}>
+              <div className="flex justify-end gap-2">
+                <Button
+                  variant="ghost"
+                  size="default"
+                  onClick={() => toggleQuickReset(classItem)}
+                  title="Toggle Quick Reset"
+                  className="hover:bg-white/10"
+                >
+                  <Zap
+                    className={`h-5 w-5 ${classItem.is_quick_reset ? "fill-yellow-400 text-yellow-400" : "text-yellow-400"}`}
+                  />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="default"
+                  onClick={() => setAsFeatured(classItem)}
+                  title="Set as featured class"
+                  className="hover:bg-white/10"
+                >
+                  <Star
+                    className={`h-5 w-5 ${featuredClassId === classItem.id ? "fill-[#E8C547] text-[#E8C547]" : "text-[#E8C547]"}`}
+                  />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="default"
+                  onClick={() => handleEdit(classItem)}
+                  className="hover:bg-white/10"
+                >
+                  <Pencil className="h-5 w-5 text-[#E6DBC7]" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="default"
+                  onClick={() => handleDelete(classItem.id)}
+                  className="hover:bg-red-500/10"
+                >
+                  <Trash2 className="h-5 w-5 text-destructive" />
+                </Button>
+              </div>
+            </TableCell>
+          </TableRow>
+        ))}
+      </AdminTable>
     </AdminLayout>
   );
 };

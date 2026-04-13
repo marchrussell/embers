@@ -1086,10 +1086,8 @@ const AdminExperiences = () => {
         {configs.map((config) => (
           <TableRow key={config.id} className={adminTableRowClass}>
             <TableCell className={adminTableCellClass}>
-              <div className="p-6">
-                <p className="font-medium text-[#E6DBC7]">{config.title}</p>
-                <p className="font-mono text-xs text-foreground/50">{config.experience_type}</p>
-              </div>
+              <p className="font-medium text-[#E6DBC7]">{config.title}</p>
+              <p className="font-mono text-xs text-foreground/50">{config.experience_type}</p>
             </TableCell>
             <TableCell className={adminTableCellClass}>{config.recurrence_label ?? "—"}</TableCell>
             <TableCell className={adminTableCellClass}>

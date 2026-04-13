@@ -20,7 +20,12 @@ import {
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 
-import { AdminLayout } from "@/components/admin";
+import {
+  AdminLayout,
+  AdminTable,
+  adminTableCellClass,
+  adminTableRowClass,
+} from "@/components/admin";
 import { AdminContentSkeleton } from "@/components/skeletons/AdminContentSkeleton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -43,14 +48,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { TableCell, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/contexts/AuthContext";
@@ -1367,154 +1365,149 @@ const AdminLiveSessions = () => {
                 : `No ${getTypeLabel(typeFilter)} sessions yet.`}
             </div>
           ) : (
-            <div className="overflow-hidden rounded-lg border border-[#E6DBC7]/20">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Session</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Start Time</TableHead>
-                    <TableHead>Attendees</TableHead>
-                    <TableHead>Room</TableHead>
-                    <TableHead>Guest Link</TableHead>
-                    <TableHead>Actions</TableHead>
+            <AdminTable
+              headers={[
+                "Session",
+                "Type",
+                "Status",
+                "Start Time",
+                "Attendees",
+                "Room",
+                "Guest Link",
+                "Actions",
+              ]}
+            >
+              {filteredSessions.map((session) => {
+                const details = sessionDetails.get(session.id);
+                return (
+                  <TableRow key={session.id} className={adminTableRowClass}>
+                    <TableCell className={adminTableCellClass}>
+                      <div className="flex items-center gap-3">
+                        {details?.photo_url && (
+                          <img
+                            src={details.photo_url}
+                            alt=""
+                            className="h-9 w-9 flex-shrink-0 rounded-md object-cover"
+                          />
+                        )}
+                        <div>
+                          <p className="font-medium">{session.title}</p>
+                          {details?.name && (
+                            <p className="text-xs text-muted-foreground">
+                              {details.name}
+                              {details.title ? ` · ${details.title}` : ""}
+                            </p>
+                          )}
+                          {!details?.name && session.description && (
+                            <p className="max-w-xs truncate text-xs text-muted-foreground">
+                              {session.description}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className={adminTableCellClass}>
+                      {getTypeBadge(session.session_type)}
+                    </TableCell>
+                    <TableCell className={adminTableCellClass}>
+                      {getStatusBadge(session.status)}
+                    </TableCell>
+                    <TableCell className={adminTableCellClass}>
+                      {format(new Date(session.start_time), "MMM d, yyyy h:mm a")}
+                    </TableCell>
+                    <TableCell className={adminTableCellClass}>
+                      <span className="flex items-center gap-1">
+                        <Users className="h-5 w-5" />
+                        {session.attendee_count}
+                      </span>
+                    </TableCell>
+                    <TableCell className={adminTableCellClass}>
+                      {session.daily_room_name ? (
+                        <Badge variant="outline" className="font-mono text-xs">
+                          {session.daily_room_name}
+                        </Badge>
+                      ) : (
+                        <span className="text-sm text-muted-foreground">Not created</span>
+                      )}
+                    </TableCell>
+                    <TableCell className={adminTableCellClass}>
+                      {session.guest_token ? (
+                        <div className="flex items-center gap-2">
+                          <Badge variant="secondary" className="text-xs">
+                            Active
+                          </Badge>
+                          <Button
+                            variant="ghost"
+                            onClick={() => handleGenerateGuestLink(session)}
+                            disabled={actionLoading === session.id}
+                          >
+                            <RefreshCw className="h-5 w-5" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <Button
+                          variant="ghost"
+                          onClick={() => handleGenerateGuestLink(session)}
+                          disabled={actionLoading === session.id}
+                        >
+                          <Link2 className="mr-1 h-5 w-5" />
+                          Generate
+                        </Button>
+                      )}
+                    </TableCell>
+                    <TableCell className={adminTableCellClass}>
+                      <div className="flex items-center gap-1">
+                        {session.status === "scheduled" && (
+                          <Button
+                            variant="default"
+                            onClick={() => handleStatusChange(session, "live")}
+                            disabled={actionLoading === session.id}
+                          >
+                            <Play className="mr-1 h-5 w-5" />
+                            Go Live
+                          </Button>
+                        )}
+                        {session.status === "live" && (
+                          <Button
+                            variant="destructive"
+                            onClick={() => handleStatusChange(session, "ended")}
+                            disabled={actionLoading === session.id}
+                          >
+                            <Square className="mr-1 h-5 w-5" />
+                            End
+                          </Button>
+                        )}
+                        <Button
+                          variant="outline"
+                          onClick={() => window.open(`/live/${session.id}?role=host`, "_blank")}
+                        >
+                          <Video className="mr-1 h-5 w-5" />
+                          {session.status === "scheduled" ? "Test" : "Join"}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleCopyHostLink(session)}
+                        >
+                          <Copy className="h-5 w-5" />
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={() => openEditDialog(session)}>
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDelete(session)}
+                          className="text-destructive hover:text-destructive"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
                   </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredSessions.map((session) => {
-                    const details = sessionDetails.get(session.id);
-                    return (
-                      <TableRow key={session.id}>
-                        <TableCell>
-                          <div className="flex items-center gap-3">
-                            {details?.photo_url && (
-                              <img
-                                src={details.photo_url}
-                                alt=""
-                                className="h-9 w-9 flex-shrink-0 rounded-md object-cover"
-                              />
-                            )}
-                            <div>
-                              <p className="font-medium">{session.title}</p>
-                              {details?.name && (
-                                <p className="text-xs text-muted-foreground">
-                                  {details.name}
-                                  {details.title ? ` · ${details.title}` : ""}
-                                </p>
-                              )}
-                              {!details?.name && session.description && (
-                                <p className="max-w-xs truncate text-xs text-muted-foreground">
-                                  {session.description}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>{getTypeBadge(session.session_type)}</TableCell>
-                        <TableCell>{getStatusBadge(session.status)}</TableCell>
-                        <TableCell>
-                          {format(new Date(session.start_time), "MMM d, yyyy h:mm a")}
-                        </TableCell>
-                        <TableCell>
-                          <span className="flex items-center gap-1">
-                            <Users className="h-5 w-5" />
-                            {session.attendee_count}
-                          </span>
-                        </TableCell>
-                        <TableCell>
-                          {session.daily_room_name ? (
-                            <Badge variant="outline" className="font-mono text-xs">
-                              {session.daily_room_name}
-                            </Badge>
-                          ) : (
-                            <span className="text-sm text-muted-foreground">Not created</span>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {session.guest_token ? (
-                            <div className="flex items-center gap-2">
-                              <Badge variant="secondary" className="text-xs">
-                                Active
-                              </Badge>
-                              <Button
-                                variant="ghost"
-                                onClick={() => handleGenerateGuestLink(session)}
-                                disabled={actionLoading === session.id}
-                              >
-                                <RefreshCw className="h-5 w-5" />
-                              </Button>
-                            </div>
-                          ) : (
-                            <Button
-                              variant="ghost"
-                              onClick={() => handleGenerateGuestLink(session)}
-                              disabled={actionLoading === session.id}
-                            >
-                              <Link2 className="mr-1 h-5 w-5" />
-                              Generate
-                            </Button>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-1">
-                            {session.status === "scheduled" && (
-                              <Button
-                                variant="default"
-                                onClick={() => handleStatusChange(session, "live")}
-                                disabled={actionLoading === session.id}
-                              >
-                                <Play className="mr-1 h-5 w-5" />
-                                Go Live
-                              </Button>
-                            )}
-                            {session.status === "live" && (
-                              <Button
-                                variant="destructive"
-                                onClick={() => handleStatusChange(session, "ended")}
-                                disabled={actionLoading === session.id}
-                              >
-                                <Square className="mr-1 h-5 w-5" />
-                                End
-                              </Button>
-                            )}
-                            <Button
-                              variant="outline"
-                              onClick={() => window.open(`/live/${session.id}?role=host`, "_blank")}
-                            >
-                              <Video className="mr-1 h-5 w-5" />
-                              {session.status === "scheduled" ? "Test" : "Join"}
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => handleCopyHostLink(session)}
-                            >
-                              <Copy className="h-5 w-5" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => openEditDialog(session)}
-                            >
-                              <Pencil className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => handleDelete(session)}
-                              className="text-destructive hover:text-destructive"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </div>
+                );
+              })}
+            </AdminTable>
           )}
         </TabsContent>
 

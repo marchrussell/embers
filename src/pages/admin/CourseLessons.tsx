@@ -3,6 +3,7 @@ import { ArrowLeft, Pencil, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { AdminTable, adminTableCellClass, adminTableRowClass } from "@/components/admin";
 import { UploadingSkeleton } from "@/components/skeletons";
 import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
 import { Button } from "@/components/ui/button";
@@ -23,14 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { TableCell, TableRow } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
@@ -410,52 +404,41 @@ const AdminCourseLessons = () => {
           </Dialog>
         </div>
 
-        {lessons.length === 0 ? (
-          <div className="py-12 text-center text-muted-foreground">
-            <p>No lessons yet. Add your first lesson to get started.</p>
-          </div>
-        ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-12">#</TableHead>
-                <TableHead>Title</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Duration</TableHead>
-                <TableHead>Published</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {lessons.map((lesson, index) => (
-                <TableRow key={lesson.id}>
-                  <TableCell className="text-muted-foreground">{index + 1}</TableCell>
-                  <TableCell className="font-medium">{lesson.title}</TableCell>
-                  <TableCell className="capitalize">{lesson.content_type}</TableCell>
-                  <TableCell>
-                    {lesson.duration_minutes ? `${lesson.duration_minutes} min` : "-"}
-                  </TableCell>
-                  <TableCell>
-                    <Switch
-                      checked={lesson.is_published}
-                      onCheckedChange={() => togglePublish(lesson)}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <Button variant="ghost" size="icon" onClick={() => handleEdit(lesson)}>
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon" onClick={() => handleDelete(lesson.id)}>
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        )}
+        <AdminTable
+          headers={["#", "Title", "Type", "Duration", "Published", "Actions"]}
+          emptyState="No lessons yet. Add your first lesson to get started."
+        >
+          {lessons.map((lesson, index) => (
+            <TableRow key={lesson.id} className={adminTableRowClass}>
+              <TableCell className={`${adminTableCellClass} text-muted-foreground`}>
+                {index + 1}
+              </TableCell>
+              <TableCell className={`${adminTableCellClass} font-medium`}>{lesson.title}</TableCell>
+              <TableCell className={`${adminTableCellClass} capitalize`}>
+                {lesson.content_type}
+              </TableCell>
+              <TableCell className={adminTableCellClass}>
+                {lesson.duration_minutes ? `${lesson.duration_minutes} min` : "-"}
+              </TableCell>
+              <TableCell className={adminTableCellClass}>
+                <Switch
+                  checked={lesson.is_published}
+                  onCheckedChange={() => togglePublish(lesson)}
+                />
+              </TableCell>
+              <TableCell className={adminTableCellClass}>
+                <div className="flex gap-2">
+                  <Button variant="ghost" size="icon" onClick={() => handleEdit(lesson)}>
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="icon" onClick={() => handleDelete(lesson.id)}>
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </AdminTable>
       </div>
     </div>
   );

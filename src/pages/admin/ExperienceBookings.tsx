@@ -3,7 +3,12 @@ import { Calendar, Download, RefreshCw, Ticket, Users } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
-import { AdminLayout, AdminStatsCard } from "@/components/admin";
+import {
+  AdminLayout,
+  AdminStatsCard,
+  adminTableCellClass,
+  adminTableRowClass,
+} from "@/components/admin";
 import { TableRowSkeleton } from "@/components/skeletons/TableRowSkeleton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -278,7 +283,7 @@ const ExperienceBookings = () => {
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
-                  <TableRow className="border-white/10">
+                  <TableRow className="border-b border-[#E6DBC7]/10 hover:bg-transparent">
                     <TableHead className="text-white/60">Name</TableHead>
                     <TableHead className="text-white/60">Email</TableHead>
                     <TableHead className="text-white/60">Event</TableHead>
@@ -299,7 +304,7 @@ const ExperienceBookings = () => {
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
-                  <TableRow className="border-white/10">
+                  <TableRow className="border-b border-[#E6DBC7]/10 hover:bg-transparent">
                     <TableHead className="text-white/60">Name</TableHead>
                     <TableHead className="text-white/60">Email</TableHead>
                     <TableHead className="text-white/60">Event</TableHead>
@@ -311,26 +316,32 @@ const ExperienceBookings = () => {
                 </TableHeader>
                 <TableBody>
                   {filteredBookings.map((booking) => (
-                    <TableRow key={booking.id} className="border-white/10 hover:bg-white/5">
-                      <TableCell className="font-medium text-white">
+                    <TableRow key={booking.id} className={adminTableRowClass}>
+                      <TableCell className={`${adminTableCellClass} font-medium text-white`}>
                         {booking.attendee_name}
                       </TableCell>
-                      <TableCell className="text-white/80">{booking.attendee_email}</TableCell>
-                      <TableCell className="text-sm text-white/80">
+                      <TableCell className={`${adminTableCellClass} text-white/80`}>
+                        {booking.attendee_email}
+                      </TableCell>
+                      <TableCell className={`${adminTableCellClass} text-sm text-white/80`}>
                         {EVENT_TITLES[booking.experience_type || ""] ||
                           booking.experience_type ||
                           "Unknown"}
                       </TableCell>
-                      <TableCell className="text-white/80">
+                      <TableCell className={`${adminTableCellClass} text-white/80`}>
                         {booking.experience_date
                           ? formatDateDisplay(booking.experience_date)
                           : "N/A"}
                       </TableCell>
-                      <TableCell className="text-white">{booking.quantity}</TableCell>
-                      <TableCell className="text-white">
+                      <TableCell className={`${adminTableCellClass} text-white`}>
+                        {booking.quantity}
+                      </TableCell>
+                      <TableCell className={`${adminTableCellClass} text-white`}>
                         £{(booking.total_amount / 100).toFixed(2)}
                       </TableCell>
-                      <TableCell className="font-mono text-xs text-white/60">
+                      <TableCell
+                        className={`${adminTableCellClass} font-mono text-xs text-white/60`}
+                      >
                         {booking.stripe_payment_intent_id
                           ? booking.stripe_payment_intent_id.substring(0, 15) + "..."
                           : "N/A"}

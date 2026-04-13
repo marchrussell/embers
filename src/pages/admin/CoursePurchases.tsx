@@ -4,6 +4,7 @@ import { ArrowLeft, CheckCircle, Eye, Mail, RefreshCw, Search, ShoppingBag } fro
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+import { adminTableCellClass, adminTableRowClass } from "@/components/admin";
 import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -230,7 +231,7 @@ const AdminCoursePurchases = () => {
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
-                    <TableRow className="border-white/10">
+                    <TableRow className="border-b border-[#E6DBC7]/10 hover:bg-transparent">
                       <TableHead className="text-white/60">User</TableHead>
                       <TableHead className="text-white/60">Course</TableHead>
                       <TableHead className="text-white/60">Purchased</TableHead>
@@ -241,8 +242,8 @@ const AdminCoursePurchases = () => {
                   </TableHeader>
                   <TableBody>
                     {filteredPurchases.map((purchase) => (
-                      <TableRow key={purchase.id} className="border-white/10 hover:bg-white/5">
-                        <TableCell>
+                      <TableRow key={purchase.id} className={adminTableRowClass}>
+                        <TableCell className={adminTableCellClass}>
                           <div>
                             <p className="font-medium text-white">
                               {purchase.profile?.full_name || "Unknown"}
@@ -250,15 +251,15 @@ const AdminCoursePurchases = () => {
                             <p className="text-sm text-white/60">{purchase.profile?.email}</p>
                           </div>
                         </TableCell>
-                        <TableCell className="text-white">
+                        <TableCell className={`${adminTableCellClass} text-white`}>
                           {purchase.course?.title || "Unknown Course"}
                         </TableCell>
-                        <TableCell className="text-white/80">
+                        <TableCell className={`${adminTableCellClass} text-white/80`}>
                           {purchase.purchased_at
                             ? format(new Date(purchase.purchased_at), "MMM d, yyyy h:mm a")
                             : "-"}
                         </TableCell>
-                        <TableCell>
+                        <TableCell className={adminTableCellClass}>
                           <Badge
                             variant={purchase.status === "active" ? "default" : "secondary"}
                             className={
@@ -270,12 +271,14 @@ const AdminCoursePurchases = () => {
                             {purchase.status}
                           </Badge>
                         </TableCell>
-                        <TableCell className="font-mono text-xs text-white/60">
+                        <TableCell
+                          className={`${adminTableCellClass} font-mono text-xs text-white/60`}
+                        >
                           {purchase.stripe_payment_intent_id
                             ? `${purchase.stripe_payment_intent_id.slice(0, 15)}...`
                             : "-"}
                         </TableCell>
-                        <TableCell>
+                        <TableCell className={adminTableCellClass}>
                           <div className="flex gap-2">
                             <Button
                               variant="ghost"
