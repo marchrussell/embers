@@ -128,6 +128,7 @@ export type Database = {
           id: string;
           image_url: string | null;
           name: string;
+          order_index: number | null;
         };
         Insert: {
           created_at?: string | null;
@@ -135,6 +136,7 @@ export type Database = {
           id?: string;
           image_url?: string | null;
           name: string;
+          order_index?: number | null;
         };
         Update: {
           created_at?: string | null;
@@ -142,36 +144,30 @@ export type Database = {
           id?: string;
           image_url?: string | null;
           name?: string;
+          order_index?: number | null;
         };
         Relationships: [];
       };
       class_categories: {
         Row: {
-          id: string;
-          class_id: string;
           category_id: string;
+          class_id: string;
           created_at: string | null;
+          id: string;
         };
         Insert: {
-          id?: string;
-          class_id: string;
           category_id: string;
+          class_id: string;
           created_at?: string | null;
+          id?: string;
         };
         Update: {
-          id?: string;
-          class_id?: string;
           category_id?: string;
+          class_id?: string;
           created_at?: string | null;
+          id?: string;
         };
         Relationships: [
-          {
-            foreignKeyName: "class_categories_class_id_fkey";
-            columns: ["class_id"];
-            isOneToOne: false;
-            referencedRelation: "classes";
-            referencedColumns: ["id"];
-          },
           {
             foreignKeyName: "class_categories_category_id_fkey";
             columns: ["category_id"];
@@ -179,10 +175,18 @@ export type Database = {
             referencedRelation: "categories";
             referencedColumns: ["id"];
           },
+          {
+            foreignKeyName: "class_categories_class_id_fkey";
+            columns: ["class_id"];
+            isOneToOne: false;
+            referencedRelation: "classes";
+            referencedColumns: ["id"];
+          },
         ];
       };
       classes: {
         Row: {
+          audio_url: string | null;
           category_id: string | null;
           created_at: string | null;
           description: string | null;
@@ -191,9 +195,10 @@ export type Database = {
           goal_fit: Json | null;
           id: string;
           image_url: string | null;
+          intensity: string | null;
           is_featured: boolean | null;
-          is_quick_reset: boolean | null;
           is_published: boolean | null;
+          is_quick_reset: boolean | null;
           order_index: number | null;
           program_id: string | null;
           recommended_for_time: string | null;
@@ -203,14 +208,13 @@ export type Database = {
           show_safety_reminder: boolean | null;
           start_here_position: number | null;
           teacher_name: string | null;
-          intensity: string | null;
           technique: string | null;
           title: string;
           updated_at: string | null;
-          audio_url: string;
-          video_url?: string | null;
+          video_url: string | null;
         };
         Insert: {
+          audio_url?: string | null;
           category_id?: string | null;
           created_at?: string | null;
           description?: string | null;
@@ -219,9 +223,10 @@ export type Database = {
           goal_fit?: Json | null;
           id?: string;
           image_url?: string | null;
+          intensity?: string | null;
           is_featured?: boolean | null;
-          is_quick_reset?: boolean | null;
           is_published?: boolean | null;
+          is_quick_reset?: boolean | null;
           order_index?: number | null;
           program_id?: string | null;
           recommended_for_time?: string | null;
@@ -230,15 +235,14 @@ export type Database = {
           short_description?: string | null;
           show_safety_reminder?: boolean | null;
           start_here_position?: number | null;
-          intensity?: string | null;
-          technique?: string | null;
           teacher_name?: string | null;
+          technique?: string | null;
           title: string;
           updated_at?: string | null;
-          audio_url: string;
           video_url?: string | null;
         };
         Update: {
+          audio_url?: string | null;
           category_id?: string | null;
           created_at?: string | null;
           description?: string | null;
@@ -247,9 +251,10 @@ export type Database = {
           goal_fit?: Json | null;
           id?: string;
           image_url?: string | null;
+          intensity?: string | null;
           is_featured?: boolean | null;
-          is_quick_reset?: boolean | null;
           is_published?: boolean | null;
+          is_quick_reset?: boolean | null;
           order_index?: number | null;
           program_id?: string | null;
           recommended_for_time?: string | null;
@@ -258,12 +263,11 @@ export type Database = {
           short_description?: string | null;
           show_safety_reminder?: boolean | null;
           start_here_position?: number | null;
-          intensity?: string | null;
-          technique?: string | null;
           teacher_name?: string | null;
+          technique?: string | null;
           title?: string;
           updated_at?: string | null;
-          video_url?: string;
+          video_url?: string | null;
         };
         Relationships: [
           {
@@ -476,20 +480,146 @@ export type Database = {
         };
         Relationships: [];
       };
-      event_bookings: {
+      experience_configs: {
+        Row: {
+          created_at: string;
+          cta_label: string | null;
+          cta_link: string | null;
+          duration: string | null;
+          event_type: string | null;
+          experience_type: string;
+          format: string | null;
+          id: string;
+          image_url: string | null;
+          is_active: boolean;
+          location: string | null;
+          max_capacity: number;
+          nth: number | null;
+          nth_day: number | null;
+          price: string | null;
+          recurrence_label: string | null;
+          recurrence_type: string | null;
+          subtitle: string | null;
+          time: string | null;
+          timezone: string;
+          title: string;
+          updated_at: string;
+          venue: string | null;
+          weekday: number | null;
+          weekdays: number[] | null;
+        };
+        Insert: {
+          created_at?: string;
+          cta_label?: string | null;
+          cta_link?: string | null;
+          duration?: string | null;
+          event_type?: string | null;
+          experience_type: string;
+          format?: string | null;
+          id?: string;
+          image_url?: string | null;
+          is_active?: boolean;
+          location?: string | null;
+          max_capacity?: number;
+          nth?: number | null;
+          nth_day?: number | null;
+          price?: string | null;
+          recurrence_label?: string | null;
+          recurrence_type?: string | null;
+          subtitle?: string | null;
+          time?: string | null;
+          timezone?: string;
+          title: string;
+          updated_at?: string;
+          venue?: string | null;
+          weekday?: number | null;
+          weekdays?: number[] | null;
+        };
+        Update: {
+          created_at?: string;
+          cta_label?: string | null;
+          cta_link?: string | null;
+          duration?: string | null;
+          event_type?: string | null;
+          experience_type?: string;
+          format?: string | null;
+          id?: string;
+          image_url?: string | null;
+          is_active?: boolean;
+          location?: string | null;
+          max_capacity?: number;
+          nth?: number | null;
+          nth_day?: number | null;
+          price?: string | null;
+          recurrence_label?: string | null;
+          recurrence_type?: string | null;
+          subtitle?: string | null;
+          time?: string | null;
+          timezone?: string;
+          title?: string;
+          updated_at?: string;
+          venue?: string | null;
+          weekday?: number | null;
+          weekdays?: number[] | null;
+        };
+        Relationships: [];
+      };
+      experience_dates: {
+        Row: {
+          created_at: string;
+          date: string;
+          experience_config_id: string | null;
+          experience_type: string;
+          id: string;
+          is_cancelled: boolean;
+          max_capacity: number;
+          notes: string | null;
+          time: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          date: string;
+          experience_config_id?: string | null;
+          experience_type: string;
+          id?: string;
+          is_cancelled?: boolean;
+          max_capacity?: number;
+          notes?: string | null;
+          time?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          date?: string;
+          experience_config_id?: string | null;
+          experience_type?: string;
+          id?: string;
+          is_cancelled?: boolean;
+          max_capacity?: number;
+          notes?: string | null;
+          time?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "experience_dates_experience_config_id_fkey";
+            columns: ["experience_config_id"];
+            isOneToOne: false;
+            referencedRelation: "experience_configs";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      experiences_bookings: {
         Row: {
           attendee_email: string;
           attendee_name: string;
           created_at: string;
-          event_date: string | null;
-          event_id: string;
-          event_type: string | null;
+          experience_date: string | null;
+          experience_type: string | null;
           has_accepted_safety: boolean;
           id: string;
           payment_status: string;
           quantity: number;
           reminder_sent_at: string | null;
-          signature_data: string;
           stripe_payment_intent_id: string | null;
           total_amount: number;
           user_id: string;
@@ -498,15 +628,13 @@ export type Database = {
           attendee_email: string;
           attendee_name: string;
           created_at?: string;
-          event_date?: string | null;
-          event_id: string;
-          event_type?: string | null;
+          experience_date?: string | null;
+          experience_type?: string | null;
           has_accepted_safety?: boolean;
           id?: string;
           payment_status?: string;
           quantity?: number;
           reminder_sent_at?: string | null;
-          signature_data: string;
           stripe_payment_intent_id?: string | null;
           total_amount: number;
           user_id: string;
@@ -515,77 +643,16 @@ export type Database = {
           attendee_email?: string;
           attendee_name?: string;
           created_at?: string;
-          event_date?: string | null;
-          event_id?: string;
-          event_type?: string | null;
+          experience_date?: string | null;
+          experience_type?: string | null;
           has_accepted_safety?: boolean;
           id?: string;
           payment_status?: string;
           quantity?: number;
           reminder_sent_at?: string | null;
-          signature_data?: string;
           stripe_payment_intent_id?: string | null;
           total_amount?: number;
           user_id?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "event_bookings_event_id_fkey";
-            columns: ["event_id"];
-            isOneToOne: false;
-            referencedRelation: "events";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
-      events: {
-        Row: {
-          address: string;
-          created_at: string;
-          description: string | null;
-          event_date: string;
-          event_time: string;
-          id: string;
-          image_url: string | null;
-          is_published: boolean;
-          price: number;
-          teacher_name: string;
-          tickets_sold: number;
-          title: string;
-          total_tickets: number;
-          updated_at: string;
-        };
-        Insert: {
-          address: string;
-          created_at?: string;
-          description?: string | null;
-          event_date: string;
-          event_time: string;
-          id?: string;
-          image_url?: string | null;
-          is_published?: boolean;
-          price: number;
-          teacher_name: string;
-          tickets_sold?: number;
-          title: string;
-          total_tickets: number;
-          updated_at?: string;
-        };
-        Update: {
-          address?: string;
-          created_at?: string;
-          description?: string | null;
-          event_date?: string;
-          event_time?: string;
-          id?: string;
-          image_url?: string | null;
-          is_published?: boolean;
-          price?: number;
-          teacher_name?: string;
-          tickets_sold?: number;
-          title?: string;
-          total_tickets?: number;
-          updated_at?: string;
         };
         Relationships: [];
       };
@@ -703,62 +770,6 @@ export type Database = {
         };
         Relationships: [];
       };
-      guest_teachers: {
-        Row: {
-          created_at: string;
-          guest_join_url: string | null;
-          id: string;
-          is_active: boolean;
-          linked_session_id: string | null;
-          name: string;
-          photo_url: string | null;
-          session_date: string;
-          session_title: string;
-          short_description: string | null;
-          title: string;
-          updated_at: string;
-          what_to_expect: string[] | null;
-        };
-        Insert: {
-          created_at?: string;
-          guest_join_url?: string | null;
-          id?: string;
-          is_active?: boolean;
-          linked_session_id?: string | null;
-          name: string;
-          photo_url?: string | null;
-          session_date: string;
-          session_title: string;
-          short_description?: string | null;
-          title: string;
-          updated_at?: string;
-          what_to_expect?: string[] | null;
-        };
-        Update: {
-          created_at?: string;
-          guest_join_url?: string | null;
-          id?: string;
-          is_active?: boolean;
-          linked_session_id?: string | null;
-          name?: string;
-          photo_url?: string | null;
-          session_date?: string;
-          session_title?: string;
-          short_description?: string | null;
-          title?: string;
-          updated_at?: string;
-          what_to_expect?: string[] | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "guest_teachers_linked_session_id_fkey";
-            columns: ["linked_session_id"];
-            isOneToOne: false;
-            referencedRelation: "live_sessions";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
       live_session_attendance: {
         Row: {
           id: string;
@@ -786,6 +797,125 @@ export type Database = {
         };
         Relationships: [];
       };
+      live_session_configs: {
+        Row: {
+          created_at: string;
+          cta_label: string | null;
+          duration: string | null;
+          event_type: string | null;
+          format: string | null;
+          id: string;
+          is_active: boolean;
+          nth: number | null;
+          recurrence_label: string | null;
+          recurrence_type: string | null;
+          session_type: string;
+          subtitle: string | null;
+          time: string | null;
+          timezone: string;
+          title: string;
+          updated_at: string;
+          weekday: number | null;
+          weekdays: number[] | null;
+        };
+        Insert: {
+          created_at?: string;
+          cta_label?: string | null;
+          duration?: string | null;
+          event_type?: string | null;
+          format?: string | null;
+          id?: string;
+          is_active?: boolean;
+          nth?: number | null;
+          recurrence_label?: string | null;
+          recurrence_type?: string | null;
+          session_type: string;
+          subtitle?: string | null;
+          time?: string | null;
+          timezone?: string;
+          title: string;
+          updated_at?: string;
+          weekday?: number | null;
+          weekdays?: number[] | null;
+        };
+        Update: {
+          created_at?: string;
+          cta_label?: string | null;
+          duration?: string | null;
+          event_type?: string | null;
+          format?: string | null;
+          id?: string;
+          is_active?: boolean;
+          nth?: number | null;
+          recurrence_label?: string | null;
+          recurrence_type?: string | null;
+          session_type?: string;
+          subtitle?: string | null;
+          time?: string | null;
+          timezone?: string;
+          title?: string;
+          updated_at?: string;
+          weekday?: number | null;
+          weekdays?: number[] | null;
+        };
+        Relationships: [];
+      };
+      live_session_details: {
+        Row: {
+          created_at: string;
+          guest_join_url: string | null;
+          id: string;
+          is_active: boolean;
+          linked_session_id: string | null;
+          name: string | null;
+          photo_url: string | null;
+          session_date: string | null;
+          session_title: string | null;
+          short_description: string | null;
+          title: string | null;
+          updated_at: string;
+          what_to_expect: string[] | null;
+        };
+        Insert: {
+          created_at?: string;
+          guest_join_url?: string | null;
+          id?: string;
+          is_active?: boolean;
+          linked_session_id?: string | null;
+          name?: string | null;
+          photo_url?: string | null;
+          session_date?: string | null;
+          session_title?: string | null;
+          short_description?: string | null;
+          title?: string | null;
+          updated_at?: string;
+          what_to_expect?: string[] | null;
+        };
+        Update: {
+          created_at?: string;
+          guest_join_url?: string | null;
+          id?: string;
+          is_active?: boolean;
+          linked_session_id?: string | null;
+          name?: string | null;
+          photo_url?: string | null;
+          session_date?: string | null;
+          session_title?: string | null;
+          short_description?: string | null;
+          title?: string | null;
+          updated_at?: string;
+          what_to_expect?: string[] | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "guest_teachers_linked_session_id_fkey";
+            columns: ["linked_session_id"];
+            isOneToOne: false;
+            referencedRelation: "live_sessions";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       live_sessions: {
         Row: {
           access_level: string;
@@ -803,6 +933,7 @@ export type Database = {
           notes: string | null;
           recording_enabled: boolean | null;
           recording_url: string | null;
+          session_type: string | null;
           start_time: string;
           status: string;
           title: string;
@@ -824,6 +955,7 @@ export type Database = {
           notes?: string | null;
           recording_enabled?: boolean | null;
           recording_url?: string | null;
+          session_type?: string | null;
           start_time: string;
           status?: string;
           title: string;
@@ -845,6 +977,7 @@ export type Database = {
           notes?: string | null;
           recording_enabled?: boolean | null;
           recording_url?: string | null;
+          session_type?: string | null;
           start_time?: string;
           status?: string;
           title?: string;
@@ -982,7 +1115,7 @@ export type Database = {
           submodule_id: string | null;
           title: string;
           updated_at: string | null;
-          audio_url: string;
+          video_url: string;
           week_number: number | null;
         };
         Insert: {
@@ -1001,7 +1134,7 @@ export type Database = {
           submodule_id?: string | null;
           title: string;
           updated_at?: string | null;
-          audio_url: string;
+          video_url: string;
           week_number?: number | null;
         };
         Update: {
