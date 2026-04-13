@@ -64,7 +64,7 @@ export const AdminTable = ({ children, headers, emptyState, isLoading }: AdminTa
 };
 
 // Consistent row styling helper
-export const adminTableRowClass = "p-6 border-b border-[#E6DBC7]/10 hover:bg-white/5";
-export const adminTableCellClass = "py-4";
+export const adminTableRowClass = "border-b border-[#E6DBC7]/10 hover:bg-white/5";
+export const adminTableCellClass = "p-6 py-4";
 
 export default AdminTable;

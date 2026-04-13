@@ -200,7 +200,7 @@ const AdminCategories = () => {
         </Button>
       </DialogTrigger>
       <DialogContent
-        className="max-w-xl rounded-xl border border-white/20 bg-black/60 backdrop-blur-xl"
+        className="max-w-2xl rounded-xl border border-white/20 bg-black/60 backdrop-blur-xl"
         hideClose
       >
         <DialogHeader>
@@ -257,7 +257,7 @@ const AdminCategories = () => {
                 <img
                   src={imagePreview}
                   alt="Preview"
-                  className="h-32 w-full rounded-md border border-white/20 object-cover"
+                  className="h-44 w-full rounded-md border border-white/20 object-cover"
                   loading="lazy"
                 />
               </div>
