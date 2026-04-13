@@ -874,7 +874,8 @@ const AdminLiveSessions = () => {
       setDetailsForm((p) => ({ ...p, photo_url: publicUrl }));
       toast.success("Photo uploaded");
     } catch (err) {
-      toast.error("Failed to upload photo");
+      console.error("Photo upload error:", err);
+      toast.error(err instanceof Error ? err.message : "Failed to upload photo");
     } finally {
       setUploading(false);
     }
@@ -1125,7 +1126,7 @@ const AdminLiveSessions = () => {
                   disabled={uploading}
                   onClick={() => photoInputRef.current?.click()}
                 >
-                  {uploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                  {uploading ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : null}
                   Upload Image
                 </Button>
               </div>
@@ -1330,7 +1331,7 @@ const AdminLiveSessions = () => {
     >
       <Tabs defaultValue="instances">
         <TabsList className="mb-6">
-          <TabsTrigger value="instances">Instances</TabsTrigger>
+          <TabsTrigger value="instances">Daily Instances</TabsTrigger>
           <TabsTrigger value="session-types">Session Types</TabsTrigger>
         </TabsList>
 
