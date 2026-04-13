@@ -308,11 +308,11 @@ const AdminCategories = () => {
                 <img
                   src={category.image_url}
                   alt={category.name}
-                  className="h-16 w-16 rounded-lg object-cover"
+                  className="h-24 w-24 rounded-lg object-cover"
                   loading="lazy"
                 />
               ) : (
-                <div className="flex h-16 w-16 items-center justify-center rounded-lg px-10 text-xs text-foreground/50">
+                <div className="flex h-24 w-24 items-center justify-center rounded-lg px-10 text-xs text-foreground/50">
                   No image
                 </div>
               )}
