@@ -36,7 +36,7 @@ const AdminDashboard = () => {
         },
         {
           title: "Courses",
-          path: "/admin/programs",
+          path: "/admin/courses",
           description: "Create and organize classes into multi-day courses",
         },
       ],

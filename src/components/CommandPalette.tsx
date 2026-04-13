@@ -68,7 +68,7 @@ export const CommandPalette = () => {
     ? [
         { label: "Admin Dashboard", path: "/admin", icon: LayoutDashboard },
         { label: "Admin Classes", path: "/admin/classes", icon: Library },
-        { label: "Admin Programs", path: "/admin/programs", icon: Menu },
+        { label: "Admin Courses", path: "/admin/courses", icon: Menu },
         { label: "Admin Categories", path: "/admin/categories", icon: FileText },
         { label: "Admin Users", path: "/admin/users", icon: Users },
       ]
