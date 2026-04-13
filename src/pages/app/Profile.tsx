@@ -1,3 +1,4 @@
+import { User } from "@supabase/supabase-js";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowLeft, LogOut } from "lucide-react";
 import { Suspense, useEffect, useState } from "react";
@@ -28,7 +29,6 @@ import { useAccountSettings } from "@/hooks/useAccountSettings";
 import { useDataDeletion } from "@/hooks/useDataDeletion";
 import { useDataExport } from "@/hooks/useDataExport";
 import { supabase } from "@/integrations/supabase/client";
-import { User } from "@supabase/supabase-js";
 
 interface ProfileData {
   full_name: string | null;
@@ -379,10 +379,10 @@ const ProfileContent = ({ userId, user, signOut }: ProfileContentProps) => {
                 onClick={exportUserData}
                 disabled={isExporting}
               />
-              <ProfileMenuItem
+              {/* <ProfileMenuItem
                 label="Delete March Chat Data"
                 onClick={() => setShowDeleteDataDialog(true)}
-              />
+              /> */}
               <ProfileMenuItem
                 label="Delete Account & All Data"
                 onClick={() => setShowDeleteAccountDialog(true)}
