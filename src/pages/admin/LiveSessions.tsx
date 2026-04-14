@@ -1225,7 +1225,6 @@ const AdminLiveSessions = () => {
                     <Button
                       type="button"
                       variant="outline"
-                      size="sm"
                       disabled={uploading}
                       onClick={() => photoInputRef.current?.click()}
                     >
