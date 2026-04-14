@@ -28,6 +28,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
+import { useStorageUpload } from "@/hooks/useStorageUpload";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Lesson {
@@ -56,7 +57,9 @@ const AdminCourseLessons = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingLesson, setEditingLesson] = useState<Lesson | null>(null);
-  const [uploading, setUploading] = useState(false);
+  const { upload: uploadVideo, uploading: uploadingVideo } = useStorageUpload("videos");
+  const { upload: uploadAudio, uploading: uploadingAudio } = useStorageUpload("class-audio");
+  const uploading = uploadingVideo || uploadingAudio;
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -126,22 +129,12 @@ const AdminCourseLessons = () => {
       return;
     }
 
-    setUploading(true);
     toast({ title: "Uploading media...", duration: Infinity });
-
     try {
       const fileExt = file.name.split(".").pop();
       const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
-      const bucket = isVideo ? "videos" : "class-audio";
-
-      const { error: uploadError } = await supabase.storage.from(bucket).upload(fileName, file);
-
-      if (uploadError) throw uploadError;
-
-      const {
-        data: { publicUrl },
-      } = supabase.storage.from(bucket).getPublicUrl(fileName);
-
+      const publicUrl = await (isVideo ? uploadVideo : uploadAudio)(file, fileName);
+      if (!publicUrl) return;
       setFormData({
         ...formData,
         media_url: publicUrl,
@@ -150,8 +143,6 @@ const AdminCourseLessons = () => {
       toast({ title: "Media uploaded successfully" });
     } catch (error: any) {
       toast({ title: "Upload failed", description: error.message, variant: "destructive" });
-    } finally {
-      setUploading(false);
     }
   };
 

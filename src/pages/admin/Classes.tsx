@@ -32,6 +32,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
+import { useStorageUpload } from "@/hooks/useStorageUpload";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Class {
@@ -77,7 +78,9 @@ const AdminClasses = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingClass, setEditingClass] = useState<Class | null>(null);
-  const [uploading, setUploading] = useState(false);
+  const { upload: uploadImage, uploading: uploadingImage } = useStorageUpload("class-images");
+  const { upload: uploadAudio, uploading: uploadingAudio } = useStorageUpload("class-audio");
+  const { upload: uploadVideo, uploading: uploadingVideo } = useStorageUpload("class-video");
   const [formData, setFormData] = useState({
     title: "",
     teacher_name: "",
@@ -144,7 +147,6 @@ const AdminClasses = () => {
       });
       return;
     }
-
     if (file.size > 50 * 1024 * 1024) {
       toast({
         title: "File too large",
@@ -154,32 +156,16 @@ const AdminClasses = () => {
       return;
     }
 
-    setUploading(true);
-
+    toast({ title: "Uploading image...", duration: Infinity });
     try {
       const fileExt = file.name.split(".").pop();
-      const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
-      const filePath = `${fileName}`;
-
-      // Show upload indicator
-      toast({ title: "Uploading image...", duration: Infinity });
-
-      const { error: uploadError } = await supabase.storage
-        .from("class-images")
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      const {
-        data: { publicUrl },
-      } = supabase.storage.from("class-images").getPublicUrl(filePath);
-
+      const filePath = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+      const publicUrl = await uploadImage(file, filePath);
+      if (!publicUrl) return;
       setFormData({ ...formData, image_url: publicUrl });
       toast({ title: "Image uploaded successfully" });
     } catch (error: any) {
       toast({ title: "Upload failed", description: error.message, variant: "destructive" });
-    } finally {
-      setUploading(false);
     }
   };
 
@@ -195,7 +181,6 @@ const AdminClasses = () => {
       });
       return;
     }
-
     if (file.size > 2 * 1024 * 1024 * 1024) {
       toast({
         title: "File too large",
@@ -205,32 +190,16 @@ const AdminClasses = () => {
       return;
     }
 
-    setUploading(true);
-
+    toast({ title: "Uploading audio...", duration: Infinity });
     try {
       const fileExt = file.name.split(".").pop();
-      const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
-      const filePath = `${fileName}`;
-
-      // Show upload indicator
-      toast({ title: "Uploading audio...", duration: Infinity });
-
-      const { error: uploadError } = await supabase.storage
-        .from("class-audio")
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      const {
-        data: { publicUrl },
-      } = supabase.storage.from("class-audio").getPublicUrl(filePath);
-
+      const filePath = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+      const publicUrl = await uploadAudio(file, filePath);
+      if (!publicUrl) return;
       setFormData({ ...formData, audio_url: publicUrl });
       toast({ title: "Audio uploaded successfully" });
     } catch (error: any) {
       toast({ title: "Upload failed", description: error.message, variant: "destructive" });
-    } finally {
-      setUploading(false);
     }
   };
 
@@ -247,7 +216,6 @@ const AdminClasses = () => {
       });
       return;
     }
-
     if (file.size > 2 * 1024 * 1024 * 1024) {
       toast({
         title: "File too large",
@@ -257,30 +225,16 @@ const AdminClasses = () => {
       return;
     }
 
-    setUploading(true);
-
+    toast({ title: "Uploading video...", duration: Infinity });
     try {
       const fileExt = file.name.split(".").pop();
-      const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
-      const filePath = `${fileName}`;
-      toast({ title: "Uploading video...", duration: Infinity });
-
-      const { error: uploadError } = await supabase.storage
-        .from("class-video")
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      const {
-        data: { publicUrl },
-      } = supabase.storage.from("class-video").getPublicUrl(filePath);
-
+      const filePath = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+      const publicUrl = await uploadVideo(file, filePath);
+      if (!publicUrl) return;
       setFormData({ ...formData, video_url: publicUrl });
       toast({ title: "Video uploaded successfully" });
     } catch (error: any) {
       toast({ title: "Upload failed", description: error.message, variant: "destructive" });
-    } finally {
-      setUploading(false);
     }
   };
 
@@ -634,7 +588,7 @@ const AdminClasses = () => {
                 type="file"
                 accept="image/*"
                 onChange={handleImageUpload}
-                disabled={uploading}
+                disabled={uploadingImage}
               />
               <p className="text-xs text-muted-foreground">
                 Upload an image for this class (max 50MB)
@@ -691,7 +645,7 @@ const AdminClasses = () => {
                 type="file"
                 accept=".wav,.mp3"
                 onChange={handleAudioUpload}
-                disabled={uploading}
+                disabled={uploadingAudio}
               />
               <p className="text-xs text-muted-foreground">
                 Upload audio file (max 2GB, .wav or .mp3)
@@ -712,7 +666,7 @@ const AdminClasses = () => {
                 type="file"
                 accept=".mp4,.mov,.webm"
                 onChange={handleVideoUpload}
-                disabled={uploading}
+                disabled={uploadingVideo}
               />
               <p className="text-xs text-muted-foreground">
                 Upload video file (max 2GB, .mp4/.mov/.webm). Either audio or video is required.
@@ -906,7 +860,7 @@ const AdminClasses = () => {
             <Button
               type="submit"
               className="flex-1 bg-white text-black hover:bg-white/90"
-              disabled={uploading}
+              disabled={uploadingImage || uploadingAudio || uploadingVideo}
             >
               {editingClass ? "Update" : "Create"} Class
             </Button>

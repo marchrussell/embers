@@ -52,6 +52,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/contexts/AuthContext";
+import { useStorageUpload } from "@/hooks/useStorageUpload";
 import { supabase } from "@/integrations/supabase/client";
 
 import { NTH_LABELS, WEEKDAY_LABELS } from "./adminScheduleUtils";
@@ -794,7 +795,7 @@ const AdminLiveSessions = () => {
 
   // Session details form state (optional section in create/edit dialog)
   const [showDetails, setShowDetails] = useState(false);
-  const [uploading, setUploading] = useState(false);
+  const { upload, uploading, cancelUpload } = useStorageUpload("class-images");
   const emptyDetails = {
     session_title: "",
     short_description: "",
@@ -860,24 +861,18 @@ const AdminLiveSessions = () => {
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setUploading(true);
     try {
       const fileExt = file.name.split(".").pop();
       const filePath = `live-session-${Date.now()}.${fileExt}`;
-      const { error: uploadError } = await supabase.storage
-        .from("class-images")
-        .upload(filePath, file);
-      if (uploadError) throw uploadError;
-      const {
-        data: { publicUrl },
-      } = supabase.storage.from("class-images").getPublicUrl(filePath);
-      setDetailsForm((p) => ({ ...p, photo_url: publicUrl }));
-      toast.success("Photo uploaded");
+      const publicUrl = await upload(file, filePath);
+      if (publicUrl) {
+        setDetailsForm((p) => ({ ...p, photo_url: publicUrl }));
+        toast.success("Photo uploaded");
+      }
     } catch (err) {
+      if (err instanceof Error && err.name === "AbortError") return;
       console.error("Photo upload error:", err);
       toast.error(err instanceof Error ? err.message : "Failed to upload photo");
-    } finally {
-      setUploading(false);
     }
   };
 
@@ -924,18 +919,25 @@ const AdminLiveSessions = () => {
         if (error) throw error;
         sessionId = newSession.id;
 
-        // Create Daily.co room
-        const { error: roomError } = await supabase.functions.invoke("daily-create-room", {
-          body: {
-            sessionId,
-            title: sessionForm.title,
-            startTime: sessionForm.start_time,
-            endTime: sessionForm.end_time,
-            recordingEnabled: sessionForm.recording_enabled,
-          },
-        });
-        if (roomError) throw roomError;
         toast.success("Session created");
+
+        // Create Daily.co room — fire-and-forget so it doesn't block the dialog
+        supabase.functions
+          .invoke("daily-create-room", {
+            body: {
+              sessionId,
+              title: sessionForm.title,
+              startTime: sessionForm.start_time,
+              endTime: sessionForm.end_time,
+              recordingEnabled: sessionForm.recording_enabled,
+            },
+          })
+          .then(({ error: roomError }) => {
+            if (roomError) {
+              console.error("Daily.co room creation failed:", roomError);
+              toast.error("Room creation failed — session was saved but may need a room retry");
+            }
+          });
       }
 
       // Save session details if shown and has content
@@ -1079,152 +1081,6 @@ const AdminLiveSessions = () => {
   const filteredSessions =
     typeFilter === "all" ? sessions : sessions.filter((s) => s.session_type === typeFilter);
 
-  // ── Session Details Section (reused in create/edit dialog) ──
-  const sessionDetailsSection = (
-    <div className="space-y-3 rounded-lg border border-border p-3">
-      <button
-        type="button"
-        className="flex w-full items-center justify-between text-sm font-medium"
-        onClick={() => setShowDetails((v) => !v)}
-      >
-        <span>Session Details (optional)</span>
-        {showDetails ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-      </button>
-
-      {showDetails && (
-        <div className="space-y-6 pt-2">
-          {/* Photo */}
-          <div className="space-y-3">
-            <Label>Session Image</Label>
-            <div className="flex items-center gap-4">
-              {detailsForm.photo_url ? (
-                <div className="relative h-20 w-20 overflow-hidden rounded-lg border border-border">
-                  <img
-                    src={detailsForm.photo_url}
-                    alt="Preview"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-              ) : (
-                <div className="flex h-20 w-20 items-center justify-center rounded-lg border border-dashed border-border">
-                  <ImageIcon className="h-6 w-6 text-muted-foreground" />
-                </div>
-              )}
-              <div className="flex-1">
-                <input
-                  ref={photoInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handlePhotoUpload}
-                  disabled={uploading}
-                  className="hidden"
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  disabled={uploading}
-                  onClick={() => photoInputRef.current?.click()}
-                >
-                  {uploading ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : null}
-                  Upload Image
-                </Button>
-              </div>
-            </div>
-            <Input
-              placeholder="Or paste an image URL"
-              value={detailsForm.photo_url}
-              onChange={(e) => setDetailsForm((p) => ({ ...p, photo_url: e.target.value }))}
-            />
-          </div>
-
-          {/* Session Title */}
-          <div className="space-y-2">
-            <Label>Session Title</Label>
-            <Input
-              placeholder="e.g. Weekly Reset: Softening Through the Week"
-              value={detailsForm.session_title}
-              onChange={(e) => setDetailsForm((p) => ({ ...p, session_title: e.target.value }))}
-            />
-          </div>
-
-          {/* Short Description */}
-          <div className="space-y-2">
-            <Label>Short Description</Label>
-            <Textarea
-              placeholder="A brief description for this session..."
-              value={detailsForm.short_description}
-              onChange={(e) => setDetailsForm((p) => ({ ...p, short_description: e.target.value }))}
-            />
-          </div>
-
-          {/* Featured Person */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-2">
-              <Label>Featured Person Name</Label>
-              <Input
-                placeholder="e.g. Emily"
-                value={detailsForm.name}
-                onChange={(e) => setDetailsForm((p) => ({ ...p, name: e.target.value }))}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Their Role / Title</Label>
-              <Input
-                placeholder="e.g. Breathwork Facilitator"
-                value={detailsForm.title}
-                onChange={(e) => setDetailsForm((p) => ({ ...p, title: e.target.value }))}
-              />
-            </div>
-          </div>
-
-          {/* What to Expect */}
-          <div className="space-y-2">
-            <Label>What to Expect</Label>
-            <div className="space-y-2">
-              {detailsForm.what_to_expect.map((item, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <Input
-                    value={item}
-                    onChange={(e) => {
-                      const updated = [...detailsForm.what_to_expect];
-                      updated[i] = e.target.value;
-                      setDetailsForm((p) => ({ ...p, what_to_expect: updated }));
-                    }}
-                    placeholder="e.g. A guided, voice-led practice"
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() =>
-                      setDetailsForm((p) => ({
-                        ...p,
-                        what_to_expect: p.what_to_expect.filter((_, idx) => idx !== i),
-                      }))
-                    }
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-            </div>
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() =>
-                setDetailsForm((p) => ({ ...p, what_to_expect: [...p.what_to_expect, ""] }))
-              }
-            >
-              <Plus className="mr-1" />
-              Add item
-            </Button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-
   // ── Create/Edit Session Dialog ──
   const sessionDialog = (
     <Dialog
@@ -1241,7 +1097,11 @@ const AdminLiveSessions = () => {
         </Button>
       </DialogTrigger>
       <DialogContent
-        className="max-h-[90vh] max-w-2xl overflow-y-auto"
+        className={
+          showDetails
+            ? "max-h-[90vh] max-w-7xl overflow-y-auto"
+            : "max-h-[90vh] max-w-3xl overflow-y-auto"
+        }
         onInteractOutside={handleCloseAttempt}
         onEscapeKeyDown={handleCloseAttempt}
       >
@@ -1249,71 +1109,234 @@ const AdminLiveSessions = () => {
           <DialogTitle>{editingSession ? "Edit Session" : "Create Live Session"}</DialogTitle>
         </DialogHeader>
         <div className="space-y-6 py-6">
-          {/* Session Type */}
-          <div className="space-y-3">
-            <Label>Session Type *</Label>
-            <Select
-              value={sessionForm.session_type}
-              onValueChange={(v) =>
-                setSessionForm((p) => ({ ...p, session_type: v as SessionType }))
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select a type" />
-              </SelectTrigger>
-              <SelectContent>
-                {configs.map((c) => (
-                  <SelectItem key={c.session_type} value={c.session_type}>
-                    {c.title}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <div className={showDetails ? "grid grid-cols-2 items-start gap-6" : "space-y-6"}>
+            {/* ── Left: core session fields ── */}
+            <div className="space-y-6">
+              {/* Session Type */}
+              <div className="space-y-3">
+                <Label>Session Type *</Label>
+                <Select
+                  value={sessionForm.session_type}
+                  onValueChange={(v) =>
+                    setSessionForm((p) => ({ ...p, session_type: v as SessionType }))
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {configs.map((c) => (
+                      <SelectItem key={c.session_type} value={c.session_type}>
+                        {c.title}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-          <div className="space-y-3">
-            <Label>Title *</Label>
-            <Input
-              value={sessionForm.title}
-              onChange={(e) => setSessionForm((p) => ({ ...p, title: e.target.value }))}
-              placeholder="Weekly Reset"
-            />
-          </div>
-          <div className="space-y-3">
-            <Label>Description</Label>
-            <Textarea
-              value={sessionForm.description}
-              onChange={(e) => setSessionForm((p) => ({ ...p, description: e.target.value }))}
-              placeholder="A calming breathwork session..."
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-3">
-              <Label>Start Time *</Label>
-              <Input
-                type="datetime-local"
-                value={sessionForm.start_time}
-                onChange={(e) => setSessionForm((p) => ({ ...p, start_time: e.target.value }))}
-              />
-            </div>
-            <div className="space-y-3">
-              <Label>End Time</Label>
-              <Input
-                type="datetime-local"
-                value={sessionForm.end_time}
-                onChange={(e) => setSessionForm((p) => ({ ...p, end_time: e.target.value }))}
-              />
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Switch
-              checked={sessionForm.recording_enabled}
-              onCheckedChange={(v) => setSessionForm((p) => ({ ...p, recording_enabled: v }))}
-            />
-            <Label>Enable Recording</Label>
-          </div>
+              <div className="space-y-3">
+                <Label>Title *</Label>
+                <Input
+                  value={sessionForm.title}
+                  onChange={(e) => setSessionForm((p) => ({ ...p, title: e.target.value }))}
+                  placeholder="Weekly Reset"
+                />
+              </div>
 
-          {sessionDetailsSection}
+              <div className="space-y-3">
+                <Label>Description</Label>
+                <Textarea
+                  value={sessionForm.description}
+                  onChange={(e) => setSessionForm((p) => ({ ...p, description: e.target.value }))}
+                  placeholder="A calming breathwork session..."
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-3">
+                  <Label>Start Time *</Label>
+                  <Input
+                    type="datetime-local"
+                    value={sessionForm.start_time}
+                    onChange={(e) => setSessionForm((p) => ({ ...p, start_time: e.target.value }))}
+                  />
+                </div>
+                <div className="space-y-3">
+                  <Label>End Time</Label>
+                  <Input
+                    type="datetime-local"
+                    value={sessionForm.end_time}
+                    onChange={(e) => setSessionForm((p) => ({ ...p, end_time: e.target.value }))}
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Switch
+                  checked={sessionForm.recording_enabled}
+                  onCheckedChange={(v) => setSessionForm((p) => ({ ...p, recording_enabled: v }))}
+                />
+                <Label>Enable Recording</Label>
+              </div>
+
+              {/* Details toggle */}
+              <button
+                type="button"
+                className="flex w-full items-center justify-between rounded-lg border border-border p-3 text-sm font-medium transition-colors hover:bg-muted/50"
+                onClick={() => setShowDetails((v) => !v)}
+              >
+                <span>Session Details (optional)</span>
+                {showDetails ? (
+                  <ChevronUp className="h-4 w-4" />
+                ) : (
+                  <ChevronDown className="h-4 w-4" />
+                )}
+              </button>
+            </div>
+
+            {/* ── Right: session details panel (visible when expanded) ── */}
+            {showDetails && (
+              <div className="space-y-6 rounded-lg border border-border p-6">
+                {/* Photo */}
+                <div className="space-y-3">
+                  <Label>Session Image</Label>
+                  {detailsForm.photo_url ? (
+                    <div className="relative h-36 w-full overflow-hidden rounded-lg border border-border">
+                      <img
+                        src={detailsForm.photo_url}
+                        alt="Preview"
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex h-36 w-full items-center justify-center rounded-lg border border-dashed border-border">
+                      <ImageIcon className="h-6 w-6 text-muted-foreground" />
+                    </div>
+                  )}
+                  <div className="flex gap-2">
+                    <input
+                      ref={photoInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handlePhotoUpload}
+                      disabled={uploading}
+                      className="hidden"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      disabled={uploading}
+                      onClick={() => photoInputRef.current?.click()}
+                    >
+                      {uploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                      {uploading ? "Uploading…" : "Upload Image"}
+                    </Button>
+                    {uploading && (
+                      <Button type="button" variant="ghost" size="sm" onClick={cancelUpload}>
+                        Cancel
+                      </Button>
+                    )}
+                  </div>
+                  <Input
+                    placeholder="Or paste an image URL"
+                    value={detailsForm.photo_url}
+                    onChange={(e) => setDetailsForm((p) => ({ ...p, photo_url: e.target.value }))}
+                  />
+                </div>
+
+                {/* Session Title */}
+                <div className="space-y-2">
+                  <Label>Session Title</Label>
+                  <Input
+                    placeholder="e.g. Weekly Reset: Softening Through the Week"
+                    value={detailsForm.session_title}
+                    onChange={(e) =>
+                      setDetailsForm((p) => ({ ...p, session_title: e.target.value }))
+                    }
+                  />
+                </div>
+
+                {/* Short Description */}
+                <div className="space-y-2">
+                  <Label>Short Description</Label>
+                  <Textarea
+                    placeholder="A brief description for this session..."
+                    value={detailsForm.short_description}
+                    onChange={(e) =>
+                      setDetailsForm((p) => ({ ...p, short_description: e.target.value }))
+                    }
+                  />
+                </div>
+
+                {/* Featured Person */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2">
+                    <Label>Featured Person Name</Label>
+                    <Input
+                      placeholder="e.g. Emily"
+                      value={detailsForm.name}
+                      onChange={(e) => setDetailsForm((p) => ({ ...p, name: e.target.value }))}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Their Role / Title</Label>
+                    <Input
+                      placeholder="e.g. Breathwork Facilitator"
+                      value={detailsForm.title}
+                      onChange={(e) => setDetailsForm((p) => ({ ...p, title: e.target.value }))}
+                    />
+                  </div>
+                </div>
+
+                {/* What to Expect */}
+                <div className="space-y-2">
+                  <Label>What to Expect</Label>
+                  <div className="space-y-2">
+                    {detailsForm.what_to_expect.map((item, i) => (
+                      <div key={i} className="flex items-center gap-2">
+                        <Input
+                          value={item}
+                          onChange={(e) => {
+                            const updated = [...detailsForm.what_to_expect];
+                            updated[i] = e.target.value;
+                            setDetailsForm((p) => ({ ...p, what_to_expect: updated }));
+                          }}
+                          placeholder="e.g. A guided, voice-led practice"
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() =>
+                            setDetailsForm((p) => ({
+                              ...p,
+                              what_to_expect: p.what_to_expect.filter((_, idx) => idx !== i),
+                            }))
+                          }
+                        >
+                          <Minus className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() =>
+                      setDetailsForm((p) => ({
+                        ...p,
+                        what_to_expect: [...p.what_to_expect, ""],
+                      }))
+                    }
+                  >
+                    <Plus className="mr-1" />
+                    Add item
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
 
           <Button onClick={handleSave} disabled={isCreating} className="w-full">
             {isCreating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
