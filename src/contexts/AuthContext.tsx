@@ -172,10 +172,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       log("runAuthChecks done");
     };
 
-    // Safety timeout — last-resort fallback if neither INITIAL_SESSION nor getSession() resolves
+    // Safety timeout — last-resort fallback if neither INITIAL_SESSION nor getSession() resolves.
+    // Only force-unblock if auth checks were never initiated (no session found at all).
+    // If authCheckedRef is true, checks are in progress and will call setLoading(false) themselves.
     safetyTimeoutRef.current = setTimeout(() => {
-      log("safety timeout fired — forcing loading=false");
-      setLoading(false);
+      if (!authCheckedRef.current) {
+        log("safety timeout fired — no session found, forcing loading=false");
+        setLoading(false);
+      } else {
+        log("safety timeout fired — auth checks in progress, skipping");
+      }
     }, 3000);
 
     const {
@@ -238,6 +244,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             created_at: session.user.created_at,
           });
           await runAuthChecks(session.user.id, session.access_token);
+          setLoading(false);
+        } else if (!session?.user) {
+          setLoading(false);
         }
         return;
       }
@@ -267,47 +276,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
     });
 
-    // Cross-tab auth sync via storage events.
-    // The storage event fires in other tabs when localStorage changes — not in the
-    // tab that wrote it. This covers the case where INITIAL_SESSION fires with null
-    // (expired token, refresh race with another tab) and that tab later writes a
-    // fresh session after its own token refresh.
-    const handleStorageEvent = async (event: StorageEvent) => {
-      if (!event.key?.endsWith("-auth-token")) return;
-      log("storage event", { key: event.key, hasNewValue: !!event.newValue });
-
-      if (!event.newValue) {
-        log("storage: sign-out detected from another tab");
-        setUser(null);
-        setSession(null);
-        clearAuthState();
-        authCheckedRef.current = false;
-        setLoading(false);
-        return;
-      }
-
-      // Another tab wrote a new/refreshed session. setSession() triggers SIGNED_IN
-      // in onAuthStateChange, which calls runAuthChecks and sets all auth state.
-      try {
-        const parsed = JSON.parse(event.newValue);
-        if (parsed?.access_token && parsed?.refresh_token) {
-          log("storage: calling setSession with tokens from another tab");
-          await supabase.auth.setSession({
-            access_token: parsed.access_token,
-            refresh_token: parsed.refresh_token,
-          });
-        } else {
-          log(
-            "storage: parsed value missing access_token or refresh_token",
-            Object.keys(parsed ?? {})
-          );
-        }
-      } catch (err) {
-        log("storage: failed to parse newValue", err);
-      }
-    };
-
-    window.addEventListener("storage", handleStorageEvent);
+    // Supabase JS v2 handles cross-tab session sync internally: sign-in, token refresh,
+    // and sign-out from another tab all surface as onAuthStateChange events (SIGNED_IN,
+    // TOKEN_REFRESHED, SIGNED_OUT) in every tab. No custom storage listener is needed.
 
     // getSession() is a safety fallback for environments where INITIAL_SESSION
     // may not fire. If INITIAL_SESSION already ran, initialLoadRef is false and
@@ -351,7 +322,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return () => {
       if (safetyTimeoutRef.current) clearTimeout(safetyTimeoutRef.current);
       subscription.unsubscribe();
-      window.removeEventListener("storage", handleStorageEvent);
+      // Reset so the remounted effect (React StrictMode double-invokes effects) starts
+      // fresh and re-runs auth checks rather than skipping them because the ref was
+      // set by the now-torn-down invocation.
+      authCheckedRef.current = false;
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
