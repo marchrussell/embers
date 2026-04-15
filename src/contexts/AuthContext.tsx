@@ -1,8 +1,12 @@
 // @refresh reset
 import { Session, User } from "@supabase/supabase-js";
-import React, { createContext, useContext, useEffect, useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
+import { useAuthOnboarding } from "@/hooks/auth/useAuthOnboarding";
+import { useAuthRoles } from "@/hooks/auth/useAuthRoles";
+import { useAuthSubscription } from "@/hooks/auth/useAuthSubscription";
 import { supabase } from "@/integrations/supabase/client";
 import { identifyUser, resetUser } from "@/lib/posthog";
 
@@ -29,308 +33,171 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [isTestUser, setIsTestUser] = useState(false);
-  const [hasSubscription, setHasSubscription] = useState(false);
-  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
-  const [hasAcceptedSafetyDisclosure, setHasAcceptedSafetyDisclosure] = useState(false);
-  const isCheckingSubscriptionRef = useRef(false);
-  const initialLoadRef = useRef(true);
-  const authCheckedRef = useRef(false);
+  const [identityLoading, setIdentityLoading] = useState(true);
+  // Optimistic local override: set immediately when user accepts safety disclosure,
+  // before the onboarding query re-fetches from the DB.
+  const [acceptedSafetyLocal, setAcceptedSafetyLocal] = useState(false);
   const safetyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const queryClient = useQueryClient();
 
-  const checkAdminRole = async (userId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", userId);
+  // Derived state via TanStack Query — gated on user identity being resolved.
+  // Queries re-run automatically whenever user changes (handles cross-tab sync).
+  const { isAdmin, isTestUser, isLoading: rolesIsLoading } = useAuthRoles(user?.id);
+  const { hasSubscription, isLoading: subIsLoading } = useAuthSubscription(user?.id);
+  const {
+    hasCompletedOnboarding,
+    hasAcceptedSafetyDisclosure: savedSafetyDisclosure,
+    isLoading: onboardingIsLoading,
+  } = useAuthOnboarding(user?.id);
 
-      if (error || !data) {
-        setIsAdmin(false);
-        setIsTestUser(false);
-        return false;
-      }
+  const hasAcceptedSafetyDisclosure = acceptedSafetyLocal || savedSafetyDisclosure;
 
-      const roles = new Set(data.map((r: any) => r.role));
-      setIsAdmin(roles.has("admin"));
-      setIsTestUser(roles.has("test_user"));
-      return true;
-    } catch (err) {
-      setIsAdmin(false);
-      setIsTestUser(false);
-      return false;
-    }
-  };
-
-  const checkOnboardingStatus = async (userId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("has_completed_onboarding, has_accepted_safety_disclosure")
-        .eq("id", userId)
-        .single();
-
-      if (error || !data) {
-        setHasCompletedOnboarding(false);
-        setHasAcceptedSafetyDisclosure(false);
-        return false;
-      }
-
-      setHasCompletedOnboarding(data.has_completed_onboarding || false);
-      setHasAcceptedSafetyDisclosure(data.has_accepted_safety_disclosure || false);
-
-      return data.has_completed_onboarding || false;
-    } catch (err) {
-      setHasCompletedOnboarding(false);
-      setHasAcceptedSafetyDisclosure(false);
-      return false;
-    }
-  };
-
-  const acceptSafetyDisclosure = () => {
-    setHasAcceptedSafetyDisclosure(true);
-  };
-
-  // Expose refresh function for manual use
-  const refreshOnboardingStatus = async () => {
-    if (user?.id) {
-      await checkOnboardingStatus(user.id);
-    }
-  };
-
-  const checkSubscription = async (userId?: string, accessToken?: string) => {
-    // Prevent concurrent calls
-    if (isCheckingSubscriptionRef.current) {
-      return;
-    }
-
-    isCheckingSubscriptionRef.current = true;
-
-    try {
-      // Get user ID from parameter or current user
-      const targetUserId = userId || user?.id;
-      if (!targetUserId) {
-        setHasSubscription(false);
-        return;
-      }
-
-      // Check local database for active subscription - FAST and RELIABLE
-      const { data: localSub, error: localError } = await supabase
-        .from("user_subscriptions")
-        .select("status")
-        .eq("user_id", targetUserId)
-        .in("status", ["active", "trialing", "past_due"])
-        .maybeSingle();
-
-      if (!localError && localSub) {
-        setHasSubscription(true);
-        return;
-      }
-
-      // Fallback: call edge function to check Stripe (only if no local subscription found)
-      const token = accessToken ?? (await supabase.auth.getSession()).data.session?.access_token;
-      if (token) {
-        const { data } = await supabase.functions.invoke("check-subscription", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setHasSubscription(data?.subscribed || false);
-      } else {
-        setHasSubscription(false);
-      }
-    } catch (error) {
-      console.error("AuthContext: Error checking subscription:", error);
-      setHasSubscription(false);
-    } finally {
-      isCheckingSubscriptionRef.current = false;
-    }
-  };
-
-  // Resets all derived auth state (roles, subscription, onboarding).
-  // Called on sign-out and cross-tab sign-out detection.
-  const clearAuthState = () => {
-    setIsAdmin(false);
-    setIsTestUser(false);
-    setHasSubscription(false);
-    setHasCompletedOnboarding(false);
-    setHasAcceptedSafetyDisclosure(false);
-  };
+  // loading is true until user identity is resolved AND all derived queries settle.
+  // This prevents AdminRoute / ProtectedRoute from seeing an intermediate state where
+  // user is set but isAdmin / hasSubscription are still their default (false).
+  const loading =
+    identityLoading || (!!user && (rolesIsLoading || subIsLoading || onboardingIsLoading));
 
   useEffect(() => {
     const log = (...args: unknown[]) => console.debug("[auth]", ...args);
 
-    // Runs the three DB checks in parallel. Defined inside the effect so it doesn't
-    // need to be listed as a dependency (it's only called from within this effect).
-    const runAuthChecks = async (userId: string, accessToken?: string) => {
-      log("runAuthChecks start", { userId });
-      await Promise.all([
-        checkAdminRole(userId).catch(() => {}),
-        checkSubscription(userId, accessToken).catch(() => {}),
-        checkOnboardingStatus(userId).catch(() => {}),
-      ]);
-      log("runAuthChecks done");
-    };
+    // Each effect invocation owns its initialLoadComplete flag. This is a closure
+    // variable (not a React ref) so that React StrictMode's double-invocation gives
+    // each mount its own clean state — no cross-contamination between invocations.
+    let initialLoadComplete = false;
 
-    // Safety timeout — last-resort fallback if neither INITIAL_SESSION nor getSession() resolves.
-    // Only force-unblock if auth checks were never initiated (no session found at all).
-    // If authCheckedRef is true, checks are in progress and will call setLoading(false) themselves.
+    // Safety timeout — last resort if INITIAL_SESSION never fires at all (broken env).
+    // Cancelled as soon as INITIAL_SESSION fires (null or not), because at that point
+    // getSession() is in control of the null-session path.
     safetyTimeoutRef.current = setTimeout(() => {
-      if (!authCheckedRef.current) {
-        log("safety timeout fired — no session found, forcing loading=false");
-        setLoading(false);
-      } else {
-        log("safety timeout fired — auth checks in progress, skipping");
+      if (!initialLoadComplete) {
+        log("safety timeout — INITIAL_SESSION never fired, forcing identityLoading=false");
+        setIdentityLoading(false);
       }
     }, 3000);
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       log("onAuthStateChange", event, { hasSession: !!session, userId: session?.user?.id });
 
-      // INITIAL_SESSION fires when the listener is registered with the session read
-      // directly from localStorage — no server round-trip. Handling it here (instead of
-      // relying on getSession()) ensures second-tab loads work even when getSession()
-      // races with another tab's concurrent token refresh.
       if (event === "INITIAL_SESSION") {
-        if (session?.user) {
-          // Valid session found in localStorage — handle immediately.
-          if (safetyTimeoutRef.current) {
-            clearTimeout(safetyTimeoutRef.current);
-            safetyTimeoutRef.current = null;
-          }
-          initialLoadRef.current = false;
-          setSession(session);
-          setUser(session.user);
-          if (!authCheckedRef.current) {
-            log("INITIAL_SESSION: user found, running auth checks");
-            authCheckedRef.current = true;
-            identifyUser(session.user.id, {
-              email: session.user.email,
-              created_at: session.user.created_at,
-            });
-            await runAuthChecks(session.user.id, session.access_token);
-          } else {
-            log("INITIAL_SESSION: authCheckedRef already true, skipping checks");
-          }
-          setLoading(false);
-        } else {
-          // Null session — access token is likely expired.
-          // Don't mark initial load complete; let getSession() perform the server-side refresh.
-          // The safety timeout (already running) will unblock loading if getSession() also fails.
-          log("INITIAL_SESSION: no session — deferring to getSession() for token refresh recovery");
-        }
-        return;
-      }
-
-      // Skip all other events until INITIAL_SESSION has been processed
-      if (initialLoadRef.current) {
-        log("skipping event — initialLoad not complete yet");
-        return;
-      }
-
-      // On token refresh, update session/user. If INITIAL_SESSION fired with null
-      // (expired token), auth checks haven't run yet — run them now with the fresh token.
-      if (event === "TOKEN_REFRESHED") {
-        log("TOKEN_REFRESHED: updating session/user");
-        setSession(session);
-        setUser(session?.user ?? null);
-        if (session?.user && !authCheckedRef.current) {
-          log("TOKEN_REFRESHED: first auth — running checks");
-          authCheckedRef.current = true;
-          identifyUser(session.user.id, {
-            email: session.user.email,
-            created_at: session.user.created_at,
-          });
-          await runAuthChecks(session.user.id, session.access_token);
-          setLoading(false);
-        } else if (!session?.user) {
-          setLoading(false);
-        }
-        return;
-      }
-
-      setSession(session);
-      setUser(session?.user ?? null);
-
-      if (session?.user) {
-        log("SIGNED_IN: running auth checks");
-        // Only show loading state on first authentication — re-auth events (e.g.
-        // cross-tab sign-in triggering SIGNED_IN via setSession) should refresh
-        // auth data silently without flashing a loading screen.
-        const isFirstAuth = !authCheckedRef.current;
-        authCheckedRef.current = true;
-        if (isFirstAuth) setLoading(true);
-        identifyUser(session.user.id, {
-          email: session.user.email,
-          created_at: session.user.created_at,
-        });
-        await runAuthChecks(session.user.id, session.access_token);
-        if (isFirstAuth) setLoading(false);
-      } else {
-        log("SIGNED_OUT: clearing auth state");
-        authCheckedRef.current = false;
-        clearAuthState();
-        setLoading(false);
-      }
-    });
-
-    // Supabase JS v2 handles cross-tab session sync internally: sign-in, token refresh,
-    // and sign-out from another tab all surface as onAuthStateChange events (SIGNED_IN,
-    // TOKEN_REFRESHED, SIGNED_OUT) in every tab. No custom storage listener is needed.
-
-    // getSession() is a safety fallback for environments where INITIAL_SESSION
-    // may not fire. If INITIAL_SESSION already ran, initialLoadRef is false and
-    // this becomes a no-op.
-    supabase.auth
-      .getSession()
-      .then(async ({ data: { session } }) => {
-        log("getSession resolved", {
-          hasSession: !!session,
-          initialLoadPending: initialLoadRef.current,
-        });
-        if (!initialLoadRef.current) return;
-        log("getSession fallback active — INITIAL_SESSION did not fire");
+        // INITIAL_SESSION fired — cancel safety timeout regardless of null/non-null session.
+        // If session is null (expired token), getSession() (already running) handles recovery.
         if (safetyTimeoutRef.current) {
           clearTimeout(safetyTimeoutRef.current);
           safetyTimeoutRef.current = null;
         }
-        initialLoadRef.current = false;
-        setSession(session);
-        setUser(session?.user ?? null);
-        if (session?.user && !authCheckedRef.current) {
-          authCheckedRef.current = true;
+        if (session?.user) {
+          initialLoadComplete = true;
+          setSession(session);
+          setUser(session.user);
           identifyUser(session.user.id, {
             email: session.user.email,
             created_at: session.user.created_at,
           });
-          await runAuthChecks(session.user.id, session.access_token);
-        } else if (!session?.user) {
-          clearAuthState();
+          setIdentityLoading(false);
         }
-        setLoading(false);
+        // null session: identity not resolved yet — defer to TOKEN_REFRESHED or getSession()
+        return;
+      }
+
+      // TOKEN_REFRESHED: primary handler for the "expired access token + valid refresh token"
+      // initial-load path. Never blocked — allows the expired-token case to resolve directly
+      // without waiting for the getSession() fallback.
+      if (event === "TOKEN_REFRESHED") {
+        if (!initialLoadComplete) {
+          // Mark complete so getSession() fallback skips its processing
+          initialLoadComplete = true;
+        }
+        setSession(session);
+        setUser(session?.user ?? null);
+        if (session?.user) {
+          identifyUser(session.user.id, {
+            email: session.user.email,
+            created_at: session.user.created_at,
+          });
+        }
+        setIdentityLoading(false);
+        return;
+      }
+
+      // SIGNED_IN: handles cross-tab sign-in and direct sign-in after initial load.
+      // Just update user/session — TanStack queries re-run automatically when user changes,
+      // so derived state (isAdmin, hasSubscription, etc.) stays in sync without any
+      // imperative DB calls here.
+      if (event === "SIGNED_IN") {
+        setSession(session);
+        setUser(session?.user ?? null);
+        if (session?.user) {
+          identifyUser(session.user.id, {
+            email: session.user.email,
+            created_at: session.user.created_at,
+          });
+        }
+        return;
+      }
+
+      // SIGNED_OUT: clear identity. Derived state resets automatically — queries are
+      // disabled when user is null (enabled: !!user?.id) and default to false.
+      setSession(null);
+      setUser(null);
+      setAcceptedSafetyLocal(false);
+      resetUser();
+    });
+
+    // Supabase JS v2 fires cross-tab auth events (SIGNED_IN, TOKEN_REFRESHED, SIGNED_OUT)
+    // in all tabs via its own internal storage listener. No custom storage handler needed.
+
+    // getSession() fallback — covers two cases:
+    // 1. Environments where INITIAL_SESSION doesn't fire
+    // 2. INITIAL_SESSION fired null (expired token) but TOKEN_REFRESHED didn't fire
+    //    (no valid refresh token → user is genuinely logged out)
+    supabase.auth
+      .getSession()
+      .then(({ data: { session } }) => {
+        log("getSession resolved", { hasSession: !!session, initialLoadComplete });
+        if (initialLoadComplete) return; // INITIAL_SESSION (with user) or TOKEN_REFRESHED handled it
+        log("getSession fallback — resolving identity");
+        initialLoadComplete = true;
+        setSession(session);
+        setUser(session?.user ?? null);
+        if (session?.user) {
+          identifyUser(session.user.id, {
+            email: session.user.email,
+            created_at: session.user.created_at,
+          });
+        }
+        setIdentityLoading(false);
       })
       .catch((err) => {
         log("getSession error", err);
-        if (initialLoadRef.current) {
-          initialLoadRef.current = false;
-          setLoading(false);
+        if (!initialLoadComplete) {
+          initialLoadComplete = true;
+          setIdentityLoading(false);
         }
       });
 
     return () => {
-      if (safetyTimeoutRef.current) clearTimeout(safetyTimeoutRef.current);
+      if (safetyTimeoutRef.current) {
+        clearTimeout(safetyTimeoutRef.current);
+        safetyTimeoutRef.current = null;
+      }
       subscription.unsubscribe();
-      // Reset so the remounted effect (React StrictMode double-invokes effects) starts
-      // fresh and re-runs auth checks rather than skipping them because the ref was
-      // set by the now-torn-down invocation.
-      authCheckedRef.current = false;
     };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
-  // Removed auto-refresh to prevent session lock issues
-  // Subscription is checked on login and can be manually refreshed if needed
+  const checkSubscription = useCallback(async () => {
+    await queryClient.invalidateQueries({ queryKey: ["auth-subscription", user?.id] });
+  }, [queryClient, user?.id]);
+
+  const refreshOnboardingStatus = useCallback(async () => {
+    await queryClient.invalidateQueries({ queryKey: ["auth-onboarding", user?.id] });
+  }, [queryClient, user?.id]);
+
+  const acceptSafetyDisclosure = useCallback(() => {
+    setAcceptedSafetyLocal(true);
+  }, []);
 
   const signIn = async (email: string, password: string) => {
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -342,11 +209,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     // Immediately update state with the returned session so the UI reflects
     // the logged-in state before signIn() returns. onAuthStateChange (SIGNED_IN)
-    // will fire next and run the DB checks (admin, subscription, onboarding).
+    // will fire next and update state again (no-op since it's the same session).
     if (data.session) {
       setSession(data.session);
       setUser(data.session.user);
-
       identifyUser(data.session.user.id, {
         email: data.session.user.email,
         created_at: data.session.user.created_at,
@@ -386,12 +252,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
 
       resetUser();
-      clearAuthState();
+      setAcceptedSafetyLocal(false);
       setUser(null);
       setSession(null);
+      // Remove cached derived state so a re-login as a different user gets fresh data
+      queryClient.removeQueries({ queryKey: ["auth-roles"] });
+      queryClient.removeQueries({ queryKey: ["auth-subscription"] });
+      queryClient.removeQueries({ queryKey: ["auth-onboarding"] });
     } catch (error) {
       resetUser();
-      clearAuthState();
+      setAcceptedSafetyLocal(false);
       setUser(null);
       setSession(null);
       throw error;

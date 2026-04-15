@@ -17,6 +17,8 @@ const guestSessionImg = experienceImages.guestSession;
 const monthlyPresenceImg = experienceImages.monthlyBreathOnline;
 const weeklyResetImg = experienceImages.weeklyReset;
 
+import { SafetyDisclosureModal } from "@/components/SafetyDisclosureModal";
+
 import Library from "./Library";
 import CoursesTab from "./online/CoursesTab";
 import HomeTab from "./online/HomeTab";
@@ -125,7 +127,6 @@ const Online = () => {
     <div className="min-h-screen bg-background">
       <NavBar />
       <OnlineHeader activeTab={activeTab} onTabChange={handleTabChange} />
-
       <div className="lg:pt-88 px-6 pb-40 pt-44 md:px-10 md:pt-72 lg:px-12">
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
           <TabsContent value="home" className="mt-0 pb-24">
@@ -164,27 +165,22 @@ const Online = () => {
 
         <OnlineFooter />
       </div>
-
       <div className="hidden md:block">
         <Footer />
       </div>
-
       <Suspense fallback={null}>
         <SubscriptionModal
           open={showSubscriptionModal}
           onClose={() => setShowSubscriptionModal(false)}
         />
       </Suspense>
-
-      //todo - review this, causes strange bug on duplicate tab
-      {/* {user && (
+      {user && (
         <SafetyDisclosureModal
           isOpen={showSafetyModal}
           onAccept={handleSafetyAccept}
           userId={user.id}
         />
-      )} */}
-
+      )}
       <SessionDetailModal
         sessionId={selectedSessionId}
         open={!!selectedSessionId}
