@@ -47,6 +47,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -1028,6 +1029,14 @@ const AdminLiveSessions = () => {
     }
   };
 
+  // Copy guest link (reconstructs URL from persisted guest_token — no edge function call)
+  const handleCopyGuestLink = async (session: LiveSession) => {
+    if (!session.guest_token) return;
+    const url = `${window.location.origin}/live/${session.id}?role=guest&token=${session.guest_token}`;
+    await navigator.clipboard.writeText(url);
+    toast.success("Guest link copied");
+  };
+
   // Copy host link
   const handleCopyHostLink = async (session: LiveSession) => {
     await navigator.clipboard.writeText(`${window.location.origin}/live/${session.id}?role=host`);
@@ -1455,16 +1464,30 @@ const AdminLiveSessions = () => {
                     </TableCell>
                     <TableCell className={adminTableCellClass}>
                       {session.guest_token ? (
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1">
                           <Badge variant="secondary" className="text-xs">
                             Active
                           </Badge>
                           <Button
                             variant="ghost"
+                            size="icon"
+                            title="Regenerate link"
                             onClick={() => handleGenerateGuestLink(session)}
                             disabled={actionLoading === session.id}
                           >
-                            <RefreshCw className="h-5 w-5" />
+                            {actionLoading === session.id ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <RefreshCw className="h-4 w-4" />
+                            )}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            title="Copy guest link"
+                            onClick={() => handleCopyGuestLink(session)}
+                          >
+                            <Copy className="h-4 w-4" />
                           </Button>
                         </div>
                       ) : (
@@ -1473,7 +1496,11 @@ const AdminLiveSessions = () => {
                           onClick={() => handleGenerateGuestLink(session)}
                           disabled={actionLoading === session.id}
                         >
-                          <Link2 className="mr-1 h-5 w-5" />
+                          {actionLoading === session.id ? (
+                            <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+                          ) : (
+                            <Link2 className="mr-1 h-4 w-4" />
+                          )}
                           Generate
                         </Button>
                       )}
@@ -1510,16 +1537,24 @@ const AdminLiveSessions = () => {
                         <Button
                           variant="ghost"
                           size="icon"
+                          title="Copy host link"
                           onClick={() => handleCopyHostLink(session)}
                         >
                           <Copy className="h-5 w-5" />
                         </Button>
-                        <Button variant="ghost" size="icon" onClick={() => openEditDialog(session)}>
+                        <Separator orientation="vertical" className="mx-1 h-6" />
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          title="Edit session"
+                          onClick={() => openEditDialog(session)}
+                        >
                           <Pencil className="h-4 w-4" />
                         </Button>
                         <Button
                           variant="ghost"
                           size="icon"
+                          title="Delete session"
                           onClick={() => handleDelete(session)}
                           className="text-destructive hover:text-destructive"
                         >
