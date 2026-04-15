@@ -6,7 +6,6 @@ import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { NavBar } from "@/components/NavBar";
 import OnlineFooter from "@/components/OnlineFooter";
 import OnlineHeader from "@/components/OnlineHeader";
-import { SafetyDisclosureModal } from "@/components/SafetyDisclosureModal";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLiveSessionConfigs } from "@/hooks/useLiveSessionConfigs";
@@ -56,7 +55,10 @@ const Online = () => {
   const [shouldClearLibraryCategory, setShouldClearLibraryCategory] = useState(false);
 
   const { data: configs = [] } = useLiveSessionConfigs();
+  console.log("Live session initial data configs: ", configs);
+  //todo - we want guest-session type to show the next date of guest teacher for the recurrence_label
   const { teacher: nextGuestTeacher } = useNextGuestTeacher();
+  console.log("Live session next guest teacher: ", nextGuestTeacher);
 
   // Derive active tab from URL — URL is the single source of truth
   const tabParam = searchParams.get("tab");
@@ -80,6 +82,7 @@ const Online = () => {
 
       // Enrich guest-session with live data from live_session_details
       if (config.session_type === "guest-session" && nextGuestTeacher) {
+        console.log("Enriching guest-session with next guest teacher data: ", nextGuestTeacher);
         return {
           sessionType: config.session_type,
           title: config.title,
@@ -110,6 +113,8 @@ const Online = () => {
       };
     });
   }, [configs, nextGuestTeacher]);
+
+  console.log("liveSessionsData formatted: ", liveSessionsData);
 
   const handleTabChange = (tab: string) => {
     navigate(`/online?tab=${tab}`, { replace: true });
@@ -171,13 +176,14 @@ const Online = () => {
         />
       </Suspense>
 
-      {user && (
+      //todo - review this, causes strange bug on duplicate tab
+      {/* {user && (
         <SafetyDisclosureModal
           isOpen={showSafetyModal}
           onAccept={handleSafetyAccept}
           userId={user.id}
         />
-      )}
+      )} */}
 
       <SessionDetailModal
         sessionId={selectedSessionId}
