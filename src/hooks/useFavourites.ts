@@ -33,37 +33,35 @@ export function useFavourites(): UseFavouritesReturn {
   });
 
   const toggleMutation = useMutation({
-    mutationFn: async (sessionId: string) => {
-      const isFav = queryClient.getQueryData<string[]>(queryKey)?.includes(sessionId);
-      if (isFav) {
+    mutationFn: async ({ sessionId, add }: { sessionId: string; add: boolean }) => {
+      if (add) {
+        const { error } = await supabase
+          .from("user_favourites")
+          .insert({ user_id: user!.id, session_id: sessionId });
+        if (error) throw error;
+      } else {
         const { error } = await supabase
           .from("user_favourites")
           .delete()
           .eq("user_id", user!.id)
           .eq("session_id", sessionId);
         if (error) throw error;
-      } else {
-        const { error } = await supabase
-          .from("user_favourites")
-          .insert({ user_id: user!.id, session_id: sessionId });
-        if (error) throw error;
       }
     },
-    onMutate: async (sessionId) => {
+    onMutate: async ({ sessionId, add }) => {
       await queryClient.cancelQueries({ queryKey });
       const prev = queryClient.getQueryData<string[]>(queryKey);
-      const isFav = prev?.includes(sessionId);
       queryClient.setQueryData<string[]>(queryKey, (old = []) =>
-        isFav ? old.filter((id) => id !== sessionId) : [...old, sessionId]
+        add ? [...old, sessionId] : old.filter((id) => id !== sessionId)
       );
-      return { prev, wasAdded: !isFav };
+      return { prev };
     },
-    onError: (_err, _sessionId, context) => {
+    onError: (_err, _vars, context) => {
       queryClient.setQueryData(queryKey, context?.prev);
       toast.error("Failed to update favourites");
     },
-    onSuccess: (_data, _sessionId, context) => {
-      toast.success(context?.wasAdded ? "Added to favourites" : "Removed from favourites");
+    onSuccess: (_data, { add }) => {
+      toast.success(add ? "Added to favourites" : "Removed from favourites");
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey });
@@ -110,9 +108,10 @@ export function useFavourites(): UseFavouritesReturn {
         toast.error("Please sign in to save favourites");
         return;
       }
-      toggleMutation.mutate(sessionId);
+      const add = !favouriteIds.includes(sessionId);
+      toggleMutation.mutate({ sessionId, add });
     },
-    [user?.id, toggleMutation]
+    [user?.id, favouriteIds, toggleMutation]
   );
 
   const removeFavourite = useCallback(
