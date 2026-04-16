@@ -4,11 +4,11 @@ A React + TypeScript + Vite web app for Embers Studio — a breathwork platform 
 
 ## Stack
 
-- **Frontend**: React 18, TypeScript, Vite, Tailwind CSS, shadcn/ui (Radix UI)
+- **Frontend**: React 18, TypeScript, Vite, Tailwind CSS, shadcn/ui (Radix UI), Zod validation
 - **Backend**: Supabase (auth, database, edge functions)
 - **Routing**: React Router v6
 - **State/Data**: TanStack Query
-- **Video**: Daily.co (live sessions), Vimeo/YouTube (recorded)
+- **Video**: Daily.co (live sessions)
 - **Analytics**: PostHog
 - **Deployment**: Vercel
 - **Package manager**: pnpm
@@ -33,7 +33,7 @@ supabase/
 
 ## Data Fetching
 
-Use **TanStack Query (`useQuery`)** for all data fetching — not `useEffect` + `useState`.
+Use **TanStack Query (`useQuery` or `useSuspenseQuery`)** for all data fetching — not `useEffect` + `useState`.
 
 - Query keys: `['resource', userId]` (e.g. `['profile', user.id]`, `['profile-stats', user.id]`)
 - Gate queries with `enabled: !!user?.id` so they don't run before auth is confirmed
