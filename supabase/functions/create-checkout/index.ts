@@ -1,10 +1,17 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
+import { z } from "https://esm.sh/zod@3.25.76";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
+
+const createCheckoutSchema = z.object({
+  priceId: z.string().startsWith("price_", "Invalid price ID format"),
+  couponCode: z.string().optional(),
+  mode: z.enum(["payment", "subscription"]).default("subscription"),
+});
 
 const logStep = (step: string, details?: any) => {
   const detailsStr = details ? ` - ${JSON.stringify(details)}` : '';
@@ -20,19 +27,18 @@ serve(async (req) => {
     logStep("Function started");
 
     const body = await req.json();
-    const { priceId, couponCode, mode } = body;
-    logStep("Request body parsed", { priceId, couponCode, mode });
-    
-    if (!priceId) {
-      logStep("ERROR: No price ID provided");
-      throw new Error("Price ID is required");
+    const parseResult = createCheckoutSchema.safeParse(body);
+
+    if (!parseResult.success) {
+      logStep("ERROR: Invalid request body", { errors: parseResult.error.flatten().fieldErrors });
+      return new Response(
+        JSON.stringify({ error: parseResult.error.flatten().fieldErrors }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
-    // Validate priceId format (should start with price_)
-    if (typeof priceId !== 'string' || !priceId.startsWith('price_')) {
-      logStep("ERROR: Invalid price ID format");
-      throw new Error("Invalid price ID format");
-    }
+    const { priceId, couponCode, mode } = parseResult.data;
+    logStep("Request body parsed", { priceId, couponCode, mode });
 
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
     if (!stripeKey) {
@@ -50,9 +56,8 @@ serve(async (req) => {
     logStep("Creating checkout session", { priceId, origin, hasCoupon: !!couponCode });
     
     // Build checkout session params - NO AUTH REQUIRED for new signups
-    // Determine checkout mode - default to subscription, but allow payment for one-time purchases
-    const checkoutMode = mode === 'payment' ? 'payment' : 'subscription';
-    logStep("Checkout mode determined", { requestedMode: mode, usingMode: checkoutMode });
+    const checkoutMode = mode;
+    logStep("Checkout mode determined", { usingMode: checkoutMode });
     
     const sessionParams: any = {
       line_items: [

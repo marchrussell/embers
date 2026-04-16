@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 import { Resend } from "https://esm.sh/resend@2.0.0";
+import { z } from "https://esm.sh/zod@3.25.76";
 
 import { newsletterEmail } from "../_shared/email-templates.ts";
 
@@ -11,12 +12,12 @@ const corsHeaders = {
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
-interface SendNewsletterRequest {
-  subject: string;
-  content: string;
-  preheader?: string;
-  testEmail?: string; // Optional: send to test email instead of all subscribers
-}
+const sendNewsletterSchema = z.object({
+  subject: z.string().min(1, "Subject is required"),
+  content: z.string().min(1, "Content is required"),
+  preheader: z.string().optional(),
+  testEmail: z.string().email().optional(),
+});
 
 const logStep = (step: string, details?: any) => {
   const detailsStr = details ? ` - ${JSON.stringify(details)}` : '';
@@ -65,11 +66,20 @@ serve(async (req) => {
 
     logStep("Admin verified", { userId: user.id });
 
-    const { subject, content, preheader, testEmail }: SendNewsletterRequest = await req.json();
-    
-    if (!subject || !content) {
-      throw new Error("Missing required fields: subject, content");
+    const body = await req.json();
+    const parseResult = sendNewsletterSchema.safeParse(body);
+
+    if (!parseResult.success) {
+      return new Response(
+        JSON.stringify({ error: parseResult.error.flatten().fieldErrors }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
     }
+
+    const { subject, content, preheader, testEmail } = parseResult.data;
 
     logStep("Request validated", { subject, isTest: !!testEmail });
 

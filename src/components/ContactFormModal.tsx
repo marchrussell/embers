@@ -1,5 +1,8 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { X } from "lucide-react";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -9,6 +12,18 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
+const contactSchema = z.object({
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  email: z.string().email("Please enter a valid email address"),
+  message: z
+    .string()
+    .min(5, "Message must be at least 5 characters")
+    .max(5000, "Message cannot exceed 5000 characters"),
+});
+
+type ContactFormValues = z.infer<typeof contactSchema>;
+
 interface ContactFormModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -16,82 +31,57 @@ interface ContactFormModalProps {
 
 export const ContactFormModal = ({ open, onOpenChange }: ContactFormModalProps) => {
   const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    message: "",
-  });
   const [subscribeToNewsletter, setSubscribeToNewsletter] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<ContactFormValues>({
+    resolver: zodResolver(contactSchema),
+  });
 
-    if (!formData.firstName || !formData.lastName || !formData.email || !formData.message) {
-      toast({
-        title: "All fields required",
-        description: "Please fill in all fields to send a message.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (formData.message.trim().length < 5) {
-      toast({
-        title: "Message too short",
-        description: "Please write at least 5 characters in your message.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsSubmitting(true);
-
+  const onSubmit = async (data: ContactFormValues) => {
     try {
-      const fullName = `${formData.firstName.trim()} ${formData.lastName.trim()}`;
+      const fullName = `${data.firstName.trim()} ${data.lastName.trim()}`;
 
-      // Send the message
-      const { data, error } = await supabase.functions.invoke("send-contact-email", {
+      const { data: responseData, error } = await supabase.functions.invoke("send-contact-email", {
         body: {
           name: fullName,
-          email: formData.email.trim().toLowerCase(),
-          message: formData.message.trim(),
+          email: data.email.trim().toLowerCase(),
+          message: data.message.trim(),
           type: "contact",
         },
       });
 
-      console.log("Contact email response:", { data, error });
+      console.log("Contact email response:", { data: responseData, error });
 
       if (error) throw error;
 
-      // If newsletter checkbox is checked, also subscribe them
       if (subscribeToNewsletter) {
         try {
           const { error: dbError } = await supabase.from("newsletter_subscribers").insert([
             {
-              email: formData.email.trim().toLowerCase(),
+              email: data.email.trim().toLowerCase(),
               name: fullName,
             },
           ]);
 
           if (dbError && dbError.code !== "23505") {
-            // Ignore duplicate error
             throw dbError;
           }
 
-          // Send confirmation email
           await supabase.functions.invoke("send-contact-email", {
             body: {
               name: fullName,
-              email: formData.email.trim().toLowerCase(),
+              email: data.email.trim().toLowerCase(),
               message: "",
               type: "newsletter",
             },
           });
         } catch (newsletterError) {
           console.error("Error subscribing to newsletter:", newsletterError);
-          // Don't fail the message send if newsletter fails
         }
       }
 
@@ -101,7 +91,7 @@ export const ContactFormModal = ({ open, onOpenChange }: ContactFormModalProps) 
           ? "Thank you for your message. You've also been subscribed to our newsletter."
           : "Thank you for your message. We'll get back to you soon.",
       });
-      setFormData({ firstName: "", lastName: "", email: "", message: "" });
+      reset();
       setSubscribeToNewsletter(false);
       onOpenChange(false);
     } catch (error) {
@@ -111,8 +101,6 @@ export const ContactFormModal = ({ open, onOpenChange }: ContactFormModalProps) 
         description: "Please try again later or contact us directly.",
         variant: "destructive",
       });
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -139,46 +127,58 @@ export const ContactFormModal = ({ open, onOpenChange }: ContactFormModalProps) 
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <DarkInput
-                id="modal-first-name"
-                placeholder="First name"
-                value={formData.firstName}
-                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                required
-                className="text-lg"
-              />
+              <div>
+                <DarkInput
+                  id="modal-first-name"
+                  placeholder="First name"
+                  className="text-lg"
+                  {...register("firstName")}
+                />
+                {errors.firstName && (
+                  <p className="mt-1.5 text-sm text-red-400">{errors.firstName.message}</p>
+                )}
+              </div>
 
-              <DarkInput
-                id="modal-last-name"
-                placeholder="Last name"
-                value={formData.lastName}
-                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                required
-                className="text-lg"
-              />
+              <div>
+                <DarkInput
+                  id="modal-last-name"
+                  placeholder="Last name"
+                  className="text-lg"
+                  {...register("lastName")}
+                />
+                {errors.lastName && (
+                  <p className="mt-1.5 text-sm text-red-400">{errors.lastName.message}</p>
+                )}
+              </div>
             </div>
 
-            <DarkInput
-              id="modal-email"
-              type="email"
-              placeholder="your@email.com"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              required
-              className="text-lg"
-            />
+            <div>
+              <DarkInput
+                id="modal-email"
+                type="email"
+                placeholder="your@email.com"
+                className="text-lg"
+                {...register("email")}
+              />
+              {errors.email && (
+                <p className="mt-1.5 text-sm text-red-400">{errors.email.message}</p>
+              )}
+            </div>
 
-            <DarkTextarea
-              id="message"
-              placeholder="Tell me about what you're looking for..."
-              rows={6}
-              value={formData.message}
-              onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-              required
-              className="text-lg"
-            />
+            <div>
+              <DarkTextarea
+                id="message"
+                placeholder="Tell me about what you're looking for..."
+                rows={6}
+                className="text-lg"
+                {...register("message")}
+              />
+              {errors.message && (
+                <p className="mt-1.5 text-sm text-red-400">{errors.message.message}</p>
+              )}
+            </div>
 
             <div className="flex items-center justify-center space-x-3 py-2 sm:py-3">
               <Checkbox

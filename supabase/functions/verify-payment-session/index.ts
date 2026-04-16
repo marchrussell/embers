@@ -1,11 +1,16 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 import Stripe from "https://esm.sh/stripe@18.5.0";
+import { z } from "https://esm.sh/zod@3.25.76";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
+
+const verifyPaymentSchema = z.object({
+  sessionId: z.string().min(1, "Session ID is required"),
+});
 
 const logStep = (step: string, details?: Record<string, unknown>) => {
   const detailsStr = details ? ` - ${JSON.stringify(details)}` : '';
@@ -24,19 +29,24 @@ serve(async (req) => {
   try {
     logStep("Function started - POST request received");
 
-    let sessionId;
+    let body;
     try {
-      const body = await req.json();
-      sessionId = body.sessionId;
-      logStep("Request body parsed", { sessionId, hasSessionId: !!sessionId });
+      body = await req.json();
     } catch (parseError) {
       logStep("ERROR: Failed to parse request body", { error: parseError });
       throw new Error("Invalid request body");
     }
 
-    if (!sessionId) {
-      throw new Error("Session ID is required");
+    const parseResult = verifyPaymentSchema.safeParse(body);
+    if (!parseResult.success) {
+      return new Response(
+        JSON.stringify({ error: parseResult.error.flatten().fieldErrors }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
+
+    const { sessionId } = parseResult.data;
+    logStep("Request body parsed", { sessionId });
 
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
     if (!stripeKey) {

@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 import { Resend } from "https://esm.sh/resend@2.0.0";
+import { z } from "https://esm.sh/zod@3.25.76";
 
 import * as templates from "../_shared/email-templates.ts";
 
@@ -11,12 +12,30 @@ const corsHeaders = {
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
-interface SendEmailRequest {
-  to: string;
-  firstName: string;
-  emailType: string;
-  data?: Record<string, any>;
-}
+const EMAIL_TYPES = [
+  "payment_confirmation",
+  "setup_reminder_day1",
+  "final_reminder_day3",
+  "final_notice_day7",
+  "welcome",
+  "usage_nudge",
+  "check_in",
+  "payment_failed",
+  "retry_reminder",
+  "payment_final_notice",
+  "cancellation_confirmation",
+  "winback",
+  "refund_confirmation",
+  "plan_change",
+  "support_acknowledgement",
+] as const;
+
+const sendEmailSchema = z.object({
+  to: z.string().email("Invalid recipient email"),
+  firstName: z.string().min(1, "First name is required"),
+  emailType: z.enum(EMAIL_TYPES, { message: "Unknown email type" }),
+  data: z.record(z.unknown()).optional(),
+});
 
 const logStep = (step: string, details?: any) => {
   const detailsStr = details ? ` - ${JSON.stringify(details)}` : '';
@@ -31,12 +50,19 @@ serve(async (req) => {
   try {
     logStep("Function started");
 
-    const { to, firstName, emailType, data = {} }: SendEmailRequest = await req.json();
-    logStep("Request received", { to, firstName, emailType });
+    const body = await req.json();
+    const parseResult = sendEmailSchema.safeParse(body);
 
-    if (!to || !firstName || !emailType) {
-      throw new Error("Missing required fields: to, firstName, emailType");
+    if (!parseResult.success) {
+      logStep("ERROR: Invalid request body", { errors: parseResult.error.flatten().fieldErrors });
+      return new Response(
+        JSON.stringify({ error: parseResult.error.flatten().fieldErrors }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
+
+    const { to, firstName, emailType, data = {} } = parseResult.data;
+    logStep("Request received", { to, firstName, emailType });
 
     // Initialize Supabase admin client
     const supabaseAdmin = createClient(
@@ -118,9 +144,6 @@ serve(async (req) => {
     };
 
     const config = emailConfig[emailType];
-    if (!config) {
-      throw new Error(`Unknown email type: ${emailType}`);
-    }
 
     // Render the email template
     const html = config.template(data);

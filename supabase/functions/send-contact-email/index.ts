@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@4.0.0";
+import { z } from "https://esm.sh/zod@3.25.76";
 
 import { newsletterWelcomeEmail } from "../_shared/email-templates.ts";
 
@@ -17,12 +18,20 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-interface ContactEmailRequest {
-  name: string;
-  email: string;
-  message: string;
-  type: "contact" | "newsletter";
-}
+const contactEmailSchema = z.discriminatedUnion("type", [
+  z.object({
+    type: z.literal("contact"),
+    name: z.string().min(2).max(100),
+    email: z.string().email(),
+    message: z.string().min(5).max(5000),
+  }),
+  z.object({
+    type: z.literal("newsletter"),
+    name: z.string().min(2).max(100),
+    email: z.string().email(),
+    message: z.string().optional(),
+  }),
+]);
 
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
@@ -42,65 +51,24 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    const { name, email, message, type }: ContactEmailRequest = await req.json();
+    const body = await req.json();
+    const result = contactEmailSchema.safeParse(body);
 
+    if (!result.success) {
+      return new Response(
+        JSON.stringify({ error: result.error.flatten().fieldErrors }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    const { name, email, type } = result.data;
     console.log(`📧 Processing ${type} email for: ${email}`);
 
-    // Validate inputs
-    if (!name || !email) {
-      return new Response(
-        JSON.stringify({ error: "Name and email are required" }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json", ...corsHeaders },
-        }
-      );
-    }
-
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return new Response(
-        JSON.stringify({ error: "Invalid email format" }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json", ...corsHeaders },
-        }
-      );
-    }
-
-    // Validate name length
-    if (name.length < 2 || name.length > 100) {
-      return new Response(
-        JSON.stringify({ error: "Name must be between 2 and 100 characters" }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json", ...corsHeaders },
-        }
-      );
-    }
-
     if (type === "contact") {
-      if (!message) {
-        return new Response(
-          JSON.stringify({ error: "Message is required for contact form" }),
-          {
-            status: 400,
-            headers: { "Content-Type": "application/json", ...corsHeaders },
-          }
-        );
-      }
-
-      // Validate message length
-      if (message.length < 5 || message.length > 5000) {
-        return new Response(
-          JSON.stringify({ error: "Message must be between 5 and 5000 characters" }),
-          {
-            status: 400,
-            headers: { "Content-Type": "application/json", ...corsHeaders },
-          }
-        );
-      }
+      const { message } = result.data;
 
       // Basic XSS prevention - strip HTML tags
       const sanitizedMessage = message.replace(/<[^>]*>/g, '');
@@ -131,11 +99,11 @@ const handler = async (req: Request): Promise<Response> => {
           ...corsHeaders,
         },
       });
-    } else if (type === "newsletter") {
+    } else {
       // Basic XSS prevention for newsletter
       const sanitizedName = name.replace(/<[^>]*>/g, '');
       const firstName = sanitizedName.split(' ')[0] || sanitizedName;
-      
+
       // Send newsletter confirmation to subscriber
       console.log("📤 Attempting to send newsletter welcome email via Resend...");
       const newsletterResponse = await resend.emails.send({
@@ -154,14 +122,6 @@ const handler = async (req: Request): Promise<Response> => {
           ...corsHeaders,
         },
       });
-    } else {
-      return new Response(
-        JSON.stringify({ error: "Invalid type specified" }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json", ...corsHeaders },
-        }
-      );
     }
   } catch (error: any) {
     console.error("❌ Error in send-contact-email function:", error);
@@ -170,9 +130,9 @@ const handler = async (req: Request): Promise<Response> => {
       name: error.name,
       stack: error.stack,
     });
-    
+
     return new Response(
-      JSON.stringify({ 
+      JSON.stringify({
         error: error.message || "Failed to send email. Please try again or contact support directly.",
         details: error.name || "Unknown error"
       }),

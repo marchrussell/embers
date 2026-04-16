@@ -1,5 +1,6 @@
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { useState } from "react";
+import { z } from "zod";
 
 import { ButtonLoadingSpinner } from "@/components/skeletons";
 import { Button } from "@/components/ui/button";
@@ -155,35 +156,23 @@ export const RiseArcApplicationForm = ({ open, onOpenChange }: RiseArcApplicatio
     return [...array, item];
   };
 
+  const stepSchemas = {
+    1: z.object({ fullName: z.string().min(1), email: z.string().email() }),
+    2: z.object({ challenges: z.array(z.string()).min(1) }),
+    3: z.object({ internalExperience: z.string().min(1) }),
+    4: z.object({ statements: z.array(z.string()).min(1) }),
+    5: z.object({ triedOptions: z.array(z.string()).min(1) }),
+    6: z.object({ needs: z.array(z.string()).min(1) }),
+    7: z.object({ desiredShift: z.string().min(1) }),
+    9: z.object({ whereAreYou: z.string().min(1) }),
+    10: z.object({ finalCheckin: z.string().min(1) }),
+  } as const;
+
   const canProceed = () => {
-    switch (step) {
-      case 1:
-        return (
-          formData.fullName.trim().length > 0 &&
-          formData.email.trim().length > 0 &&
-          formData.email.includes("@")
-        );
-      case 2:
-        return formData.challenges.length > 0;
-      case 3:
-        return formData.internalExperience.trim().length > 0;
-      case 4:
-        return formData.statements.length > 0;
-      case 5:
-        return formData.triedOptions.length > 0;
-      case 6:
-        return formData.needs.length > 0;
-      case 7:
-        return formData.desiredShift.trim().length > 0;
-      case 8:
-        return true;
-      case 9:
-        return formData.whereAreYou.length > 0;
-      case 10:
-        return formData.finalCheckin.length > 0;
-      default:
-        return true;
-    }
+    if (step === 8) return true;
+    const schema = stepSchemas[step as keyof typeof stepSchemas];
+    if (!schema) return true;
+    return schema.safeParse(formData).success;
   };
 
   const handleNext = () => {
