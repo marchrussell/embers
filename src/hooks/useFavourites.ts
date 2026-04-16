@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { toast } from "sonner";
 
@@ -8,8 +8,8 @@ import { supabase } from "@/integrations/supabase/client";
 interface UseFavouritesReturn {
   favouriteIds: string[];
   isFavourite: (sessionId: string) => boolean;
-  toggleFavourite: (sessionId: string) => Promise<void>;
-  removeFavourite: (sessionId: string) => Promise<void>;
+  toggleFavourite: (sessionId: string) => void;
+  removeFavourite: (sessionId: string) => void;
   loading: boolean;
 }
 
@@ -32,77 +32,98 @@ export function useFavourites(): UseFavouritesReturn {
     enabled: !!user?.id,
   });
 
+  const toggleMutation = useMutation({
+    mutationFn: async (sessionId: string) => {
+      const isFav = queryClient.getQueryData<string[]>(queryKey)?.includes(sessionId);
+      if (isFav) {
+        const { error } = await supabase
+          .from("user_favourites")
+          .delete()
+          .eq("user_id", user!.id)
+          .eq("session_id", sessionId);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from("user_favourites")
+          .insert({ user_id: user!.id, session_id: sessionId });
+        if (error) throw error;
+      }
+    },
+    onMutate: async (sessionId) => {
+      await queryClient.cancelQueries({ queryKey });
+      const prev = queryClient.getQueryData<string[]>(queryKey);
+      const isFav = prev?.includes(sessionId);
+      queryClient.setQueryData<string[]>(queryKey, (old = []) =>
+        isFav ? old.filter((id) => id !== sessionId) : [...old, sessionId]
+      );
+      return { prev, wasAdded: !isFav };
+    },
+    onError: (_err, _sessionId, context) => {
+      queryClient.setQueryData(queryKey, context?.prev);
+      toast.error("Failed to update favourites");
+    },
+    onSuccess: (_data, _sessionId, context) => {
+      toast.success(context?.wasAdded ? "Added to favourites" : "Removed from favourites");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey });
+    },
+  });
+
+  const removeMutation = useMutation({
+    mutationFn: async (sessionId: string) => {
+      const { error } = await supabase
+        .from("user_favourites")
+        .delete()
+        .eq("user_id", user!.id)
+        .eq("session_id", sessionId);
+      if (error) throw error;
+    },
+    onMutate: async (sessionId) => {
+      await queryClient.cancelQueries({ queryKey });
+      const prev = queryClient.getQueryData<string[]>(queryKey);
+      queryClient.setQueryData<string[]>(queryKey, (old = []) =>
+        old.filter((id) => id !== sessionId)
+      );
+      return { prev };
+    },
+    onError: (_err, _sessionId, context) => {
+      queryClient.setQueryData(queryKey, context?.prev);
+      toast.error("Failed to remove from favourites");
+    },
+    onSuccess: () => {
+      toast.success("Removed from favourites");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey });
+    },
+  });
+
   const isFavourite = useCallback(
     (sessionId: string) => favouriteIds.includes(sessionId),
     [favouriteIds]
   );
 
   const toggleFavourite = useCallback(
-    async (sessionId: string) => {
+    (sessionId: string) => {
       if (!user?.id) {
         toast.error("Please sign in to save favourites");
         return;
       }
-
-      const isCurrentlyFavourited = favouriteIds.includes(sessionId);
-
-      if (isCurrentlyFavourited) {
-        const { error } = await supabase
-          .from("user_favourites")
-          .delete()
-          .eq("user_id", user.id)
-          .eq("session_id", sessionId);
-
-        if (error) {
-          toast.error("Failed to remove from favourites");
-          return;
-        }
-
-        queryClient.setQueryData<string[]>(queryKey, (prev) =>
-          (prev || []).filter((id) => id !== sessionId)
-        );
-        toast.success("Removed from favourites");
-      } else {
-        const { error } = await supabase
-          .from("user_favourites")
-          .insert({ user_id: user.id, session_id: sessionId });
-
-        if (error) {
-          toast.error("Failed to add to favourites");
-          return;
-        }
-
-        queryClient.setQueryData<string[]>(queryKey, (prev) => [...(prev || []), sessionId]);
-        toast.success("Added to favourites");
-      }
+      toggleMutation.mutate(sessionId);
     },
-    [user?.id, favouriteIds, queryClient, queryKey]
+    [user?.id, toggleMutation]
   );
 
   const removeFavourite = useCallback(
-    async (sessionId: string) => {
+    (sessionId: string) => {
       if (!user?.id) {
         toast.error("Please sign in to manage favourites");
         return;
       }
-
-      const { error } = await supabase
-        .from("user_favourites")
-        .delete()
-        .eq("user_id", user.id)
-        .eq("session_id", sessionId);
-
-      if (error) {
-        toast.error("Failed to remove from favourites");
-        return;
-      }
-
-      queryClient.setQueryData<string[]>(queryKey, (prev) =>
-        (prev || []).filter((id) => id !== sessionId)
-      );
-      toast.success("Removed from favourites");
+      removeMutation.mutate(sessionId);
     },
-    [user?.id, queryClient, queryKey]
+    [user?.id, removeMutation]
   );
 
   return {

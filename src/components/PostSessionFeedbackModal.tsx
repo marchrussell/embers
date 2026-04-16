@@ -6,7 +6,7 @@ import { ButtonLoadingSpinner } from "@/components/skeletons";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { supabase } from "@/integrations/supabase/client";
+import { useSubmitSessionFeedback } from "@/hooks/useSubmitSessionFeedback";
 
 interface PostSessionFeedbackModalProps {
   open: boolean;
@@ -26,60 +26,17 @@ export function PostSessionFeedbackModal({
   const [rating, setRating] = useState<number | null>(null);
   const [helpedWithGoal, setHelpedWithGoal] = useState<boolean | null>(null);
   const [feedbackText, setFeedbackText] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { mutate: submitFeedback, isPending: isSubmitting } = useSubmitSessionFeedback();
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!rating) {
       toast.error("Please rate your session");
       return;
     }
-
-    setIsSubmitting(true);
-
-    try {
-      // Save feedback
-      const { error } = await supabase.from("session_feedback").insert({
-        user_id: userId,
-        class_id: sessionId,
-        rating,
-        helped_with_goal: helpedWithGoal,
-        feedback_text: feedbackText || null,
-      });
-
-      if (error) throw error;
-
-      // Update user preferences engagement_patterns with this feedback
-      const { data: currentPrefs } = await supabase
-        .from("user_preferences")
-        .select("engagement_patterns")
-        .eq("user_id", userId)
-        .maybeSingle();
-
-      const patterns = (currentPrefs?.engagement_patterns as any) || {};
-      const sessionRatings = patterns.session_ratings || {};
-      sessionRatings[sessionId] = {
-        rating,
-        helped: helpedWithGoal,
-        timestamp: new Date().toISOString(),
-      };
-
-      await supabase.from("user_preferences").upsert({
-        user_id: userId,
-        engagement_patterns: {
-          ...patterns,
-          session_ratings: sessionRatings,
-          last_feedback_date: new Date().toISOString(),
-        },
-      });
-
-      toast.success("Thank you for your feedback! 💛");
-      onClose();
-    } catch (error) {
-      console.error("Error submitting feedback:", error);
-      toast.error("Failed to save feedback");
-    } finally {
-      setIsSubmitting(false);
-    }
+    submitFeedback(
+      { userId, sessionId, rating, helpedWithGoal, feedbackText },
+      { onSuccess: onClose }
+    );
   };
 
   const handleSkip = () => {

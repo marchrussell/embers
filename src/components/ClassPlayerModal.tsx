@@ -16,6 +16,7 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavourites } from "@/hooks/useFavourites";
+import { useMarkSessionComplete } from "@/hooks/useMarkSessionComplete";
 import { supabase } from "@/integrations/supabase/client";
 import { analytics } from "@/lib/posthog";
 
@@ -34,6 +35,7 @@ export const ClassPlayerModal = ({
 }: ClassPlayerModalProps) => {
   const { user } = useAuth();
   const { isFavourite, toggleFavourite } = useFavourites();
+  const markSessionCompleteMutation = useMarkSessionComplete();
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -317,53 +319,15 @@ export const ClassPlayerModal = ({
     }
   };
 
-  const markSessionComplete = async () => {
-    if (!user?.id || !classId) return;
-
-    try {
-      // Mark session as completed in user_progress
-      const { data: existingProgress } = await supabase
-        .from("user_progress")
-        .select("*")
-        .eq("user_id", user.id)
-        .eq("class_id", classId)
-        .maybeSingle();
-
-      if (existingProgress) {
-        const { error } = await supabase
-          .from("user_progress")
-          .update({
-            completed: true,
-            completed_at: new Date().toISOString(),
-            last_position_seconds: 0,
-          })
-          .eq("id", existingProgress.id);
-
-        if (error) {
-          console.error("Error updating progress:", error);
-        }
-      } else {
-        const { error } = await supabase.from("user_progress").insert({
-          user_id: user.id,
-          class_id: classId,
-          completed: true,
-          completed_at: new Date().toISOString(),
-          last_position_seconds: 0,
-        });
-
-        if (error) {
-          console.error("Error inserting progress:", error);
-        }
-      }
-
-      analytics.sessionCompleted(classId, classData?.title ?? "", classData?.duration_minutes ?? 0);
-
-      // Refresh stats and show completion modal
-      await fetchUserStatsAndProfile();
-      setShowCompletionModal(true);
-    } catch (error) {
-      console.error("Error marking session complete:", error);
-    }
+  const markSessionComplete = () => {
+    if (!classId) return;
+    markSessionCompleteMutation.mutate(classId, {
+      onSuccess: async () => {
+        analytics.sessionCompleted(classId, classData?.title ?? "", classData?.duration_minutes ?? 0);
+        await fetchUserStatsAndProfile();
+        setShowCompletionModal(true);
+      },
+    });
   };
 
   const handleFavourite = () => {
