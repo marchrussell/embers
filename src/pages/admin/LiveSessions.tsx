@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import {
   ChevronDown,
@@ -47,7 +47,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -57,60 +56,12 @@ import { useStorageUpload } from "@/hooks/useStorageUpload";
 import { supabase } from "@/integrations/supabase/client";
 
 import { NTH_LABELS, WEEKDAY_LABELS } from "./adminScheduleUtils";
+import { useAdminLiveSessionConfigs } from "./hooks/useAdminLiveSessionConfigs";
+import { useAdminLiveSessions } from "./hooks/useAdminLiveSessions";
+import { LiveSession, LiveSessionConfig, LiveSessionDetails, SessionType } from "./types";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any;
-
-type SessionType = string;
-
-interface LiveSession {
-  id: string;
-  title: string;
-  description: string | null;
-  start_time: string;
-  end_time: string | null;
-  status: string;
-  session_type: SessionType | null;
-  daily_room_name: string | null;
-  daily_room_url: string | null;
-  guest_token: string | null;
-  guest_link_expires_at: string | null;
-  recording_enabled: boolean;
-  attendee_count: number;
-  created_at: string;
-}
-
-interface LiveSessionDetails {
-  id: string;
-  linked_session_id: string;
-  session_title: string | null;
-  short_description: string | null;
-  photo_url: string | null;
-  what_to_expect: string[];
-  name: string | null;
-  title: string | null;
-  guest_join_url: string | null;
-  is_active: boolean;
-}
-
-interface LiveSessionConfig {
-  id: string;
-  session_type: SessionType;
-  title: string;
-  subtitle: string | null;
-  recurrence_type: "weekly" | "nthWeekday" | null;
-  weekdays: number[] | null;
-  weekday: number | null;
-  nth: number | null;
-  time: string | null;
-  timezone: string;
-  duration: string | null;
-  recurrence_label: string | null;
-  cta_label: string | null;
-  event_type: string | null;
-  format: string | null;
-  is_active: boolean;
-}
 
 const SESSION_TYPE_COLORS: Record<string, string> = {
   "weekly-reset": "bg-blue-500/20 text-blue-300 border-blue-500/30",
@@ -735,50 +686,8 @@ const AdminLiveSessions = () => {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [typeFilter, setTypeFilter] = useState<SessionType | "all">("all");
 
-  // Session configs
-  const { data: configs = [], isLoading: configsLoading } = useQuery<LiveSessionConfig[]>({
-    queryKey: ["admin-live-session-configs"],
-    queryFn: async (): Promise<LiveSessionConfig[]> => {
-      const { data, error } = await db
-        .from("live_session_configs")
-        .select("*")
-        .order("session_type");
-      if (error) throw error;
-      return (data as unknown as LiveSessionConfig[]) ?? [];
-    },
-    enabled: !!isAdmin,
-  });
-
-  // Sessions + details
-  const { data: sessionsData = { sessions: [], sessionDetails: new Map() }, isLoading } = useQuery<{
-    sessions: LiveSession[];
-    sessionDetails: Map<string, LiveSessionDetails>;
-  }>({
-    queryKey: ["admin-live-sessions"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("live_sessions")
-        .select("*")
-        .order("start_time", { ascending: false });
-      if (error) throw error;
-      const sessionList = (data ?? []) as unknown as LiveSession[];
-      const detailsMap = new Map<string, LiveSessionDetails>();
-      if (sessionList.length > 0) {
-        const { data: detailsData } = await db
-          .from("live_session_details")
-          .select("*")
-          .in(
-            "linked_session_id",
-            sessionList.map((s) => s.id)
-          );
-        ((detailsData ?? []) as LiveSessionDetails[]).forEach((d) => {
-          detailsMap.set(d.linked_session_id, d);
-        });
-      }
-      return { sessions: sessionList, sessionDetails: detailsMap };
-    },
-    enabled: !!isAdmin,
-  });
+  const { data: configs = [], isLoading: configsLoading } = useAdminLiveSessionConfigs();
+  const { sessionsData, isLoading, fetchRecordingMutation } = useAdminLiveSessions();
 
   const sessions = sessionsData.sessions;
   const sessionDetails = sessionsData.sessionDetails;
@@ -791,6 +700,7 @@ const AdminLiveSessions = () => {
     end_time: "",
     session_type: "" as SessionType | "",
     recording_enabled: false,
+    recording_url: "",
   };
   const [sessionForm, setSessionForm] = useState(emptyForm);
 
@@ -842,6 +752,7 @@ const AdminLiveSessions = () => {
       end_time: session.end_time ? session.end_time.slice(0, 16) : "",
       session_type: session.session_type ?? "",
       recording_enabled: session.recording_enabled,
+      recording_url: session.recording_url ?? "",
     });
     const details = sessionDetails.get(session.id);
     if (details) {
@@ -898,6 +809,7 @@ const AdminLiveSessions = () => {
             end_time: sessionForm.end_time || null,
             session_type: sessionForm.session_type,
             recording_enabled: sessionForm.recording_enabled,
+            recording_url: sessionForm.recording_url || null,
           })
           .eq("id", editingSession.id);
         if (error) throw error;
@@ -1188,6 +1100,19 @@ const AdminLiveSessions = () => {
                 <Label>Enable Recording</Label>
               </div>
 
+              {editingSession && (
+                <div className="space-y-2">
+                  <Label>Recording URL (optional)</Label>
+                  <Input
+                    placeholder="Paste recording URL to make replay available"
+                    value={sessionForm.recording_url}
+                    onChange={(e) =>
+                      setSessionForm((p) => ({ ...p, recording_url: e.target.value }))
+                    }
+                  />
+                </div>
+              )}
+
               {/* Details toggle */}
               <button
                 type="button"
@@ -1400,94 +1325,146 @@ const AdminLiveSessions = () => {
             <AdminTable
               headers={[
                 "Session",
-                "Type",
                 "Status",
                 "Start Time",
-                "Attendees",
                 "Room",
+                "Recording",
                 "Guest Link",
                 "Actions",
               ]}
             >
               {filteredSessions.map((session) => {
                 const details = sessionDetails.get(session.id);
+                const isFetchingThis =
+                  fetchRecordingMutation.isPending &&
+                  fetchRecordingMutation.variables?.sessionId === session.id;
                 return (
                   <TableRow key={session.id} className={adminTableRowClass}>
+                    {/* Session — title + type badge + attendee count */}
                     <TableCell className={adminTableCellClass}>
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-6">
                         {details?.photo_url && (
                           <img
                             src={details.photo_url}
                             alt=""
-                            className="h-9 w-9 flex-shrink-0 rounded-md object-cover"
+                            className="h-12 w-12 flex-shrink-0 rounded-md object-cover"
                           />
                         )}
-                        <div>
+                        <div className="space-y-2">
                           <p className="font-medium">{session.title}</p>
+                          <div className="flex items-center gap-2">
+                            {getTypeBadge(session.session_type)}
+                            <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                              <Users className="h-3 w-3" />
+                              {session.attendee_count}
+                            </span>
+                          </div>
                           {details?.name && (
                             <p className="text-xs text-muted-foreground">
                               {details.name}
                               {details.title ? ` · ${details.title}` : ""}
                             </p>
                           )}
-                          {!details?.name && session.description && (
-                            <p className="max-w-xs truncate text-xs text-muted-foreground">
-                              {session.description}
-                            </p>
-                          )}
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell className={adminTableCellClass}>
-                      {getTypeBadge(session.session_type)}
-                    </TableCell>
+
+                    {/* Status */}
                     <TableCell className={adminTableCellClass}>
                       {getStatusBadge(session.status)}
                     </TableCell>
+
+                    {/* Start Time */}
                     <TableCell className={adminTableCellClass}>
-                      {format(new Date(session.start_time), "MMM d, yyyy h:mm a")}
-                    </TableCell>
-                    <TableCell className={adminTableCellClass}>
-                      <span className="flex items-center gap-1">
-                        <Users className="h-5 w-5" />
-                        {session.attendee_count}
+                      <span className="text-sm">
+                        {format(new Date(session.start_time), "MMM d, yyyy")}
                       </span>
+                      <p className="text-xs text-muted-foreground">
+                        {format(new Date(session.start_time), "h:mm a")}
+                      </p>
                     </TableCell>
+
+                    {/* Room */}
                     <TableCell className={adminTableCellClass}>
                       {session.daily_room_name ? (
                         <Badge variant="outline" className="font-mono text-xs">
                           {session.daily_room_name}
                         </Badge>
                       ) : (
-                        <span className="text-sm text-muted-foreground">Not created</span>
+                        <span className="text-xs text-muted-foreground">Not created</span>
                       )}
                     </TableCell>
+
+                    {/* Recording */}
+                    <TableCell className={adminTableCellClass}>
+                      {session.recording_url ? (
+                        <a
+                          href={session.recording_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 rounded-md bg-green-500/10 px-2 py-1 text-xs font-medium text-green-400 hover:bg-green-500/20"
+                        >
+                          <Video className="h-3.5 w-3.5" />
+                          Ready
+                        </a>
+                      ) : session.recording_enabled && session.daily_room_name ? (
+                        <Button
+                          variant="ghost"
+                          className="h-7 px-2 text-xs"
+                          onClick={() =>
+                            fetchRecordingMutation.mutate({
+                              sessionId: session.id,
+                              roomName: session.daily_room_name!,
+                            })
+                          }
+                          disabled={isFetchingThis || session.status !== "ended"}
+                          title={
+                            session.status !== "ended"
+                              ? "Available after session ends"
+                              : "Fetch from Daily.co"
+                          }
+                        >
+                          {isFetchingThis ? (
+                            <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" />
+                          ) : (
+                            <RefreshCw className="mr-1 h-3.5 w-3.5" />
+                          )}
+                          Fetch
+                        </Button>
+                      ) : (
+                        <span className="text-xs text-muted-foreground">—</span>
+                      )}
+                    </TableCell>
+
+                    {/* Guest Link */}
                     <TableCell className={adminTableCellClass}>
                       {session.guest_token ? (
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-3">
                           <Badge variant="secondary" className="text-xs">
                             Active
                           </Badge>
                           <Button
                             variant="ghost"
                             size="icon"
+                            className="h-7 w-7"
                             title="Regenerate link"
                             onClick={() => handleGenerateGuestLink(session)}
                             disabled={actionLoading === session.id}
                           >
                             {actionLoading === session.id ? (
-                              <Loader2 className="h-4 w-4 animate-spin" />
+                              <Loader2 className="h-3.5 w-3.5 animate-spin" />
                             ) : (
-                              <RefreshCw className="h-4 w-4" />
+                              <RefreshCw className="h-3.5 w-3.5" />
                             )}
                           </Button>
                           <Button
                             variant="ghost"
                             size="icon"
+                            className="h-7 w-7"
                             title="Copy guest link"
                             onClick={() => handleCopyGuestLink(session)}
                           >
-                            <Copy className="h-4 w-4" />
+                            <Copy className="h-3.5 w-3.5" />
                           </Button>
                         </div>
                       ) : (
@@ -1497,69 +1474,80 @@ const AdminLiveSessions = () => {
                           disabled={actionLoading === session.id}
                         >
                           {actionLoading === session.id ? (
-                            <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+                            <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" />
                           ) : (
-                            <Link2 className="mr-1 h-4 w-4" />
+                            <Link2 className="mr-1 h-3.5 w-3.5" />
                           )}
                           Generate
                         </Button>
                       )}
                     </TableCell>
+
+                    {/* Actions — stacked vertically */}
                     <TableCell className={adminTableCellClass}>
-                      <div className="flex items-center gap-1">
-                        {session.status === "scheduled" && (
+                      <div className="flex flex-col gap-5">
+                        {/* Row 1: live status + test/join */}
+                        <div className="flex items-center gap-3">
+                          {session.status === "scheduled" && (
+                            <Button
+                              className="h-7 px-2 text-xs"
+                              onClick={() => handleStatusChange(session, "live")}
+                              disabled={actionLoading === session.id}
+                            >
+                              <Play className="mr-1 h-3.5 w-3.5" />
+                              Go Live
+                            </Button>
+                          )}
+                          {session.status === "live" && (
+                            <Button
+                              variant="destructive"
+                              className="h-7 px-2 text-xs"
+                              onClick={() => handleStatusChange(session, "ended")}
+                              disabled={actionLoading === session.id}
+                            >
+                              <Square className="mr-1 h-3.5 w-3.5" />
+                              End
+                            </Button>
+                          )}
                           <Button
-                            variant="default"
-                            onClick={() => handleStatusChange(session, "live")}
-                            disabled={actionLoading === session.id}
+                            variant="outline"
+                            className="h-7 px-2 text-xs"
+                            onClick={() => window.open(`/live/${session.id}?role=host`, "_blank")}
                           >
-                            <Play className="mr-1 h-5 w-5" />
-                            Go Live
+                            <Video className="mr-1 h-3.5 w-3.5" />
+                            {session.status === "scheduled" ? "Test" : "Join"}
                           </Button>
-                        )}
-                        {session.status === "live" && (
+                        </div>
+                        {/* Row 2: copy host / edit / delete */}
+                        <div className="flex items-center gap-3">
                           <Button
-                            variant="destructive"
-                            onClick={() => handleStatusChange(session, "ended")}
-                            disabled={actionLoading === session.id}
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7"
+                            title="Copy host link"
+                            onClick={() => handleCopyHostLink(session)}
                           >
-                            <Square className="mr-1 h-5 w-5" />
-                            End
+                            <Copy className="h-3.5 w-3.5" />
                           </Button>
-                        )}
-                        <Button
-                          variant="outline"
-                          onClick={() => window.open(`/live/${session.id}?role=host`, "_blank")}
-                        >
-                          <Video className="mr-1 h-5 w-5" />
-                          {session.status === "scheduled" ? "Test" : "Join"}
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          title="Copy host link"
-                          onClick={() => handleCopyHostLink(session)}
-                        >
-                          <Copy className="h-5 w-5" />
-                        </Button>
-                        <Separator orientation="vertical" className="mx-1 h-6" />
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          title="Edit session"
-                          onClick={() => openEditDialog(session)}
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          title="Delete session"
-                          onClick={() => handleDelete(session)}
-                          className="text-destructive hover:text-destructive"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7"
+                            title="Edit session"
+                            onClick={() => openEditDialog(session)}
+                          >
+                            <Pencil className="h-3.5 w-3.5" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 text-destructive hover:text-destructive"
+                            title="Delete session"
+                            onClick={() => handleDelete(session)}
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        </div>
                       </div>
                     </TableCell>
                   </TableRow>
