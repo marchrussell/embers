@@ -196,6 +196,10 @@ serve(async (req) => {
       tokenProperties.enable_screenshare = true;
       tokenProperties.start_video_off = false;
       tokenProperties.start_audio_off = false;
+      // Auto-start cloud recording when host joins, if enabled for this session
+      if (session.recording_enabled) {
+        tokenProperties.start_cloud_recording = true;
+      }
     } else if (tokenRole === 'guest') {
       // Guest teacher: can broadcast but NOT see participant count or list
       tokenProperties.is_owner = false;

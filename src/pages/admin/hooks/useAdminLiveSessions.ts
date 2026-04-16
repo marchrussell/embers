@@ -51,9 +51,9 @@ export const useAdminLiveSessions = () => {
   });
 
   const fetchRecordingMutation = useMutation({
-    mutationFn: async ({ sessionId, roomName }: { sessionId: string; roomName: string }) => {
+    mutationFn: async ({ sessionId, roomName, sessionType }: { sessionId: string; roomName: string; sessionType: string | null }) => {
       const { data, error } = await supabase.functions.invoke("daily-fetch-recording", {
-        body: { sessionId, roomName },
+        body: { sessionId, roomName, sessionType },
       });
       if (error) throw error;
       return data as { recording_url: string };

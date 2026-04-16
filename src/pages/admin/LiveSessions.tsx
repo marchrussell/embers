@@ -1092,13 +1092,19 @@ const AdminLiveSessions = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
-                <Switch
-                  checked={sessionForm.recording_enabled}
-                  onCheckedChange={(v) => setSessionForm((p) => ({ ...p, recording_enabled: v }))}
-                />
-                <Label>Enable Recording</Label>
-              </div>
+              {!editingSession ? (
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={sessionForm.recording_enabled}
+                    onCheckedChange={(v) => setSessionForm((p) => ({ ...p, recording_enabled: v }))}
+                  />
+                  <Label>Enable Recording</Label>
+                </div>
+              ) : (
+                <p className="text-muted-foreground">
+                  Recording is configured at room creation and cannot be changed after.
+                </p>
+              )}
 
               {editingSession && (
                 <div className="space-y-2">
@@ -1415,6 +1421,7 @@ const AdminLiveSessions = () => {
                             fetchRecordingMutation.mutate({
                               sessionId: session.id,
                               roomName: session.daily_room_name!,
+                              sessionType: session.session_type,
                             })
                           }
                           disabled={isFetchingThis || session.status !== "ended"}
@@ -1490,31 +1497,31 @@ const AdminLiveSessions = () => {
                         <div className="flex items-center gap-3">
                           {session.status === "scheduled" && (
                             <Button
-                              className="h-7 px-2 text-xs"
+                              className="h-9 px-3 text-xs"
                               onClick={() => handleStatusChange(session, "live")}
                               disabled={actionLoading === session.id}
                             >
-                              <Play className="mr-1 h-3.5 w-3.5" />
+                              <Play className="h-3.5 w-3.5" />
                               Go Live
                             </Button>
                           )}
                           {session.status === "live" && (
                             <Button
                               variant="destructive"
-                              className="h-7 px-2 text-xs"
+                              className="h-9 px-3 text-xs"
                               onClick={() => handleStatusChange(session, "ended")}
                               disabled={actionLoading === session.id}
                             >
-                              <Square className="mr-1 h-3.5 w-3.5" />
+                              <Square className="h-3.5 w-3.5" />
                               End
                             </Button>
                           )}
                           <Button
                             variant="outline"
-                            className="h-7 px-2 text-xs"
+                            className="h-9 px-3 text-xs"
                             onClick={() => window.open(`/live/${session.id}?role=host`, "_blank")}
                           >
-                            <Video className="mr-1 h-3.5 w-3.5" />
+                            <Video className="h-3.5 w-3.5" />
                             {session.status === "scheduled" ? "Test" : "Join"}
                           </Button>
                         </div>
