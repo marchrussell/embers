@@ -790,6 +790,7 @@ const AdminLiveSessions = () => {
 
   // Create or update session
   const handleSave = async () => {
+    console.log('sessionForm', sessionForm)
     if (!sessionForm.title || !sessionForm.start_time || !sessionForm.session_type) {
       toast.error("Title, start time, and session type are required");
       return;
