@@ -86,7 +86,7 @@ const Onboarding = () => {
   }
 
   if (!hasSubscription) {
-    return <SubscriptionModal open={true} onClose={() => navigate("/auth")} />;
+    return <SubscriptionModal open={true} onClose={() => navigate("/")} />;
   }
 
   return (
