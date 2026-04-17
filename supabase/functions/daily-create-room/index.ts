@@ -29,12 +29,15 @@ serve(async (req) => {
       throw new Error('No authorization header');
     }
 
+    const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY');
     const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
-    
+    const supabaseUser = createClient(SUPABASE_URL!, SUPABASE_ANON_KEY!, {
+      global: { headers: { Authorization: authHeader } },
+    });
+
     // Verify the user is an admin
-    const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-    
+    const { data: { user }, error: authError } = await supabaseUser.auth.getUser();
+
     if (authError || !user) {
       throw new Error('Unauthorized');
     }
