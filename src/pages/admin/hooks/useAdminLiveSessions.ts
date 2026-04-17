@@ -90,7 +90,15 @@ export const useAdminLiveSessions = () => {
   });
 
   const fetchRecordingMutation = useMutation({
-    mutationFn: async ({ sessionId, roomName, sessionType }: { sessionId: string; roomName: string; sessionType: string | null }) => {
+    mutationFn: async ({
+      sessionId,
+      roomName,
+      sessionType,
+    }: {
+      sessionId: string;
+      roomName: string;
+      sessionType: string | null;
+    }) => {
       const { data, error } = await supabase.functions.invoke("daily-fetch-recording", {
         body: { sessionId, roomName, sessionType },
       });
@@ -133,8 +141,7 @@ export const useAdminLiveSessions = () => {
       toast.success("Session deleted");
     },
     onError: (err) => {
-      const msg =
-        err instanceof z.ZodError ? err.errors[0].message : "Failed to delete session";
+      const msg = err instanceof z.ZodError ? err.errors[0].message : "Failed to delete session";
       toast.error(msg);
     },
   });
@@ -226,12 +233,21 @@ export const useAdminLiveSessions = () => {
       }
 
       if (detailsPayload) {
-        const payload = { linked_session_id: sessionId, ...detailsPayload };
+        const payload = {
+          linked_session_id: sessionId,
+          session_date: form.start_time,
+          ...detailsPayload,
+        };
         if (existingDetailsId) {
           await db.from("live_session_details").update(payload).eq("id", existingDetailsId);
         } else {
           await db.from("live_session_details").insert(payload);
         }
+      } else if (editingSessionId && existingDetailsId) {
+        await db
+          .from("live_session_details")
+          .update({ session_date: form.start_time})
+          .eq("id", existingDetailsId);
       }
 
       return { sessionId, isNew: !editingSessionId };

@@ -77,9 +77,16 @@ serve(async (req) => {
       
       // Guest teachers can only join when session is live
       canJoinNow = session.status === 'live';
-      
+
       if (!canJoinNow) {
-        throw new Error('Waiting for host to start the session');
+        return new Response(
+          JSON.stringify({
+            waitingRoom: true,
+            sessionStatus: session.status,
+            message: 'Waiting for the host to start the session.',
+          }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
       }
       
       console.log('Guest teacher joining session:', sessionId);

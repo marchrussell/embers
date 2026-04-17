@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import { Calendar, Clock, Video } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -14,6 +15,7 @@ import {
   parseUTCDateForDisplay,
   useNextGuestTeacher,
 } from "@/hooks/useNextGuestTeacher";
+import { supabase } from "@/integrations/supabase/client";
 import { CLOUD_IMAGES, experienceImages, getCloudImageUrl } from "@/lib/cloudImageUrls";
 import { getNextDateFromConfig } from "@/lib/experienceDateUtils";
 
@@ -57,6 +59,24 @@ const LiveSession = () => {
 
   const { data: configs = [], isLoading: configsLoading } = useLiveSessionConfigs();
   const { teacher: nextGuestTeacher, loading: guestLoading } = useNextGuestTeacher();
+
+  // Poll for a currently-live session of this type so we can link the Join button
+  const { data: liveSession } = useQuery({
+    queryKey: ["live-session-active", sessionId],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("live_sessions")
+        .select("id, status")
+        .eq("session_type", sessionId!)
+        .eq("status", "live")
+        .order("start_time", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      return data;
+    },
+    refetchInterval: 15_000,
+    enabled: !!sessionId,
+  });
 
   const config = configs.find((c) => c.session_type === sessionId) ?? null;
 
@@ -174,7 +194,7 @@ const LiveSession = () => {
     );
   }
 
-  const isLive = countdown.days === 0 && countdown.hours === 0 && countdown.minutes <= 5;
+  const isLive = !!liveSession;
   const teacherImage =
     session.teacherImage || (sessionId === "guest-session" ? session.image : marchPortrait);
   const whatToExpectItems = session.whatToExpect || DEFAULT_WHAT_TO_EXPECT;
@@ -280,7 +300,10 @@ const LiveSession = () => {
                 <p className="mb-8 font-light text-[#E6DBC7]/70">
                   The session is open now. Join when you're ready.
                 </p>
-                <Button className="rounded-full bg-[#E6DBC7] px-12 py-6 text-base font-medium text-[#1A1A1A] hover:bg-[#E6DBC7]/90">
+                <Button
+                  className="rounded-full bg-[#E6DBC7] px-12 py-6 text-base font-medium text-[#1A1A1A] hover:bg-[#E6DBC7]/90"
+                  onClick={() => window.open(`/live/${liveSession!.id}`, "_blank")}
+                >
                   Join Live Session
                 </Button>
               </div>

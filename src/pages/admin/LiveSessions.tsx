@@ -945,9 +945,20 @@ const AdminLiveSessions = () => {
                 <Label>Session Type *</Label>
                 <Select
                   value={sessionForm.session_type}
-                  onValueChange={(v) =>
-                    setSessionForm((p) => ({ ...p, session_type: v as SessionType }))
-                  }
+                  onValueChange={(v) => {
+                    const selected = configs.find((c) => c.session_type === v);
+                    setSessionForm((p) => {
+                      const update: typeof p = { ...p, session_type: v as SessionType };
+                      if (selected?.time) {
+                        const date = p.start_time
+                          ? p.start_time.slice(0, 10)
+                          : new Date().toISOString().slice(0, 10);
+                        const time = selected.time.replace(".", ":");
+                        update.start_time = `${date}T${time}`;
+                      }
+                      return update;
+                    });
+                  }}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select a type" />
@@ -1185,7 +1196,9 @@ const AdminLiveSessions = () => {
           </div>
 
           <Button onClick={handleSave} disabled={saveSessionMutation.isPending} className="w-full">
-            {saveSessionMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+            {saveSessionMutation.isPending ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : null}
             {editingSession ? "Save Changes" : "Create Session"}
           </Button>
         </div>
@@ -1290,10 +1303,16 @@ const AdminLiveSessions = () => {
                     {/* Start Time — parsed without timezone offset to display the UTC value as entered */}
                     <TableCell className={adminTableCellClass}>
                       <span className="text-sm">
-                        {format(new Date(session.start_time.slice(0, 16).replace(" ", "T")), "MMM d, yyyy")}
+                        {format(
+                          new Date(session.start_time.slice(0, 16).replace(" ", "T")),
+                          "MMM d, yyyy"
+                        )}
                       </span>
                       <p className="text-xs text-muted-foreground">
-                        {format(new Date(session.start_time.slice(0, 16).replace(" ", "T")), "h:mm a")}
+                        {format(
+                          new Date(session.start_time.slice(0, 16).replace(" ", "T")),
+                          "h:mm a"
+                        )}
                       </p>
                     </TableCell>
 

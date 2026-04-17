@@ -323,7 +323,11 @@ export const ClassPlayerModal = ({
     if (!classId) return;
     markSessionCompleteMutation.mutate(classId, {
       onSuccess: async () => {
-        analytics.sessionCompleted(classId, classData?.title ?? "", classData?.duration_minutes ?? 0);
+        analytics.sessionCompleted(
+          classId,
+          classData?.title ?? "",
+          classData?.duration_minutes ?? 0
+        );
         await fetchUserStatsAndProfile();
         setShowCompletionModal(true);
       },

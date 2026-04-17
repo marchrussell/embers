@@ -29,7 +29,7 @@ export function useNextGuestTeacher() {
         .from("live_session_details")
         .select("*")
         .eq("is_active", true)
-        .gte("session_date", now)
+        // .gte("session_date", now)
         .order("session_date", { ascending: true })
         .limit(1)
         .maybeSingle();
