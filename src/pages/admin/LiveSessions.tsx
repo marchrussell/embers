@@ -57,8 +57,8 @@ import { supabase } from "@/integrations/supabase/client";
 
 import { NTH_LABELS, WEEKDAY_LABELS } from "./adminScheduleUtils";
 import { useAdminLiveSessionConfigs } from "./hooks/useAdminLiveSessionConfigs";
-import { useAdminLiveSessions } from "./hooks/useAdminLiveSessions";
-import { LiveSession, LiveSessionConfig, LiveSessionDetails, SessionType } from "./types";
+import { type SaveSessionInput, useAdminLiveSessions } from "./hooks/useAdminLiveSessions";
+import { LiveSession, LiveSessionConfig, SessionType } from "./types";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any;
@@ -680,14 +680,20 @@ const AdminLiveSessions = () => {
   const queryClient = useQueryClient();
 
   // Instances state
-  const [isCreating, setIsCreating] = useState(false);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [editingSession, setEditingSession] = useState<LiveSession | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [typeFilter, setTypeFilter] = useState<SessionType | "all">("all");
 
   const { data: configs = [], isLoading: configsLoading } = useAdminLiveSessionConfigs();
-  const { sessionsData, isLoading, fetchRecordingMutation } = useAdminLiveSessions();
+  const {
+    sessionsData,
+    isLoading,
+    fetchRecordingMutation,
+    deleteSessionMutation,
+    statusChangeMutation,
+    saveSessionMutation,
+  } = useAdminLiveSessions();
 
   const sessions = sessionsData.sessions;
   const sessionDetails = sessionsData.sessionDetails;
@@ -789,138 +795,53 @@ const AdminLiveSessions = () => {
   };
 
   // Create or update session
-  const handleSave = async () => {
-    console.log('sessionForm', sessionForm)
-    if (!sessionForm.title || !sessionForm.start_time || !sessionForm.session_type) {
-      toast.error("Title, start time, and session type are required");
-      return;
-    }
+  const handleSave = () => {
+    const hasDetails =
+      showDetails &&
+      (detailsForm.session_title ||
+        detailsForm.short_description ||
+        detailsForm.photo_url ||
+        detailsForm.name ||
+        detailsForm.title ||
+        detailsForm.what_to_expect.some((item) => item.trim()));
 
-    setIsCreating(true);
-    try {
-      let sessionId: string;
+    const existingDetails = editingSession ? sessionDetails.get(editingSession.id) : undefined;
 
-      if (editingSession) {
-        const { error } = await supabase
-          .from("live_sessions")
-          .update({
-            title: sessionForm.title,
-            description: sessionForm.description || null,
-            start_time: sessionForm.start_time,
-            end_time: sessionForm.end_time || null,
-            session_type: sessionForm.session_type,
-            recording_enabled: sessionForm.recording_enabled,
-            recording_url: sessionForm.recording_url || null,
-          })
-          .eq("id", editingSession.id);
-        if (error) throw error;
-        sessionId = editingSession.id;
-        toast.success("Session updated");
-      } else {
-        const { data: newSession, error } = await supabase
-          .from("live_sessions")
-          .insert({
-            title: sessionForm.title,
-            description: sessionForm.description || null,
-            start_time: sessionForm.start_time,
-            end_time: sessionForm.end_time || null,
-            session_type: sessionForm.session_type,
-            recording_enabled: sessionForm.recording_enabled,
-            created_by: user?.id,
-          })
-          .select()
-          .single();
-        if (error) throw error;
-        sessionId = newSession.id;
+    const input: SaveSessionInput = {
+      form: {
+        title: sessionForm.title,
+        description: sessionForm.description,
+        start_time: sessionForm.start_time,
+        end_time: sessionForm.end_time,
+        session_type: sessionForm.session_type,
+        recording_enabled: sessionForm.recording_enabled,
+        recording_url: sessionForm.recording_url,
+      },
+      editingSessionId: editingSession?.id ?? null,
+      createdBy: user?.id,
+      detailsPayload: hasDetails
+        ? {
+            session_title: detailsForm.session_title || null,
+            short_description: detailsForm.short_description || null,
+            photo_url: detailsForm.photo_url || null,
+            what_to_expect: detailsForm.what_to_expect.filter((item) => item.trim()),
+            name: detailsForm.name || null,
+            title: detailsForm.title || null,
+          }
+        : null,
+      existingDetailsId: existingDetails?.id,
+    };
 
-        toast.success("Session created");
-
-        // Create Daily.co room — fire-and-forget so it doesn't block the dialog
-        supabase.functions
-          .invoke("daily-create-room", {
-            body: {
-              sessionId,
-              title: sessionForm.title,
-              startTime: sessionForm.start_time,
-              endTime: sessionForm.end_time,
-              recordingEnabled: sessionForm.recording_enabled,
-            },
-          })
-          .then(({ error: roomError }) => {
-            if (roomError) {
-              console.error("Daily.co room creation failed:", roomError);
-              toast.error("Room creation failed — session was saved but may need a room retry");
-            }
-          });
-      }
-
-      // Save session details if shown and has content
-      const hasDetails =
-        showDetails &&
-        (detailsForm.session_title ||
-          detailsForm.short_description ||
-          detailsForm.photo_url ||
-          detailsForm.name ||
-          detailsForm.title ||
-          detailsForm.what_to_expect.some((item) => item.trim()));
-
-      if (hasDetails) {
-        const existingDetails = sessionDetails.get(sessionId);
-        const detailsPayload = {
-          linked_session_id: sessionId,
-          session_title: detailsForm.session_title || null,
-          short_description: detailsForm.short_description || null,
-          photo_url: detailsForm.photo_url || null,
-          what_to_expect: detailsForm.what_to_expect.filter((item) => item.trim()),
-          name: detailsForm.name || null,
-          title: detailsForm.title || null,
-        };
-
-        if (existingDetails) {
-          await db.from("live_session_details").update(detailsPayload).eq("id", existingDetails.id);
-        } else {
-          await db.from("live_session_details").insert(detailsPayload);
-        }
-      }
-
-      resetDialog();
-      await queryClient.invalidateQueries({ queryKey: ["admin-live-sessions"] });
-    } catch (err) {
-      console.error("Error saving session:", err);
-      toast.error(err instanceof Error ? err.message : "Failed to save session");
-    } finally {
-      setIsCreating(false);
-    }
+    saveSessionMutation.mutate(input, { onSuccess: resetDialog });
   };
 
   // Status change
-  const handleStatusChange = async (session: LiveSession, newStatus: string) => {
+  const handleStatusChange = (session: LiveSession, newStatus: string) => {
     setActionLoading(session.id);
-    try {
-      const { error } = await supabase
-        .from("live_sessions")
-        .update({ status: newStatus })
-        .eq("id", session.id);
-      if (error) throw error;
-      queryClient.setQueryData<{
-        sessions: LiveSession[];
-        sessionDetails: Map<string, LiveSessionDetails>;
-      }>(["admin-live-sessions"], (prev) =>
-        prev
-          ? {
-              ...prev,
-              sessions: prev.sessions.map((s) =>
-                s.id === session.id ? { ...s, status: newStatus } : s
-              ),
-            }
-          : prev
-      );
-      toast.success(`Session ${newStatus === "live" ? "started" : "ended"}`);
-    } catch (err) {
-      toast.error("Failed to update session status");
-    } finally {
-      setActionLoading(null);
-    }
+    statusChangeMutation.mutate(
+      { sessionId: session.id, newStatus: newStatus as "scheduled" | "live" | "ended" },
+      { onSettled: () => setActionLoading(null) }
+    );
   };
 
   // Generate guest link
@@ -957,24 +878,9 @@ const AdminLiveSessions = () => {
   };
 
   // Delete session
-  const handleDelete = async (session: LiveSession) => {
+  const handleDelete = (session: LiveSession) => {
     if (!confirm("Are you sure you want to delete this session?")) return;
-    try {
-      const { error } = await supabase.from("live_sessions").delete().eq("id", session.id);
-      if (error) throw error;
-      queryClient.setQueryData<{
-        sessions: LiveSession[];
-        sessionDetails: Map<string, LiveSessionDetails>;
-      }>(["admin-live-sessions"], (prev) => {
-        if (!prev) return prev;
-        const next = new Map(prev.sessionDetails);
-        next.delete(session.id);
-        return { sessions: prev.sessions.filter((s) => s.id !== session.id), sessionDetails: next };
-      });
-      toast.success("Session deleted");
-    } catch (err) {
-      toast.error("Failed to delete session");
-    }
+    deleteSessionMutation.mutate(session.id);
   };
 
   const getStatusBadge = (status: string) => {
@@ -1278,8 +1184,8 @@ const AdminLiveSessions = () => {
             )}
           </div>
 
-          <Button onClick={handleSave} disabled={isCreating} className="w-full">
-            {isCreating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+          <Button onClick={handleSave} disabled={saveSessionMutation.isPending} className="w-full">
+            {saveSessionMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
             {editingSession ? "Save Changes" : "Create Session"}
           </Button>
         </div>
@@ -1300,7 +1206,7 @@ const AdminLiveSessions = () => {
 
         {/* ── Instances Tab ── */}
         <TabsContent value="instances">
-          <div className="mb-4 flex items-center justify-between gap-4">
+          <div className="mb-6 flex items-center justify-between gap-4">
             {/* Filter tabs */}
             <div className="flex gap-2">
               {["all", ...configs.map((c) => c.session_type)].map((type) => (
@@ -1381,13 +1287,13 @@ const AdminLiveSessions = () => {
                       {getStatusBadge(session.status)}
                     </TableCell>
 
-                    {/* Start Time */}
+                    {/* Start Time — parsed without timezone offset to display the UTC value as entered */}
                     <TableCell className={adminTableCellClass}>
                       <span className="text-sm">
-                        {format(new Date(session.start_time), "MMM d, yyyy")}
+                        {format(new Date(session.start_time.slice(0, 16).replace(" ", "T")), "MMM d, yyyy")}
                       </span>
                       <p className="text-xs text-muted-foreground">
-                        {format(new Date(session.start_time), "h:mm a")}
+                        {format(new Date(session.start_time.slice(0, 16).replace(" ", "T")), "h:mm a")}
                       </p>
                     </TableCell>
 
@@ -1417,7 +1323,7 @@ const AdminLiveSessions = () => {
                       ) : session.recording_enabled && session.daily_room_name ? (
                         <Button
                           variant="ghost"
-                          className="h-7 px-2 text-xs"
+                          className="h-7 px-2"
                           onClick={() =>
                             fetchRecordingMutation.mutate({
                               sessionId: session.id,
@@ -1433,9 +1339,9 @@ const AdminLiveSessions = () => {
                           }
                         >
                           {isFetchingThis ? (
-                            <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" />
+                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
                           ) : (
-                            <RefreshCw className="mr-1 h-3.5 w-3.5" />
+                            <RefreshCw className="h-3.5 w-3.5" />
                           )}
                           Fetch
                         </Button>
@@ -1482,9 +1388,9 @@ const AdminLiveSessions = () => {
                           disabled={actionLoading === session.id}
                         >
                           {actionLoading === session.id ? (
-                            <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" />
+                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
                           ) : (
-                            <Link2 className="mr-1 h-3.5 w-3.5" />
+                            <Link2 className="h-3.5 w-3.5" />
                           )}
                           Generate
                         </Button>
