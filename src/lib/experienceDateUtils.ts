@@ -229,6 +229,29 @@ export function formatTime(time: string): string {
   return `${displayHours}:${displayMinutes} ${period}`;
 }
 
+// ── Live session date display helpers ────────────────────────────────────────
+
+/**
+ * Format a Date for display as "Wednesday, 21 May" (used on live session pages).
+ */
+export function formatGuestSessionDate(date: Date): string {
+  return date.toLocaleDateString("en-GB", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+  });
+}
+
+/**
+ * Parse a UTC ISO date string for display — extracts the UTC date to avoid
+ * local timezone shifting the day (e.g. 7:30 PM GMT appearing as the next day
+ * for users in UTC+5+).
+ */
+export function parseUTCDateForDisplay(isoString: string): Date {
+  const [year, month, day] = isoString.slice(0, 10).split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
+
 // ── Live session config → next date ──────────────────────────────────────────
 
 interface LiveSessionConfigRecurrence {

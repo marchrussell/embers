@@ -57,11 +57,7 @@ const Online = () => {
   const [shouldClearLibraryCategory, setShouldClearLibraryCategory] = useState(false);
 
   const { data: configs = [] } = useLiveSessionConfigs();
-  console.log("Live session initial data configs: ", configs);
-  //todo - we want guest-session type to show the next date of guest teacher for the recurrence_label
   const { teacher: nextGuestTeacher } = useNextGuestTeacher();
-  console.log("Live session next guest teacher: ", nextGuestTeacher);
-  // Derive active tab from URL — URL is the single source of truth
   const tabParam = searchParams.get("tab");
   const activeTab = tabParam && VALID_TABS.includes(tabParam) ? tabParam : "home";
 

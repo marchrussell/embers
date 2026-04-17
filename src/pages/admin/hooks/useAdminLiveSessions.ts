@@ -246,7 +246,7 @@ export const useAdminLiveSessions = () => {
       } else if (editingSessionId && existingDetailsId) {
         await db
           .from("live_session_details")
-          .update({ session_date: form.start_time})
+          .update({ session_date: form.start_time })
           .eq("id", existingDetailsId);
       }
 

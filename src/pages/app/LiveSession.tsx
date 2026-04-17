@@ -9,15 +9,18 @@ import { NavBar } from "@/components/NavBar";
 import OnlineFooter from "@/components/OnlineFooter";
 import OnlineHeader from "@/components/OnlineHeader";
 import { Button } from "@/components/ui/button";
-import { useLiveSessionConfigs } from "@/hooks/useLiveSessionConfigs";
+import { LiveSessionConfig, useLiveSessionConfigs } from "@/hooks/useLiveSessionConfigs";
 import {
-  formatGuestSessionDate,
-  parseUTCDateForDisplay,
-  useNextGuestTeacher,
-} from "@/hooks/useNextGuestTeacher";
+  LiveSessionEnrichment,
+  useNextLiveSessionDetails,
+} from "@/hooks/useNextLiveSessionDetails";
 import { supabase } from "@/integrations/supabase/client";
 import { CLOUD_IMAGES, experienceImages, getCloudImageUrl } from "@/lib/cloudImageUrls";
-import { getNextDateFromConfig } from "@/lib/experienceDateUtils";
+import {
+  formatGuestSessionDate,
+  getNextDateFromConfig,
+  parseUTCDateForDisplay,
+} from "@/lib/experienceDateUtils";
 
 const guestSessionImg = experienceImages.guestSession;
 const monthlyPresenceImg = experienceImages.monthlyBreathOnline;
@@ -53,12 +56,59 @@ interface SessionDisplay {
   whatToExpect?: string[];
 }
 
+function buildSessionDisplay(
+  config: LiveSessionConfig,
+  enrichment: LiveSessionEnrichment | null,
+  nextDateObj: Date | null
+): SessionDisplay {
+  const fallbackImage = SESSION_TYPE_IMAGES[config.session_type] ?? guestSessionImg;
+
+  const computedNextDate = (() => {
+    if (enrichment?.session_date) {
+      return formatGuestSessionDate(parseUTCDateForDisplay(enrichment.session_date));
+    }
+    return nextDateObj ? formatGuestSessionDate(nextDateObj) : "";
+  })();
+
+  const time = config.time ? `${config.time} ${config.timezone}` : "";
+  const duration = config.duration ?? "";
+
+  if (enrichment) {
+    return {
+      title: enrichment.session_title || config.title,
+      subtitle: config.recurrence_label ?? "",
+      description: enrichment.short_description || config.subtitle,
+      image: enrichment.photo_url || fallbackImage,
+      nextDate: computedNextDate,
+      teacher: enrichment.name ?? "March",
+      teacherTitle: enrichment.title ?? undefined,
+      teacherImage: enrichment.photo_url ?? undefined,
+      duration,
+      time,
+      whatToExpect: enrichment.what_to_expect ?? undefined,
+    };
+  }
+
+  return {
+    title: config.title,
+    subtitle: config.recurrence_label ?? "",
+    description: config.subtitle ?? "",
+    image: fallbackImage,
+    nextDate: computedNextDate,
+    teacher: config.session_type === "guest-session" ? "Guest Teacher" : "March",
+    duration,
+    time,
+  };
+}
+
 const LiveSession = () => {
   const { sessionId } = useParams<{ sessionId: string }>();
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   const { data: configs = [], isLoading: configsLoading } = useLiveSessionConfigs();
-  const { teacher: nextGuestTeacher, loading: guestLoading } = useNextGuestTeacher();
+  const { data: enrichment = null, isLoading: detailsLoading } = useNextLiveSessionDetails(
+    sessionId!
+  );
 
   // Poll for a currently-live session of this type so we can link the Join button
   const { data: liveSession } = useQuery({
@@ -80,65 +130,15 @@ const LiveSession = () => {
 
   const config = configs.find((c) => c.session_type === sessionId) ?? null;
 
-  const isLoading = configsLoading || (sessionId === "guest-session" && guestLoading);
+  const isLoading = configsLoading || detailsLoading;
 
-  // Compute the display date for this session
   const nextDateObj = config ? getNextDateFromConfig(config) : null;
-  const computedNextDate = (() => {
-    if (sessionId === "guest-session" && nextGuestTeacher) {
-      return formatGuestSessionDate(parseUTCDateForDisplay(nextGuestTeacher.session_date));
-    }
-    return nextDateObj ? formatGuestSessionDate(nextDateObj) : null;
-  })();
 
-  // Build session display data from config + optional guest teacher details
-  const session: SessionDisplay | null = (() => {
-    if (!config) return null;
+  const session: SessionDisplay | null = config
+    ? buildSessionDisplay(config, enrichment, nextDateObj)
+    : null;
 
-    const fallbackImage = SESSION_TYPE_IMAGES[config.session_type] ?? guestSessionImg;
-
-    if (sessionId === "guest-session") {
-      if (nextGuestTeacher) {
-        return {
-          title: nextGuestTeacher.session_title || config.title,
-          subtitle: config.recurrence_label ?? "",
-          description:
-            nextGuestTeacher.short_description ||
-            config.subtitle ||
-            "A unique session featuring a guest teacher with fresh perspectives.",
-          image: nextGuestTeacher.photo_url || fallbackImage,
-          nextDate: computedNextDate ?? "",
-          teacher: nextGuestTeacher.name,
-          teacherTitle: nextGuestTeacher.title,
-          teacherImage: nextGuestTeacher.photo_url || undefined,
-          duration: config.duration ?? "1 hour",
-          time: config.time ? `${config.time} ${config.timezone}` : "",
-          whatToExpect: nextGuestTeacher.what_to_expect,
-        };
-      }
-      return {
-        title: config.title,
-        subtitle: config.recurrence_label ?? "",
-        description: config.subtitle ?? "A unique session featuring a guest teacher.",
-        image: fallbackImage,
-        nextDate: computedNextDate ?? "",
-        teacher: "Guest Teacher",
-        duration: config.duration ?? "1 hour",
-        time: config.time ? `${config.time} ${config.timezone}` : "",
-      };
-    }
-
-    return {
-      title: config.title,
-      subtitle: config.recurrence_label ?? "",
-      description: config.subtitle ?? "",
-      image: fallbackImage,
-      nextDate: computedNextDate ?? "",
-      teacher: "March",
-      duration: config.duration ?? "",
-      time: config.time ? `${config.time} ${config.timezone}` : "",
-    };
-  })();
+    console.log('LiveSession render - session: ', session, 'liveSession: ', liveSession, 'enrichment: ', enrichment, 'config: ', config);
 
   // Calculate countdown to next session
   useEffect(() => {
@@ -147,8 +147,8 @@ const LiveSession = () => {
     const calculateCountdown = () => {
       let targetDate: Date | null = null;
 
-      if (sessionId === "guest-session" && nextGuestTeacher) {
-        targetDate = new Date(nextGuestTeacher.session_date);
+      if (enrichment?.session_date) {
+        targetDate = new Date(enrichment.session_date);
       } else {
         targetDate = getNextDateFromConfig(config);
       }
@@ -176,7 +176,7 @@ const LiveSession = () => {
     calculateCountdown();
     const interval = setInterval(calculateCountdown, 1000);
     return () => clearInterval(interval);
-  }, [config, sessionId, nextGuestTeacher]);
+  }, [config, enrichment]);
 
   if (isLoading) {
     return (
