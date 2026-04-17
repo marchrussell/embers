@@ -1,27 +1,21 @@
-import { Check, Wind } from "lucide-react";
+import { Wind } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 import { SafetyDisclosureContent } from "@/components/SafetyDisclosureContent";
 import { ButtonLoadingSpinner } from "@/components/skeletons";
+import { SubscriptionModal } from "@/components/SubscriptionModal";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { GlowButton } from "@/components/ui/glow-button";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { analytics } from "@/lib/posthog";
-import {
-  SUBSCRIPTION_BENEFITS,
-  SUBSCRIPTION_DISPLAY_PRICES,
-  SUBSCRIPTION_PRICES,
-} from "@/lib/stripePrices";
 
 const Onboarding = () => {
   const [safetyAccepted, setSafetyAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [loadingPlan, setLoadingPlan] = useState<"annual" | "monthly" | null>(null);
   const {
     user,
     hasSubscription,
@@ -41,27 +35,6 @@ const Onboarding = () => {
     checkSubscription();
   }, [user, navigate, checkSubscription]);
 
-  const handleSubscribe = async (priceId: string) => {
-    if (loadingPlan) return;
-    const plan = priceId === SUBSCRIPTION_PRICES.ANNUAL ? "annual" : "monthly";
-    setLoadingPlan(plan);
-    analytics.subscriptionStarted(plan);
-    try {
-      const { data, error } = await supabase.functions.invoke("create-checkout", {
-        body: { priceId },
-      });
-
-      if (error) throw error;
-
-      if (data?.url) {
-        // Open in same window to preserve auth session
-        window.location.href = data.url;
-      }
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Failed to create checkout session");
-      setLoadingPlan(null);
-    }
-  };
 
   const completeOnboarding = async () => {
     if (!safetyAccepted) {
@@ -112,138 +85,8 @@ const Onboarding = () => {
     );
   }
 
-  // Show subscription page only if explicitly no subscription
-  // This page should normally only be reached through direct navigation or if payment flow was incomplete
   if (!hasSubscription) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <div className="w-full max-w-[1200px] overflow-hidden rounded-[28px] border border-white/20 bg-black/75 backdrop-blur-xl">
-          <div className="flex flex-col lg:flex-row">
-            {/* Left side - Branding & Benefits */}
-            <div className="flex flex-col justify-center bg-black/50 p-12 md:p-16 lg:w-1/2 lg:p-20">
-              <div className="mx-auto w-full max-w-lg">
-                <div className="mb-8 space-y-5 text-center sm:mb-10">
-                  <p className="text-base font-light italic leading-loose tracking-wide text-white/70 sm:text-lg">
-                    Where your nervous system rests.
-                    <br />
-                    And your senses awaken.
-                  </p>
-                  <div className="flex items-center justify-center gap-4">
-                    <div className="h-px w-10 bg-white/25" />
-                    <span className="font-bold uppercase tracking-[0.3em] text-white/50 sm:text-xs">
-                      Join Embers
-                    </span>
-                    <div className="h-px w-10 bg-white/25" />
-                  </div>
-                </div>
-
-                <div className="space-y-4 sm:space-y-5">
-                  {SUBSCRIPTION_BENEFITS.map((benefit) => (
-                    <div key={benefit} className="flex items-start gap-3">
-                      <Check
-                        className="mt-0.5 h-5 w-5 flex-shrink-0 text-white"
-                        strokeWidth={1.5}
-                      />
-                      <p className="text-sm font-light leading-relaxed text-white/90 sm:text-base">
-                        {benefit}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Right side - Pricing Plans */}
-            <div className="flex flex-col justify-center bg-black/50 p-12 md:p-16 lg:w-1/2 lg:p-20">
-              <div className="mx-auto w-full max-w-lg">
-                <div className="space-y-6">
-                  {/* Annual Plan */}
-                  <div
-                    className="relative rounded-lg border-2 border-white bg-white/5 p-7 backdrop-blur-md hover:bg-white/10 sm:p-9"
-                    style={{
-                      boxShadow:
-                        "0 0 16px rgba(255, 255, 255, 0.3), 0 0 32px rgba(255, 255, 255, 0.15)",
-                    }}
-                  >
-                    <div className="absolute -right-3 -top-3">
-                      <div className="rounded-sm bg-white px-3 py-1.5 shadow-lg">
-                        <span className="text-[10px] font-medium tracking-wider text-black sm:text-xs">
-                          BEST VALUE
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="pr-12">
-                      <h3 className="mb-3 font-editorial text-xl text-white sm:text-2xl">Annual</h3>
-                      <div className="mb-2">
-                        <span className="text-xl font-light text-white sm:text-2xl">
-                          {SUBSCRIPTION_DISPLAY_PRICES.annual.unitAmountFormatted}
-                        </span>
-                        <span className="ml-2 text-sm text-white/60">
-                          ({SUBSCRIPTION_DISPLAY_PRICES.annual.monthlyEquivalent}/month)
-                        </span>
-                      </div>
-                      <p className="mb-6 text-sm font-light text-white/50">
-                        7-day free trial, then{" "}
-                        {SUBSCRIPTION_DISPLAY_PRICES.annual.unitAmountFormatted}/year
-                      </p>
-                    </div>
-
-                    <GlowButton
-                      variant="whiteSolid"
-                      className="w-full"
-                      onClick={() => handleSubscribe(SUBSCRIPTION_PRICES.ANNUAL)}
-                      disabled={!!loadingPlan}
-                    >
-                      {loadingPlan === "annual" ? (
-                        <ButtonLoadingSpinner size="lg" />
-                      ) : (
-                        "Start your 7-day free trial"
-                      )}
-                    </GlowButton>
-                  </div>
-
-                  {/* Monthly Plan */}
-                  <div className="relative rounded-lg border border-white/25 bg-black/20 p-7 backdrop-blur-md hover:border-white/40 hover:bg-white/5 sm:p-9">
-                    <h3 className="mb-3 font-editorial text-xl text-white sm:text-2xl">Monthly</h3>
-                    <div className="mb-2">
-                      <span className="text-xl font-light text-white sm:text-2xl">
-                        {SUBSCRIPTION_DISPLAY_PRICES.monthly.unitAmountFormatted}
-                      </span>
-                      <span className="ml-1 text-sm text-white/60">/month</span>
-                    </div>
-                    <p className="mb-6 text-sm font-light text-white/50">
-                      7-day free trial, then{" "}
-                      {SUBSCRIPTION_DISPLAY_PRICES.monthly.unitAmountFormatted}/month
-                    </p>
-
-                    <GlowButton
-                      variant="white"
-                      className="w-full"
-                      onClick={() => handleSubscribe(SUBSCRIPTION_PRICES.MONTHLY)}
-                      disabled={!!loadingPlan}
-                    >
-                      {loadingPlan === "monthly" ? (
-                        <ButtonLoadingSpinner size="lg" />
-                      ) : (
-                        "Start your 7-day free trial"
-                      )}
-                    </GlowButton>
-                  </div>
-                </div>
-
-                <div className="mt-10">
-                  <p className="text-center text-xs font-light leading-relaxed text-white/40 sm:text-sm">
-                    You will be automatically charged after your 7-day free trial ends unless you
-                    cancel before then. Cancel anytime during the trial at no charge.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <SubscriptionModal open={true} onClose={() => navigate("/auth")} />;
   }
 
   return (
