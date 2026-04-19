@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { RecordingModal } from "@/components/RecordingModal";
 import { IconButton } from "@/components/ui/icon-button";
 import {
   CalendarEvent,
@@ -13,13 +13,13 @@ import {
 } from "@/lib/calendarUtils";
 import { experienceImages } from "@/lib/cloudImageUrls";
 
-const guestSessionImg = experienceImages.guestSession;
-const monthlyPresenceImg = experienceImages.monthlyBreathOnline;
-const weeklyResetImg = experienceImages.weeklyReset;
-
 import LiveProgramCard from "./components/LiveProgramCard";
 import { AVAILABILITY_DAYS, useLiveReplays } from "./hooks/useLiveReplays";
 import { LiveReplay, LiveSessionCardData } from "./types";
+
+const guestSessionImg = experienceImages.guestSession;
+const monthlyPresenceImg = experienceImages.monthlyBreathOnline;
+const weeklyResetImg = experienceImages.weeklyReset;
 
 interface LiveTabProps {
   liveSessionsData: LiveSessionCardData[];
@@ -375,36 +375,6 @@ const GuestReplayComingSoon = () => (
       </p>
     </div>
   </>
-);
-
-const RecordingModal = ({
-  recording,
-  onClose,
-}: {
-  recording: { url: string; title: string } | null;
-  onClose: () => void;
-}) => (
-  <Dialog open={!!recording} onOpenChange={(open) => !open && onClose()}>
-    <DialogContent className="z-[100] w-[96%] max-w-3xl gap-0 overflow-hidden rounded-2xl border border-[#E6DBC7]/20 bg-black/90 p-0 backdrop-blur-xl">
-      <div className="px-4 py-3 pr-14 md:px-5 md:py-4">
-        <p className="text-[10px] font-medium uppercase tracking-[0.15em] text-[#D4A574] md:text-xs">
-          Session Replay
-        </p>
-        <h3 className="mt-0.5 font-editorial text-base text-[#E6DBC7] md:text-lg">
-          {recording?.title}
-        </h3>
-      </div>
-      <video
-        key={recording?.url}
-        src={recording?.url}
-        controls
-        autoPlay
-        playsInline
-        className="w-full"
-        style={{ display: "block" }}
-      />
-    </DialogContent>
-  </Dialog>
 );
 
 export default LiveTab;
