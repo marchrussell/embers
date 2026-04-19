@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { IconButton } from "@/components/ui/icon-button";
 import {
   CalendarEvent,
@@ -56,6 +57,7 @@ const LiveTab = ({
 }: LiveTabProps) => {
   const navigate = useNavigate();
   const [openCalendarId, setOpenCalendarId] = useState<string | null>(null);
+  const [activeRecording, setActiveRecording] = useState<{ url: string; title: string } | null>(null);
   const { data: replays = [] } = useLiveReplays();
 
   const latestWeeklyReplay = replays.find((r) => r.session_type === "weekly-reset");
@@ -175,7 +177,7 @@ const LiveTab = ({
               date={latestWeeklyReplay ? formatReplayDate(latestWeeklyReplay) : null}
               onClick={
                 latestWeeklyReplay
-                  ? () => window.open(latestWeeklyReplay.recording_url, "_blank")
+                  ? () => setActiveRecording({ url: latestWeeklyReplay.recording_url, title: "Weekly Reset" })
                   : undefined
               }
             />
@@ -187,7 +189,7 @@ const LiveTab = ({
               date={latestMonthlyReplay ? formatReplayDate(latestMonthlyReplay) : null}
               onClick={
                 latestMonthlyReplay
-                  ? () => window.open(latestMonthlyReplay.recording_url, "_blank")
+                  ? () => setActiveRecording({ url: latestMonthlyReplay.recording_url, title: "Monthly Breath & Presence" })
                   : undefined
               }
             />
@@ -216,7 +218,13 @@ const LiveTab = ({
               {guestReplays.length > 0 ? (
                 guestReplays
                   .slice(0, 3)
-                  .map((replay) => <GuestReplayCard key={replay.id} replay={replay} />)
+                  .map((replay) => (
+                    <GuestReplayCard
+                      key={replay.id}
+                      replay={replay}
+                      onPlay={() => setActiveRecording({ url: replay.recording_url, title: replay.title })}
+                    />
+                  ))
               ) : (
                 <GuestReplayComingSoon />
               )}
@@ -238,6 +246,7 @@ const LiveTab = ({
           </div>
         </div>
       </div>
+      <RecordingModal recording={activeRecording} onClose={() => setActiveRecording(null)} />
     </div>
   );
 };
@@ -295,10 +304,10 @@ const ReplayBox = ({ image, alt, availability, category, date, onClick }: Replay
   );
 };
 
-const GuestReplayCard = ({ replay }: { replay: LiveReplay }) => (
+const GuestReplayCard = ({ replay, onPlay }: { replay: LiveReplay; onPlay: () => void }) => (
   <div
     className="group relative cursor-pointer overflow-hidden rounded-2xl border border-[#E6DBC7]/15 bg-black/40 transition-colors duration-500 hover:border-[#E6DBC7]/30"
-    onClick={() => window.open(replay.recording_url, "_blank")}
+    onClick={onPlay}
   >
     <div className="relative h-44 overflow-hidden">
       <img
@@ -366,6 +375,36 @@ const GuestReplayComingSoon = () => (
       </p>
     </div>
   </>
+);
+
+const RecordingModal = ({
+  recording,
+  onClose,
+}: {
+  recording: { url: string; title: string } | null;
+  onClose: () => void;
+}) => (
+  <Dialog open={!!recording} onOpenChange={(open) => !open && onClose()}>
+    <DialogContent className="z-[100] w-[96%] max-w-3xl gap-0 overflow-hidden rounded-2xl border border-[#E6DBC7]/20 bg-black/90 p-0 backdrop-blur-xl">
+      <div className="px-4 py-3 pr-14 md:px-5 md:py-4">
+        <p className="text-[10px] font-medium uppercase tracking-[0.15em] text-[#D4A574] md:text-xs">
+          Session Replay
+        </p>
+        <h3 className="mt-0.5 font-editorial text-base text-[#E6DBC7] md:text-lg">
+          {recording?.title}
+        </h3>
+      </div>
+      <video
+        key={recording?.url}
+        src={recording?.url}
+        controls
+        autoPlay
+        playsInline
+        className="w-full"
+        style={{ display: "block" }}
+      />
+    </DialogContent>
+  </Dialog>
 );
 
 export default LiveTab;
