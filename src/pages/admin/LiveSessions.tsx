@@ -1256,7 +1256,7 @@ const AdminLiveSessions = () => {
                 "Room",
                 "Recording",
                 "Guest Link",
-                "Actions",
+                "Host Actions",
               ]}
             >
               {filteredSessions.map((session) => {
