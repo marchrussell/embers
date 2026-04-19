@@ -127,26 +127,16 @@ serve(async (req) => {
 
       const fileName = `${sessionId}-${Date.now()}.mp4`;
 
-      // Stream directly to Storage without buffering the file in memory.
-      // Using the raw REST API so we can pipe videoRes.body (ReadableStream).
-      const uploadHeaders: Record<string, string> = {
-        'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY!}`,
-        'Content-Type': 'video/mp4',
-      };
-      const contentLength = videoRes.headers.get('content-length');
-      if (contentLength) uploadHeaders['Content-Length'] = contentLength;
+      // Stream videoRes.body (ReadableStream) directly into the JS client upload.
+      // The client passes it to fetch without buffering, so memory stays flat
+      // regardless of file size.
+      const { error: uploadError } = await supabase.storage
+        .from('recordings')
+        .upload(fileName, videoRes.body!, { contentType: 'video/mp4', upsert: false });
 
-      const storageUrl = `${SUPABASE_URL}/storage/v1/object/recordings/${fileName}`;
-      const uploadResponse = await fetch(storageUrl, {
-        method: 'POST',
-        headers: uploadHeaders,
-        body: videoRes.body,
-      });
-
-      if (!uploadResponse.ok) {
-        const errorText = await uploadResponse.text();
-        console.error('Storage upload error:', errorText);
-        throw new Error(`Storage upload failed: ${errorText}`);
+      if (uploadError) {
+        console.error('Storage upload error:', uploadError);
+        throw new Error(`Storage upload failed: ${uploadError.message}`);
       }
 
       const { data: urlData } = supabase.storage
