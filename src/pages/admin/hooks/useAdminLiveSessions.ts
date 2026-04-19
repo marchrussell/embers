@@ -102,7 +102,15 @@ export const useAdminLiveSessions = () => {
       const { data, error } = await supabase.functions.invoke("daily-fetch-recording", {
         body: { sessionId, roomName, sessionType },
       });
-      if (error) throw error;
+      if (error) {
+        let message = error.message;
+        try {
+          const body = await (error as { context?: Response }).context?.json?.();
+          if (body?.error) message = body.error;
+        } catch { /* ignore parse errors */ }
+        throw new Error(message);
+      }
+      if (data?.error) throw new Error(data.error);
       return data as { recording_url: string };
     },
     onSuccess: (data, { sessionId }) => {
