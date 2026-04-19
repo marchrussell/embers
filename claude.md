@@ -51,6 +51,17 @@ This is a **mobile-first** product. Prioritise mobile experience in all UI work:
 - Avoid hover-only interactions — ensure tap/touch equivalents exist
 - Font sizes: use `clamp()` or responsive text classes rather than fixed sizes
 
+## Edge Functions
+
+Every edge function must have a `[functions.<name>]` entry in `supabase/config.toml` with `verify_jwt = false`. Functions handle auth internally. Omitting this entry causes Supabase's edge runtime to reject ES256 JWTs before the function code runs (`401 UNAUTHORIZED_UNSUPPORTED_TOKEN_ALGORITHM`, `execution_id: null` in logs).
+
+```toml
+[functions.my-function]
+verify_jwt = false
+```
+
+Deploy with: `supabase functions deploy <function-name>`
+
 ## Dev Commands
 
 ```bash
