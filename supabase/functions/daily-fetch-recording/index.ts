@@ -118,23 +118,35 @@ serve(async (req) => {
       console.log('Storing Daily.co temp link for weekly-reset session:', sessionId);
       recordingUrl = downloadLink;
     } else {
-      console.log('Downloading and re-hosting recording for session:', sessionId);
+      console.log('Streaming recording to Supabase Storage for session:', sessionId);
 
       const videoRes = await fetch(downloadLink);
       if (!videoRes.ok) {
-        throw new Error(`Failed to download recording from Daily.co: ${videoRes.statusText}`);
+        throw new Error(`Failed to fetch recording from Daily.co: ${videoRes.statusText}`);
       }
 
       const fileName = `${sessionId}-${Date.now()}.mp4`;
-      const videoBlob = await videoRes.blob();
 
-      const { error: uploadError } = await supabase.storage
-        .from('recordings')
-        .upload(fileName, videoBlob, { contentType: 'video/mp4', upsert: false });
+      // Stream directly to Storage without buffering the file in memory.
+      // Using the raw REST API so we can pipe videoRes.body (ReadableStream).
+      const uploadHeaders: Record<string, string> = {
+        'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY!}`,
+        'Content-Type': 'video/mp4',
+      };
+      const contentLength = videoRes.headers.get('content-length');
+      if (contentLength) uploadHeaders['Content-Length'] = contentLength;
 
-      if (uploadError) {
-        console.error('Storage upload error:', uploadError);
-        throw new Error(`Storage upload failed: ${uploadError.message}`);
+      const storageUrl = `${SUPABASE_URL}/storage/v1/object/recordings/${fileName}`;
+      const uploadResponse = await fetch(storageUrl, {
+        method: 'POST',
+        headers: uploadHeaders,
+        body: videoRes.body,
+      });
+
+      if (!uploadResponse.ok) {
+        const errorText = await uploadResponse.text();
+        console.error('Storage upload error:', errorText);
+        throw new Error(`Storage upload failed: ${errorText}`);
       }
 
       const { data: urlData } = supabase.storage
@@ -142,7 +154,7 @@ serve(async (req) => {
         .getPublicUrl(fileName);
 
       recordingUrl = urlData.publicUrl;
-      console.log('Recording uploaded to Supabase Storage:', recordingUrl);
+      console.log('Recording streamed to Supabase Storage:', recordingUrl);
     }
 
     // ── Step 4: Write to DB ────────────────────────────────────────────────

@@ -35,3 +35,6 @@ verify_jwt = false
 
 [functions.get-prices]
 verify_jwt = false
+
+[functions.daily-fetch-recording]
+verify_jwt = false
