@@ -203,6 +203,9 @@ serve(async (req) => {
       tokenProperties.enable_screenshare = true;
       tokenProperties.start_video_off = false;
       tokenProperties.start_audio_off = false;
+      if (session.recording_enabled) {
+        tokenProperties.enable_recording = true;
+      }
     } else if (tokenRole === 'guest') {
       // Guest teacher: full broadcast control, can lead session independently
       // is_owner allows them to manage participants and start recording if needed
@@ -210,6 +213,9 @@ serve(async (req) => {
       tokenProperties.enable_screenshare = true;
       tokenProperties.start_video_off = false;
       tokenProperties.start_audio_off = false;
+      if (session.recording_enabled) {
+        tokenProperties.enable_recording = true;
+      }
     } else {
       // Audience: view-only, completely passive
       tokenProperties.is_owner = false;
