@@ -7,7 +7,7 @@ interface RecordingModalProps {
 
 export const RecordingModal = ({ recording, onClose }: RecordingModalProps) => (
   <Dialog open={!!recording} onOpenChange={(open) => !open && onClose()}>
-    <DialogContent className="z-[100] w-[96%] max-w-3xl gap-0 overflow-hidden rounded-2xl border border-[#E6DBC7]/20 bg-black/90 p-0 backdrop-blur-xl">
+    <DialogContent className="w-[96%] max-w-3xl gap-0 overflow-hidden rounded-2xl border border-[#E6DBC7]/20 bg-black/90 p-0 backdrop-blur-xl">
       <div className="px-4 py-3 pr-14 md:px-5 md:py-4">
         <p className="text-[10px] font-medium uppercase tracking-[0.15em] text-[#D4A574] md:text-xs">
           Session Replay
