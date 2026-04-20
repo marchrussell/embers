@@ -44,7 +44,9 @@ const LiveSessionRoom = () => {
   const [joinError, setJoinError] = useState<string | null>(null);
   const [callFrame, setCallFrame] = useState<DailyCall | null>(null);
   const [inWaitingRoom, setInWaitingRoom] = useState(false);
+  const [isAudioSharing, setIsAudioSharing] = useState(false);
   const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const audioTrackRef = useRef<MediaStreamTrack | null>(null);
 
   const role = searchParams.get("role");
   const guestToken = searchParams.get("token");
@@ -149,6 +151,11 @@ const LiveSessionRoom = () => {
         showParticipantsBar: data.role === "host",
         showLocalVideo: data.role !== "audience",
         activeSpeakerMode: true,
+        layoutConfig: {
+          grid: {
+            maxTilesPerPage: 1,
+          },
+        },
         theme: {
           colors: {
             accent: "#D97757",
@@ -175,6 +182,9 @@ const LiveSessionRoom = () => {
       frame.on("left-meeting", () => {
         console.log("Left meeting");
         setHasJoined(false);
+        audioTrackRef.current?.stop();
+        audioTrackRef.current = null;
+        setIsAudioSharing(false);
         frame.destroy();
         setCallFrame(null);
       });
@@ -184,10 +194,14 @@ const LiveSessionRoom = () => {
         toast.error("Connection issue. Please try again.");
       });
 
-      // Join with token
+      // Join with token; lock media off at call-object level for audience
       await frame.join({
         url: data.roomUrl,
         token: data.token,
+        ...(data.role === "audience" && {
+          startVideoOff: true,
+          startAudioOff: true,
+        }),
       });
 
       setCallFrame(frame);
@@ -207,7 +221,45 @@ const LiveSessionRoom = () => {
       if (pollIntervalRef.current) {
         clearInterval(pollIntervalRef.current);
       }
+      audioTrackRef.current?.stop();
+      audioTrackRef.current = null;
     };
+  }, [callFrame]);
+
+  // Share system/tab audio without screen video
+  const handleShareAudio = useCallback(async () => {
+    if (!callFrame) return;
+    try {
+      const stream = await navigator.mediaDevices.getDisplayMedia({
+        video: true,
+        audio: true,
+      });
+      // Discard video — we only want the audio track
+      stream.getVideoTracks().forEach((t) => t.stop());
+      const audioTrack = stream.getAudioTracks()[0];
+      if (!audioTrack) {
+        toast.error("No audio captured — make sure to enable audio in the picker");
+        return;
+      }
+      audioTrackRef.current = audioTrack;
+      // Handle host stopping via browser's built-in stop button
+      audioTrack.addEventListener("ended", () => {
+        setIsAudioSharing(false);
+        audioTrackRef.current = null;
+      });
+      // Send as screen audio so the host's mic remains active simultaneously
+      callFrame.startScreenShare({ mediaStream: new MediaStream([audioTrack]) });
+      setIsAudioSharing(true);
+    } catch {
+      // User dismissed the picker — not an error worth surfacing
+    }
+  }, [callFrame]);
+
+  const handleStopAudio = useCallback(() => {
+    callFrame?.stopScreenShare();
+    audioTrackRef.current?.stop();
+    audioTrackRef.current = null;
+    setIsAudioSharing(false);
   }, [callFrame]);
 
   // Leave session
@@ -370,8 +422,8 @@ const LiveSessionRoom = () => {
                     ? "Session is live. You can join now."
                     : "Session is not live yet. Join to test your setup privately."
                   : role === "guest"
-                    ? "You'll join as a guest presenter with video and audio enabled."
-                    : "You're joining a quiet, view-only space. Your camera and mic will be off."}
+                    ? "You'll join as a guest presenter. Make sure your camera and audio enabled."
+                    : "You're joining a quiet, view-only space. Please turn your camera and mic off."}
               </p>
             </div>
 
@@ -414,6 +466,15 @@ const LiveSessionRoom = () => {
       {/* Controls when joined */}
       {hasJoined && (
         <div className="flex items-center justify-center gap-4 border-t border-white/10 bg-black/50 p-4">
+          {(role === "host" || role === "guest") && (
+            <Button
+              variant="outline"
+              onClick={isAudioSharing ? handleStopAudio : handleShareAudio}
+              className="border-white/20 text-white/70 hover:text-white"
+            >
+              {isAudioSharing ? "Stop Audio" : "Share Audio"}
+            </Button>
+          )}
           <Button
             variant="outline"
             onClick={handleOpenInTab}
