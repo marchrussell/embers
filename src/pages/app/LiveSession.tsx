@@ -27,6 +27,7 @@ const monthlyPresenceImg = experienceImages.monthlyBreathOnline;
 const weeklyResetImg = experienceImages.weeklyReset;
 
 const marchPortrait = getCloudImageUrl(CLOUD_IMAGES.march);
+const liveSessionCountdownBg = getCloudImageUrl(CLOUD_IMAGES.liveSessionCountdownBg);
 
 // Fallback images keyed by session_type slug
 const SESSION_TYPE_IMAGES: Record<string, string> = {
@@ -138,7 +139,16 @@ const LiveSession = () => {
     ? buildSessionDisplay(config, enrichment, nextDateObj)
     : null;
 
-    console.log('LiveSession render - session: ', session, 'liveSession: ', liveSession, 'enrichment: ', enrichment, 'config: ', config);
+  console.log(
+    "LiveSession render - session: ",
+    session,
+    "liveSession: ",
+    liveSession,
+    "enrichment: ",
+    enrichment,
+    "config: ",
+    config
+  );
 
   // Calculate countdown to next session
   useEffect(() => {
@@ -298,7 +308,7 @@ const LiveSession = () => {
                   </span>
                 </div>
                 <p className="mb-8 font-light text-[#E6DBC7]/70">
-                  The session is open now. <br/> Join when you're ready.
+                  The session is open now. <br /> Join when you're ready.
                 </p>
                 <Button
                   className="rounded-full bg-[#E6DBC7] px-12 py-6 text-base font-medium text-[#1A1A1A] hover:bg-[#E6DBC7]/90"

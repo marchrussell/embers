@@ -88,6 +88,7 @@ export const CLOUD_IMAGES = {
   // Online images
   startHereButterfly: "online/start-here-butterfly.webp",
   march: "online/march-russell.webp",
+  liveSessionCountdownBg: "live/live-session-countdown-bg.webp",
 
   // About/Bio images
   marchBioPhoto: "about/march-bio-photo.webp",
