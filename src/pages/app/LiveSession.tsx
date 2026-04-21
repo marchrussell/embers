@@ -287,7 +287,6 @@ const LiveSession = () => {
               </div>
             </div>
           </div>
-        </div>
 
         {/* Countdown / Status Box - video container size with 16:9 aspect ratio */}
         <div>
