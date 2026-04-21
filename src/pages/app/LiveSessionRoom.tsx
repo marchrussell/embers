@@ -412,19 +412,30 @@ const LiveSessionRoom = () => {
             </div>
 
             {/* Calm pre-join message */}
-            <div className="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-8">
+            <div className="space-y-6 rounded-2xl border border-white/10 bg-white/5 p-10">
               <p className="text-lg text-white/90">
                 {role === "host" ? "Ready to begin." : "Arrive, get settled."}
               </p>
-              <p className="text-white/60">
-                {role === "host"
-                  ? session.status === "live"
-                    ? "Session is live. You can join now."
-                    : "Session is not live yet. Join to test your setup privately."
-                  : role === "guest"
-                    ? "You'll join as a guest presenter with video and audio enabled."
-                    : "You're joining a quiet, view-only space. Your camera and mic will be turned off."}
-              </p>
+              <div>
+                <p className="text-white/60">
+                  {role === "host"
+                    ? session.status === "live"
+                      ? "Session is live. You can join now."
+                      : "Session is not live yet."
+                    : role === "guest"
+                      ? "You'll join as a guest presenter with video and audio enabled."
+                      : "You're joining a quiet, view-only space."}
+                </p>
+                <p className="text-white/60">
+                  {role === "host"
+                    ? session.status === "live"
+                      ? "You can join now."
+                      : "Join to test your setup privately."
+                    : role === "guest"
+                      ? ""
+                      : "Your camera and mic will be turned off."}
+                </p>
+              </div>
             </div>
 
             {/* Join button */}
