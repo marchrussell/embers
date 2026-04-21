@@ -402,7 +402,7 @@ const LiveSessionRoom = () => {
       {/* Pre-join screen */}
       {!hasJoined && (
         <div className="flex flex-1 flex-col items-center justify-center p-6">
-          <div className="max-w-lg space-y-8 text-center">
+          <div className="max-w-lg space-y-10 text-center">
             {/* Session info */}
             <div className="space-y-4">
               <h1 className="font-editorial text-3xl text-white md:text-4xl">{session.title}</h1>
@@ -422,8 +422,8 @@ const LiveSessionRoom = () => {
                     ? "Session is live. You can join now."
                     : "Session is not live yet. Join to test your setup privately."
                   : role === "guest"
-                    ? "You'll join as a guest presenter. Make sure your camera and audio enabled."
-                    : "You're joining a quiet, view-only space. Please turn your camera and mic off."}
+                    ? "You'll join as a guest presenter with video and audio enabled."
+                    : "You're joining a quiet, view-only space. Your camera and mic will be turned off."}
               </p>
             </div>
 
