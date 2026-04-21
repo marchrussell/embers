@@ -81,9 +81,14 @@ const LiveProgramCard = memo(
                 : data.subtitle}
             </span>
           </div>
-          <h2 className="mb-3 font-editorial text-[clamp(1.5rem,2.4vw,2.1rem)] font-light leading-[1.2] tracking-[-0.01em] text-[#E6DBC7]">
+          <h2 className="mb-2 font-editorial text-[clamp(1.5rem,2.4vw,2.1rem)] font-light leading-[1.2] tracking-[-0.01em] text-[#E6DBC7]">
             {data.title}
           </h2>
+          {data.teacherName && (
+            <p className="mb-3 text-[11px] font-light uppercase tracking-[0.12em] text-[#D4A574]/80">
+              Held by {data.teacherName}
+            </p>
+          )}
           <p className="mb-4 max-w-[340px] font-editorial text-[14px] italic leading-[1.5] text-[#E6DBC7]/65 lg:text-[15px]">
             {data.description}
           </p>
