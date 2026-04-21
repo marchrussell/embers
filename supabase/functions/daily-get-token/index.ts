@@ -204,7 +204,7 @@ serve(async (req) => {
       tokenProperties.start_video_off = false;
       tokenProperties.start_audio_off = false;
       if (session.recording_enabled) {
-        tokenProperties.enable_recording = true;
+        tokenProperties.start_cloud_recording = true;
       }
     } else if (tokenRole === 'guest') {
       // Guest teacher: full broadcast control, can lead session independently
@@ -213,8 +213,8 @@ serve(async (req) => {
       tokenProperties.enable_screenshare = true;
       tokenProperties.start_video_off = false;
       tokenProperties.start_audio_off = false;
-      if (session.recording_enabled) {
-        tokenProperties.enable_recording = true;
+     if (session.recording_enabled) {
+        tokenProperties.start_cloud_recording = true;
       }
     } else {
       // Audience: view-only, completely passive
