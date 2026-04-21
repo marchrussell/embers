@@ -2,6 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import {
   ChevronDown,
+  ChevronsUpDown,
   ChevronUp,
   Copy,
   ImageIcon,
@@ -58,6 +59,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { NTH_LABELS, WEEKDAY_LABELS } from "./adminScheduleUtils";
 import { useAdminLiveSessionConfigs } from "./hooks/useAdminLiveSessionConfigs";
 import { type SaveSessionInput, useAdminLiveSessions } from "./hooks/useAdminLiveSessions";
+import { type SessionSortKey, type SortDir, useSessionSort } from "./hooks/useSessionSort";
 import { LiveSession, LiveSessionConfig, SessionType } from "./types";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -671,6 +673,40 @@ const CreateConfigDialog = ({ onCreated }: CreateConfigDialogProps) => {
 };
 
 // ────────────────────────────────────────────────────────
+// Sortable column header
+// ────────────────────────────────────────────────────────
+
+const SortableHeader = ({
+  label,
+  column,
+  currentKey,
+  dir,
+  onSort,
+}: {
+  label: string;
+  column: SessionSortKey;
+  currentKey: SessionSortKey;
+  dir: SortDir;
+  onSort: (k: SessionSortKey) => void;
+}) => (
+  <button
+    onClick={() => onSort(column)}
+    className="flex items-center gap-1.5 text-inherit hover:opacity-80"
+  >
+    {label}
+    {currentKey === column ? (
+      dir === "asc" ? (
+        <ChevronUp className="h-3.5 w-3.5" />
+      ) : (
+        <ChevronDown className="h-3.5 w-3.5" />
+      )
+    ) : (
+      <ChevronsUpDown className="h-3.5 w-3.5 opacity-40" />
+    )}
+  </button>
+);
+
+// ────────────────────────────────────────────────────────
 // Main Page Component
 // ────────────────────────────────────────────────────────
 
@@ -906,8 +942,9 @@ const AdminLiveSessions = () => {
     );
   };
 
-  const filteredSessions =
+  const filtered =
     typeFilter === "all" ? sessions : sessions.filter((s) => s.session_type === typeFilter);
+  const { sorted: filteredSessions, sortKey, sortDir, handleSort } = useSessionSort(filtered);
 
   // ── Create/Edit Session Dialog ──
   const sessionDialog = (
@@ -1251,10 +1288,40 @@ const AdminLiveSessions = () => {
             <AdminTable
               headers={[
                 "Session",
-                "Status",
-                "Start Time",
+                {
+                  label: (
+                    <SortableHeader
+                      label="Status"
+                      column="status"
+                      currentKey={sortKey}
+                      dir={sortDir}
+                      onSort={handleSort}
+                    />
+                  ),
+                },
+                {
+                  label: (
+                    <SortableHeader
+                      label="Start Time"
+                      column="start_time"
+                      currentKey={sortKey}
+                      dir={sortDir}
+                      onSort={handleSort}
+                    />
+                  ),
+                },
                 "Room",
-                "Recording",
+                {
+                  label: (
+                    <SortableHeader
+                      label="Recording"
+                      column="recording"
+                      currentKey={sortKey}
+                      dir={sortDir}
+                      onSort={handleSort}
+                    />
+                  ),
+                },
                 "Guest Link",
                 "Host Actions",
               ]}
