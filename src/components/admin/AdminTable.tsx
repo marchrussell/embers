@@ -5,7 +5,7 @@ import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components
 import { cn } from "@/lib/utils";
 
 export interface AdminTableHeader {
-  label: string;
+  label: ReactNode;
   align?: "left" | "center" | "right";
   width?: string;
   className?: string;

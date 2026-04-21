@@ -24,6 +24,7 @@ import { toast } from "sonner";
 import {
   AdminLayout,
   AdminTable,
+  type AdminTableHeader,
   adminTableCellClass,
   adminTableRowClass,
 } from "@/components/admin";
@@ -1286,45 +1287,47 @@ const AdminLiveSessions = () => {
             </div>
           ) : (
             <AdminTable
-              headers={[
-                "Session",
-                {
-                  label: (
-                    <SortableHeader
-                      label="Status"
-                      column="status"
-                      currentKey={sortKey}
-                      dir={sortDir}
-                      onSort={handleSort}
-                    />
-                  ),
-                },
-                {
-                  label: (
-                    <SortableHeader
-                      label="Start Time"
-                      column="start_time"
-                      currentKey={sortKey}
-                      dir={sortDir}
-                      onSort={handleSort}
-                    />
-                  ),
-                },
-                "Room",
-                {
-                  label: (
-                    <SortableHeader
-                      label="Recording"
-                      column="recording"
-                      currentKey={sortKey}
-                      dir={sortDir}
-                      onSort={handleSort}
-                    />
-                  ),
-                },
-                "Guest Link",
-                "Host Actions",
-              ]}
+              headers={
+                [
+                  "Session",
+                  {
+                    label: (
+                      <SortableHeader
+                        label="Status"
+                        column="status"
+                        currentKey={sortKey}
+                        dir={sortDir}
+                        onSort={handleSort}
+                      />
+                    ),
+                  } as AdminTableHeader,
+                  {
+                    label: (
+                      <SortableHeader
+                        label="Start Time"
+                        column="start_time"
+                        currentKey={sortKey}
+                        dir={sortDir}
+                        onSort={handleSort}
+                      />
+                    ),
+                  } as AdminTableHeader,
+                  "Room",
+                  {
+                    label: (
+                      <SortableHeader
+                        label="Recording"
+                        column="recording"
+                        currentKey={sortKey}
+                        dir={sortDir}
+                        onSort={handleSort}
+                      />
+                    ),
+                  } as AdminTableHeader,
+                  "Guest Link",
+                  "Host Actions",
+                ] as (string | AdminTableHeader)[]
+              }
             >
               {filteredSessions.map((session) => {
                 const details = sessionDetails.get(session.id);
