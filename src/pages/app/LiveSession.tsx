@@ -3,7 +3,6 @@ import { Calendar, Clock, Video } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import liveSessionCountdownBg from "@/assets/live-session-countdown-bg.png";
 import { Footer } from "@/components/Footer";
 import { NavBar } from "@/components/NavBar";
 import OnlineFooter from "@/components/OnlineFooter";
@@ -366,6 +365,7 @@ const LiveSession = () => {
             )}
           </div>
         </div>
+      </div>
       </div>
 
       <div className="block md:hidden">
