@@ -94,6 +94,7 @@ const Online = () => {
           durationMinutes,
           teacherName: nextGuestTeacher.name,
           teacherTitle: nextGuestTeacher.title,
+          recurrenceLabel: config.recurrence_label ?? undefined,
         };
       }
 
@@ -107,6 +108,7 @@ const Online = () => {
         isLive: false,
         time: config.time,
         durationMinutes,
+        recurrenceLabel: config.recurrence_label ?? undefined,
       };
     });
   }, [configs, nextGuestTeacher]);

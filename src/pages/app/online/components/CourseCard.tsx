@@ -13,6 +13,7 @@ interface CourseCardProps {
   badge?: string;
   locked?: boolean;
   imagePosition?: string;
+  recurrenceLabel?: string;
 }
 
 const CourseCard = memo(
@@ -25,6 +26,7 @@ const CourseCard = memo(
     badge,
     locked = false,
     imagePosition = "center",
+    recurrenceLabel,
   }: CourseCardProps) => (
     <div
       onClick={onClick}
@@ -59,6 +61,11 @@ const CourseCard = memo(
           </p>
         )}
         <h3 className="mb-2 font-editorial text-xl leading-tight text-[#E6DBC7]">{title}</h3>
+        {recurrenceLabel && (
+          <p className="mb-2 text-xs font-light tracking-wide text-[#E6DBC7]/50">
+            {recurrenceLabel}
+          </p>
+        )}
         <p className="line-clamp-2 text-sm font-light leading-relaxed text-[#E6DBC7]/70">
           {description}
         </p>

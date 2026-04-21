@@ -226,18 +226,27 @@ const HomeTab = ({
           Nothing to keep up with. Just somewhere to come back to.
         </p>
         <div className="grid gap-6 md:grid-cols-3">
-          {liveSessionsData.map((session) => (
-            <CourseCard
-              key={session.sessionType}
-              title={session.title}
-              subtitle={session.subtitle}
-              description={session.description}
-              image={session.image}
-              badge={session.isLive ? "Live Now" : undefined}
-              locked={!hasSubscription && !isAdmin && !isTestUser}
-              onClick={() => handleLiveCardClick(`/online/live/${session.sessionType}`)}
-            />
-          ))}
+          {liveSessionsData.map((session) => {
+            const courseSubtitle = [
+              session.nextDate,
+              session.durationMinutes ? `${session.durationMinutes} min` : null,
+            ]
+              .filter(Boolean)
+              .join(" · ");
+            return (
+              <CourseCard
+                key={session.sessionType}
+                title={session.title}
+                subtitle={courseSubtitle || session.subtitle}
+                recurrenceLabel={session.recurrenceLabel}
+                description={session.description}
+                image={session.image}
+                badge={session.isLive ? "Live Now" : undefined}
+                locked={!hasSubscription && !isAdmin && !isTestUser}
+                onClick={() => handleLiveCardClick(`/online/live/${session.sessionType}`)}
+              />
+            );
+          })}
         </div>
         <Button
           className="mt-6 w-fit rounded-full border border-[#E6DBC7]/60 bg-transparent px-12 py-3 text-sm font-light text-[#E6DBC7] transition-all hover:border-[#E6DBC7] hover:bg-white/5 md:text-base"

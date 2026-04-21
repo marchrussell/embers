@@ -23,6 +23,7 @@ export interface LiveSessionCardData {
   durationMinutes: number; // e.g. 30, 90 — defaults to 60
   teacherName?: string;
   teacherTitle?: string;
+  recurrenceLabel?: string; // e.g. "Every Wednesday"
 }
 
 export interface LiveReplay {
