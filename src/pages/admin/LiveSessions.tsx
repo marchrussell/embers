@@ -18,14 +18,14 @@ import {
   Users,
   Video,
 } from "lucide-react";
-import { useRef, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import {
   AdminLayout,
   AdminTable,
-  type AdminTableHeader,
   adminTableCellClass,
+  type AdminTableHeader,
   adminTableRowClass,
 } from "@/components/admin";
 import { AdminContentSkeleton } from "@/components/skeletons/AdminContentSkeleton";
@@ -49,6 +49,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -59,9 +60,13 @@ import { supabase } from "@/integrations/supabase/client";
 
 import { NTH_LABELS, WEEKDAY_LABELS } from "./adminScheduleUtils";
 import { useAdminLiveSessionConfigs } from "./hooks/useAdminLiveSessionConfigs";
-import { type SaveSessionInput, useAdminLiveSessions } from "./hooks/useAdminLiveSessions";
+import {
+  type SaveSessionInput,
+  useAdminLiveSessions,
+  useSaveSessionMutation,
+} from "./hooks/useAdminLiveSessions";
 import { type SessionSortKey, type SortDir, useSessionSort } from "./hooks/useSessionSort";
-import { LiveSession, LiveSessionConfig, SessionType } from "./types";
+import { LiveSession, LiveSessionConfig, LiveSessionDetails, SessionType } from "./types";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any;
@@ -708,32 +713,453 @@ const SortableHeader = ({
 );
 
 // ────────────────────────────────────────────────────────
+// Sessions Table Skeleton
+// ────────────────────────────────────────────────────────
+
+const LiveSessionsTableSkeleton = () => (
+  <Card className="overflow-hidden border-[#E6DBC7]/20 bg-background/40 backdrop-blur-xl">
+    {/* Header row */}
+    <div className="border-b border-[#E6DBC7]/10 px-6 py-4">
+      <div className="flex gap-6">
+        <Skeleton className="h-4 w-48 bg-[#E6DBC7]/10" />
+        {[1, 2, 3, 4, 5, 6].map((i) => (
+          <Skeleton key={i} className="h-4 flex-1 bg-[#E6DBC7]/10" />
+        ))}
+      </div>
+    </div>
+    {/* Skeleton rows — enough to fill a full screen */}
+    <div className="min-h-[60dvh] divide-y divide-[#E6DBC7]/10">
+      {Array.from({ length: 10 }).map((_, i) => (
+        <div key={i} className="flex gap-6 p-6">
+          {/* Session cell: thumbnail + text */}
+          <div className="flex w-48 shrink-0 items-center gap-4">
+            <Skeleton className="h-12 w-12 shrink-0 rounded-md bg-[#E6DBC7]/10" />
+            <div className="flex-1 space-y-2">
+              <Skeleton className="h-4 w-full bg-[#E6DBC7]/10" />
+              <Skeleton className="bg-[#E6DBC7]/8 h-3 w-2/3" />
+            </div>
+          </div>
+          {/* Remaining 6 columns */}
+          {[1, 2, 3, 4, 5, 6].map((j) => (
+            <Skeleton key={j} className="bg-[#E6DBC7]/8 h-5 flex-1 self-center" />
+          ))}
+        </div>
+      ))}
+    </div>
+  </Card>
+);
+
+// ────────────────────────────────────────────────────────
+// Sessions Table (suspended inner component)
+// ────────────────────────────────────────────────────────
+
+interface LiveSessionsTableProps {
+  configs: LiveSessionConfig[];
+  onEditSession: (session: LiveSession, details?: LiveSessionDetails) => void;
+  /** Slot rendered on the right of the filter tabs (e.g. "New Session" button) */
+  headerActions?: React.ReactNode;
+}
+
+const LiveSessionsTable = ({ configs, onEditSession, headerActions }: LiveSessionsTableProps) => {
+  const queryClient = useQueryClient();
+  const [typeFilter, setTypeFilter] = useState<SessionType | "all">("all");
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
+
+  const { sessionsData, fetchRecordingMutation, deleteSessionMutation, statusChangeMutation } =
+    useAdminLiveSessions();
+  const { sessions, sessionDetails } = sessionsData;
+
+  const filtered =
+    typeFilter === "all" ? sessions : sessions.filter((s) => s.session_type === typeFilter);
+  const { sorted: filteredSessions, sortKey, sortDir, handleSort } = useSessionSort(filtered);
+
+  const getTypeLabel = (type: string) =>
+    configs.find((c) => c.session_type === type)?.title ?? type;
+
+  const getTypeBadge = (type: SessionType | null) => {
+    if (!type) return null;
+    return (
+      <Badge variant="outline" className={`text-xs ${getTypeColor(type)}`}>
+        {getTypeLabel(type)}
+      </Badge>
+    );
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "live":
+        return <Badge className="animate-pulse bg-red-500 text-white">Live</Badge>;
+      case "ended":
+        return <Badge variant="secondary">Ended</Badge>;
+      default:
+        return <Badge variant="outline">Scheduled</Badge>;
+    }
+  };
+
+  const handleStatusChange = (session: LiveSession, newStatus: string) => {
+    setActionLoading(session.id);
+    statusChangeMutation.mutate(
+      { sessionId: session.id, newStatus: newStatus as "scheduled" | "live" | "ended" },
+      { onSettled: () => setActionLoading(null) }
+    );
+  };
+
+  const handleGenerateGuestLink = async (session: LiveSession) => {
+    setActionLoading(session.id);
+    try {
+      const { data, error: linkError } = await supabase.functions.invoke(
+        "daily-generate-guest-link",
+        { body: { sessionId: session.id } }
+      );
+      if (linkError) throw linkError;
+      await navigator.clipboard.writeText(data.guestJoinUrl);
+      toast.success("Guest link copied to clipboard");
+      await queryClient.invalidateQueries({ queryKey: ["admin-live-sessions"] });
+    } catch {
+      toast.error("Failed to generate guest link");
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleCopyGuestLink = async (session: LiveSession) => {
+    if (!session.guest_token) return;
+    const url = `${window.location.origin}/live/${session.id}?role=guest&token=${session.guest_token}`;
+    await navigator.clipboard.writeText(url);
+    toast.success("Guest link copied");
+  };
+
+  const handleCopyHostLink = async (session: LiveSession) => {
+    await navigator.clipboard.writeText(`${window.location.origin}/live/${session.id}?role=host`);
+    toast.success("Host link copied");
+  };
+
+  const handleDelete = (session: LiveSession) => {
+    if (!confirm("Are you sure you want to delete this session?")) return;
+    deleteSessionMutation.mutate(session.id);
+  };
+
+  return (
+    <>
+      {/* Filter tabs + header actions */}
+      <div className="mb-6 flex items-center justify-between gap-4">
+        <div className="flex gap-2">
+          {["all", ...configs.map((c) => c.session_type)].map((type) => (
+            <button
+              key={type}
+              onClick={() => setTypeFilter(type as SessionType | "all")}
+              className={`rounded-full px-3 py-1 text-sm transition-colors ${
+                typeFilter === type
+                  ? "bg-foreground text-background"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {type === "all" ? "All" : getTypeLabel(type)}
+            </button>
+          ))}
+        </div>
+        {headerActions}
+      </div>
+
+      {/* Table or empty state */}
+      {filteredSessions.length === 0 ? (
+        <div className="py-12 text-center text-muted-foreground">
+          {typeFilter === "all"
+            ? "No live sessions yet. Create your first one!"
+            : `No ${getTypeLabel(typeFilter)} sessions yet.`}
+        </div>
+      ) : (
+        <AdminTable
+          headers={
+            [
+              "Session",
+              {
+                label: (
+                  <SortableHeader
+                    label="Status"
+                    column="status"
+                    currentKey={sortKey}
+                    dir={sortDir}
+                    onSort={handleSort}
+                  />
+                ),
+              } as AdminTableHeader,
+              {
+                label: (
+                  <SortableHeader
+                    label="Start Time"
+                    column="start_time"
+                    currentKey={sortKey}
+                    dir={sortDir}
+                    onSort={handleSort}
+                  />
+                ),
+              } as AdminTableHeader,
+              "Room",
+              {
+                label: (
+                  <SortableHeader
+                    label="Recording"
+                    column="recording"
+                    currentKey={sortKey}
+                    dir={sortDir}
+                    onSort={handleSort}
+                  />
+                ),
+              } as AdminTableHeader,
+              "Guest Link",
+              "Host Actions",
+            ] as (string | AdminTableHeader)[]
+          }
+        >
+          {filteredSessions.map((session) => {
+            const details = sessionDetails.get(session.id);
+            const isFetchingThis =
+              fetchRecordingMutation.isPending &&
+              fetchRecordingMutation.variables?.sessionId === session.id;
+            return (
+              <TableRow key={session.id} className={adminTableRowClass}>
+                {/* Session — title + type badge + attendee count */}
+                <TableCell className={adminTableCellClass}>
+                  <div className="flex items-center gap-6">
+                    {details?.photo_url && (
+                      <img
+                        src={details.photo_url}
+                        alt=""
+                        className="h-12 w-12 flex-shrink-0 rounded-md object-cover"
+                      />
+                    )}
+                    <div className="space-y-2">
+                      <p className="font-medium">{session.title}</p>
+                      <div className="flex items-center gap-2">
+                        {getTypeBadge(session.session_type)}
+                        <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <Users className="h-3 w-3" />
+                          {session.attendee_count}
+                        </span>
+                      </div>
+                      {details?.name && (
+                        <p className="text-xs text-muted-foreground">
+                          {details.name}
+                          {details.title ? ` · ${details.title}` : ""}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </TableCell>
+
+                {/* Status */}
+                <TableCell className={adminTableCellClass}>
+                  {getStatusBadge(session.status)}
+                </TableCell>
+
+                {/* Start Time — parsed without timezone offset to display the UTC value as entered */}
+                <TableCell className={adminTableCellClass}>
+                  <span className="text-sm">
+                    {format(
+                      new Date(session.start_time.slice(0, 16).replace(" ", "T")),
+                      "MMM d, yyyy"
+                    )}
+                  </span>
+                  <p className="text-xs text-muted-foreground">
+                    {format(new Date(session.start_time.slice(0, 16).replace(" ", "T")), "h:mm a")}
+                  </p>
+                </TableCell>
+
+                {/* Room */}
+                <TableCell className={adminTableCellClass}>
+                  {session.daily_room_name ? (
+                    <Badge variant="outline" className="font-mono text-xs">
+                      {session.daily_room_name}
+                    </Badge>
+                  ) : (
+                    <span className="text-xs text-muted-foreground">Not created</span>
+                  )}
+                </TableCell>
+
+                {/* Recording */}
+                <TableCell className={adminTableCellClass}>
+                  {session.recording_url ? (
+                    <a
+                      href={session.recording_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 rounded-md bg-green-500/10 px-2 py-1 text-xs font-medium text-green-400 hover:bg-green-500/20"
+                    >
+                      <Video className="h-3.5 w-3.5" />
+                      Ready
+                    </a>
+                  ) : session.recording_enabled && session.daily_room_name ? (
+                    <Button
+                      variant="ghost"
+                      className="h-7 px-2"
+                      onClick={() =>
+                        fetchRecordingMutation.mutate({
+                          sessionId: session.id,
+                          roomName: session.daily_room_name!,
+                          sessionType: session.session_type,
+                        })
+                      }
+                      disabled={isFetchingThis || session.status !== "ended"}
+                      title={
+                        session.status !== "ended"
+                          ? "Available after session ends"
+                          : "Fetch from Daily.co"
+                      }
+                    >
+                      {isFetchingThis ? (
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      ) : (
+                        <RefreshCw className="h-3.5 w-3.5" />
+                      )}
+                      Fetch
+                    </Button>
+                  ) : (
+                    <span className="text-xs text-muted-foreground">—</span>
+                  )}
+                </TableCell>
+
+                {/* Guest Link */}
+                <TableCell className={adminTableCellClass}>
+                  {session.guest_token ? (
+                    <div className="flex items-center gap-3">
+                      <Badge variant="secondary" className="text-xs">
+                        Active
+                      </Badge>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7"
+                        title="Regenerate link"
+                        onClick={() => handleGenerateGuestLink(session)}
+                        disabled={actionLoading === session.id}
+                      >
+                        {actionLoading === session.id ? (
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        ) : (
+                          <RefreshCw className="h-3.5 w-3.5" />
+                        )}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7"
+                        title="Copy guest link"
+                        onClick={() => handleCopyGuestLink(session)}
+                      >
+                        <Copy className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button
+                      variant="ghost"
+                      onClick={() => handleGenerateGuestLink(session)}
+                      disabled={actionLoading === session.id}
+                    >
+                      {actionLoading === session.id ? (
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      ) : (
+                        <Link2 className="h-3.5 w-3.5" />
+                      )}
+                      Generate
+                    </Button>
+                  )}
+                </TableCell>
+
+                {/* Actions — stacked vertically */}
+                <TableCell className={adminTableCellClass}>
+                  <div className="flex flex-col gap-5">
+                    {/* Row 1: live status + test/join */}
+                    <div className="flex items-center gap-3">
+                      {session.status === "scheduled" && (
+                        <Button
+                          className="h-9 px-3 text-xs"
+                          onClick={() => handleStatusChange(session, "live")}
+                          disabled={actionLoading === session.id}
+                        >
+                          <Play className="h-3.5 w-3.5" />
+                          Go Live
+                        </Button>
+                      )}
+                      {session.status === "live" && (
+                        <Button
+                          variant="destructive"
+                          className="h-9 px-3 text-xs"
+                          onClick={() => handleStatusChange(session, "ended")}
+                          disabled={actionLoading === session.id}
+                        >
+                          <Square className="h-3.5 w-3.5" />
+                          End
+                        </Button>
+                      )}
+                      <Button
+                        variant="outline"
+                        className="h-9 px-3 text-xs"
+                        onClick={() => window.open(`/live/${session.id}?role=host`, "_blank")}
+                      >
+                        <Video className="h-3.5 w-3.5" />
+                        {session.status === "scheduled" ? "Test" : "Join"}
+                      </Button>
+                    </div>
+                    {/* Row 2: copy host / edit / delete */}
+                    <div className="flex items-center gap-3">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7"
+                        title="Copy host link"
+                        onClick={() => handleCopyHostLink(session)}
+                      >
+                        <Copy className="h-3.5 w-3.5" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7"
+                        title="Edit session"
+                        onClick={() => onEditSession(session, details)}
+                      >
+                        <Pencil className="h-3.5 w-3.5" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 text-destructive hover:text-destructive"
+                        title="Delete session"
+                        onClick={() => handleDelete(session)}
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
+                  </div>
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </AdminTable>
+      )}
+    </>
+  );
+};
+
+// ────────────────────────────────────────────────────────
 // Main Page Component
 // ────────────────────────────────────────────────────────
 
 const AdminLiveSessions = () => {
-  const { user, isAdmin } = useAuth();
+  const { user } = useAuth();
 
   const queryClient = useQueryClient();
 
   // Instances state
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [editingSession, setEditingSession] = useState<LiveSession | null>(null);
-  const [actionLoading, setActionLoading] = useState<string | null>(null);
-  const [typeFilter, setTypeFilter] = useState<SessionType | "all">("all");
+  const [editingSessionDetails, setEditingSessionDetails] = useState<
+    LiveSessionDetails | undefined
+  >(undefined);
 
   const { data: configs = [], isLoading: configsLoading } = useAdminLiveSessionConfigs();
-  const {
-    sessionsData,
-    isLoading,
-    fetchRecordingMutation,
-    deleteSessionMutation,
-    statusChangeMutation,
-    saveSessionMutation,
-  } = useAdminLiveSessions();
-
-  const sessions = sessionsData.sessions;
-  const sessionDetails = sessionsData.sessionDetails;
+  const saveSessionMutation = useSaveSessionMutation();
 
   // Instance form state
   const emptyForm = {
@@ -781,13 +1207,15 @@ const AdminLiveSessions = () => {
   const resetDialog = () => {
     setShowCreateDialog(false);
     setEditingSession(null);
+    setEditingSessionDetails(undefined);
     setSessionForm(emptyForm);
     setDetailsForm(emptyDetails);
     setShowDetails(false);
   };
 
-  const openEditDialog = (session: LiveSession) => {
+  const openEditDialog = (session: LiveSession, details?: LiveSessionDetails) => {
     setEditingSession(session);
+    setEditingSessionDetails(details);
     setSessionForm({
       title: session.title,
       description: session.description ?? "",
@@ -797,7 +1225,6 @@ const AdminLiveSessions = () => {
       recording_enabled: session.recording_enabled,
       recording_url: session.recording_url ?? "",
     });
-    const details = sessionDetails.get(session.id);
     if (details) {
       setDetailsForm({
         session_title: details.session_title ?? "",
@@ -842,8 +1269,6 @@ const AdminLiveSessions = () => {
         detailsForm.title ||
         detailsForm.what_to_expect.some((item) => item.trim()));
 
-    const existingDetails = editingSession ? sessionDetails.get(editingSession.id) : undefined;
-
     const input: SaveSessionInput = {
       form: {
         title: sessionForm.title,
@@ -866,86 +1291,11 @@ const AdminLiveSessions = () => {
             title: detailsForm.title || null,
           }
         : null,
-      existingDetailsId: existingDetails?.id,
+      existingDetailsId: editingSessionDetails?.id,
     };
 
     saveSessionMutation.mutate(input, { onSuccess: resetDialog });
   };
-
-  // Status change
-  const handleStatusChange = (session: LiveSession, newStatus: string) => {
-    setActionLoading(session.id);
-    statusChangeMutation.mutate(
-      { sessionId: session.id, newStatus: newStatus as "scheduled" | "live" | "ended" },
-      { onSettled: () => setActionLoading(null) }
-    );
-  };
-
-  // Generate guest link
-  const handleGenerateGuestLink = async (session: LiveSession) => {
-    setActionLoading(session.id);
-    try {
-      const { data, error: linkError } = await supabase.functions.invoke(
-        "daily-generate-guest-link",
-        { body: { sessionId: session.id } }
-      );
-      if (linkError) throw linkError;
-      await navigator.clipboard.writeText(data.guestJoinUrl);
-      toast.success("Guest link copied to clipboard");
-      await queryClient.invalidateQueries({ queryKey: ["admin-live-sessions"] });
-    } catch (err) {
-      toast.error("Failed to generate guest link");
-    } finally {
-      setActionLoading(null);
-    }
-  };
-
-  // Copy guest link (reconstructs URL from persisted guest_token — no edge function call)
-  const handleCopyGuestLink = async (session: LiveSession) => {
-    if (!session.guest_token) return;
-    const url = `${window.location.origin}/live/${session.id}?role=guest&token=${session.guest_token}`;
-    await navigator.clipboard.writeText(url);
-    toast.success("Guest link copied");
-  };
-
-  // Copy host link
-  const handleCopyHostLink = async (session: LiveSession) => {
-    await navigator.clipboard.writeText(`${window.location.origin}/live/${session.id}?role=host`);
-    toast.success("Host link copied");
-  };
-
-  // Delete session
-  const handleDelete = (session: LiveSession) => {
-    if (!confirm("Are you sure you want to delete this session?")) return;
-    deleteSessionMutation.mutate(session.id);
-  };
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "live":
-        return <Badge className="animate-pulse bg-red-500 text-white">Live</Badge>;
-      case "ended":
-        return <Badge variant="secondary">Ended</Badge>;
-      default:
-        return <Badge variant="outline">Scheduled</Badge>;
-    }
-  };
-
-  const getTypeLabel = (type: string) =>
-    configs.find((c) => c.session_type === type)?.title ?? type;
-
-  const getTypeBadge = (type: SessionType | null) => {
-    if (!type) return null;
-    return (
-      <Badge variant="outline" className={`text-xs ${getTypeColor(type)}`}>
-        {getTypeLabel(type)}
-      </Badge>
-    );
-  };
-
-  const filtered =
-    typeFilter === "all" ? sessions : sessions.filter((s) => s.session_type === typeFilter);
-  const { sorted: filteredSessions, sortKey, sortDir, handleSort } = useSessionSort(filtered);
 
   // ── Create/Edit Session Dialog ──
   const sessionDialog = (
@@ -1257,307 +1607,13 @@ const AdminLiveSessions = () => {
 
         {/* ── Instances Tab ── */}
         <TabsContent value="instances">
-          <div className="mb-6 flex items-center justify-between gap-4">
-            {/* Filter tabs */}
-            <div className="flex gap-2">
-              {["all", ...configs.map((c) => c.session_type)].map((type) => (
-                <button
-                  key={type}
-                  onClick={() => setTypeFilter(type)}
-                  className={`rounded-full px-3 py-1 text-sm transition-colors ${
-                    typeFilter === type
-                      ? "bg-foreground text-background"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {type === "all" ? "All" : getTypeLabel(type)}
-                </button>
-              ))}
-            </div>
-            {sessionDialog}
-          </div>
-
-          {isLoading ? (
-            <AdminContentSkeleton showStats={false} variant="table" />
-          ) : filteredSessions.length === 0 ? (
-            <div className="py-12 text-center text-muted-foreground">
-              {typeFilter === "all"
-                ? "No live sessions yet. Create your first one!"
-                : `No ${getTypeLabel(typeFilter)} sessions yet.`}
-            </div>
-          ) : (
-            <AdminTable
-              headers={
-                [
-                  "Session",
-                  {
-                    label: (
-                      <SortableHeader
-                        label="Status"
-                        column="status"
-                        currentKey={sortKey}
-                        dir={sortDir}
-                        onSort={handleSort}
-                      />
-                    ),
-                  } as AdminTableHeader,
-                  {
-                    label: (
-                      <SortableHeader
-                        label="Start Time"
-                        column="start_time"
-                        currentKey={sortKey}
-                        dir={sortDir}
-                        onSort={handleSort}
-                      />
-                    ),
-                  } as AdminTableHeader,
-                  "Room",
-                  {
-                    label: (
-                      <SortableHeader
-                        label="Recording"
-                        column="recording"
-                        currentKey={sortKey}
-                        dir={sortDir}
-                        onSort={handleSort}
-                      />
-                    ),
-                  } as AdminTableHeader,
-                  "Guest Link",
-                  "Host Actions",
-                ] as (string | AdminTableHeader)[]
-              }
-            >
-              {filteredSessions.map((session) => {
-                const details = sessionDetails.get(session.id);
-                const isFetchingThis =
-                  fetchRecordingMutation.isPending &&
-                  fetchRecordingMutation.variables?.sessionId === session.id;
-                return (
-                  <TableRow key={session.id} className={adminTableRowClass}>
-                    {/* Session — title + type badge + attendee count */}
-                    <TableCell className={adminTableCellClass}>
-                      <div className="flex items-center gap-6">
-                        {details?.photo_url && (
-                          <img
-                            src={details.photo_url}
-                            alt=""
-                            className="h-12 w-12 flex-shrink-0 rounded-md object-cover"
-                          />
-                        )}
-                        <div className="space-y-2">
-                          <p className="font-medium">{session.title}</p>
-                          <div className="flex items-center gap-2">
-                            {getTypeBadge(session.session_type)}
-                            <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                              <Users className="h-3 w-3" />
-                              {session.attendee_count}
-                            </span>
-                          </div>
-                          {details?.name && (
-                            <p className="text-xs text-muted-foreground">
-                              {details.name}
-                              {details.title ? ` · ${details.title}` : ""}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    </TableCell>
-
-                    {/* Status */}
-                    <TableCell className={adminTableCellClass}>
-                      {getStatusBadge(session.status)}
-                    </TableCell>
-
-                    {/* Start Time — parsed without timezone offset to display the UTC value as entered */}
-                    <TableCell className={adminTableCellClass}>
-                      <span className="text-sm">
-                        {format(
-                          new Date(session.start_time.slice(0, 16).replace(" ", "T")),
-                          "MMM d, yyyy"
-                        )}
-                      </span>
-                      <p className="text-xs text-muted-foreground">
-                        {format(
-                          new Date(session.start_time.slice(0, 16).replace(" ", "T")),
-                          "h:mm a"
-                        )}
-                      </p>
-                    </TableCell>
-
-                    {/* Room */}
-                    <TableCell className={adminTableCellClass}>
-                      {session.daily_room_name ? (
-                        <Badge variant="outline" className="font-mono text-xs">
-                          {session.daily_room_name}
-                        </Badge>
-                      ) : (
-                        <span className="text-xs text-muted-foreground">Not created</span>
-                      )}
-                    </TableCell>
-
-                    {/* Recording */}
-                    <TableCell className={adminTableCellClass}>
-                      {session.recording_url ? (
-                        <a
-                          href={session.recording_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 rounded-md bg-green-500/10 px-2 py-1 text-xs font-medium text-green-400 hover:bg-green-500/20"
-                        >
-                          <Video className="h-3.5 w-3.5" />
-                          Ready
-                        </a>
-                      ) : session.recording_enabled && session.daily_room_name ? (
-                        <Button
-                          variant="ghost"
-                          className="h-7 px-2"
-                          onClick={() =>
-                            fetchRecordingMutation.mutate({
-                              sessionId: session.id,
-                              roomName: session.daily_room_name!,
-                              sessionType: session.session_type,
-                            })
-                          }
-                          disabled={isFetchingThis || session.status !== "ended"}
-                          title={
-                            session.status !== "ended"
-                              ? "Available after session ends"
-                              : "Fetch from Daily.co"
-                          }
-                        >
-                          {isFetchingThis ? (
-                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                          ) : (
-                            <RefreshCw className="h-3.5 w-3.5" />
-                          )}
-                          Fetch
-                        </Button>
-                      ) : (
-                        <span className="text-xs text-muted-foreground">—</span>
-                      )}
-                    </TableCell>
-
-                    {/* Guest Link */}
-                    <TableCell className={adminTableCellClass}>
-                      {session.guest_token ? (
-                        <div className="flex items-center gap-3">
-                          <Badge variant="secondary" className="text-xs">
-                            Active
-                          </Badge>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-7 w-7"
-                            title="Regenerate link"
-                            onClick={() => handleGenerateGuestLink(session)}
-                            disabled={actionLoading === session.id}
-                          >
-                            {actionLoading === session.id ? (
-                              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                            ) : (
-                              <RefreshCw className="h-3.5 w-3.5" />
-                            )}
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-7 w-7"
-                            title="Copy guest link"
-                            onClick={() => handleCopyGuestLink(session)}
-                          >
-                            <Copy className="h-3.5 w-3.5" />
-                          </Button>
-                        </div>
-                      ) : (
-                        <Button
-                          variant="ghost"
-                          onClick={() => handleGenerateGuestLink(session)}
-                          disabled={actionLoading === session.id}
-                        >
-                          {actionLoading === session.id ? (
-                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                          ) : (
-                            <Link2 className="h-3.5 w-3.5" />
-                          )}
-                          Generate
-                        </Button>
-                      )}
-                    </TableCell>
-
-                    {/* Actions — stacked vertically */}
-                    <TableCell className={adminTableCellClass}>
-                      <div className="flex flex-col gap-5">
-                        {/* Row 1: live status + test/join */}
-                        <div className="flex items-center gap-3">
-                          {session.status === "scheduled" && (
-                            <Button
-                              className="h-9 px-3 text-xs"
-                              onClick={() => handleStatusChange(session, "live")}
-                              disabled={actionLoading === session.id}
-                            >
-                              <Play className="h-3.5 w-3.5" />
-                              Go Live
-                            </Button>
-                          )}
-                          {session.status === "live" && (
-                            <Button
-                              variant="destructive"
-                              className="h-9 px-3 text-xs"
-                              onClick={() => handleStatusChange(session, "ended")}
-                              disabled={actionLoading === session.id}
-                            >
-                              <Square className="h-3.5 w-3.5" />
-                              End
-                            </Button>
-                          )}
-                          <Button
-                            variant="outline"
-                            className="h-9 px-3 text-xs"
-                            onClick={() => window.open(`/live/${session.id}?role=host`, "_blank")}
-                          >
-                            <Video className="h-3.5 w-3.5" />
-                            {session.status === "scheduled" ? "Test" : "Join"}
-                          </Button>
-                        </div>
-                        {/* Row 2: copy host / edit / delete */}
-                        <div className="flex items-center gap-3">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-7 w-7"
-                            title="Copy host link"
-                            onClick={() => handleCopyHostLink(session)}
-                          >
-                            <Copy className="h-3.5 w-3.5" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-7 w-7"
-                            title="Edit session"
-                            onClick={() => openEditDialog(session)}
-                          >
-                            <Pencil className="h-3.5 w-3.5" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-7 w-7 text-destructive hover:text-destructive"
-                            title="Delete session"
-                            onClick={() => handleDelete(session)}
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </Button>
-                        </div>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </AdminTable>
-          )}
+          <Suspense fallback={<LiveSessionsTableSkeleton />}>
+            <LiveSessionsTable
+              configs={configs}
+              onEditSession={openEditDialog}
+              headerActions={sessionDialog}
+            />
+          </Suspense>
         </TabsContent>
 
         {/* ── Session Types Tab ── */}

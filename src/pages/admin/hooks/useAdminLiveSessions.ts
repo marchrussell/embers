@@ -1,8 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 
 import { LiveSession, LiveSessionDetails } from "../types";
@@ -14,8 +13,6 @@ type SessionsData = {
   sessions: LiveSession[];
   sessionDetails: Map<string, LiveSessionDetails>;
 };
-
-const EMPTY: SessionsData = { sessions: [], sessionDetails: new Map() };
 
 // ── Schemas ───────────────────────────────────────────────
 
@@ -53,13 +50,12 @@ const SaveSessionSchema = z.object({
 });
 export type SaveSessionInput = z.infer<typeof SaveSessionSchema>;
 
-// ── Hook ──────────────────────────────────────────────────
+// ── Query hook (suspending) ───────────────────────────────
 
 export const useAdminLiveSessions = () => {
-  const { isAdmin } = useAuth();
   const queryClient = useQueryClient();
 
-  const query = useQuery<SessionsData>({
+  const query = useSuspenseQuery<SessionsData>({
     queryKey: ["admin-live-sessions"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -86,7 +82,6 @@ export const useAdminLiveSessions = () => {
 
       return { sessions: sessionList, sessionDetails: detailsMap };
     },
-    enabled: !!isAdmin,
   });
 
   const fetchRecordingMutation = useMutation({
@@ -107,7 +102,9 @@ export const useAdminLiveSessions = () => {
         try {
           const body = await (error as { context?: Response }).context?.json?.();
           if (body?.error) message = body.error;
-        } catch { /* ignore parse errors */ }
+        } catch {
+          /* ignore parse errors */
+        }
         throw new Error(message);
       }
       if (data?.error) throw new Error(data.error);
@@ -184,7 +181,20 @@ export const useAdminLiveSessions = () => {
     },
   });
 
-  const saveSessionMutation = useMutation({
+  return {
+    sessionsData: query.data,
+    fetchRecordingMutation,
+    deleteSessionMutation,
+    statusChangeMutation,
+  };
+};
+
+// ── Save mutation (used by the create/edit dialog) ────────
+
+export const useSaveSessionMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
     mutationFn: async (input: SaveSessionInput) => {
       const { form, editingSessionId, createdBy, detailsPayload, existingDetailsId } =
         SaveSessionSchema.parse(input);
@@ -274,13 +284,4 @@ export const useAdminLiveSessions = () => {
       toast.error(msg);
     },
   });
-
-  return {
-    sessionsData: query.data ?? EMPTY,
-    isLoading: query.isLoading,
-    fetchRecordingMutation,
-    deleteSessionMutation,
-    statusChangeMutation,
-    saveSessionMutation,
-  };
 };
