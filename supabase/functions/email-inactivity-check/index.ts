@@ -60,53 +60,52 @@ serve(async (req) => {
       });
     }
 
-    // Find users whose last activity falls in the inactivity window
-    // user_progress tracks session completions — use max(completed_at) per user
-    const { data: recentActivity, error: activityError } = await supabaseAdmin
+    const tenDaysAgo = new Date(now.getTime() - INACTIVITY_MIN_DAYS * 24 * 60 * 60 * 1000);
+    const fourteenDaysAgo = new Date(now.getTime() - INACTIVITY_MAX_DAYS * 24 * 60 * 60 * 1000);
+
+    // Step 1: Users with ANY activity in the last 10 days — these are not inactive
+    const { data: recentlyActive } = await supabaseAdmin
       .from("user_progress")
-      .select("user_id, completed_at")
+      .select("user_id")
       .in("user_id", userIds)
-      .gte("completed_at", inactiveFrom.toISOString())
-      .lte("completed_at", inactiveTo.toISOString());
+      .gte("completed_at", tenDaysAgo.toISOString());
+
+    const recentlyActiveIds = new Set((recentlyActive ?? []).map((r: { user_id: string }) => r.user_id));
+
+    // Step 2: Users who had a session 10–14 days ago, but none since
+    const { data: hadActivity, error: activityError } = await supabaseAdmin
+      .from("user_progress")
+      .select("user_id")
+      .in("user_id", userIds)
+      .gte("completed_at", fourteenDaysAgo.toISOString())
+      .lt("completed_at", tenDaysAgo.toISOString());
 
     if (activityError) {
       logStep("Error fetching user progress", { error: activityError.message });
       throw activityError;
     }
 
-    // Also find users with NO activity at all who joined 10–14 days ago
+    const inactiveWithHistory = ([...new Set((hadActivity ?? []).map((r: { user_id: string }) => r.user_id))] as string[])
+      .filter((id) => !recentlyActiveIds.has(id));
+
+    // Step 3: Users who joined 10–14 days ago with no activity in the last 10 days
     const { data: noActivityUsers, error: noActivityError } = await supabaseAdmin
       .from("user_subscriptions")
-      .select("user_id, current_period_start")
+      .select("user_id")
       .in("status", ["active", "trialing"])
-      .gte("current_period_start", inactiveFrom.toISOString())
-      .lte("current_period_start", inactiveTo.toISOString());
+      .in("user_id", userIds)
+      .gte("current_period_start", fourteenDaysAgo.toISOString())
+      .lt("current_period_start", tenDaysAgo.toISOString());
 
     if (noActivityError) {
       logStep("Error fetching no-activity users", { error: noActivityError.message });
     }
 
-    // Combine: users with last activity in window + users with no activity who joined in window
-    const activityUserIds = new Set((recentActivity ?? []).map((r) => r.user_id));
-    const noActivityUserIds = (noActivityUsers ?? [])
-      .filter((u) => !activityUserIds.has(u.user_id))
-      .map((u) => u.user_id);
+    const neverActiveIds = (noActivityUsers ?? [])
+      .map((u: { user_id: string }) => u.user_id)
+      .filter((id: string) => !recentlyActiveIds.has(id));
 
-    // Check which users haven't had activity since the window (last activity is in window range)
-    // We need users whose LATEST activity falls in the window
-    const userLastActivity: Record<string, string> = {};
-    for (const row of recentActivity ?? []) {
-      const current = userLastActivity[row.user_id];
-      if (!current || row.completed_at > current) {
-        userLastActivity[row.user_id] = row.completed_at;
-      }
-    }
-
-    const inactiveUserIds = [
-      ...Object.keys(userLastActivity),
-      ...noActivityUserIds,
-    ];
-
+    const inactiveUserIds = [...new Set([...inactiveWithHistory, ...neverActiveIds])];
     logStep("Inactive users found", { count: inactiveUserIds.length });
 
     let fired = 0;
