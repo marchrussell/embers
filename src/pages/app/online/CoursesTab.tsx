@@ -31,10 +31,11 @@ const CoursesTabContent = () => {
         {courses.map((course) => (
           <SplitCard
             key={course.id}
-            imageSrc={course.image_url || ""}
+            imageSrc={course.image_url}
             imageAlt={course.title}
-            breakpoint="lg"
+            breakpoint="md"
             mobileLayout="stacked"
+            height="h-[380px] md:h-[400px]"
             style={{
               background: "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.98) 55%)",
             }}
