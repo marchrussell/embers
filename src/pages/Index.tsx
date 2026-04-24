@@ -194,7 +194,7 @@ const Index = () => {
                     fontSize: "clamp(0.7rem, 0.8vw, 0.85rem)",
                   }}
                 >
-                  10-Day Course
+                  Collection
                 </p>
                 <p
                   className="mb-5 text-white/90 sm:mb-6"
