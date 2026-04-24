@@ -40,11 +40,11 @@ const ProgramView = memo(
           <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
 
           <div className="relative flex h-full items-end px-6 pb-8">
-            <div className="w-full">
-              <h1 className="mb-4 font-editorial text-5xl text-[#E6DBC7] md:text-6xl">
+            <div className="w-full flex flex-col gap-4">
+              <h1 className="font-editorial text-5xl text-[#E6DBC7] md:text-6xl">
                 {program.title}
               </h1>
-              <p className="mb-3 max-w-2xl text-base font-light leading-relaxed text-[#E6DBC7]/80 md:text-lg">
+              <p className="max-w-2xl text-base font-light leading-relaxed text-[#E6DBC7]/80 md:text-lg">
                 {program.description}
               </p>
               <p className="text-sm font-light uppercase tracking-[0.15em] text-[#EC9037] md:text-base">
