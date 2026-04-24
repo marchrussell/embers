@@ -10,31 +10,8 @@ import { PhoneMockups } from "@/components/PhoneMockups";
 import { TermsMicrocopy } from "@/components/TermsMicrocopy";
 import { Button } from "@/components/ui/button";
 import { Pill } from "@/components/ui/pill";
-import { CLOUD_IMAGES, experienceImages, getCloudImageUrl } from "@/lib/cloudImageUrls";
-
-const onlineExperiences = [
-  {
-    id: "guest-session",
-    title: "Guest Session",
-    subtitle: "A special session with a guest teacher.",
-    recurrenceLabel: "Every Thursday of the month",
-    image: experienceImages.guestSession,
-  },
-  {
-    id: "weekly-reset",
-    title: "Weekly Reset",
-    subtitle: "A live space to pause, settle your system, and realign mid-week.",
-    recurrenceLabel: "Live every Sunday",
-    image: experienceImages.weeklyReset,
-  },
-  {
-    id: "breath-presence-online",
-    title: "Monthly Breath & Presence",
-    subtitle: "A longer, spacious session to soften tension and reconnect with yourself.",
-    recurrenceLabel: "First Saturday of the month",
-    image: experienceImages.monthlyBreathOnline,
-  },
-];
+import { useLiveSessionsData } from "@/hooks/useLiveSessionsData";
+import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
 
 const mentalResetImg = getCloudImageUrl(
   CLOUD_IMAGES.mentalReset,
@@ -48,6 +25,7 @@ const mentalResetImg = getCloudImageUrl(
 const Index = () => {
   const location = useLocation();
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+  const liveSessionsData = useLiveSessionsData();
 
   useEffect(() => {
     if (location.state?.openSubscription) {
@@ -273,59 +251,66 @@ const Index = () => {
 
             {/* Vertical Event Cards */}
             <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-6 md:grid-cols-3">
-              {onlineExperiences.map((event) => {
-                // const nextDate = getNextEventDate(event.recurrence, event.time);
-                // const formattedDate = formatEventDate(nextDate, event.time);
+              {liveSessionsData.map((event) => (
+                <Link
+                  key={event.sessionType}
+                  to="/online?tab=live"
+                  className="group relative flex flex-col overflow-hidden rounded-xl border border-white/[0.12] bg-black/40 shadow-lg transition-colors duration-500 hover:border-white/25 md:shadow-[0_0_60px_rgba(230,219,199,0.25)]"
+                >
+                  {/* Image */}
+                  <div className="relative aspect-[4/3] overflow-hidden">
+                    <img
+                      src={event.image}
+                      alt={event.title}
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        background:
+                          "linear-gradient(to bottom, transparent 30%, rgba(0,0,0,0.9) 100%)",
+                      }}
+                    />
 
-                return (
-                  <Link
-                    key={event.id}
-                    to="/online?tab=live"
-                    className="group relative flex flex-col overflow-hidden rounded-xl border border-white/[0.12] bg-black/40 shadow-lg transition-colors duration-500 hover:border-white/25 md:shadow-[0_0_60px_rgba(230,219,199,0.25)]"
-                  >
-                    {/* Image */}
-                    <div className="relative aspect-[4/3] overflow-hidden">
-                      <img
-                        src={event.image}
-                        alt={event.title}
-                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                      <div
-                        className="absolute inset-0"
-                        style={{
-                          background:
-                            "linear-gradient(to bottom, transparent 30%, rgba(0,0,0,0.9) 100%)",
-                        }}
-                      />
-
-                      {/* Format Badge */}
+                    {/* Format Badge */}
+                    <span
+                      className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-black/60 px-2.5 py-1 text-[9px] font-medium uppercase tracking-[0.12em] backdrop-blur-sm"
+                      style={{ color: "#4ade80" }}
+                    >
                       <span
-                        className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-black/60 px-2.5 py-1 text-[9px] font-medium uppercase tracking-[0.12em] backdrop-blur-sm"
-                        style={{ color: "#4ade80" }}
-                      >
-                        <span
-                          className="h-1.5 w-1.5 rounded-full"
-                          style={{ backgroundColor: "#4ade80" }}
-                        />
-                        Online
-                      </span>
+                        className="h-1.5 w-1.5 rounded-full"
+                        style={{ backgroundColor: "#4ade80" }}
+                      />
+                      Online
+                    </span>
 
-                      {/* Content overlaid on image bottom */}
-                      <div className="absolute bottom-0 left-0 right-0 p-5">
-                        <h3 className="mb-2 font-editorial text-[clamp(1.1rem,1.4vw,1.3rem)] font-light leading-[1.25] tracking-[-0.01em] text-white">
-                          {event.title}
-                        </h3>
-                        <p className="mb-3 line-clamp-2 text-[12px] leading-[1.5] text-white/70">
-                          {event.subtitle}
-                        </p>
+                    {/* Content overlaid on image bottom */}
+                    <div className="absolute bottom-0 left-0 right-0 p-5">
+                      <h3 className="mb-2 font-editorial text-[clamp(1.1rem,1.4vw,1.3rem)] font-light leading-[1.25] tracking-[-0.01em] text-white">
+                        {event.title}
+                      </h3>
+                      <p className="mb-3 line-clamp-2 text-[12px] leading-[1.5] text-white/70">
+                        {event.description}
+                      </p>
+                      {event.recurrenceLabel && (
                         <p className="text-[11px] font-medium tracking-wide text-white/50">
                           {event.recurrenceLabel}
                         </p>
-                      </div>
+                      )}
+                      {event.teacherName && (
+                        <p className="mt-1 text-[11px] tracking-wide text-white/40">
+                          with {event.teacherName}
+                        </p>
+                      )}
+                      {event.nextDate && (
+                        <p className="mt-1 text-[11px] tracking-wide text-white/40">
+                          {event.nextDate}
+                        </p>
+                      )}
                     </div>
-                  </Link>
-                );
-              })}
+                  </div>
+                </Link>
+              ))}
             </div>
 
             {/* View All Experiences CTA */}

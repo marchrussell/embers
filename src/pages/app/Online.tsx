@@ -1,4 +1,4 @@
-import { Suspense, useMemo, useState } from "react";
+import { Suspense, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { Footer } from "@/components/Footer";
@@ -8,14 +8,7 @@ import OnlineFooter from "@/components/OnlineFooter";
 import OnlineHeader from "@/components/OnlineHeader";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
-import { useLiveSessionConfigs } from "@/hooks/useLiveSessionConfigs";
-import { useNextGuestTeacher } from "@/hooks/useNextGuestTeacher";
-import { experienceImages } from "@/lib/cloudImageUrls";
-import { formatExperienceDate, getNextDateFromConfig } from "@/lib/experienceDateUtils";
-
-const guestSessionImg = experienceImages.guestSession;
-const monthlyPresenceImg = experienceImages.monthlyBreathOnline;
-const weeklyResetImg = experienceImages.weeklyReset;
+import { useLiveSessionsData } from "@/hooks/useLiveSessionsData";
 
 import { SafetyDisclosureModal } from "@/components/SafetyDisclosureModal";
 
@@ -23,17 +16,9 @@ import Library from "./Library";
 import CoursesTab from "./online/CoursesTab";
 import HomeTab from "./online/HomeTab";
 import LiveTab from "./online/LiveTab";
-import { LiveSessionCardData } from "./online/types";
 import SessionDetailModal from "./SessionDetail";
 
 const VALID_TABS = ["home", "library", "courses", "live"];
-
-// Fallback images keyed by session_type slug
-const SESSION_TYPE_IMAGES: Record<string, string> = {
-  "weekly-reset": weeklyResetImg,
-  "monthly-presence": monthlyPresenceImg,
-  "guest-session": guestSessionImg,
-};
 
 const Online = () => {
   const {
@@ -56,65 +41,9 @@ const Online = () => {
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [shouldClearLibraryCategory, setShouldClearLibraryCategory] = useState(false);
 
-  const { data: configs = [] } = useLiveSessionConfigs();
-  const { teacher: nextGuestTeacher } = useNextGuestTeacher();
+  const liveSessionsData = useLiveSessionsData();
   const tabParam = searchParams.get("tab");
   const activeTab = tabParam && VALID_TABS.includes(tabParam) ? tabParam : "home";
-
-  const liveSessionsData: LiveSessionCardData[] = useMemo(() => {
-    return configs.map((config) => {
-      const nextDateObj = getNextDateFromConfig(config);
-      const nextDate = nextDateObj ? formatExperienceDate(nextDateObj, config.time ?? "") : null;
-      console.log('Config: ', config, 'Next date object: ', nextDateObj,'Next date: ', nextDate);
-
-      const subtitleParts = [
-        config.recurrence_label,
-        config.time ? `${config.time} ${config.timezone}` : null,
-        config.duration,
-      ].filter(Boolean);
-      const subtitle = subtitleParts.join(" · ");
-
-      const fallbackImage = SESSION_TYPE_IMAGES[config.session_type] ?? guestSessionImg;
-
-      const durationMinutes = config.duration ? parseInt(config.duration) || 60 : 60;
-
-      // Enrich guest-session with live data from live_session_details
-      if (config.session_type === "guest-session" && nextGuestTeacher) {
-        console.log("Enriching guest-session with next guest teacher data: ", nextGuestTeacher);
-        return {
-          sessionType: config.session_type,
-          title: config.title,
-          subtitle,
-          description:
-            config.subtitle ||
-            "A unique session featuring a guest teacher with fresh perspectives.",
-          image: fallbackImage,
-          nextDate,
-          isLive: false,
-          time: config.time,
-          durationMinutes,
-          teacherName: nextGuestTeacher.name,
-          teacherTitle: nextGuestTeacher.title,
-          recurrenceLabel: config.recurrence_label ?? undefined,
-        };
-      }
-
-      return {
-        sessionType: config.session_type,
-        title: config.title,
-        subtitle,
-        description: config.subtitle ?? "",
-        image: fallbackImage,
-        nextDate,
-        isLive: false,
-        time: config.time,
-        durationMinutes,
-        recurrenceLabel: config.recurrence_label ?? undefined,
-      };
-    });
-  }, [configs, nextGuestTeacher]);
-
-  console.log("liveSessionsData formatted: ", liveSessionsData);
 
   const handleTabChange = (tab: string) => {
     navigate(`/online?tab=${tab}`, { replace: true });
