@@ -298,8 +298,8 @@ const Index = () => {
                         </p>
                       )}
                       {event.teacherName && (
-                        <p className="mt-1 text-[11px] tracking-wide text-white/40">
-                          with {event.teacherName}
+                        <p className="mt-1 text-[11px] tracking-wide text-yellow-500/40">
+                          With {event.teacherName}
                         </p>
                       )}
                       {event.nextDate && (
