@@ -5,11 +5,11 @@ import { Link, useLocation } from "react-router-dom";
 import { Footer } from "@/components/Footer";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { NavBar } from "@/components/NavBar";
-import { OptimizedImage } from "@/components/OptimizedImage";
 import { PhoneMockups } from "@/components/PhoneMockups";
 import { TermsMicrocopy } from "@/components/TermsMicrocopy";
 import { Button } from "@/components/ui/button";
 import { Pill } from "@/components/ui/pill";
+import SplitCard from "@/components/ui/split-card";
 import { useLiveSessionsData } from "@/hooks/useLiveSessionsData";
 import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
 
@@ -156,73 +156,60 @@ const Index = () => {
 
         {/* Mental Reset Course Card - White-lined curved box */}
         <section className="w-full bg-background px-6 py-16 md:px-8 md:py-20 lg:px-12 lg:py-36">
-          <div className="mx-auto max-w-[1400px] overflow-hidden rounded-2xl border border-white/50 shadow-glow-strong">
-            <div className="grid min-h-[280px] sm:min-h-[320px] md:min-h-[380px] md:grid-cols-2">
-              {/* Left: Image */}
-              <div className="relative min-h-[160px] sm:min-h-[180px] md:min-h-[380px]">
-                <OptimizedImage
-                  src={mentalResetImg}
-                  alt="Mental Reset Course"
-                  className="absolute inset-0 h-full w-full object-cover"
-                  style={{
-                    objectPosition: "center 65%",
-                  }}
-                  optimizationOptions={{
-                    quality: 85,
-                    width: 960,
-                    height: 500,
-                  }}
-                  priority={true}
-                />
-              </div>
-
-              {/* Right: Content */}
-              <div className="flex flex-col justify-center bg-black px-6 py-6 sm:px-8 sm:py-8 md:px-10 md:py-10 lg:px-12">
-                <h3
-                  className="mb-5 font-editorial text-white sm:mb-6"
-                  style={{
-                    fontSize: "clamp(1.8rem, 2.2vw, 2.4rem)",
-                    lineHeight: 1.15,
-                    fontWeight: 400,
-                  }}
-                >
-                  Mental Reset
-                </h3>
-                <p
-                  className="mb-5 font-light uppercase tracking-[0.1em] text-[#EC9037] sm:mb-6"
-                  style={{
-                    fontSize: "clamp(0.7rem, 0.8vw, 0.85rem)",
-                  }}
-                >
-                  Collection
-                </p>
-                <p
-                  className="mb-5 text-white/90 sm:mb-6"
-                  style={{
-                    fontSize: "clamp(0.85rem, 0.92vw, 0.95rem)",
-                    lineHeight: 1.65,
-                  }}
-                >
-                  A guided reset to clear mental noise, reduce overstimulation, and restore clarity.
-                </p>
-
-                <Button
-                  onClick={() => {
-                    window.open("/online/program/mental-reset", "_blank");
-                  }}
-                  className="inline-flex w-fit items-center justify-center rounded-full border border-white bg-transparent text-white transition-all hover:bg-white/10"
-                  style={{
-                    fontSize: "clamp(0.85rem, 0.9vw, 0.95rem)",
-                    fontWeight: 400,
-                    letterSpacing: "0.02em",
-                    padding: "0.6rem 1.4rem",
-                  }}
-                >
-                  Start Course
-                </Button>
-              </div>
-            </div>
-          </div>
+          <SplitCard
+            imageSrc={mentalResetImg}
+            imageAlt="Mental Reset Course"
+            imageObjectPosition="center 65%"
+            breakpoint="md"
+            mobileLayout="stacked"
+            leftPanelClassName="md:w-1/2"
+            height="h-[380px] md:h-[400px]"
+            // minHeight="min-h-[280px] sm:min-h-[320px] md:min-h-[380px]"
+            // className="mx-auto max-w-[1400px] cursor-default border-white/50"
+            contentClassName="flex flex-col justify-center bg-black px-6 py-6 sm:px-8 sm:py-8 md:px-10 md:py-10 lg:px-12"
+          >
+            <h3
+              className="mb-5 font-editorial text-white sm:mb-6"
+              style={{
+                fontSize: "clamp(1.8rem, 2.2vw, 2.4rem)",
+                lineHeight: 1.15,
+                fontWeight: 400,
+              }}
+            >
+              Mental Reset
+            </h3>
+            <p
+              className="mb-5 font-light uppercase tracking-[0.1em] text-[#EC9037] sm:mb-6"
+              style={{
+                fontSize: "clamp(0.7rem, 0.8vw, 0.85rem)",
+              }}
+            >
+              Collection
+            </p>
+            <p
+              className="mb-5 text-white/90 sm:mb-6"
+              style={{
+                fontSize: "clamp(0.85rem, 0.92vw, 0.95rem)",
+                lineHeight: 1.65,
+              }}
+            >
+              A guided reset to clear mental noise, reduce overstimulation, and restore clarity.
+            </p>
+            <Button
+              onClick={() => {
+                window.open("/online/program/mental-reset", "_blank");
+              }}
+              className="inline-flex w-fit items-center justify-center rounded-full border border-white bg-transparent text-white transition-all hover:bg-white/10"
+              style={{
+                fontSize: "clamp(0.85rem, 0.9vw, 0.95rem)",
+                fontWeight: 400,
+                letterSpacing: "0.02em",
+                padding: "0.6rem 1.4rem",
+              }}
+            >
+              Start Course
+            </Button>
+          </SplitCard>
         </section>
 
         {/* ========== EXPERIENCES ========== */}
