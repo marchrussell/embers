@@ -65,6 +65,7 @@ const Online = () => {
     return configs.map((config) => {
       const nextDateObj = getNextDateFromConfig(config);
       const nextDate = nextDateObj ? formatExperienceDate(nextDateObj, config.time ?? "") : null;
+      console.log('Config: ', config, 'Next date object: ', nextDateObj,'Next date: ', nextDate);
 
       const subtitleParts = [
         config.recurrence_label,
