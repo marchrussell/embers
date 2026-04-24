@@ -274,7 +274,7 @@ const Index = () => {
                     {/* Content overlaid on image bottom */}
                     <div className="absolute bottom-0 left-0 right-0 p-5">
                       <h3 className="mb-2 font-editorial text-[clamp(1.1rem,1.4vw,1.3rem)] font-light leading-[1.25] tracking-[-0.01em] text-white">
-                        {event.title}
+                        {event.title} // todo - be dynamic, edit hook
                       </h3>
                       <p className="mb-3 line-clamp-2 text-[12px] leading-[1.5] text-white/70">
                         {event.description}
@@ -282,11 +282,6 @@ const Index = () => {
                       {event.recurrenceLabel && (
                         <p className="text-[11px] font-medium tracking-wide text-white/50">
                           {event.recurrenceLabel}
-                        </p>
-                      )}
-                      {event.teacherName && (
-                        <p className="mt-1 text-[11px] tracking-wide text-yellow-500/40">
-                          With {event.teacherName}
                         </p>
                       )}
                       {event.nextDate && (
