@@ -13,7 +13,13 @@ interface FeedbackInput {
 
 export function useSubmitSessionFeedback() {
   return useMutation({
-    mutationFn: async ({ userId, sessionId, rating, helpedWithGoal, feedbackText }: FeedbackInput) => {
+    mutationFn: async ({
+      userId,
+      sessionId,
+      rating,
+      helpedWithGoal,
+      feedbackText,
+    }: FeedbackInput) => {
       const { error } = await supabase.from("session_feedback").insert({
         user_id: userId,
         class_id: sessionId,

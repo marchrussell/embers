@@ -57,7 +57,9 @@ const LiveTab = ({
 }: LiveTabProps) => {
   const navigate = useNavigate();
   const [openCalendarId, setOpenCalendarId] = useState<string | null>(null);
-  const [activeRecording, setActiveRecording] = useState<{ url: string; title: string } | null>(null);
+  const [activeRecording, setActiveRecording] = useState<{ url: string; title: string } | null>(
+    null
+  );
   const { data: replays = [] } = useLiveReplays();
 
   const latestWeeklyReplay = replays.find((r) => r.session_type === "weekly-reset");
@@ -177,7 +179,11 @@ const LiveTab = ({
               date={latestWeeklyReplay ? formatReplayDate(latestWeeklyReplay) : null}
               onClick={
                 latestWeeklyReplay
-                  ? () => setActiveRecording({ url: latestWeeklyReplay.recording_url, title: "Weekly Reset" })
+                  ? () =>
+                      setActiveRecording({
+                        url: latestWeeklyReplay.recording_url,
+                        title: "Weekly Reset",
+                      })
                   : undefined
               }
             />
@@ -189,7 +195,11 @@ const LiveTab = ({
               date={latestMonthlyReplay ? formatReplayDate(latestMonthlyReplay) : null}
               onClick={
                 latestMonthlyReplay
-                  ? () => setActiveRecording({ url: latestMonthlyReplay.recording_url, title: "Monthly Breath & Presence" })
+                  ? () =>
+                      setActiveRecording({
+                        url: latestMonthlyReplay.recording_url,
+                        title: "Monthly Breath & Presence",
+                      })
                   : undefined
               }
             />
@@ -222,7 +232,9 @@ const LiveTab = ({
                     <GuestReplayCard
                       key={replay.id}
                       replay={replay}
-                      onPlay={() => setActiveRecording({ url: replay.recording_url, title: replay.title })}
+                      onPlay={() =>
+                        setActiveRecording({ url: replay.recording_url, title: replay.title })
+                      }
                     />
                   ))
               ) : (
@@ -337,7 +349,7 @@ const GuestReplayCard = ({ replay, onPlay }: { replay: LiveReplay; onPlay: () =>
 
 const GuestReplayComingSoon = () => (
   <>
-    <div className="group relative cursor-pointer overflow-hidden rounded-2xl border border-[#E6DBC7]/15 bg-black/40 transition-colors duration-500 hover:border-[#E6DBC7]/30">
+    <div className="group relative overflow-hidden rounded-2xl border border-[#E6DBC7]/15 bg-black/40 transition-colors duration-500">
       <div className="relative h-44 overflow-hidden">
         <img
           src={guestSessionImg}
@@ -346,11 +358,6 @@ const GuestReplayComingSoon = () => (
           loading="lazy"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-        {/* <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <div className="w-12 h-12 rounded-full bg-[#E6DBC7]/20 backdrop-blur-sm flex items-center justify-center">
-            <Play className="w-5 h-5 text-[#E6DBC7] ml-0.5" fill="currentColor" />
-          </div>
-        </div> */}
       </div>
       <div className="p-5">
         <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.15em] text-[#D4A574]">
@@ -359,7 +366,7 @@ const GuestReplayComingSoon = () => (
         <h3 className="mb-1 font-editorial text-base leading-tight text-[#E6DBC7]">
           Guest Teacher Session
         </h3>
-        <p className="text-xs font-light text-[#E6DBC7]/50">First session coming January 2025</p>
+        {/* <p className="text-xs font-light text-[#E6DBC7]/50">First session coming January 2025</p> */}
       </div>
     </div>
 

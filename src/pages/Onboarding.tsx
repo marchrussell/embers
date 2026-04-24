@@ -35,7 +35,6 @@ const Onboarding = () => {
     checkSubscription();
   }, [user, navigate, checkSubscription]);
 
-
   const completeOnboarding = async () => {
     if (!safetyAccepted) {
       toast.error("Please accept the safety disclosure to continue");
