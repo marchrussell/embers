@@ -1,7 +1,7 @@
-import { Lock } from "lucide-react";
 import { memo } from "react";
 
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
+import SessionPlayCard from "@/pages/app/online/components/SessionPlayCard";
 
 import { LibraryProgram, LibrarySession } from "./types";
 
@@ -14,6 +14,15 @@ interface ProgramViewProps {
 
 const ProgramView = memo(
   ({ program, hasSubscription, onSessionClick, onSubscriptionRequired }: ProgramViewProps) => {
+    const now = Date.now();
+
+    const sortedSessions = [...program.sessions].sort((a: LibrarySession, b: LibrarySession) => {
+      if (a.locked !== b.locked) return a.locked ? 1 : -1;
+      const ai = a.order_index ?? Infinity;
+      const bi = b.order_index ?? Infinity;
+      return ai - bi;
+    });
+
     return (
       <div className="min-h-screen bg-background pb-24">
         {/* Spacer for navbar and header */}
@@ -46,71 +55,43 @@ const ProgramView = memo(
         </div>
 
         <div className="px-6 pt-12">
-          <div className="grid gap-4">
-            {program.sessions.map((session: LibrarySession) => (
-              <div
-                key={session.id}
-                onClick={() => {
-                  if (session.locked && !hasSubscription) {
-                    onSubscriptionRequired();
-                  } else {
-                    onSessionClick(session.id);
+          <div className="grid gap-4 md:gap-5">
+            {sortedSessions.map((session: LibrarySession) => {
+              const isNew = session.created_at
+                ? Math.floor(
+                    (now - new Date(session.created_at).getTime()) / (1000 * 60 * 60 * 24)
+                  ) <= 7
+                : false;
+
+              return (
+                <SessionPlayCard
+                  key={session.id}
+                  sessionId={session.id}
+                  title={session.title}
+                  description={
+                    session.description || `A ${session.duration} minute practice.`
                   }
-                }}
-                className="group relative cursor-pointer overflow-hidden rounded-lg transition-all hover:shadow-[0_8px_30px_rgba(230,219,199,0.15)]"
-              >
-                <div className="flex items-center gap-4 rounded-lg border border-[#E6DBC7]/10 bg-transparent p-4 transition-all hover:border-[#E6DBC7]/20 hover:bg-[#E6DBC7]/5">
-                  {/* Thumbnail */}
-                  <div
-                    className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded bg-cover bg-center"
-                    style={{
-                      backgroundImage: `url('${getOptimizedImageUrl(session.image, IMAGE_PRESETS.thumbnail)}')`,
-                    }}
-                  >
-                    <div className="absolute inset-0 bg-black/15" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent transition-all group-hover:from-background/20" />
-                    {session.locked && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-background/60">
-                        <Lock className="h-5 w-5 text-[#E6DBC7]" strokeWidth={1.5} />
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Info */}
-                  <div className="min-w-0 flex-1">
-                    <h3 className="mb-1 truncate font-editorial text-lg text-[#E6DBC7] md:text-xl">
-                      {session.title}
-                    </h3>
-                    <p className="text-sm font-light text-[#E6DBC7]/60">
-                      {session.teacher} • {session.duration} min
-                      {session.technique ? ` • ${session.technique}` : ""}
-                      {session.intensity ? ` • ${session.intensity}` : ""}
-                    </p>
-                  </div>
-
-                  {/* Play Button */}
-                  {!session.locked && (
-                    <div className="flex items-center gap-2 pr-4">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onSessionClick(session.id);
-                        }}
-                        className="rounded-full p-2 transition-all hover:bg-[#E6DBC7]/5"
-                      >
-                        <svg
-                          className="h-5 w-5 text-[#E6DBC7] transition-all"
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M8 5v14l11-7z" />
-                        </svg>
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
+                  meta={[
+                    session.teacher,
+                    session.duration != null && `${session.duration} min`,
+                    session.intensity,
+                    session.technique,
+                  ]
+                    .filter(Boolean)
+                    .join(" • ")}
+                  imageUrl={session.image}
+                  locked={session.locked}
+                  isNew={isNew}
+                  onClick={() => {
+                    if (session.locked && !hasSubscription) {
+                      onSubscriptionRequired();
+                    } else {
+                      onSessionClick(session.id);
+                    }
+                  }}
+                />
+              );
+            })}
           </div>
         </div>
       </div>
