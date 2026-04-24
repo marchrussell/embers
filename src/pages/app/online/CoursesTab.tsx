@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { GlowButton } from "@/components/ui/glow-button";
+import SplitCard from "@/components/ui/split-card";
 
 import { useCourses } from "./hooks/useCourses";
 
@@ -28,61 +29,40 @@ const CoursesTabContent = () => {
         )}
 
         {courses.map((course) => (
-          <div
+          <SplitCard
             key={course.id}
-            onClick={() => course.slug && navigate(`/online/program/${course.slug}`)}
-            className="group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-white/[0.12] shadow-glow-strong transition-colors duration-500 hover:border-white/25 lg:flex-row"
+            imageSrc={course.image_url || ""}
+            imageAlt={course.title}
+            breakpoint="lg"
+            mobileLayout="stacked"
             style={{
-              minHeight: "400px",
               background: "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.98) 55%)",
             }}
+            contentClassName="bg-black/95 p-6 md:p-8 lg:bg-transparent lg:px-10 lg:py-10 lg:pl-6"
+            onClick={() => course.slug && navigate(`/online/program/${course.slug}`)}
           >
-            <div className="relative h-[240px] shrink-0 overflow-hidden lg:h-auto lg:min-h-full lg:w-[52%]">
-              <img
-                src={course.image_url || ""}
-                alt={course.title}
-                className="absolute inset-0 h-full w-full object-cover"
-                loading="lazy"
-              />
-              <div
-                className="absolute inset-0 hidden lg:block"
-                style={{
-                  background:
-                    "linear-gradient(to right, transparent 20%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.98) 100%)",
-                }}
-              />
-              <div
-                className="absolute inset-0 lg:hidden"
-                style={{
-                  background: "linear-gradient(to bottom, transparent 30%, rgba(0,0,0,0.98) 100%)",
-                }}
-              />
-            </div>
-
-            <div className="relative flex flex-1 flex-col justify-center bg-black/95 p-6 md:p-8 lg:bg-transparent lg:px-10 lg:py-10 lg:pl-6">
-              <div>
-                <div className="mb-5">
-                  <span className="inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.14em] text-[#E6DBC7]">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#E6DBC7]" />
-                    {course.slug === "nervous-system-reset"
-                      ? "14-Day Flagship Reset"
-                      : course.duration_days
-                        ? `${course.duration_days}-Day Course`
-                        : "Course"}
-                  </span>
-                </div>
-                <h2 className="mb-3 font-editorial text-[clamp(1.5rem,2.4vw,2.1rem)] font-light leading-[1.2] tracking-[-0.01em] text-[#E6DBC7]">
-                  {course.title}
-                </h2>
-                <p className="mb-4 max-w-[340px] font-editorial text-[14px] italic leading-[1.5] text-[#E6DBC7]/65 lg:text-[15px]">
-                  {course.short_description || course.description}
-                </p>
+            <div>
+              <div className="mb-5">
+                <span className="inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.14em] text-[#E6DBC7]">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#E6DBC7]" />
+                  {course.slug === "nervous-system-reset"
+                    ? "14-Day Flagship Reset"
+                    : course.duration_days
+                      ? `${course.duration_days}-Day Course`
+                      : "Course"}
+                </span>
               </div>
-              <div className="mt-8 flex justify-start lg:ml-auto lg:mr-8 lg:mt-10">
-                <GlowButton size="sm">Start Course</GlowButton>
-              </div>
+              <h2 className="mb-3 font-editorial text-[clamp(1.5rem,2.4vw,2.1rem)] font-light leading-[1.2] tracking-[-0.01em] text-[#E6DBC7]">
+                {course.title}
+              </h2>
+              <p className="mb-4 max-w-[340px] font-editorial text-[14px] italic leading-[1.5] text-[#E6DBC7]/65 lg:text-[15px]">
+                {course.short_description || course.description}
+              </p>
             </div>
-          </div>
+            <div className="mt-8 flex justify-start lg:ml-auto lg:mr-8 lg:mt-10">
+              <GlowButton size="sm">Start Course</GlowButton>
+            </div>
+          </SplitCard>
         ))}
       </div>
     </div>
