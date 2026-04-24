@@ -54,7 +54,7 @@ function getNthWeekdayOfMonth(year: number, month: number, weekday: number, nth:
 export function getNextExperienceDate(recurrence: RecurrenceRule, time: string): Date | null {
   try {
     const now = new Date();
-    const [hours, minutes] = time.split(":").map(Number);
+    const [hours, minutes] = time.replace(".", ":").split(":").map(Number);
 
     // Minimum start date: February 1, 2025
     const minStartDate = new Date(2025, 1, 1); // February 1, 2025
@@ -137,7 +137,7 @@ export function formatExperienceDate(date: Date | null, time: string): string {
     const year = date.getFullYear();
 
     // Format time from 24h to 12h with AM/PM
-    const [hours, minutes] = time.split(":").map(Number);
+    const [hours, minutes] = time.replace(".", ":").split(":").map(Number);
     const period = hours >= 12 ? "PM" : "AM";
     const displayHours = hours % 12 || 12;
     const displayMinutes = minutes.toString().padStart(2, "0");
@@ -189,7 +189,7 @@ export function formatExperienceDateWithDay(date: Date | null, time: string): st
     const monthName = months[date.getMonth()];
 
     // Format time from 24h to 12h with AM/PM
-    const [hours, minutes] = time.split(":").map(Number);
+    const [hours, minutes] = time.replace(".", ":").split(":").map(Number);
     const period = hours >= 12 ? "PM" : "AM";
     const displayHours = hours % 12 || 12;
     const displayMinutes = minutes.toString().padStart(2, "0");
