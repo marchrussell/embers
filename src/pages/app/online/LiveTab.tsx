@@ -86,7 +86,7 @@ const LiveTab = ({
 
     return {
       title: session.title,
-      description: `${session.description}\n\nSession with March Russell`,
+      description: `${session.description}\n\nSession with ${session.teacherName}`,
       location: "Online",
       startDate,
       endDate,
@@ -112,7 +112,7 @@ const LiveTab = ({
   const handleShare = (session: LiveSessionCardData, e: React.MouseEvent) => {
     e.stopPropagation();
     const shareUrl = `${window.location.origin}/online?tab=live`;
-    const shareText = `Join March Russell for ${session.title} - ${session.description}`;
+    const shareText = `Join ${session.teacherName} for ${session.title} - ${session.description}`;
 
     if (navigator.share) {
       navigator.share({ title: session.title, text: shareText, url: shareUrl });
@@ -121,6 +121,8 @@ const LiveTab = ({
       toast.success("Link copied to clipboard");
     }
   };
+
+  console.log('Rendering LiveTab with sessions: ', liveSessionsData);
 
   return (
     <div className="pb-24 pt-8 md:pt-[150px]">
