@@ -123,7 +123,7 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
         hideClose
-        className="max-h-[90vh] w-[92%] max-w-2xl overflow-y-auto rounded-3xl border border-white/20 bg-black/70 p-8 backdrop-blur-xl md:p-10"
+        className="max-h-[90vh] w-[92%] max-w-2xl overflow-y-auto rounded-3xl border border-white/20 bg-black/70 backdrop-blur-xl p-10"
       >
         <ModalCloseButton onClose={onClose} size="md" />
         <DialogHeader className="pb-2">
@@ -133,7 +133,7 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
         </DialogHeader>
 
         {step === 1 && (
-          <div className="space-y-8 pt-6 md:space-y-10">
+          <div className="pt-6 space-y-10">
             {/* Date Selector */}
             <div>
               <Label className="mb-4 block text-[15px] font-medium tracking-wide text-white/90">
