@@ -2,7 +2,6 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { Calendar, Share } from "lucide-react";
 import { Suspense, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ExperienceBookingModal } from "@/components/ExperienceBookingModal";
@@ -23,6 +22,7 @@ import {
   getOutlookCalendarUrl,
 } from "@/lib/calendarUtils";
 import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
+import { copyLink } from "@/lib/copyLink";
 import {
   ExperienceSchedule,
   formatExperienceDate,
@@ -190,19 +190,7 @@ const ExperiencesContent = () => {
   };
 
   const handleShare = (event: ExperienceSchedule) => {
-    const shareUrl = `${window.location.origin}/experiences#${event.id}`;
-    const shareText = `Join March Russell for ${event.title} - ${event.subtitle}`;
-
-    if (navigator.share) {
-      navigator.share({
-        title: event.title,
-        text: shareText,
-        url: shareUrl,
-      });
-    } else {
-      navigator.clipboard.writeText(shareUrl);
-      toast.success("Link copied to clipboard");
-    }
+    copyLink(`${window.location.origin}/experiences#${event.id}`, "Link copied to clipboard");
   };
 
   return (
@@ -305,7 +293,13 @@ const ExperiencesContent = () => {
                       </p>
 
                       <div className="flex items-center gap-4">
-                        <IconButton size="lg" onClick={(e) => { e.stopPropagation(); handleShare(event); }}>
+                        <IconButton
+                          size="lg"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleShare(event);
+                          }}
+                        >
                           <Share />
                         </IconButton>
 
@@ -350,7 +344,10 @@ const ExperiencesContent = () => {
 
                     <div className="mt-8 flex justify-start lg:ml-auto lg:mr-8 lg:mt-10">
                       <button
-                        onClick={(e) => { e.stopPropagation(); handleBookEvent(event); }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleBookEvent(event);
+                        }}
                         className="rounded-full border border-[#E6DBC7]/30 px-10 py-2.5 text-[13px] font-normal tracking-wide text-[#E6DBC7] transition-colors duration-300 hover:border-[#E6DBC7]/50 hover:bg-white/[0.03]"
                       >
                         {event.cta}

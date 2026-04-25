@@ -57,6 +57,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/contexts/AuthContext";
 import { useStorageUpload } from "@/hooks/useStorageUpload";
 import { supabase } from "@/integrations/supabase/client";
+import { copyLink } from "@/lib/copyLink";
 
 import { NTH_LABELS, WEEKDAY_LABELS } from "./adminScheduleUtils";
 import { useAdminLiveSessionConfigs } from "./hooks/useAdminLiveSessionConfigs";
@@ -812,8 +813,7 @@ const LiveSessionsTable = ({ configs, onEditSession, headerActions }: LiveSessio
         { body: { sessionId: session.id } }
       );
       if (linkError) throw linkError;
-      await navigator.clipboard.writeText(data.guestJoinUrl);
-      toast.success("Guest link copied to clipboard");
+      await copyLink(data.guestJoinUrl, "Guest link copied to clipboard");
       await queryClient.invalidateQueries({ queryKey: ["admin-live-sessions"] });
     } catch {
       toast.error("Failed to generate guest link");
@@ -822,16 +822,16 @@ const LiveSessionsTable = ({ configs, onEditSession, headerActions }: LiveSessio
     }
   };
 
-  const handleCopyGuestLink = async (session: LiveSession) => {
+  const handleCopyGuestLink = (session: LiveSession) => {
     if (!session.guest_token) return;
-    const url = `${window.location.origin}/live/${session.id}?role=guest&token=${session.guest_token}`;
-    await navigator.clipboard.writeText(url);
-    toast.success("Guest link copied");
+    copyLink(
+      `${window.location.origin}/live/${session.id}?role=guest&token=${session.guest_token}`,
+      "Guest link copied"
+    );
   };
 
-  const handleCopyHostLink = async (session: LiveSession) => {
-    await navigator.clipboard.writeText(`${window.location.origin}/live/${session.id}?role=host`);
-    toast.success("Host link copied");
+  const handleCopyHostLink = (session: LiveSession) => {
+    copyLink(`${window.location.origin}/live/${session.id}?role=host`, "Host link copied");
   };
 
   const handleDelete = (session: LiveSession) => {

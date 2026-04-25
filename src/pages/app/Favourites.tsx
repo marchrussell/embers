@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Heart, Play, Share2 } from "lucide-react";
 import { Suspense, useState } from "react";
-import { toast } from "sonner";
 
 import favouritesHeroImage from "@/assets/favourites-hero.jpg";
 import { ClassPlayerModal } from "@/components/ClassPlayerModal";
@@ -12,6 +11,7 @@ import { SessionCardSkeleton } from "@/components/skeletons/SessionCardSkeleton"
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavourites } from "@/hooks/useFavourites";
 import { supabase } from "@/integrations/supabase/client";
+import { copyLink } from "@/lib/copyLink";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 
 const Favourites = () => {
@@ -56,8 +56,7 @@ const Favourites = () => {
 
   const handleShare = (session: any) => {
     const shareUrl = `${window.location.origin}/shared-session/${session.id}`;
-    navigator.clipboard.writeText(shareUrl);
-    toast.success("Share link copied to clipboard!");
+    copyLink(shareUrl, "Session link copied to clipboard");
   };
 
   const handleSessionClick = (sessionId: string, locked: boolean) => {

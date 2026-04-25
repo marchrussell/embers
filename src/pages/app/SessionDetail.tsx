@@ -18,6 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavourites } from "@/hooks/useFavourites";
 import { supabase } from "@/integrations/supabase/client";
+import { copyLink } from "@/lib/copyLink";
 import { IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 interface SessionDetailModalProps {
   sessionId: string | null;
@@ -87,31 +88,12 @@ export default function SessionDetailModal({
     }
   };
 
-  const handleShare = async () => {
+  const handleShare = () => {
     if (!session?.is_published) {
       toast.error("This session cannot be shared");
       return;
     }
-
-    const shareUrl = `${window.location.origin}/shared-session/${sessionId}`;
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: session?.title,
-          text: `Check out this breathwork session: ${session?.title}`,
-          url: shareUrl,
-        });
-        toast.success("Shared successfully");
-      } catch (err) {
-        if (err instanceof Error && err.name !== "AbortError") {
-          await navigator.clipboard.writeText(shareUrl);
-          toast.success("Link copied to clipboard");
-        }
-      }
-    } else {
-      await navigator.clipboard.writeText(shareUrl);
-      toast.success("Link copied to clipboard");
-    }
+    copyLink(`${window.location.origin}/shared-session/${sessionId}`, "Link copied to clipboard");
   };
 
   // Function to render safety note with clickable Safety Disclosure link

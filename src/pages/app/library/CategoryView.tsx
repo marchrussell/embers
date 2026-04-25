@@ -58,7 +58,7 @@ const CategoryView = memo(
 
           <button
             onClick={onBack}
-            className="absolute left-6 top-6 flex items-center gap-1 text-[#E6DBC7]/80 transition-colors hover:text-[#E6DBC7] md:left-10 lg:left-12"
+            className="absolute left-6 top-6 z-[80] flex items-center gap-1 text-[#E6DBC7]/80 transition-colors hover:text-[#E6DBC7] md:left-10 lg:left-12"
             aria-label="Back to Library"
           >
             <ArrowLeft className="h-5 w-5" />

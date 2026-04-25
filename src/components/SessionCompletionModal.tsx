@@ -1,11 +1,11 @@
 import { Award, Share2, Target, Zap } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 
 import { PostSessionFeedbackModal } from "@/components/PostSessionFeedbackModal";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { copyLink } from "@/lib/copyLink";
 
 interface SessionCompletionModalProps {
   open: boolean;
@@ -49,25 +49,9 @@ export const SessionCompletionModal = ({
     navigate("/online");
   };
 
-  const handleShare = async () => {
+  const handleShare = () => {
     const shareText = `I just completed a breathwork session! 🧘‍♀️\n\n${userStats?.totalSessions || 0} sessions completed\n${userStats?.totalMinutes || 0} minutes practiced`;
-
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: "My Breathwork Journey",
-          text: shareText,
-        });
-      } catch (err) {
-        if (err instanceof Error && err.name !== "AbortError") {
-          await navigator.clipboard.writeText(shareText);
-          toast.success("Copied to clipboard");
-        }
-      }
-    } else {
-      await navigator.clipboard.writeText(shareText);
-      toast.success("Copied to clipboard");
-    }
+    copyLink(shareText, "Copied to clipboard");
   };
 
   return (

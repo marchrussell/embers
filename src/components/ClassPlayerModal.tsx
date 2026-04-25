@@ -18,6 +18,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useFavourites } from "@/hooks/useFavourites";
 import { useMarkSessionComplete } from "@/hooks/useMarkSessionComplete";
 import { supabase } from "@/integrations/supabase/client";
+import { copyLink } from "@/lib/copyLink";
 import { analytics } from "@/lib/posthog";
 
 interface ClassPlayerModalProps {
@@ -340,31 +341,12 @@ export const ClassPlayerModal = ({
     }
   };
 
-  const handleShare = async () => {
+  const handleShare = () => {
     if (!classData?.is_published) {
       toast.error("This session cannot be shared");
       return;
     }
-
-    const shareUrl = `${window.location.origin}/shared-session/${classId}`;
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: classData?.title,
-          text: `Check out this breathwork session: ${classData?.title}`,
-          url: shareUrl,
-        });
-        toast.success("Shared successfully");
-      } catch (err) {
-        if (err instanceof Error && err.name !== "AbortError") {
-          await navigator.clipboard.writeText(shareUrl);
-          toast.success("Link copied to clipboard");
-        }
-      }
-    } else {
-      await navigator.clipboard.writeText(shareUrl);
-      toast.success("Link copied to clipboard");
-    }
+    copyLink(`${window.location.origin}/shared-session/${classId}`, "Link copied to clipboard");
   };
 
   console.log("[ClassPlayerModal] render:", {

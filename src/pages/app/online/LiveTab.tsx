@@ -1,7 +1,6 @@
 import { ChevronLeft, ChevronRight, Play, Video } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 
 import { RecordingModal } from "@/components/RecordingModal";
 import { IconButton } from "@/components/ui/icon-button";
@@ -12,6 +11,7 @@ import {
   getOutlookCalendarUrl,
 } from "@/lib/calendarUtils";
 import { experienceImages } from "@/lib/cloudImageUrls";
+import { copyLink } from "@/lib/copyLink";
 
 import LiveProgramCard from "./components/LiveProgramCard";
 import { AVAILABILITY_DAYS, useLiveReplays } from "./hooks/useLiveReplays";
@@ -111,18 +111,13 @@ const LiveTab = ({
 
   const handleShare = (session: LiveSessionCardData, e: React.MouseEvent) => {
     e.stopPropagation();
-    const shareUrl = `${window.location.origin}/online?tab=live`;
-    const shareText = `Join ${session.teacherName} for ${session.title} - ${session.description}`;
+    const shareUrl = `${window.location.origin}/online/live/${session.sessionType}`;
+    const shareText = `Join ${session.title} - ${session.description}`;
 
-    if (navigator.share) {
-      navigator.share({ title: session.title, text: shareText, url: shareUrl });
-    } else {
-      navigator.clipboard.writeText(shareUrl);
-      toast.success("Link copied to clipboard");
-    }
+    copyLink(shareText + "\n\n" + shareUrl, "Session details copied to clipboard");
   };
 
-  console.log('Rendering LiveTab with sessions: ', liveSessionsData);
+  console.log("Rendering LiveTab with sessions: ", liveSessionsData);
 
   return (
     <div className="pb-24 pt-8 md:pt-[150px]">
