@@ -111,7 +111,7 @@ const LiveProgramCard = memo(
         <GlowButton size="sm">{data.isLive ? "Join Now" : "Join Live"}</GlowButton>
       </div>
     </SplitCard>
-  ),
+  )
 );
 
 LiveProgramCard.displayName = "LiveProgramCard";

@@ -26,8 +26,7 @@ const BP = {
     flexRow: "md:flex-row",
     imgVisible: "hidden md:block",
     imgAutoH: "md:h-auto md:min-h-full",
-    contentLayout:
-      "md:relative md:flex-1 md:justify-center md:backdrop-blur-2xl md:bg-black/10",
+    contentLayout: "md:relative md:flex-1 md:justify-center md:backdrop-blur-2xl md:bg-black/10",
   },
   lg: {
     flexRow: "lg:flex-row",
@@ -90,12 +89,14 @@ const SplitCard = memo(
     const resolvedLeftPanel =
       leftPanelClassName ?? (isOverlay ? undefined : DEFAULT_LEFT_PANEL[breakpoint]);
     const resolvedImageOverlay =
-      imageOverlay === null ? null : imageOverlay ?? (isOverlay ? null : STACKED_IMAGE_OVERLAY);
+      imageOverlay === null ? null : (imageOverlay ?? (isOverlay ? null : STACKED_IMAGE_OVERLAY));
     const resolvedBackground =
       containerBackground === null
         ? undefined
-        : containerBackground ??
-          (isOverlay ? undefined : "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.98) 55%)");
+        : (containerBackground ??
+          (isOverlay
+            ? undefined
+            : "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.98) 55%)"));
 
     return (
       <Comp
@@ -104,7 +105,7 @@ const SplitCard = memo(
           "cursor-pointer shadow-glow-strong transition-colors duration-500 hover:border-white/25",
           height,
           resolvedMinHeight,
-          className,
+          className
         )}
         style={resolvedBackground ? { background: resolvedBackground } : undefined}
         {...rest}
@@ -132,7 +133,7 @@ const SplitCard = memo(
           className={cn(
             "flex flex-col",
             bp.flexRow,
-            isOverlay ? "absolute inset-0" : "relative flex-1",
+            isOverlay ? "absolute inset-0" : "relative flex-1"
           )}
         >
           {/* Left image panel */}
@@ -140,7 +141,7 @@ const SplitCard = memo(
             className={cn(
               "relative shrink-0 overflow-hidden",
               isOverlay ? bp.imgVisible : cn("h-[240px]", bp.imgAutoH),
-              resolvedLeftPanel,
+              resolvedLeftPanel
             )}
             style={isOverlay ? { width: `${imageWidth}%` } : undefined}
           >
@@ -161,7 +162,7 @@ const SplitCard = memo(
               isOverlay
                 ? cn("absolute bottom-0 left-0 right-0", bp.contentLayout)
                 : cn("flex-1 justify-center bg-black/95", bp.contentLayout),
-              contentClassName,
+              contentClassName
             )}
           >
             {children}
@@ -169,7 +170,7 @@ const SplitCard = memo(
         </div>
       </Comp>
     );
-  },
+  }
 );
 
 SplitCard.displayName = "SplitCard";

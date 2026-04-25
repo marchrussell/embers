@@ -76,7 +76,7 @@ const Index = () => {
                   //   textShadow: "0 2px 12px rgba(0,0,0,0.5)",
                   // }}
                 >
-                  <span className="text-[24px] font-editorial font-bold">
+                  <span className="font-editorial text-[24px] font-bold">
                     Embers Studio is a place to come back to the body.
                   </span>
                   <br className="hidden md:block" />

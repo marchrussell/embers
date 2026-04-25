@@ -74,7 +74,7 @@ const CategoryView = memo(
                 {category.name}
               </h1>
               <p className="mb-20 font-editorial text-xl italic leading-relaxed text-[#E6DBC7]/80 md:text-2xl">
-              {category.description}
+                {category.description}
               </p>
             </div>
           </div>

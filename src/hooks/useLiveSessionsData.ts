@@ -20,9 +20,7 @@ export function useLiveSessionsData(): LiveSessionCardData[] {
   return useMemo(() => {
     return configs.map((config) => {
       const nextDateObj = getNextDateFromConfig(config);
-      const nextDate = nextDateObj
-        ? formatExperienceDate(nextDateObj, config.time ?? "")
-        : null;
+      const nextDate = nextDateObj ? formatExperienceDate(nextDateObj, config.time ?? "") : null;
 
       const subtitleParts = [
         config.recurrence_label,

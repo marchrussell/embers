@@ -40,7 +40,7 @@ const ProgramView = memo(
           <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
 
           <div className="relative flex h-full items-end px-6 pb-8">
-            <div className="w-full flex flex-col gap-4">
+            <div className="flex w-full flex-col gap-4">
               <h1 className="font-editorial text-5xl text-[#E6DBC7] md:text-6xl">
                 {program.title}
               </h1>
@@ -68,9 +68,7 @@ const ProgramView = memo(
                   key={session.id}
                   sessionId={session.id}
                   title={session.title}
-                  description={
-                    session.description || `A ${session.duration} minute practice.`
-                  }
+                  description={session.description || `A ${session.duration} minute practice.`}
                   meta={[
                     session.teacher,
                     session.duration != null && `${session.duration} min`,

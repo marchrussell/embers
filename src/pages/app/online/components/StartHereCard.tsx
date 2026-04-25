@@ -38,8 +38,8 @@ const StartHereCard = memo(({ locked = false, onLockedClick }: StartHereCardProp
       Your First Two Weeks
     </p>
     <p className="mb-6 max-w-2xl text-sm font-light leading-relaxed text-[#E6DBC7]/80 md:text-base">
-      This space is designed to help you arrive gently and find your footing — without pressure
-      or expectation.
+      This space is designed to help you arrive gently and find your footing — without pressure or
+      expectation.
     </p>
     <Button className="w-fit rounded-full border border-[#E6DBC7]/60 bg-transparent px-12 py-3 text-sm font-light text-[#E6DBC7] transition-all hover:border-[#E6DBC7] hover:bg-white/5 md:text-base">
       Begin gently
