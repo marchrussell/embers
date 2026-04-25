@@ -100,7 +100,7 @@ const SplitCard = memo(
     return (
       <Comp
         className={cn(
-          "group relative overflow-hidden rounded-2xl border border-white/[0.12]",
+          "group relative flex flex-col overflow-hidden rounded-2xl border border-white/[0.12]",
           "cursor-pointer shadow-glow-strong transition-colors duration-500 hover:border-white/25",
           height,
           resolvedMinHeight,
@@ -109,19 +109,20 @@ const SplitCard = memo(
         style={resolvedBackground ? { background: resolvedBackground } : undefined}
         {...rest}
       >
-        {/* Background image — full bleed, decorative (meaningful alt on panel img below) */}
-        <img
-          src={imageSrc}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover"
-          style={{ objectPosition: imageObjectPosition }}
-          loading="lazy"
-        />
-
-        {/* Gradient overlay — overlay mode only */}
+        {/* Background image — overlay mode only (mobile full-bleed). Stacked mode uses the
+            left panel image + container CSS gradient instead; no background img needed. */}
         {isOverlay && (
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent md:bg-gradient-to-r md:from-background/40 md:via-transparent md:to-transparent" />
+          <>
+            <img
+              src={imageSrc}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{ objectPosition: imageObjectPosition }}
+              loading="lazy"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent md:bg-gradient-to-r md:from-background/40 md:via-transparent md:to-transparent" />
+          </>
         )}
 
         {badgeSlot}
@@ -131,7 +132,7 @@ const SplitCard = memo(
           className={cn(
             "flex flex-col",
             bp.flexRow,
-            isOverlay ? "absolute inset-0" : "relative h-full",
+            isOverlay ? "absolute inset-0" : "relative flex-1",
           )}
         >
           {/* Left image panel */}
@@ -146,7 +147,7 @@ const SplitCard = memo(
             <img
               src={imageSrc}
               alt={imageAlt}
-              className="absolute inset-0 h-full w-full object-cover"
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
               style={{ objectPosition: imageObjectPosition }}
               loading="lazy"
             />
@@ -159,7 +160,7 @@ const SplitCard = memo(
               "flex flex-col",
               isOverlay
                 ? cn("absolute bottom-0 left-0 right-0", bp.contentLayout)
-                : cn("flex-1 bg-black/95", bp.contentLayout),
+                : cn("flex-1 justify-center bg-black/95", bp.contentLayout),
               contentClassName,
             )}
           >

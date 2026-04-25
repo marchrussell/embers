@@ -14,6 +14,7 @@ import { TermsMicrocopy } from "@/components/TermsMicrocopy";
 import { GlowButton } from "@/components/ui/glow-button";
 import { IconButton } from "@/components/ui/icon-button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import SplitCard from "@/components/ui/split-card";
 import { supabase } from "@/integrations/supabase/client";
 import {
   CalendarEvent,
@@ -246,147 +247,116 @@ const ExperiencesContent = () => {
                 const isFree = event.eventType === "free";
 
                 return (
-                  <div
+                  <SplitCard
                     key={event.id}
                     id={event.id}
-                    className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/[0.12] shadow-glow-strong transition-colors duration-500 hover:border-white/25 lg:flex-row"
-                    style={{
-                      minHeight: "340px",
-                      background: "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.98) 55%)",
-                    }}
+                    imageSrc={event.image}
+                    imageAlt={event.title}
+                    breakpoint="lg"
+                    mobileLayout="stacked"
+                    contentClassName="bg-black/95 p-6 md:p-8 lg:bg-transparent lg:px-10 lg:py-10 lg:pl-6"
+                    onClick={() => handleBookEvent(event)}
                   >
-                    {/* Image - Left Side - Fills full card height */}
-                    <div className="relative h-[240px] shrink-0 overflow-hidden lg:h-auto lg:min-h-full lg:w-[52%]">
-                      <img
-                        src={event.image}
-                        alt={event.title}
-                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
-                      />
-                      <div
-                        className="absolute inset-0 hidden lg:block"
-                        style={{
-                          background:
-                            "linear-gradient(to right, transparent 20%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.98) 100%)",
-                        }}
-                      />
-                      <div
-                        className="absolute inset-0 lg:hidden"
-                        style={{
-                          background:
-                            "linear-gradient(to bottom, transparent 30%, rgba(0,0,0,0.98) 100%)",
-                        }}
-                      />
-                    </div>
-
-                    {/* Content - Right Side */}
-                    <div className="relative flex flex-1 flex-col justify-center bg-black/95 p-6 md:p-8 lg:bg-transparent lg:px-10 lg:py-10 lg:pl-6">
-                      <div>
-                        {/* Format Badge - Simplified */}
-                        <div className="mb-5">
-                          <span
-                            className="inline-flex items-center text-[11px] font-medium uppercase tracking-[0.14em]"
-                            style={{
-                              color: isStudioMember
-                                ? "#9B87F5"
-                                : isOnline
-                                  ? "rgb(74, 222, 128)"
-                                  : "#D4A574",
-                            }}
-                          >
-                            {isStudioMember
-                              ? `For Studio Members • Online${event.duration ? ` • ${event.duration}` : ""}`
+                    <div>
+                      {/* Format Badge */}
+                      <div className="mb-5">
+                        <span
+                          className="inline-flex items-center text-[11px] font-medium uppercase tracking-[0.14em]"
+                          style={{
+                            color: isStudioMember
+                              ? "#9B87F5"
                               : isOnline
-                                ? isFree
-                                  ? `Free • IG Live • Weekly${event.duration ? ` • ${event.duration}` : ""}`
-                                  : `Online • Monthly${event.duration ? ` • ${event.duration}` : ""}`
-                                : `In-Person • Monthly${event.duration ? ` • ${event.duration}` : ""}`}
-                          </span>
-                        </div>
-
-                        {/* Title */}
-                        <h2 className="mb-3 font-editorial text-[clamp(1.5rem,2.4vw,2.1rem)] font-light leading-[1.2] tracking-[-0.01em] text-[#E6DBC7]">
-                          {event.title}
-                        </h2>
-
-                        {/* Subtitle - Two lines max */}
-                        <p className="mb-6 max-w-[340px] font-editorial text-[14px] italic leading-[1.5] text-[#E6DBC7]/65 lg:text-[15px]">
-                          {event.subtitle}
-                        </p>
-
-                        {/* Date Block */}
-                        <div className="mb-2">
-                          <p className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.16em] text-[#E6DBC7]/45">
-                            Next Event
-                          </p>
-                          <p className="text-[15px] font-medium tracking-wide text-[#E6DBC7] lg:text-[16px]">
-                            {formattedDate}
-                          </p>
-                        </div>
-
-                        {/* Cadence - Micro text */}
-                        <p className="mb-5 text-[11px] tracking-wide text-[#E6DBC7]/40">
-                          Occurs: {event.recurrenceLabel}
-                          {event.venue && (
-                            <span className="mt-0.5 block text-[#E6DBC7]/35">{event.venue}</span>
-                          )}
-                        </p>
-
-                        {/* Utility Icons */}
-                        <div className="flex items-center gap-4">
-                          <IconButton size="lg" onClick={() => handleShare(event)}>
-                            <Share />
-                          </IconButton>
-
-                          <Popover
-                            open={openCalendarId === event.id}
-                            onOpenChange={(open) => setOpenCalendarId(open ? event.id : null)}
-                          >
-                            <PopoverTrigger asChild>
-                              <IconButton size="lg">
-                                <Calendar />
-                              </IconButton>
-                            </PopoverTrigger>
-                            <PopoverContent
-                              className="w-auto rounded-full border border-[#E6DBC7]/15 bg-[#1A1A1A] p-0 shadow-lg"
-                              align="start"
-                              sideOffset={8}
-                            >
-                              <div className="flex items-center gap-0.5 px-3 py-2">
-                                <button
-                                  onClick={() => handleDownloadICal(event)}
-                                  className="rounded-full px-2.5 py-1 text-[12px] font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:bg-white/5 hover:text-white"
-                                >
-                                  iCal
-                                </button>
-                                <button
-                                  onClick={() => handleGoogleCalendar(event)}
-                                  className="rounded-full px-2.5 py-1 text-[12px] font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:bg-white/5 hover:text-white"
-                                >
-                                  Google
-                                </button>
-                                <button
-                                  onClick={() => handleOutlookCalendar(event)}
-                                  className="rounded-full px-2.5 py-1 text-[12px] font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:bg-white/5 hover:text-white"
-                                >
-                                  Outlook
-                                </button>
-                              </div>
-                            </PopoverContent>
-                          </Popover>
-                        </div>
+                                ? "rgb(74, 222, 128)"
+                                : "#D4A574",
+                          }}
+                        >
+                          {isStudioMember
+                            ? `For Studio Members • Online${event.duration ? ` • ${event.duration}` : ""}`
+                            : isOnline
+                              ? isFree
+                                ? `Free • IG Live • Weekly${event.duration ? ` • ${event.duration}` : ""}`
+                                : `Online • Monthly${event.duration ? ` • ${event.duration}` : ""}`
+                              : `In-Person • Monthly${event.duration ? ` • ${event.duration}` : ""}`}
+                        </span>
                       </div>
 
-                      {/* CTA - Positioned below icons with right offset */}
-                      <div className="mt-8 flex justify-start lg:ml-auto lg:mr-8 lg:mt-10">
-                        <button
-                          onClick={() => handleBookEvent(event)}
-                          className="rounded-full border border-[#E6DBC7]/30 px-10 py-2.5 text-[13px] font-normal tracking-wide text-[#E6DBC7] transition-colors duration-300 hover:border-[#E6DBC7]/50 hover:bg-white/[0.03]"
+                      <h2 className="mb-3 font-editorial text-[clamp(1.5rem,2.4vw,2.1rem)] font-light leading-[1.2] tracking-[-0.01em] text-[#E6DBC7]">
+                        {event.title}
+                      </h2>
+
+                      <p className="mb-6 max-w-[340px] font-editorial text-[14px] italic leading-[1.5] text-[#E6DBC7]/65 lg:text-[15px]">
+                        {event.subtitle}
+                      </p>
+
+                      <div className="mb-2">
+                        <p className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.16em] text-[#E6DBC7]/45">
+                          Next Event
+                        </p>
+                        <p className="text-[15px] font-medium tracking-wide text-[#E6DBC7] lg:text-[16px]">
+                          {formattedDate}
+                        </p>
+                      </div>
+
+                      <p className="mb-5 text-[11px] tracking-wide text-[#E6DBC7]/40">
+                        Occurs: {event.recurrenceLabel}
+                        {event.venue && (
+                          <span className="mt-0.5 block text-[#E6DBC7]/35">{event.venue}</span>
+                        )}
+                      </p>
+
+                      <div className="flex items-center gap-4">
+                        <IconButton size="lg" onClick={(e) => { e.stopPropagation(); handleShare(event); }}>
+                          <Share />
+                        </IconButton>
+
+                        <Popover
+                          open={openCalendarId === event.id}
+                          onOpenChange={(open) => setOpenCalendarId(open ? event.id : null)}
                         >
-                          {event.cta}
-                        </button>
+                          <PopoverTrigger asChild>
+                            <IconButton size="lg" onClick={(e) => e.stopPropagation()}>
+                              <Calendar />
+                            </IconButton>
+                          </PopoverTrigger>
+                          <PopoverContent
+                            className="w-auto rounded-full border border-[#E6DBC7]/15 bg-[#1A1A1A] p-0 shadow-lg"
+                            align="start"
+                            sideOffset={8}
+                          >
+                            <div className="flex items-center gap-0.5 px-3 py-2">
+                              <button
+                                onClick={() => handleDownloadICal(event)}
+                                className="rounded-full px-2.5 py-1 text-[12px] font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:bg-white/5 hover:text-white"
+                              >
+                                iCal
+                              </button>
+                              <button
+                                onClick={() => handleGoogleCalendar(event)}
+                                className="rounded-full px-2.5 py-1 text-[12px] font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:bg-white/5 hover:text-white"
+                              >
+                                Google
+                              </button>
+                              <button
+                                onClick={() => handleOutlookCalendar(event)}
+                                className="rounded-full px-2.5 py-1 text-[12px] font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:bg-white/5 hover:text-white"
+                              >
+                                Outlook
+                              </button>
+                            </div>
+                          </PopoverContent>
+                        </Popover>
                       </div>
                     </div>
-                  </div>
+
+                    <div className="mt-8 flex justify-start lg:ml-auto lg:mr-8 lg:mt-10">
+                      <button
+                        onClick={(e) => { e.stopPropagation(); handleBookEvent(event); }}
+                        className="rounded-full border border-[#E6DBC7]/30 px-10 py-2.5 text-[13px] font-normal tracking-wide text-[#E6DBC7] transition-colors duration-300 hover:border-[#E6DBC7]/50 hover:bg-white/[0.03]"
+                      >
+                        {event.cta}
+                      </button>
+                    </div>
+                  </SplitCard>
                 );
               })}
           </div>

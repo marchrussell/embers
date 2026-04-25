@@ -162,14 +162,9 @@ const Index = () => {
           <SplitCard
             imageSrc={mentalResetImg}
             imageAlt="Mental Reset Course"
-            imageObjectPosition="center 65%"
-            breakpoint="md"
+            breakpoint="lg"
             mobileLayout="stacked"
-            leftPanelClassName="md:w-1/2"
-            height="h-[380px] md:h-[400px]"
-            // minHeight="min-h-[280px] sm:min-h-[320px] md:min-h-[380px]"
-            // className="mx-auto max-w-[1400px] cursor-default border-white/50"
-            contentClassName="flex flex-col justify-center bg-black px-6 py-6 sm:px-8 sm:py-8 md:px-10 md:py-10 lg:px-12"
+            contentClassName="bg-black/95 p-6 md:p-8 lg:bg-transparent lg:px-10 lg:py-10 lg:pl-6"
           >
             <h3
               className="mb-5 font-editorial text-white sm:mb-6"
@@ -202,7 +197,7 @@ const Index = () => {
               onClick={() => {
                 window.open("/online/program/mental-reset", "_blank");
               }}
-              className="inline-flex w-fit items-center justify-center rounded-full border border-white bg-transparent text-white transition-all hover:bg-white/10"
+              className="mt-auto inline-flex w-fit items-center justify-center rounded-full border border-white bg-transparent text-white transition-all hover:bg-white/10"
               style={{
                 fontSize: "clamp(0.85rem, 0.9vw, 0.95rem)",
                 fontWeight: 400,

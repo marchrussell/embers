@@ -18,7 +18,6 @@ interface LiveProgramCardProps {
   onOutlookCalendar: (e: React.MouseEvent) => void;
   isCalendarOpen: boolean;
   onCalendarOpenChange: (open: boolean) => void;
-  imageObjectPosition?: string;
 }
 
 const LiveProgramCard = memo(
@@ -31,15 +30,11 @@ const LiveProgramCard = memo(
     onOutlookCalendar,
     isCalendarOpen,
     onCalendarOpenChange,
-    imageObjectPosition,
   }: LiveProgramCardProps) => (
     <SplitCard
       imageSrc={data.image}
       imageAlt={data.title}
-      imageObjectPosition={imageObjectPosition}
-      breakpoint="md"
-      leftPanelClassName="md:w-1/2"
-      height="h-[380px] md:h-[400px]"
+      breakpoint="lg"
       mobileLayout="stacked"
       contentClassName="bg-black/95 p-6 md:p-8 lg:bg-transparent lg:px-10 lg:py-10 lg:pl-6"
       onClick={onClick}

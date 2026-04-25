@@ -33,12 +33,8 @@ const CoursesTabContent = () => {
             key={course.id}
             imageSrc={course.image_url}
             imageAlt={course.title}
-            breakpoint="md"
+            breakpoint="lg"
             mobileLayout="stacked"
-            height="h-[380px] md:h-[400px]"
-            style={{
-              background: "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.98) 55%)",
-            }}
             contentClassName="bg-black/95 p-6 md:p-8 lg:bg-transparent lg:px-10 lg:py-10 lg:pl-6"
             onClick={() => course.slug && navigate(`/online/program/${course.slug}`)}
           >
