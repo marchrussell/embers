@@ -55,6 +55,8 @@ interface SplitCardProps {
   contentClassName?: string;
   leftPanelClassName?: string;
   imageOverlay?: React.ReactNode | null;
+  // stacked mode defaults to the dark right-fade gradient; pass null to disable
+  containerBackground?: string | null;
   badgeSlot?: React.ReactNode;
   as?: React.ElementType;
   children: React.ReactNode;
@@ -75,6 +77,7 @@ const SplitCard = memo(
     contentClassName,
     leftPanelClassName,
     imageOverlay,
+    containerBackground,
     badgeSlot,
     as: Comp = "div",
     children,
@@ -88,6 +91,11 @@ const SplitCard = memo(
       leftPanelClassName ?? (isOverlay ? undefined : DEFAULT_LEFT_PANEL[breakpoint]);
     const resolvedImageOverlay =
       imageOverlay === null ? null : imageOverlay ?? (isOverlay ? null : STACKED_IMAGE_OVERLAY);
+    const resolvedBackground =
+      containerBackground === null
+        ? undefined
+        : containerBackground ??
+          (isOverlay ? undefined : "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.98) 55%)");
 
     return (
       <Comp
@@ -98,6 +106,7 @@ const SplitCard = memo(
           resolvedMinHeight,
           className,
         )}
+        style={resolvedBackground ? { background: resolvedBackground } : undefined}
         {...rest}
       >
         {/* Background image — full bleed, decorative (meaningful alt on panel img below) */}

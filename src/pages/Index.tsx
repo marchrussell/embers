@@ -57,6 +57,9 @@ const Index = () => {
 
           {/* Subtle dark overlay to reduce glare */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/5 to-black/10" />
+
+          {/* Gradient fade into next section */}
+          <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-b from-transparent to-black" />
         </section>
 
         {/* Phone Mockups Section */}
@@ -73,7 +76,7 @@ const Index = () => {
                   //   textShadow: "0 2px 12px rgba(0,0,0,0.5)",
                   // }}
                 >
-                  <span className="text-[24px] font-bold">
+                  <span className="text-[24px] font-editorial font-bold">
                     Embers Studio is a place to come back to the body.
                   </span>
                   <br className="hidden md:block" />
@@ -184,7 +187,7 @@ const Index = () => {
                 fontSize: "clamp(0.7rem, 0.8vw, 0.85rem)",
               }}
             >
-              Collection
+              10-Day Course
             </p>
             <p
               className="mb-5 text-white/90 sm:mb-6"
@@ -274,7 +277,7 @@ const Index = () => {
                     {/* Content overlaid on image bottom */}
                     <div className="absolute bottom-0 left-0 right-0 p-5">
                       <h3 className="mb-2 font-editorial text-[clamp(1.1rem,1.4vw,1.3rem)] font-light leading-[1.25] tracking-[-0.01em] text-white">
-                        {event.title} // todo - be dynamic, edit hook
+                        {event.title}
                       </h3>
                       <p className="mb-3 line-clamp-2 text-[12px] leading-[1.5] text-white/70">
                         {event.description}
