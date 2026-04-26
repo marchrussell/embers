@@ -18,14 +18,14 @@ const PrivacyPolicy = () => {
           >
             Privacy Policy
           </h1>
-          <p className="mb-12 text-center text-sm text-[#E6DBC7]/60">Last Updated: December 2025</p>
+          <p className="mb-12 text-center text-sm text-[#E6DBC7]/60">Last Updated: April 2026</p>
 
           <div
             className="space-y-8 text-[#E6DBC7]/90"
             style={{ fontSize: "clamp(0.9rem, 1vw, 1rem)", lineHeight: 1.7 }}
           >
             <p>
-              Embers Studio Ltd ("March", "we", "us", or "our") is committed to protecting your
+              Embers Studio Ltd ("we", "us", or "our") is committed to protecting your
               personal information and respecting your privacy rights. This Privacy Policy explains
               how we collect, use, store, and safeguard your personal data when you:
             </p>
@@ -33,14 +33,13 @@ const PrivacyPolicy = () => {
             <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
               <li>
                 Visit or use our website (
-                <a href="https://www.marchrussell.com" className="underline hover:text-[#E6DBC7]">
-                  www.marchrussell.com
+                <a href="https://www.embersstudio.io" className="underline hover:text-[#E6DBC7]">
+                  www.embersstudio.io
                 </a>
                 )
               </li>
               <li>Use our mobile or web applications (the "App"), including Embers Studio</li>
               <li>Purchase or access digital courses, toolkits, or pre-sale products</li>
-              <li>Interact with March Chat AI</li>
               <li>Attend our events or workshops</li>
               <li>Make payments through Stripe</li>
             </ul>
@@ -70,10 +69,9 @@ const PrivacyPolicy = () => {
                   Digital products (e.g., Anxiety Reset, Emotional Regulation Toolkit, Sleep & NSDR
                   Pack)
                 </li>
-                <li>March Chat AI</li>
                 <li>Events, workshops, and ticketed sessions</li>
                 <li>
-                  Third-party services that support our platform (Lovable, Stripe, AI providers)
+                  Third-party services that support our platform (Stripe, Supabase)
                 </li>
               </ul>
               <p>It does not apply to any third-party websites linked from our Services.</p>
@@ -114,73 +112,15 @@ const PrivacyPolicy = () => {
             {/* Section 3 */}
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                3. March Chat AI Data Collection
-              </h2>
-              <p>When you use March Chat AI, we collect:</p>
-              <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
-                <li>Your conversation messages</li>
-                <li>AI-generated response history</li>
-                <li>Message timestamps</li>
-                <li>Session engagement (e.g., practices completed, saved, skipped)</li>
-                <li>Personalisation preferences</li>
-              </ul>
-
-              <h4 className="mt-4 font-medium text-[#E6DBC7]/90">How Chat Data Is Used</h4>
-              <p>Only to:</p>
-              <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
-                <li>Provide personalised guidance</li>
-                <li>Improve response relevance</li>
-                <li>Support your experience in Embers Studio or digital courses</li>
-              </ul>
-              <p>We do not use March Chat data for marketing or resale.</p>
-              <p>You may delete your March Chat history at any time from your account settings.</p>
-            </section>
-
-            {/* Section 4 */}
-            <section className="space-y-4">
-              <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                4. AI Processing & Third-Party Providers
+                3. How We Store & Process Data
               </h2>
               <p>
-                March Chat uses AI models hosted through trusted third-party providers (e.g.,
-                OpenAI, Google, or equivalents). Data may be securely transmitted to these
-                processors solely for generating responses.
-              </p>
-              <p>These providers:</p>
-              <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
-                <li>Operate under data processing agreements</li>
-                <li>Do not retain your data for independent purposes</li>
-                <li>Do not use your data to train public models</li>
-              </ul>
-              <p>
-                Lovable Labs, Inc. provides the platform that hosts our App and manages secure
-                integrations.
-              </p>
-              <p>Stripe processes all payments as an independent data controller.</p>
-            </section>
-
-            {/* Section 5 */}
-            <section className="space-y-4">
-              <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                5. How We Store & Process Data
-              </h2>
-              <p>
-                Our platform is built and hosted on Lovable, which uses secure cloud infrastructure
-                (e.g., Supabase, AWS, Google Cloud). Data may be transferred and stored outside the
+                Our platform is built and hosted on Vercel, which uses secure cloud infrastructure
+                (e.g., Supabase). Data may be transferred and stored outside the
                 UK/EU under approved international safeguards.
               </p>
               <p>See their privacy policies for more details:</p>
               <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
-                <li>
-                  <a
-                    href="https://www.lovable.dev/privacy"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline hover:text-[#E6DBC7]"
-                  >
-                    Lovable Privacy Policy
-                  </a>
-                </li>
                 <li>
                   <a
                     href="https://stripe.com/privacy"
@@ -194,10 +134,10 @@ const PrivacyPolicy = () => {
               </ul>
             </section>
 
-            {/* Section 6 */}
+            {/* Section 4 */}
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                6. Health & Wellness Data
+                4. Health & Wellness Data
               </h2>
               <p>
                 We do not collect clinical medical information. Any wellness insights you log in the
@@ -209,10 +149,10 @@ const PrivacyPolicy = () => {
               </p>
             </section>
 
-            {/* Section 7 */}
+            {/* Section 5 */}
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                7. Data Retention
+                5. Data Retention
               </h2>
               <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
                 <li>Account data: retained while your account is active</li>
@@ -228,10 +168,10 @@ const PrivacyPolicy = () => {
               </p>
             </section>
 
-            {/* Section 8 */}
+            {/* Section 6 */}
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                8. Cookies & Analytics
+                6. Cookies & Analytics
               </h2>
               <p>We use cookies and analytics tools to:</p>
               <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
@@ -246,19 +186,19 @@ const PrivacyPolicy = () => {
               <p>
                 See our Cookie Notice at{" "}
                 <a
-                  href="https://www.marchrussell.com/cookies"
+                  href="https://www.embersstudio.io/cookies"
                   className="underline hover:text-[#E6DBC7]"
                 >
-                  www.marchrussell.com/cookies
+                  www.embersstudio.io/cookies
                 </a>
                 .
               </p>
             </section>
 
-            {/* Section 9 */}
+            {/* Section 7 */}
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                9. International Data Transfers
+                7. International Data Transfers
               </h2>
               <p>
                 If your data is transferred outside your region (e.g., to the United States), we
@@ -271,10 +211,10 @@ const PrivacyPolicy = () => {
               </ul>
             </section>
 
-            {/* Section 10 */}
+            {/* Section 8 */}
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                10. Your Rights (UK & EU GDPR)
+                8. Your Rights (UK & EU GDPR)
               </h2>
               <p>You have the right to:</p>
               <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
@@ -294,10 +234,10 @@ const PrivacyPolicy = () => {
               </p>
             </section>
 
-            {/* Section 11 */}
+            {/* Section 9 */}
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                11. California Residents (CCPA)
+                9. California Residents (CCPA)
               </h2>
               <p>You have the right to:</p>
               <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
@@ -315,10 +255,10 @@ const PrivacyPolicy = () => {
               </p>
             </section>
 
-            {/* Section 12 */}
+            {/* Section 10 */}
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                12. Children & Age Restrictions
+                10. Children & Age Restrictions
               </h2>
               <p>
                 Our Services are designed for individuals aged 16 and over. We do not knowingly
@@ -327,10 +267,10 @@ const PrivacyPolicy = () => {
               </p>
             </section>
 
-            {/* Section 13 */}
+            {/* Section 11 */}
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                13. Event & Workshop Data
+                11. Event & Workshop Data
               </h2>
               <p>When you register for an event or workshop, we process:</p>
               <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
@@ -349,19 +289,19 @@ const PrivacyPolicy = () => {
               </p>
             </section>
 
-            {/* Section 14 */}
+            {/* Section 12 */}
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                14. Updates to This Policy
+                12. Updates to This Policy
               </h2>
               <p>
                 We may update this Privacy Policy to reflect new technologies, legal requirements,
                 or service changes. The most recent version will always be posted at{" "}
                 <a
-                  href="https://www.marchrussell.com/privacy"
+                  href="https://www.embersstudio.io/privacy"
                   className="underline hover:text-[#E6DBC7]"
                 >
-                  www.marchrussell.com/privacy
+                  www.embersstudio.io/privacy
                 </a>{" "}
                 with the "Last Updated" date.
               </p>
@@ -371,9 +311,9 @@ const PrivacyPolicy = () => {
               </p>
             </section>
 
-            {/* Section 15 */}
+            {/* Section 13 */}
             <section className="space-y-4">
-              <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">15. Contact Us</h2>
+              <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">13. Contact Us</h2>
               <p>
                 If you have questions, concerns, or requests regarding this Policy or your personal
                 data, contact:
@@ -390,10 +330,10 @@ const PrivacyPolicy = () => {
               <p className="text-[#E6DBC7]">
                 🌐{" "}
                 <a
-                  href="https://www.marchrussell.com"
+                  href="https://www.embersstudio.io"
                   className="underline hover:text-[#E6DBC7]/80"
                 >
-                  www.marchrussell.com
+                  www.embersstudio.io
                 </a>
               </p>
               <p>

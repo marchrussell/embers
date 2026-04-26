@@ -87,7 +87,7 @@ export const generateICalContent = (event: CalendarEvent, uid: string): string =
     "VERSION:2.0",
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
-    "PRODID:-//March Russell//Studio//EN",
+    "PRODID:-//Embers Studio//Studio//EN",
     "BEGIN:VEVENT",
     `UID:${uid}`,
     `DTSTAMP:${formatICalDate(new Date())}`,
@@ -111,7 +111,7 @@ export const generateICalContent = (event: CalendarEvent, uid: string): string =
  * Downloads an iCal file for the event
  */
 export const downloadICalFile = (event: CalendarEvent, filename: string): void => {
-  const uid = `${filename}-${event.startDate.getTime()}@marchrussell.com`;
+  const uid = `${filename}-${event.startDate.getTime()}@embersstudio.io`;
   const icsContent = generateICalContent(event, uid);
 
   const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
