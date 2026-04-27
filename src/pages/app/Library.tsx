@@ -28,14 +28,12 @@ import { useFavouriteSessions } from "./library/hooks/useFavouriteSessions";
 import { useLibraryData } from "./library/hooks/useLibraryData";
 import LibraryMainView from "./library/LibraryMainView";
 import ProgramView from "./library/ProgramView";
-import { LibraryCategory, LibraryProgram } from "./library/types";
+import { LibraryProgram } from "./library/types";
 import { useFeaturedSession } from "./online/hooks/useFeaturedSession";
 import SessionDetailModal from "./SessionDetail";
 
 interface LibraryProps {
   isEmbedded?: boolean;
-  onClearCategory?: () => void;
-  shouldClearCategory?: boolean;
 }
 
 interface LibraryContentProps {
@@ -44,8 +42,6 @@ interface LibraryContentProps {
   isAdmin: boolean;
   isTestUser: boolean;
   isEmbedded: boolean;
-  onClearCategory?: () => void;
-  shouldClearCategory: boolean;
 }
 
 const LibraryContent = ({
@@ -54,15 +50,12 @@ const LibraryContent = ({
   isAdmin,
   isTestUser,
   isEmbedded,
-  onClearCategory,
-  shouldClearCategory,
 }: LibraryContentProps) => {
   const { favouriteIds } = useFavourites();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<LibraryCategory | null>(null);
-  const [selectedProgram, setSelectedProgram] = useState<LibraryProgram | null>(null);
+  const [selectedProgram] = useState<LibraryProgram | null>(null);
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(() => {
     return new URLSearchParams(window.location.search).get("session");
   });
@@ -99,25 +92,13 @@ const LibraryContent = ({
   });
   const { featuredSession } = useFeaturedSession();
 
-  // Adjust state when shouldClearCategory prop changes — avoids setState-in-effect cascade
-  const [prevShouldClear, setPrevShouldClear] = useState(shouldClearCategory);
-  if (prevShouldClear !== shouldClearCategory && shouldClearCategory) {
-    setPrevShouldClear(shouldClearCategory);
-    setSelectedCategory(null);
-    setSelectedProgram(null);
-    onClearCategory?.();
-  }
-
-  // Derive selected category from URL param — avoids setState-in-effect cascade
-  const urlCategory = useMemo(() => {
+  const activeCategory = useMemo(() => {
     const categoryParam = searchParams.get("category");
     if (categoryParam && categoriesWithSessions.length > 0) {
       return categoriesWithSessions.find((cat) => cat.name === categoryParam) ?? null;
     }
     return null;
   }, [searchParams, categoriesWithSessions]);
-
-  const activeCategory = selectedCategory ?? urlCategory;
 
   const checkFavouritesScroll = () => {
     if (favouritesScrollRef.current) {
@@ -169,10 +150,7 @@ const LibraryContent = ({
   }, [activeCategory]);
 
   const handleBack = () => {
-    setSelectedCategory(null);
-    if (searchParams.get("category")) {
-      navigate(isEmbedded ? "/online?tab=library" : "/library", { replace: true });
-    }
+    navigate(isEmbedded ? "/online?tab=library" : "/library", { replace: true });
   };
 
   const handleSessionClick = (sessionId: string) => {
@@ -215,7 +193,13 @@ const LibraryContent = ({
         isEmbedded={isEmbedded}
         hasSubscription={hasSubscription}
         isLoading={false}
-        onCategorySelect={setSelectedCategory}
+        onCategorySelect={(category) =>
+          navigate(
+            isEmbedded
+              ? `/online?tab=library&category=${encodeURIComponent(category.name)}`
+              : `/library?category=${encodeURIComponent(category.name)}`
+          )
+        }
         onSessionClick={handleSessionClick}
         onSubscriptionRequired={() => setShowSubscriptionModal(true)}
         onScrollFavourites={scrollFavourites}
@@ -262,11 +246,7 @@ const LibraryContent = ({
   );
 };
 
-const Library = ({
-  isEmbedded = false,
-  onClearCategory,
-  shouldClearCategory = false,
-}: LibraryProps) => {
+const Library = ({ isEmbedded = false }: LibraryProps) => {
   const { user, hasSubscription, isAdmin, isTestUser, loading: authLoading } = useAuth();
 
   const skeleton = isEmbedded ? <LibraryEmbeddedSkeleton /> : <LibraryPageSkeleton />;
@@ -281,8 +261,6 @@ const Library = ({
         isAdmin={isAdmin}
         isTestUser={isTestUser}
         isEmbedded={isEmbedded}
-        onClearCategory={onClearCategory}
-        shouldClearCategory={shouldClearCategory}
       />
     </Suspense>
   );

@@ -38,15 +38,12 @@ const Online = () => {
     acceptSafetyDisclosure();
   };
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
-  const [shouldClearLibraryCategory, setShouldClearLibraryCategory] = useState(false);
-
   const liveSessionsData = useLiveSessionsData();
   const tabParam = searchParams.get("tab");
   const activeTab = tabParam && VALID_TABS.includes(tabParam) ? tabParam : "home";
 
   const handleTabChange = (tab: string) => {
     navigate(`/online?tab=${tab}`, { replace: true });
-    setShouldClearLibraryCategory(true);
   };
 
   return (
@@ -67,11 +64,7 @@ const Online = () => {
           </TabsContent>
 
           <TabsContent value="library" className="mt-0 pb-24">
-            <Library
-              isEmbedded={true}
-              shouldClearCategory={shouldClearLibraryCategory}
-              onClearCategory={() => setShouldClearLibraryCategory(false)}
-            />
+            <Library isEmbedded={true} />
           </TabsContent>
 
           <TabsContent value="courses" className="mt-0">
