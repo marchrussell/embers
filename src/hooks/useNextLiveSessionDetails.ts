@@ -46,12 +46,15 @@ export function useNextLiveSessionDetails(sessionType: string) {
         .limit(1)
         .maybeSingle()) as { data: RawSessionRow | null; error: unknown };
 
+      console.log("Fetched next live session db:", data);
       if (error) throw error;
       if (!data) return null;
 
       const details = Array.isArray(data.live_session_details)
         ? (data.live_session_details[0] ?? null)
         : data.live_session_details;
+
+      console.log("Fetched next live session details:", details);
 
       return details;
     },

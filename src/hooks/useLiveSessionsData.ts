@@ -5,9 +5,9 @@ import { formatExperienceDate, getNextDateFromConfig } from "@/lib/experienceDat
 import { LiveSessionCardData } from "@/pages/app/online/types";
 
 import { useLiveSessionConfigs } from "./useLiveSessionConfigs";
-import { useNextLiveSessionDetails } from "./useNextLiveSessionDetails";
+import { useNextLiveSessionDetailsByType } from "./useNextLiveSessionDetailsByType";
 
-// todo - add control in admin 
+// todo - add control in admin
 const SESSION_TYPE_IMAGES: Record<string, string> = {
   "weekly-reset": experienceImages.weeklyReset,
   "monthly-presence": experienceImages.monthlyBreathOnline,
@@ -16,11 +16,14 @@ const SESSION_TYPE_IMAGES: Record<string, string> = {
 
 export function useLiveSessionsData(): LiveSessionCardData[] {
   const { data: configs = [] } = useLiveSessionConfigs();
-  const { data: nextGuestTeacher } = useNextLiveSessionDetails("guest-session");
+  const { data: sessionDetailsByType = {} } = useNextLiveSessionDetailsByType();
 
   return useMemo(() => {
     return configs.map((config) => {
-      const nextDateObj = getNextDateFromConfig(config);
+      const dbSession = sessionDetailsByType[config.session_type];
+      const nextDateObj = dbSession
+        ? new Date(dbSession.startTime)
+        : getNextDateFromConfig(config);
       const nextDate = nextDateObj ? formatExperienceDate(nextDateObj, config.time ?? "") : null;
 
       const subtitleParts = [
@@ -34,14 +37,14 @@ export function useLiveSessionsData(): LiveSessionCardData[] {
         SESSION_TYPE_IMAGES[config.session_type] ?? experienceImages.guestSession;
       const durationMinutes = config.duration ? parseInt(config.duration) || 60 : 60;
       console.log('Live Session Config:', config);
-      console.log('Date object:', nextDateObj, 'Formatted next date:', nextDate);
+      console.log('DB session:', dbSession, 'Date object:', nextDateObj, 'Formatted next date:', nextDate);
       console.log('Subtitle parts:', subtitleParts, 'Final subtitle:', subtitle);
-      
-      if (config.session_type === "guest-session" && nextGuestTeacher) {
-        console.log('Enriching next Guest Teacher:', nextGuestTeacher);
+
+      if (config.session_type === "guest-session" && dbSession) {
+        console.log('Enriching next Guest Teacher:', dbSession);
         return {
           sessionType: config.session_type,
-          title: config.title,
+          title: dbSession.session_title ?? config.title,
           subtitle,
           description:
             config.subtitle ||
@@ -51,8 +54,8 @@ export function useLiveSessionsData(): LiveSessionCardData[] {
           isLive: false,
           time: config.time,
           durationMinutes,
-          teacherName: nextGuestTeacher.name,
-          teacherTitle: nextGuestTeacher.title,
+          teacherName: dbSession.name,
+          teacherTitle: dbSession.title,
           recurrenceLabel: config.recurrence_label ?? undefined,
         };
       }
@@ -70,5 +73,5 @@ export function useLiveSessionsData(): LiveSessionCardData[] {
         recurrenceLabel: config.recurrence_label ?? undefined,
       };
     });
-  }, [configs, nextGuestTeacher]);
+  }, [configs, sessionDetailsByType]);
 }
