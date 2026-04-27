@@ -7,6 +7,7 @@ import { LiveSessionCardData } from "@/pages/app/online/types";
 import { useLiveSessionConfigs } from "./useLiveSessionConfigs";
 import { useNextGuestTeacher } from "./useNextGuestTeacher";
 
+// todo - add control in admin 
 const SESSION_TYPE_IMAGES: Record<string, string> = {
   "weekly-reset": experienceImages.weeklyReset,
   "monthly-presence": experienceImages.monthlyBreathOnline,
@@ -32,8 +33,12 @@ export function useLiveSessionsData(): LiveSessionCardData[] {
       const fallbackImage =
         SESSION_TYPE_IMAGES[config.session_type] ?? experienceImages.guestSession;
       const durationMinutes = config.duration ? parseInt(config.duration) || 60 : 60;
-
+      console.log('Live Session Config:', config);
+      console.log('Date object:', nextDateObj, 'Formatted next date:', nextDate);
+      console.log('Subtitle parts:', subtitleParts, 'Final subtitle:', subtitle);
+      
       if (config.session_type === "guest-session" && nextGuestTeacher) {
+        console.log('Enriching next Guest Teacher:', nextGuestTeacher);
         return {
           sessionType: config.session_type,
           title: config.title,
