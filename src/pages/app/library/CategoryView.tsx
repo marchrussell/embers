@@ -38,7 +38,7 @@ const CategoryView = memo(
       <div className="min-h-screen bg-background pb-40">
         {/* Category Hero Header */}
         <div
-          className={`relative z-10 h-[420px] ${isEmbedded ? "-mx-6 mt-[150px] md:-mx-10 lg:-mx-12" : "mt-[340px] md:mt-[380px]"}`}
+          className={`relative z-10 h-[420px] ${isEmbedded ? "-mx-6 mt-8 md:-mx-10 md:mt-[150px] lg:-mx-12" : "mt-[340px] md:mt-[380px]"}`}
         >
           <img
             src={getOptimizedImageUrl(category.image, IMAGE_PRESETS.hero)}

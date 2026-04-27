@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { FadeUp } from "@/components/FadeUp";
+import OnlineTabLayout from "@/components/OnlineTabLayout";
 import { RecordingModal } from "@/components/RecordingModal";
 import { IconButton } from "@/components/ui/icon-button";
 import {
@@ -121,7 +122,7 @@ const LiveTab = ({
   console.log("Rendering LiveTab with sessions: ", liveSessionsData);
 
   return (
-    <div className="pb-24 pt-8 md:pt-[150px]">
+    <OnlineTabLayout className="pb-24">
       <FadeUp>
         <h2 className="mb-2 text-2xl font-medium tracking-wide text-[#E6DBC7] md:text-3xl">
           Live Rhythm
@@ -260,7 +261,7 @@ const LiveTab = ({
         </div>
       </div>
       <RecordingModal recording={activeRecording} onClose={() => setActiveRecording(null)} />
-    </div>
+    </OnlineTabLayout>
   );
 };
 

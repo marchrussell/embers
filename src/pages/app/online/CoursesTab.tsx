@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { FadeUp } from "@/components/FadeUp";
+import OnlineTabLayout from "@/components/OnlineTabLayout";
 import { GlowButton } from "@/components/ui/glow-button";
 import SplitCard from "@/components/ui/split-card";
 
@@ -12,7 +13,7 @@ const CoursesTabContent = () => {
   const { courses } = useCourses();
 
   return (
-    <div className="pb-64 pt-8 md:pt-[150px]">
+    <OnlineTabLayout className="pb-64">
       <FadeUp>
         <h2 className="mb-2 text-2xl font-medium tracking-wide text-[#E6DBC7] md:text-3xl">
           Guided Courses
@@ -64,7 +65,7 @@ const CoursesTabContent = () => {
           </FadeUp>
         ))}
       </div>
-    </div>
+    </OnlineTabLayout>
   );
 };
 

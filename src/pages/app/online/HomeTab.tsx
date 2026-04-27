@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 import { FadeUp } from "@/components/FadeUp";
+import OnlineTabLayout from "@/components/OnlineTabLayout";
 import { Button } from "@/components/ui/button";
 import { IconButton } from "@/components/ui/icon-button";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
@@ -72,7 +73,7 @@ const HomeTab = ({
   };
 
   return (
-    <div className="space-y-16 pt-8 md:pt-[150px]">
+    <OnlineTabLayout className="space-y-16">
       {/* Start Here — Your First Two Weeks */}
       {showStartHere && (
         <section>
@@ -268,7 +269,7 @@ const HomeTab = ({
           See All <ArrowRight className="h-5 w-5" />
         </Button>
       </section>
-    </div>
+    </OnlineTabLayout>
   );
 };
 

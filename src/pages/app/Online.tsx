@@ -6,11 +6,10 @@ import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { NavBar } from "@/components/NavBar";
 import OnlineFooter from "@/components/OnlineFooter";
 import OnlineHeader from "@/components/OnlineHeader";
+import { SafetyDisclosureModal } from "@/components/SafetyDisclosureModal";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLiveSessionsData } from "@/hooks/useLiveSessionsData";
-
-import { SafetyDisclosureModal } from "@/components/SafetyDisclosureModal";
 
 import Library from "./Library";
 import CoursesTab from "./online/CoursesTab";
