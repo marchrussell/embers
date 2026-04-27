@@ -166,18 +166,15 @@ const SessionCard = ({
     onClick={onClick}
     className="group flex cursor-pointer items-center gap-4 rounded-lg border border-[#E6DBC7]/10 bg-transparent p-4 transition-all hover:border-[#E6DBC7]/20 hover:bg-[#E6DBC7]/5"
   >
-    <div
-      className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-[#2A2A2A]"
-      style={
-        imageUrl
-          ? {
-              backgroundImage: `url('${getOptimizedImageUrl(imageUrl, IMAGE_PRESETS.thumbnail)}')`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }
-          : {}
-      }
-    >
+    <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-[#2A2A2A]">
+      {imageUrl && (
+        <img
+          src={getOptimizedImageUrl(imageUrl, IMAGE_PRESETS.thumbnail)}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover object-center"
+        />
+      )}
       {!imageUrl && (
         <div className="absolute inset-0 flex items-center justify-center">
           <Play className="h-6 w-6 text-[#E6DBC7]/40" />

@@ -36,7 +36,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <NavBar />
-      <Suspense fallback={null}>
+      <Suspense>
         <SubscriptionModal
           open={showSubscriptionModal}
           onClose={() => setShowSubscriptionModal(false)}
@@ -46,13 +46,13 @@ const Index = () => {
       <main>
         {/* Hero Section with Optimized Background */}
         <section className="relative flex h-[100dvh] flex-col items-center justify-center overflow-hidden">
-          <div
-            className="absolute inset-0 h-full w-full"
-            style={{
-              backgroundImage: `url("${getCloudImageUrl(CLOUD_IMAGES.threeWaysMushroom, { width: 1920, quality: 85 })}")`,
-              backgroundSize: "cover",
-              backgroundPosition: "30% 40%",
-            }}
+          <img
+            src={getCloudImageUrl(CLOUD_IMAGES.threeWaysMushroom, { width: 1920, quality: 85 })}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover"
+            style={{ objectPosition: "30% 40%" }}
+            fetchPriority="high"
           />
 
           {/* Subtle dark overlay to reduce glare */}
@@ -62,12 +62,12 @@ const Index = () => {
           <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-b from-transparent to-black" />
         </section>
 
-        {/* Phone Mockups Section */}
+        {/* Second Screen Section */}
         <section className="bg-background">
-          <div className="mx-auto w-full px-5 pb-20 pt-12 md:px-12 lg:px-20">
+          <div className="mx-auto w-full px-5 py-20 md:px-12 lg:px-20">
             <div>
               {/* Micro-heading above mockups - centered */}
-              <div className="px-5 py-8 text-center md:px-16 md:py-20">
+              <div className="px-5 py-10 text-center md:px-16 md:py-20">
                 <p
                   className="text-center font-sans leading-[1.6] text-white"
                   // style={{
@@ -76,17 +76,17 @@ const Index = () => {
                   //   textShadow: "0 2px 12px rgba(0,0,0,0.5)",
                   // }}
                 >
-                  <span className="font-editorial text-[24px] font-bold">
+                  <p className="font-editorial text-[24px] font-bold">
                     Embers Studio is a place to come back to the body.
-                  </span>
+                  </p>
                   <br/>
-                  <p className="mt-6 text-[18px]">
+                  <p className="mt-4 text-[18px]">
                     Through breath, movement, and sensory practice, it creates space for the nervous
                     system to settle, <br className="hidden md:block" /> perception to soften, and
                     experience to open.
                   </p>
                 </p>
-                <div className="my-10 flex flex-wrap justify-center gap-3">
+                <div className="my-12 flex flex-wrap justify-center gap-3 md:my-10">
                   {[
                     "Calm the Nervous System",
                     "Sharpen Attention",
@@ -128,7 +128,7 @@ const Index = () => {
 
               {/* Closing Line - moved here under mockups */}
               <p
-                className="mx-auto mt-12 max-w-[800px] text-center italic leading-[1.7] text-white/75 md:mt-20"
+                className="mx-auto mt-16 max-w-[800px] text-center italic leading-[1.7] text-white/75 md:mt-20"
                 style={{
                   fontSize: "clamp(0.95rem, 1.1vw, 1.1rem)",
                 }}
@@ -137,7 +137,7 @@ const Index = () => {
               </p>
             </div>
             {/* Pills below mockups */}
-            <div className="mt-12 flex flex-col items-center gap-6 md:mt-16 md:gap-6">
+            <div className="mt-14 flex flex-col items-center gap-6 md:mt-16 md:gap-6">
               <div className="flex flex-wrap gap-4">
                 {["Daily Resets", "Sleep Stories", "Courses"].map((label) => (
                   <Pill key={label} variant="dark">
@@ -210,10 +210,10 @@ const Index = () => {
         </section>
 
         {/* ========== EXPERIENCES ========== */}
-        <section className="relative overflow-hidden bg-background py-16 md:py-24 lg:py-32">
+        <section className="relative overflow-hidden bg-background py-20 md:py-24 lg:py-32">
           <div className="relative z-10 mx-auto max-w-[1400px] px-6 md:px-10 lg:px-12">
             {/* Section Header - Centered */}
-            <div className="my-10 text-center">
+            <div className="my-20 text-center md:my-12">
               <h2
                 className="mb-3 font-editorial leading-[1.15] text-white"
                 style={{

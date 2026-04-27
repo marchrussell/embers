@@ -5,9 +5,11 @@ export const InstagramStoryCardComingSoon = () => {
   return (
     <div className="relative mx-auto aspect-[9/16] w-full max-w-md overflow-hidden rounded-2xl shadow-2xl">
       {/* Background Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${liveSessionBg})` }}
+      <img
+        src={liveSessionBg}
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 h-full w-full object-cover object-center"
       />
 
       {/* Subtle overlay for contrast */}

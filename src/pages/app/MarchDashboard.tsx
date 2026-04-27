@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import featherTexture from "@/assets/feather-texture.jpg";
 import marchHeroOrangeFlowers from "@/assets/march-hero-orange-flowers.jpg";
 import { Footer } from "@/components/Footer";
+import { OptimizedImage } from "@/components/OptimizedImage";
 import { ChatInput } from "@/components/march/ChatInput";
 import { ChatMessage } from "@/components/march/ChatMessage";
 import { TypingIndicator } from "@/components/march/TypingIndicator";
@@ -395,9 +396,11 @@ export default function MarchDashboard() {
 
         {/* Hero Image Section - Full Width */}
         <div className="relative z-10 h-[280px]">
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${marchHeroOrangeFlowers})` }}
+          <img
+            src={marchHeroOrangeFlowers}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover object-center"
           />
           <div className="absolute inset-0 bg-black/30" />
           <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
@@ -430,9 +433,11 @@ export default function MarchDashboard() {
           <div className="mx-auto mb-24">
             <div className="relative mx-auto max-w-4xl overflow-hidden rounded-2xl border-2 border-white/30">
               {/* Background Image */}
-              <div
-                className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: `url(${featherTexture})` }}
+              <img
+                src={featherTexture}
+                alt=""
+                aria-hidden="true"
+                className="absolute inset-0 h-full w-full object-cover object-center"
               />
 
               {/* Glassmorphism overlay */}
@@ -577,9 +582,11 @@ export default function MarchDashboard() {
             <div className="mx-auto mb-24 border-t border-[#E6DBC7]/10 pt-16">
               <div className="relative mx-auto max-w-4xl overflow-hidden rounded-2xl border-2 border-white/30">
                 {/* Background Image */}
-                <div
-                  className="absolute inset-0 bg-cover bg-center opacity-20"
-                  style={{ backgroundImage: `url(${featherTexture})` }}
+                <img
+                  src={featherTexture}
+                  alt=""
+                  aria-hidden="true"
+                  className="absolute inset-0 h-full w-full object-cover object-center opacity-20"
                 />
 
                 {/* Glassmorphism overlay */}
@@ -607,11 +614,13 @@ export default function MarchDashboard() {
                   <div className="group relative cursor-pointer overflow-hidden rounded-2xl border-2 border-white/30 transition-transform duration-300 hover:scale-[1.02]">
                     {/* Background image with less blur */}
                     {todaySession.image_url && (
-                      <div
-                        className="absolute inset-0 bg-cover bg-center"
-                        style={{
-                          backgroundImage: `url(${todaySession.image_url})`,
-                        }}
+                      <OptimizedImage
+                        src={todaySession.image_url}
+                        alt=""
+                        aria-hidden="true"
+                        className="absolute inset-0 h-full w-full object-cover object-center"
+                        responsive
+                        showSkeleton={false}
                       />
                     )}
 

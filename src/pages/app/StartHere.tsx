@@ -41,9 +41,11 @@ const StartHere = () => {
 
       {/* Hero Section - positioned to start where tab content begins */}
       <div className="relative z-10 mt-[280px] h-[320px] sm:mt-[320px] sm:h-[380px] md:mt-[380px] md:h-[420px]">
-        <div
-          className="absolute inset-0 bg-cover bg-center transition-transform duration-700"
-          style={{ backgroundImage: `url('${startHereButterfly}')` }}
+        <img
+          src={startHereButterfly}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700"
         />
         <div className="absolute inset-0 bg-black/30" />
         <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />

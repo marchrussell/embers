@@ -27,12 +27,12 @@ export const InstagramStoryCardWithSession = () => {
         <div className="mx-auto w-full max-w-xs">
           <div className="group relative aspect-square cursor-pointer overflow-hidden rounded-lg">
             {/* Session Background Image */}
-            <div
-              className="absolute inset-0 bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
-              style={{
-                backgroundImage: `url(${theLandingImage})`,
-                filter: "brightness(0.8)",
-              }}
+            <img
+              src={theLandingImage}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
+              style={{ filter: "brightness(0.8)" }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
 

@@ -80,7 +80,7 @@ export const Footer = memo(() => {
           {/* Mobile: Categorized footer layout */}
           <div className="flex flex-col md:hidden">
             {/* Connect & Legal Sections - Side by Side */}
-            <div className="grid grid-cols-2 gap-x-6 py-4">
+            <div className="grid grid-cols-2 gap-x-6 py-6">
               {/* Connect Section */}
               <div className="flex flex-col gap-5">
                 <span className="text-[11px] font-medium uppercase tracking-[0.08em] text-[#1A1A1A]/60">
@@ -89,7 +89,7 @@ export const Footer = memo(() => {
                 <div className="flex flex-col gap-3">
                   <button
                     onClick={() => setShowContactModal(true)}
-                    className="flex min-h-[44px] items-center gap-2 text-[13px] tracking-[0.02em] text-[#1A1A1A] transition-opacity duration-200 hover:opacity-60"
+                    className="flex min-h-[44px] items-center gap-2 text-[13px] tracking-[0.02em] text-[#1A1A1A] transition-opacity duration-200 md:hover:opacity-60"
                   >
                     Contact <ArrowRight className="h-5 w-5" />
                   </button>
@@ -97,7 +97,7 @@ export const Footer = memo(() => {
                     href="https://www.instagram.com/embers.io"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex min-h-[44px] items-center gap-2 text-[13px] tracking-[0.02em] text-[#1A1A1A] transition-opacity duration-200 hover:opacity-60"
+                    className="flex min-h-[44px] items-center gap-2 text-[13px] tracking-[0.02em] text-[#1A1A1A] transition-opacity duration-200 md:hover:opacity-60"
                   >
                     Instagram <ArrowRight className="h-5 w-5" />
                   </a>
@@ -112,19 +112,19 @@ export const Footer = memo(() => {
                 <div className="flex flex-col gap-3">
                   <button
                     onClick={() => setShowPrivacyModal(true)}
-                    className="flex min-h-[44px] items-center gap-2 text-[13px] tracking-[0.02em] text-[#1A1A1A] transition-opacity duration-200 hover:opacity-60"
+                    className="flex min-h-[44px] items-center gap-2 text-[13px] tracking-[0.02em] text-[#1A1A1A] transition-opacity duration-200 md:hover:opacity-60"
                   >
                     Privacy <ArrowRight className="h-5 w-5" />
                   </button>
                   <button
                     onClick={() => setShowTermsModal(true)}
-                    className="flex min-h-[44px] items-center gap-2 text-[13px] tracking-[0.02em] text-[#1A1A1A] transition-opacity duration-200 hover:opacity-60"
+                    className="flex min-h-[44px] items-center gap-2 text-[13px] tracking-[0.02em] text-[#1A1A1A] transition-opacity duration-200 md:hover:opacity-60"
                   >
                     Terms <ArrowRight className="h-5 w-5" />
                   </button>
                   <button
                     onClick={() => setShowRefundModal(true)}
-                    className="flex min-h-[44px] items-center gap-2 text-[13px] tracking-[0.02em] text-[#1A1A1A] transition-opacity duration-200 hover:opacity-60"
+                    className="flex min-h-[44px] items-center gap-2 text-[13px] tracking-[0.02em] text-[#1A1A1A] transition-opacity duration-200 md:hover:opacity-60"
                   >
                     Refunds <ArrowRight className="h-5 w-5" />
                   </button>
@@ -133,7 +133,7 @@ export const Footer = memo(() => {
             </div>
 
             {/* Newsletter Section */}
-            <div className="pt-4">
+            <div className="pt-6">
               <form onSubmit={handleNewsletterSubmit} className="flex-1">
                 <div className="flex w-full items-center overflow-hidden rounded-full border border-[#1A1A1A]/80 bg-transparent">
                   <input
@@ -147,7 +147,7 @@ export const Footer = memo(() => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="flex min-h-[44px] items-center gap-2 pl-3 pr-5 text-[11px] font-medium uppercase tracking-[0.06em] text-[#1A1A1A] transition-colors duration-200 hover:text-[#1A1A1A]/70 disabled:opacity-40"
+                    className="flex min-h-[44px] items-center gap-2 pl-3 pr-5 text-[11px] font-medium uppercase tracking-[0.06em] text-[#1A1A1A] transition-colors duration-200 md:hover:text-[#1A1A1A]/70 disabled:opacity-40"
                   >
                     Join <ArrowRight className="h-5 w-5" />
                   </button>

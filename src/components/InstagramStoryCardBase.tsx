@@ -34,12 +34,12 @@ export const InstagramStoryCardBase = ({
       )}
     >
       {/* Background Image */}
-      <div
-        className="absolute inset-0 bg-cover"
-        style={{
-          backgroundImage: `url(${backgroundImage})`,
-          backgroundPosition,
-        }}
+      <img
+        src={backgroundImage}
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 h-full w-full object-cover"
+        style={{ objectPosition: backgroundPosition }}
       />
 
       {/* Overlay */}

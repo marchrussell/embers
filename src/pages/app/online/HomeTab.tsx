@@ -149,13 +149,14 @@ const HomeTab = ({
                   className="group w-52 flex-shrink-0 cursor-pointer"
                 >
                   <div className="relative mb-4 h-52 w-52 overflow-hidden rounded-lg border border-[#E6DBC7]/15 shadow-glow">
-                    <div
-                      className="relative h-full w-full bg-cover bg-center"
-                      style={{
-                        backgroundImage: `url('${getOptimizedImageUrl(session.image_url, IMAGE_PRESETS.thumbnail)}')`,
-                        filter: "brightness(0.98) contrast(0.95) saturate(0.95)",
-                      }}
-                    >
+                    <div className="relative h-full w-full">
+                      <img
+                        src={getOptimizedImageUrl(session.image_url, IMAGE_PRESETS.thumbnail)}
+                        alt=""
+                        aria-hidden="true"
+                        className="absolute inset-0 h-full w-full object-cover object-center"
+                        style={{ filter: "brightness(0.98) contrast(0.95) saturate(0.95)" }}
+                      />
                       {locked && (
                         <div className="absolute right-2 top-2">
                           <Lock className="h-5 w-5 text-white/80" />

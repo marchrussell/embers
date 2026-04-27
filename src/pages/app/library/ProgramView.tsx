@@ -30,11 +30,11 @@ const ProgramView = memo(
 
         {/* Program Hero Header */}
         <div className="relative z-10 h-[280px]">
-          <div
-            className="absolute inset-0 bg-cover bg-center transition-transform duration-700"
-            style={{
-              backgroundImage: `url('${getOptimizedImageUrl(program.image, IMAGE_PRESETS.hero)}')`,
-            }}
+          <img
+            src={getOptimizedImageUrl(program.image, IMAGE_PRESETS.hero)}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700"
           />
           <div className="absolute inset-0 bg-black/20" />
           <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />

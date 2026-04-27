@@ -90,11 +90,11 @@ const Favourites = () => {
       <div className="min-h-screen bg-background pb-24">
         {/* Hero Header - matches StartHere layout */}
         <div className="relative z-10 mt-[340px] h-[420px] md:mt-[380px]">
-          <div
-            className="absolute inset-0 bg-cover bg-center transition-transform duration-700"
-            style={{
-              backgroundImage: `url(${favouritesHeroImage})`,
-            }}
+          <img
+            src={favouritesHeroImage}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700"
           />
           <div className="absolute inset-0 bg-black/30" />
           <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
@@ -133,12 +133,14 @@ const Favourites = () => {
                   className="group relative flex cursor-pointer items-center gap-3 overflow-hidden py-2 md:gap-4"
                 >
                   {/* Thumbnail */}
-                  <div
-                    className="relative h-16 w-16 flex-shrink-0 rounded bg-cover bg-center md:h-24 md:w-24"
-                    style={{
-                      backgroundImage: `url('${getOptimizedImageUrl(session.image, IMAGE_PRESETS.thumbnail)}')`,
-                    }}
-                  />
+                  <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded md:h-24 md:w-24">
+                    <img
+                      src={getOptimizedImageUrl(session.image, IMAGE_PRESETS.thumbnail)}
+                      alt=""
+                      aria-hidden="true"
+                      className="absolute inset-0 h-full w-full object-cover object-center"
+                    />
+                  </div>
 
                   {/* Info */}
                   <div className="min-w-0 flex-1">

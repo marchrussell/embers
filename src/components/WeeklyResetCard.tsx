@@ -97,10 +97,13 @@ export const WeeklyResetCard = ({
     >
       <div className="flex flex-col sm:flex-row">
         {/* Image - Top on mobile, Left on tablet+ */}
-        <div
-          className="relative h-[140px] w-full flex-shrink-0 bg-cover bg-center sm:h-auto sm:w-[140px] sm:self-stretch md:w-[200px] lg:w-[240px]"
-          style={{ backgroundImage: `url('${weeklyResetImage}')` }}
-        >
+        <div className="relative h-[140px] w-full flex-shrink-0 sm:h-auto sm:w-[140px] sm:self-stretch md:w-[200px] lg:w-[240px]">
+          <img
+            src={weeklyResetImage}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover object-center"
+          />
           <div className="absolute inset-0 bg-black/0" />
         </div>
 

@@ -156,9 +156,13 @@ const ClassPlayer = () => {
         {/* Blurred Background Image */}
         {classData?.image_url && (
           <>
-            <div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: `url(${classData.image_url})` }}
+            <OptimizedImage
+              src={classData.image_url}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full object-cover object-center"
+              responsive
+              showSkeleton={false}
             />
             {/* Glassmorphism Overlay */}
             <div className="absolute inset-0 bg-black/40 backdrop-blur-3xl" />

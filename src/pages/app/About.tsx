@@ -46,14 +46,13 @@ const About = () => {
                   alt="March Russell - Breathwork Facilitator"
                   className="h-auto w-full rounded-t-lg object-cover"
                 />
-                <div
-                  className="relative flex-1 overflow-hidden rounded-b-lg"
-                  style={{
-                    backgroundImage: `url(${marchBioPhoto})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                  }}
-                >
+                <div className="relative flex-1 overflow-hidden rounded-b-lg">
+                  <img
+                    src={marchBioPhoto}
+                    alt=""
+                    aria-hidden="true"
+                    className="absolute inset-0 h-full w-full object-cover object-center"
+                  />
                   <div className="absolute inset-0 bg-black/60 backdrop-blur-2xl" />
                   <div className="relative z-10 space-y-4 p-6 text-base leading-relaxed text-foreground/90">
                     <p className="font-editorial text-lg text-[#E6DBC7]">

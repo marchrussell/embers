@@ -33,10 +33,6 @@ const SessionPlayCard = memo(
     isNew = false,
   }: SessionPlayCardProps) => {
     const { isFavourite, toggleFavourite } = useFavourites();
-    const imageStyle = imageUrl
-      ? { backgroundImage: `url('${getOptimizedImageUrl(imageUrl, IMAGE_PRESETS.card)}')` }
-      : undefined;
-
     return (
       <div
         onClick={onClick}
@@ -47,9 +43,16 @@ const SessionPlayCard = memo(
         >
           {/* Image */}
           <div
-            className={`relative flex-shrink-0 bg-cover bg-center ${mobileStacked ? "h-[140px] w-full sm:h-full sm:w-[140px] md:w-[200px] lg:w-[240px]" : "h-full w-[140px] md:w-[200px] lg:w-[240px]"}`}
-            style={imageStyle}
+            className={`relative flex-shrink-0 ${mobileStacked ? "h-[140px] w-full sm:h-full sm:w-[140px] md:w-[200px] lg:w-[240px]" : "h-full w-[140px] md:w-[200px] lg:w-[240px]"}`}
           >
+            {imageUrl && (
+              <img
+                src={getOptimizedImageUrl(imageUrl, IMAGE_PRESETS.card)}
+                alt=""
+                aria-hidden="true"
+                className="absolute inset-0 h-full w-full object-cover object-center"
+              />
+            )}
             <div className="absolute inset-0 bg-black/0" />
             {isNew && (
               <div className="absolute left-3 top-3 z-10">

@@ -39,11 +39,11 @@ const CategoryView = memo(
         <div
           className={`relative z-10 h-[420px] ${isEmbedded ? "-mx-6 mt-[150px] md:-mx-10 lg:-mx-12" : "mt-[340px] md:mt-[380px]"}`}
         >
-          <div
-            className="absolute inset-0 bg-cover bg-center transition-transform duration-700"
-            style={{
-              backgroundImage: `url('${getOptimizedImageUrl(category.image, IMAGE_PRESETS.hero)}')`,
-            }}
+          <img
+            src={getOptimizedImageUrl(category.image, IMAGE_PRESETS.hero)}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700"
           />
           <div
             className={`absolute inset-0 ${

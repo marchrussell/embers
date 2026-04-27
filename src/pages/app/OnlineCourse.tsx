@@ -3,6 +3,7 @@ import { Suspense, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { Footer } from "@/components/Footer";
+import { OptimizedImage } from "@/components/OptimizedImage";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { NavBar } from "@/components/NavBar";
 import OnlineFooter from "@/components/OnlineFooter";
@@ -105,9 +106,13 @@ const CourseContent = ({ slug, hasSubscription, isAdmin, isTestUser }: CourseCon
       {/* Program Hero Header */}
       <div className="relative z-10 mt-[340px] h-[420px] md:mt-[380px]">
         {course.image_url && (
-          <div
-            className="absolute inset-0 bg-cover bg-center transition-transform duration-700"
-            style={{ backgroundImage: `url('${course.image_url}')` }}
+          <OptimizedImage
+            src={course.image_url}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700"
+            responsive
+            showSkeleton={false}
           />
         )}
         <div className="absolute inset-0 bg-black/30" />

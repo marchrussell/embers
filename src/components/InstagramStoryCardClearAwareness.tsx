@@ -25,11 +25,11 @@ export const InstagramStoryCardClearAwareness = () => {
         <div className="mx-auto w-full max-w-xs">
           <div className="group relative aspect-square cursor-pointer overflow-hidden rounded-lg">
             {/* Session Background Image */}
-            <div
-              className="absolute inset-0 bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
-              style={{
-                backgroundImage: `url(${sessionImage})`,
-              }}
+            <img
+              src={sessionImage}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 
