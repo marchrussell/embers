@@ -74,7 +74,7 @@ const CategoryView = memo(
               <h1 className="font-editorial text-5xl text-[#E6DBC7] md:text-6xl">
                 {category.name}
               </h1>
-              <p className="mt-6 mb-20 font-editorial text-xl italic leading-relaxed text-[#E6DBC7]/80 md:text-2xl">
+              <p className="mb-20 mt-6 font-editorial text-xl italic leading-relaxed text-[#E6DBC7]/80 md:text-2xl">
                 {category.description}
               </p>
             </FadeUp>
@@ -93,32 +93,32 @@ const CategoryView = memo(
 
               return (
                 <FadeUp key={session.id} delay={index * 50}>
-                <SessionPlayCard
-                  sessionId={session.id}
-                  title={session.title}
-                  description={
-                    session.description ||
-                    `A ${session.duration} minute practice to help you ${category.name.toLowerCase()}.`
-                  }
-                  meta={[
-                    session.teacher,
-                    session.duration != null && `${session.duration} min`,
-                    session.intensity,
-                    session.technique,
-                  ]
-                    .filter(Boolean)
-                    .join(" • ")}
-                  imageUrl={session.image}
-                  locked={session.locked}
-                  isNew={isNew}
-                  onClick={() => {
-                    if (session.locked && !hasSubscription) {
-                      onSubscriptionRequired();
-                    } else {
-                      onSessionClick(session.id);
+                  <SessionPlayCard
+                    sessionId={session.id}
+                    title={session.title}
+                    description={
+                      session.description ||
+                      `A ${session.duration} minute practice to help you ${category.name.toLowerCase()}.`
                     }
-                  }}
-                />
+                    meta={[
+                      session.teacher,
+                      session.duration != null && `${session.duration} min`,
+                      session.intensity,
+                      session.technique,
+                    ]
+                      .filter(Boolean)
+                      .join(" • ")}
+                    imageUrl={session.image}
+                    locked={session.locked}
+                    isNew={isNew}
+                    onClick={() => {
+                      if (session.locked && !hasSubscription) {
+                        onSubscriptionRequired();
+                      } else {
+                        onSessionClick(session.id);
+                      }
+                    }}
+                  />
                 </FadeUp>
               );
             })}

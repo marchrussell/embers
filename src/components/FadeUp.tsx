@@ -15,7 +15,7 @@ export function FadeUp({ children, delay = 0, className }: FadeUpProps) {
       ref={ref}
       className={cn(
         "fade-up-motion transition-all duration-700 ease-out",
-        isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
+        isInView ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
         className
       )}
       style={{ transitionDelay: `${delay}ms` }}

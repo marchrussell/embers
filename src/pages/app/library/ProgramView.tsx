@@ -66,29 +66,29 @@ const ProgramView = memo(
 
               return (
                 <FadeUp key={session.id} delay={index * 50}>
-                <SessionPlayCard
-                  sessionId={session.id}
-                  title={session.title}
-                  description={session.description || `A ${session.duration} minute practice.`}
-                  meta={[
-                    session.teacher,
-                    session.duration != null && `${session.duration} min`,
-                    session.intensity,
-                    session.technique,
-                  ]
-                    .filter(Boolean)
-                    .join(" • ")}
-                  imageUrl={session.image}
-                  locked={session.locked}
-                  isNew={isNew}
-                  onClick={() => {
-                    if (session.locked && !hasSubscription) {
-                      onSubscriptionRequired();
-                    } else {
-                      onSessionClick(session.id);
-                    }
-                  }}
-                />
+                  <SessionPlayCard
+                    sessionId={session.id}
+                    title={session.title}
+                    description={session.description || `A ${session.duration} minute practice.`}
+                    meta={[
+                      session.teacher,
+                      session.duration != null && `${session.duration} min`,
+                      session.intensity,
+                      session.technique,
+                    ]
+                      .filter(Boolean)
+                      .join(" • ")}
+                    imageUrl={session.image}
+                    locked={session.locked}
+                    isNew={isNew}
+                    onClick={() => {
+                      if (session.locked && !hasSubscription) {
+                        onSubscriptionRequired();
+                      } else {
+                        onSessionClick(session.id);
+                      }
+                    }}
+                  />
                 </FadeUp>
               );
             })}

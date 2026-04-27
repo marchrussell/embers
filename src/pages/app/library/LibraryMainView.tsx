@@ -209,7 +209,9 @@ const LibraryMainView = memo(
                                   alt=""
                                   aria-hidden="true"
                                   className="absolute inset-0 h-full w-full object-cover object-center"
-                                  style={{ filter: "brightness(0.98) contrast(0.95) saturate(0.95)" }}
+                                  style={{
+                                    filter: "brightness(0.98) contrast(0.95) saturate(0.95)",
+                                  }}
                                 />
                                 {session.locked && (
                                   <div className="absolute right-2 top-2">

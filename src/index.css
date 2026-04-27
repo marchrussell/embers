@@ -349,8 +349,12 @@ img {
 
 /* Hero background slow zoom-out on load */
 @keyframes hero-zoom {
-  from { transform: scale(1.04); }
-  to   { transform: scale(1); }
+  from {
+    transform: scale(1.04);
+  }
+  to {
+    transform: scale(1);
+  }
 }
 
 .hero-zoom {

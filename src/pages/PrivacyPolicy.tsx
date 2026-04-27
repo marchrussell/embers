@@ -25,9 +25,9 @@ const PrivacyPolicy = () => {
             style={{ fontSize: "clamp(0.9rem, 1vw, 1rem)", lineHeight: 1.7 }}
           >
             <p>
-              Embers Studio Ltd ("we", "us", or "our") is committed to protecting your
-              personal information and respecting your privacy rights. This Privacy Policy explains
-              how we collect, use, store, and safeguard your personal data when you:
+              Embers Studio Ltd ("we", "us", or "our") is committed to protecting your personal
+              information and respecting your privacy rights. This Privacy Policy explains how we
+              collect, use, store, and safeguard your personal data when you:
             </p>
 
             <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
@@ -70,9 +70,7 @@ const PrivacyPolicy = () => {
                   Pack)
                 </li>
                 <li>Events, workshops, and ticketed sessions</li>
-                <li>
-                  Third-party services that support our platform (Stripe, Supabase)
-                </li>
+                <li>Third-party services that support our platform (Stripe, Supabase)</li>
               </ul>
               <p>It does not apply to any third-party websites linked from our Services.</p>
             </section>
@@ -116,8 +114,8 @@ const PrivacyPolicy = () => {
               </h2>
               <p>
                 Our platform is built and hosted on Vercel, which uses secure cloud infrastructure
-                (e.g., Supabase). Data may be transferred and stored outside the
-                UK/EU under approved international safeguards.
+                (e.g., Supabase). Data may be transferred and stored outside the UK/EU under
+                approved international safeguards.
               </p>
               <p>See their privacy policies for more details:</p>
               <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
@@ -329,10 +327,7 @@ const PrivacyPolicy = () => {
               </p>
               <p className="text-[#E6DBC7]">
                 🌐{" "}
-                <a
-                  href="https://www.embersstudio.io"
-                  className="underline hover:text-[#E6DBC7]/80"
-                >
+                <a href="https://www.embersstudio.io" className="underline hover:text-[#E6DBC7]/80">
                   www.embersstudio.io
                 </a>
               </p>

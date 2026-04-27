@@ -70,17 +70,15 @@ const Index = () => {
               {/* Micro-heading above mockups - centered */}
               <div className="px-5 py-10 text-center md:px-16 md:py-20">
                 <FadeUp>
-                  <p
-                    className="text-center font-sans leading-[1.6] text-white"
-                  >
+                  <p className="text-center font-sans leading-[1.6] text-white">
                     <p className="font-editorial text-[24px] font-bold">
                       Embers Studio is a place to come back to the body.
                     </p>
-                    <br/>
+                    <br />
                     <p className="mt-4 text-[18px]">
-                      Through breath, movement, and sensory practice, it creates space for the nervous
-                      system to settle, <br className="hidden md:block" /> perception to soften, and
-                      experience to open.
+                      Through breath, movement, and sensory practice, it creates space for the
+                      nervous system to settle, <br className="hidden md:block" /> perception to
+                      soften, and experience to open.
                     </p>
                   </p>
                 </FadeUp>
@@ -165,55 +163,55 @@ const Index = () => {
         {/* Mental Reset Course Card - White-lined curved box */}
         <section className="w-full bg-background px-6 py-16 md:px-8 md:py-20 lg:px-12 lg:py-36">
           <FadeUp>
-          <SplitCard
-            imageSrc={mentalResetImg}
-            imageAlt="Mental Reset Course"
-            breakpoint="lg"
-            mobileLayout="stacked"
-            contentClassName="bg-black/95 p-6 md:p-8 lg:bg-transparent lg:px-10 lg:py-10 lg:pl-6"
-          >
-            <h3
-              className="mb-5 font-editorial text-white sm:mb-6"
-              style={{
-                fontSize: "clamp(1.8rem, 2.2vw, 2.4rem)",
-                lineHeight: 1.15,
-                fontWeight: 400,
-              }}
+            <SplitCard
+              imageSrc={mentalResetImg}
+              imageAlt="Mental Reset Course"
+              breakpoint="lg"
+              mobileLayout="stacked"
+              contentClassName="bg-black/95 p-6 md:p-8 lg:bg-transparent lg:px-10 lg:py-10 lg:pl-6"
             >
-              Mental Reset
-            </h3>
-            <p
-              className="mb-5 font-light uppercase tracking-[0.1em] text-[#EC9037] sm:mb-6"
-              style={{
-                fontSize: "clamp(0.7rem, 0.8vw, 0.85rem)",
-              }}
-            >
-              10-Day Course
-            </p>
-            <p
-              className="mb-5 text-white/90 sm:mb-6"
-              style={{
-                fontSize: "clamp(0.85rem, 0.92vw, 0.95rem)",
-                lineHeight: 1.65,
-              }}
-            >
-              A guided reset to clear mental noise, reduce overstimulation, and restore clarity.
-            </p>
-            <Button
-              onClick={() => {
-                window.open("/online/program/mental-reset", "_blank");
-              }}
-              className="mt-auto inline-flex w-fit items-center justify-center rounded-full border border-white bg-transparent text-white transition-all hover:bg-white/10"
-              style={{
-                fontSize: "clamp(0.85rem, 0.9vw, 0.95rem)",
-                fontWeight: 400,
-                letterSpacing: "0.02em",
-                padding: "0.6rem 1.4rem",
-              }}
-            >
-              Start Course
-            </Button>
-          </SplitCard>
+              <h3
+                className="mb-5 font-editorial text-white sm:mb-6"
+                style={{
+                  fontSize: "clamp(1.8rem, 2.2vw, 2.4rem)",
+                  lineHeight: 1.15,
+                  fontWeight: 400,
+                }}
+              >
+                Mental Reset
+              </h3>
+              <p
+                className="mb-5 font-light uppercase tracking-[0.1em] text-[#EC9037] sm:mb-6"
+                style={{
+                  fontSize: "clamp(0.7rem, 0.8vw, 0.85rem)",
+                }}
+              >
+                10-Day Course
+              </p>
+              <p
+                className="mb-5 text-white/90 sm:mb-6"
+                style={{
+                  fontSize: "clamp(0.85rem, 0.92vw, 0.95rem)",
+                  lineHeight: 1.65,
+                }}
+              >
+                A guided reset to clear mental noise, reduce overstimulation, and restore clarity.
+              </p>
+              <Button
+                onClick={() => {
+                  window.open("/online/program/mental-reset", "_blank");
+                }}
+                className="mt-auto inline-flex w-fit items-center justify-center rounded-full border border-white bg-transparent text-white transition-all hover:bg-white/10"
+                style={{
+                  fontSize: "clamp(0.85rem, 0.9vw, 0.95rem)",
+                  fontWeight: 400,
+                  letterSpacing: "0.02em",
+                  padding: "0.6rem 1.4rem",
+                }}
+              >
+                Start Course
+              </Button>
+            </SplitCard>
           </FadeUp>
         </section>
 
@@ -247,58 +245,58 @@ const Index = () => {
             <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-6 md:grid-cols-3">
               {liveSessionsData.map((event, index) => (
                 <FadeUp key={event.sessionType} delay={index * 100}>
-                <Link
-                  to="/online?tab=live"
-                  className="group relative flex flex-col overflow-hidden rounded-xl border border-white/[0.12] bg-black/40 shadow-lg transition-colors duration-500 hover:border-white/25 md:shadow-[0_0_60px_rgba(230,219,199,0.25)]"
-                >
-                  {/* Image */}
-                  <div className="relative aspect-[4/3] overflow-hidden">
-                    <img
-                      src={event.image}
-                      alt={event.title}
-                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <div
-                      className="absolute inset-0"
-                      style={{
-                        background:
-                          "linear-gradient(to bottom, transparent 30%, rgba(0,0,0,0.9) 100%)",
-                      }}
-                    />
-
-                    {/* Format Badge */}
-                    <span
-                      className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-black/60 px-2.5 py-1 text-[9px] font-medium uppercase tracking-[0.12em] backdrop-blur-sm"
-                      style={{ color: "#4ade80" }}
-                    >
-                      <span
-                        className="h-1.5 w-1.5 rounded-full"
-                        style={{ backgroundColor: "#4ade80" }}
+                  <Link
+                    to="/online?tab=live"
+                    className="group relative flex flex-col overflow-hidden rounded-xl border border-white/[0.12] bg-black/40 shadow-lg transition-colors duration-500 hover:border-white/25 md:shadow-[0_0_60px_rgba(230,219,199,0.25)]"
+                  >
+                    {/* Image */}
+                    <div className="relative aspect-[4/3] overflow-hidden">
+                      <img
+                        src={event.image}
+                        alt={event.title}
+                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                       />
-                      Online
-                    </span>
+                      <div
+                        className="absolute inset-0"
+                        style={{
+                          background:
+                            "linear-gradient(to bottom, transparent 30%, rgba(0,0,0,0.9) 100%)",
+                        }}
+                      />
 
-                    {/* Content overlaid on image bottom */}
-                    <div className="absolute bottom-0 left-0 right-0 p-5">
-                      <h3 className="mb-2 font-editorial text-[clamp(1.1rem,1.4vw,1.3rem)] font-light leading-[1.25] tracking-[-0.01em] text-white">
-                        {event.title}
-                      </h3>
-                      <p className="mb-3 line-clamp-2 text-[12px] leading-[1.5] text-white/70">
-                        {event.description}
-                      </p>
-                      {event.recurrenceLabel && (
-                        <p className="text-[11px] font-medium tracking-wide text-white/50">
-                          {event.recurrenceLabel}
+                      {/* Format Badge */}
+                      <span
+                        className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-black/60 px-2.5 py-1 text-[9px] font-medium uppercase tracking-[0.12em] backdrop-blur-sm"
+                        style={{ color: "#4ade80" }}
+                      >
+                        <span
+                          className="h-1.5 w-1.5 rounded-full"
+                          style={{ backgroundColor: "#4ade80" }}
+                        />
+                        Online
+                      </span>
+
+                      {/* Content overlaid on image bottom */}
+                      <div className="absolute bottom-0 left-0 right-0 p-5">
+                        <h3 className="mb-2 font-editorial text-[clamp(1.1rem,1.4vw,1.3rem)] font-light leading-[1.25] tracking-[-0.01em] text-white">
+                          {event.title}
+                        </h3>
+                        <p className="mb-3 line-clamp-2 text-[12px] leading-[1.5] text-white/70">
+                          {event.description}
                         </p>
-                      )}
-                      {event.nextDate && (
-                        <p className="mt-1 text-[11px] tracking-wide text-white/40">
-                          {event.nextDate}
-                        </p>
-                      )}
+                        {event.recurrenceLabel && (
+                          <p className="text-[11px] font-medium tracking-wide text-white/50">
+                            {event.recurrenceLabel}
+                          </p>
+                        )}
+                        {event.nextDate && (
+                          <p className="mt-1 text-[11px] tracking-wide text-white/40">
+                            {event.nextDate}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </Link>
+                  </Link>
                 </FadeUp>
               ))}
             </div>

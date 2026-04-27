@@ -98,42 +98,42 @@ const HomeTab = ({
       {quickResets.length > 0 && (
         <section className="pt-32">
           <FadeUp>
-          <div className="mb-2 flex items-center justify-between">
-            <h2 className="text-2xl font-medium tracking-wide text-[#E6DBC7] md:text-3xl">
-              Quick Resets
-            </h2>
-            {quickResets.length > 4 && (
-              <div className="hidden items-center gap-2 md:flex">
-                <IconButton
-                  size="sm"
-                  onClick={() => scrollResets("left")}
-                  disabled={!canScrollLeft}
-                  className={
-                    !canScrollLeft
-                      ? "border-[#E6DBC7]/15 text-[#E6DBC7]/20 shadow-none hover:shadow-none"
-                      : ""
-                  }
-                >
-                  <ChevronLeft strokeWidth={1.5} />
-                </IconButton>
-                <IconButton
-                  size="sm"
-                  onClick={() => scrollResets("right")}
-                  disabled={!canScrollRight}
-                  className={
-                    !canScrollRight
-                      ? "border-[#E6DBC7]/15 text-[#E6DBC7]/20 shadow-none hover:shadow-none"
-                      : ""
-                  }
-                >
-                  <ChevronRight strokeWidth={1.5} />
-                </IconButton>
-              </div>
-            )}
-          </div>
-          <p className="mb-10 text-base font-light text-[#E6DBC7]/60 md:text-lg">
-            Short practices, ready when you are.
-          </p>
+            <div className="mb-2 flex items-center justify-between">
+              <h2 className="text-2xl font-medium tracking-wide text-[#E6DBC7] md:text-3xl">
+                Quick Resets
+              </h2>
+              {quickResets.length > 4 && (
+                <div className="hidden items-center gap-2 md:flex">
+                  <IconButton
+                    size="sm"
+                    onClick={() => scrollResets("left")}
+                    disabled={!canScrollLeft}
+                    className={
+                      !canScrollLeft
+                        ? "border-[#E6DBC7]/15 text-[#E6DBC7]/20 shadow-none hover:shadow-none"
+                        : ""
+                    }
+                  >
+                    <ChevronLeft strokeWidth={1.5} />
+                  </IconButton>
+                  <IconButton
+                    size="sm"
+                    onClick={() => scrollResets("right")}
+                    disabled={!canScrollRight}
+                    className={
+                      !canScrollRight
+                        ? "border-[#E6DBC7]/15 text-[#E6DBC7]/20 shadow-none hover:shadow-none"
+                        : ""
+                    }
+                  >
+                    <ChevronRight strokeWidth={1.5} />
+                  </IconButton>
+                </div>
+              )}
+            </div>
+            <p className="mb-10 text-base font-light text-[#E6DBC7]/60 md:text-lg">
+              Short practices, ready when you are.
+            </p>
           </FadeUp>
           <div
             ref={quickResetsScrollRef}
@@ -199,32 +199,33 @@ const HomeTab = ({
             </p>
           </FadeUp>
           <FadeUp delay={100}>
-          <SessionPlayCard
-            sessionId={featuredSession.id}
-            title={featuredSession.title}
-            description={featuredSession.short_description || featuredSession.description || ""}
-            meta={[
-              featuredSession.teacher_name,
-              featuredSession.duration_minutes != null && `${featuredSession.duration_minutes} min`,
-              featuredSession.intensity,
-              featuredSession.technique,
-            ]
-              .filter(Boolean)
-              .join(" • ")}
-            imageUrl={featuredSession.image_url}
-            locked={!hasSubscription && !isAdmin && !isTestUser}
-            onClick={() => {
-              if (!hasSubscription && !isAdmin && !isTestUser) {
-                onSubscriptionRequired();
-                return;
-              }
-              if (!featuredSession.id) {
-                toast.error("Unable to load session");
-                return;
-              }
-              onSessionClick(featuredSession.id);
-            }}
-          />
+            <SessionPlayCard
+              sessionId={featuredSession.id}
+              title={featuredSession.title}
+              description={featuredSession.short_description || featuredSession.description || ""}
+              meta={[
+                featuredSession.teacher_name,
+                featuredSession.duration_minutes != null &&
+                  `${featuredSession.duration_minutes} min`,
+                featuredSession.intensity,
+                featuredSession.technique,
+              ]
+                .filter(Boolean)
+                .join(" • ")}
+              imageUrl={featuredSession.image_url}
+              locked={!hasSubscription && !isAdmin && !isTestUser}
+              onClick={() => {
+                if (!hasSubscription && !isAdmin && !isTestUser) {
+                  onSubscriptionRequired();
+                  return;
+                }
+                if (!featuredSession.id) {
+                  toast.error("Unable to load session");
+                  return;
+                }
+                onSessionClick(featuredSession.id);
+              }}
+            />
           </FadeUp>
         </section>
       )}

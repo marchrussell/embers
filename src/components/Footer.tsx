@@ -147,7 +147,7 @@ export const Footer = memo(() => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="flex min-h-[44px] items-center gap-2 pl-3 pr-5 text-[11px] font-medium uppercase tracking-[0.06em] text-[#1A1A1A] transition-colors duration-200 md:hover:text-[#1A1A1A]/70 disabled:opacity-40"
+                    className="flex min-h-[44px] items-center gap-2 pl-3 pr-5 text-[11px] font-medium uppercase tracking-[0.06em] text-[#1A1A1A] transition-colors duration-200 disabled:opacity-40 md:hover:text-[#1A1A1A]/70"
                   >
                     Join <ArrowRight className="h-5 w-5" />
                   </button>

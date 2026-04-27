@@ -134,40 +134,40 @@ const LiveTab = ({
       <div className="space-y-9 md:space-y-10 lg:space-y-12">
         {liveSessionsData.map((session, index) => (
           <FadeUp key={session.sessionType} delay={index * 80}>
-          <LiveProgramCard
-            sessionKey={session.sessionType}
-            data={session}
-            onClick={() => handleCardClick(`/online/live/${session.sessionType}`)}
-            onShare={(e) => handleShare(session, e)}
-            onDownloadICal={(e) => {
-              e.stopPropagation();
-              handleDownloadICal(session);
-            }}
-            onGoogleCalendar={(e) => {
-              e.stopPropagation();
-              handleGoogleCalendar(session);
-            }}
-            onOutlookCalendar={(e) => {
-              e.stopPropagation();
-              handleOutlookCalendar(session);
-            }}
-            isCalendarOpen={openCalendarId === session.sessionType}
-            onCalendarOpenChange={(open) => setOpenCalendarId(open ? session.sessionType : null)}
-          />
+            <LiveProgramCard
+              sessionKey={session.sessionType}
+              data={session}
+              onClick={() => handleCardClick(`/online/live/${session.sessionType}`)}
+              onShare={(e) => handleShare(session, e)}
+              onDownloadICal={(e) => {
+                e.stopPropagation();
+                handleDownloadICal(session);
+              }}
+              onGoogleCalendar={(e) => {
+                e.stopPropagation();
+                handleGoogleCalendar(session);
+              }}
+              onOutlookCalendar={(e) => {
+                e.stopPropagation();
+                handleOutlookCalendar(session);
+              }}
+              isCalendarOpen={openCalendarId === session.sessionType}
+              onCalendarOpenChange={(open) => setOpenCalendarId(open ? session.sessionType : null)}
+            />
           </FadeUp>
         ))}
 
         {/* Live Replays Section */}
         <div className="mt-40">
           <FadeUp>
-          <div className="my-10">
-            <h2 className="mb-2 text-2xl font-medium tracking-wide text-[#E6DBC7] md:text-3xl">
-              Live Replays
-            </h2>
-            <p className="text-base font-light text-[#E6DBC7]/60 md:text-lg">
-              Catch up on sessions you may have missed
-            </p>
-          </div>
+            <div className="my-10">
+              <h2 className="mb-2 text-2xl font-medium tracking-wide text-[#E6DBC7] md:text-3xl">
+                Live Replays
+              </h2>
+              <p className="text-base font-light text-[#E6DBC7]/60 md:text-lg">
+                Catch up on sessions you may have missed
+              </p>
+            </div>
           </FadeUp>
 
           {/* Weekly Reset & Monthly Presence Replays */}
