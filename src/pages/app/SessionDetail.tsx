@@ -284,13 +284,13 @@ export default function SessionDetailModal({
                             ⚠
                           </span>
                           <div className="min-w-0 flex-1">
-                            <h4 className="text-sm font-light tracking-wide text-white md:text-base">
+                            <h4 className="hidden md:block text-sm font-light tracking-wide text-white md:text-base">
                               Safety Reminder
                             </h4>
 
                             <div className="mt-4 space-y-4 border-t border-white/[0.08] pt-4">
                               {/* Practice safely */}
-                              <p className="text-[13px] font-light leading-relaxed text-white/70 md:text-sm">
+                              <p className="hidden md:block text-[13px] font-light leading-relaxed text-white/70 md:text-sm">
                                 Practice in a safe, comfortable space - never in water, while
                                 driving, or operating machinery. Consult your doctor if you have
                                 health conditions or concerns and do not practice breath holds or
