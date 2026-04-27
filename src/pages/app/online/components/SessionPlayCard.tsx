@@ -1,6 +1,12 @@
-import { Heart, Lock } from "lucide-react";
+import { Heart, Lock, MoreHorizontal } from "lucide-react";
 import { memo } from "react";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useFavourites } from "@/hooks/useFavourites";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 
@@ -43,7 +49,7 @@ const SessionPlayCard = memo(
         >
           {/* Image */}
           <div
-            className={`relative flex-shrink-0 ${mobileStacked ? "h-[140px] w-full sm:h-full sm:w-[140px] md:w-[200px] lg:w-[240px]" : "h-full w-[140px] md:w-[200px] lg:w-[240px]"}`}
+            className={`relative flex-shrink-0 ${mobileStacked ? "h-[140px] w-full sm:h-full sm:w-[140px] md:w-[200px] lg:w-[240px]" : "h-full w-[90px] md:w-[200px] lg:w-[240px]"}`}
           >
             {imageUrl && (
               <img
@@ -74,15 +80,46 @@ const SessionPlayCard = memo(
               <h3 className="mb-1.5 font-editorial text-base text-[#E6DBC7] sm:mb-2 sm:text-lg md:text-xl">
                 {title}
               </h3>
-              <p className="hidden md:block mb-2 line-clamp-2 text-xs font-light leading-relaxed text-[#E6DBC7]/60 sm:mb-3 sm:text-sm md:text-base">
+              <p className="mb-1.5 line-clamp-1 text-xs font-light leading-relaxed text-[#E6DBC7]/60 md:mb-2 md:line-clamp-2 md:text-base">
                 {description}
               </p>
               <p className="text-xs font-light text-green-400 md:text-sm">{meta}</p>
             </div>
 
-            {/* Favourite + Play buttons */}
+            {/* Mobile: ellipsis dropdown */}
             <div
-              className={`flex flex-shrink-0 items-center gap-2 md:gap-3 ${mobileStacked ? "self-end sm:self-center" : ""}`}
+              className={`flex-shrink-0 md:hidden ${mobileStacked ? "self-end sm:self-center" : ""}`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E6DBC7]/30 bg-[#E6DBC7]/5 transition-all hover:bg-[#E6DBC7]/10">
+                    <MoreHorizontal className="h-4 w-4 text-[#E6DBC7]" strokeWidth={1.5} />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-40">
+                  <DropdownMenuItem onClick={onClick}>
+                    <svg className="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                    Play
+                  </DropdownMenuItem>
+                  {sessionId && (
+                    <DropdownMenuItem onClick={() => toggleFavourite(sessionId)}>
+                      <Heart
+                        className={`mr-2 h-4 w-4 ${isFavourite(sessionId) ? "fill-[#E6DBC7]" : ""}`}
+                        strokeWidth={1.5}
+                      />
+                      {isFavourite(sessionId) ? "Unfavourite" : "Favourite"}
+                    </DropdownMenuItem>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+
+            {/* Desktop: heart + play buttons */}
+            <div
+              className={`hidden flex-shrink-0 items-center gap-3 md:flex ${mobileStacked ? "self-end sm:self-center" : ""}`}
             >
               {sessionId && (
                 <button
@@ -90,15 +127,15 @@ const SessionPlayCard = memo(
                     e.stopPropagation();
                     toggleFavourite(sessionId);
                   }}
-                  className="flex h-11 w-11 items-center justify-center rounded-full border border-[#E6DBC7]/30 bg-[#E6DBC7]/5 transition-all hover:bg-[#E6DBC7]/10 md:h-14 md:w-14"
+                  className="flex h-14 w-14 items-center justify-center rounded-full border border-[#E6DBC7]/30 bg-[#E6DBC7]/5 transition-all hover:bg-[#E6DBC7]/10"
                 >
                   <Heart
-                    className={`h-4 w-4 text-[#E6DBC7] md:h-5 md:w-5 ${isFavourite(sessionId) ? "fill-[#E6DBC7]" : ""}`}
+                    className={`h-5 w-5 text-[#E6DBC7] ${isFavourite(sessionId) ? "fill-[#E6DBC7]" : ""}`}
                     strokeWidth={1.5}
                   />
                 </button>
               )}
-              <div className="flex h-11 w-11 items-center justify-center rounded-full border border-[#E6DBC7]/50 bg-[#E6DBC7]/10 transition-all md:h-14 md:w-14">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full border border-[#E6DBC7]/50 bg-[#E6DBC7]/10 transition-all">
                 <svg
                   className="ml-0.5 h-5 w-5 text-[#E6DBC7] transition-all"
                   fill="currentColor"
