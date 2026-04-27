@@ -5,7 +5,7 @@ import { formatExperienceDate, getNextDateFromConfig } from "@/lib/experienceDat
 import { LiveSessionCardData } from "@/pages/app/online/types";
 
 import { useLiveSessionConfigs } from "./useLiveSessionConfigs";
-import { useNextGuestTeacher } from "./useNextGuestTeacher";
+import { useNextLiveSessionDetails } from "./useNextLiveSessionDetails";
 
 // todo - add control in admin 
 const SESSION_TYPE_IMAGES: Record<string, string> = {
@@ -16,7 +16,7 @@ const SESSION_TYPE_IMAGES: Record<string, string> = {
 
 export function useLiveSessionsData(): LiveSessionCardData[] {
   const { data: configs = [] } = useLiveSessionConfigs();
-  const { teacher: nextGuestTeacher } = useNextGuestTeacher();
+  const { data: nextGuestTeacher } = useNextLiveSessionDetails("guest-session");
 
   return useMemo(() => {
     return configs.map((config) => {
