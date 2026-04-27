@@ -62,7 +62,7 @@ const CategoryView = memo(
             aria-label="Back to Library"
           >
             <ArrowLeft className="h-5 w-5" />
-            <span className="text-sm font-light tracking-wide">Library</span>
+            {/* <span className="text-sm font-light tracking-wide">Library</span> */}
           </button>
 
           <div className="relative flex h-full items-end px-6 pb-8 md:px-10 lg:px-12">
@@ -73,7 +73,7 @@ const CategoryView = memo(
               <h1 className="font-editorial text-5xl text-[#E6DBC7] md:text-6xl">
                 {category.name}
               </h1>
-              <p className="mb-20 font-editorial text-xl italic leading-relaxed text-[#E6DBC7]/80 md:text-2xl">
+              <p className="mt-6 mb-20 font-editorial text-xl italic leading-relaxed text-[#E6DBC7]/80 md:text-2xl">
                 {category.description}
               </p>
             </div>
