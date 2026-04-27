@@ -1,3 +1,4 @@
+import { useMutation } from "@tanstack/react-query";
 import { Minus, Plus } from "lucide-react";
 import { Suspense, useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -55,7 +56,6 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
   const [attendeeName, setAttendeeName] = useState("");
   const [attendeeEmail, setAttendeeEmail] = useState("");
   const [hasAccepted, setHasAccepted] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState<ScheduledExperienceDate | null>(null);
 
   const maxTickets = selectedDate
@@ -73,13 +73,10 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
     }
   }, [open]);
 
-  const handleProceedToPayment = async () => {
-    if (!event || !selectedDate) return;
+  const { mutate: proceedToPayment, isPending } = useMutation({
+    mutationFn: async () => {
+      if (!event || !selectedDate) throw new Error("Missing event or date");
 
-    setLoading(true);
-
-    try {
-      // Determine location based on event type
       const eventLocation =
         event.id.includes("online") || event.id === "unwind-rest"
           ? "Online (Zoom link will be sent)"
@@ -101,18 +98,19 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
       });
 
       if (error) throw error;
-
+      return data;
+    },
+    onSuccess: (data) => {
       if (data?.url) {
-        analytics.eventBooked(event.id, event.title);
+        analytics.eventBooked(event!.id, event!.title);
         window.open(data.url, "_blank");
         onClose();
       }
-    } catch (error: any) {
+    },
+    onError: (error: Error) => {
       toast.error(error.message || "Failed to create payment");
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+  });
 
   if (!event) return null;
 
@@ -123,7 +121,7 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
         hideClose
-        className="max-h-[90vh] w-[92%] max-w-2xl overflow-y-auto rounded-3xl border border-white/20 bg-black/70 p-10 backdrop-blur-xl"
+        className="max-h-[90vh] min-h-[70vh] w-[92%] max-w-2xl overflow-y-auto rounded-3xl border border-white/20 bg-black/70 p-10 backdrop-blur-xl"
       >
         <ModalCloseButton onClose={onClose} size="md" />
         <DialogHeader className="pb-2">
@@ -232,7 +230,7 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
 
         {step === 2 && (
           <div className="space-y-6 pt-4 md:space-y-8">
-            <div className="prose prose-sm max-h-64 max-w-none overflow-y-auto rounded-2xl border border-white/10 bg-white/5 p-5 md:max-h-80 md:p-6">
+            <div className="prose prose-sm min-h-64 max-h-[50vh] max-w-none overflow-y-auto rounded-2xl border border-white/10 bg-white/5 p-5 md:min-h-80 md:p-6">
               <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-white/90 md:text-base">
                 {SAFETY_DISCLOSURE}
               </pre>
@@ -263,11 +261,11 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
               </Button>
               <Button
                 variant="outline"
-                onClick={handleProceedToPayment}
-                disabled={!hasAccepted || loading}
+                onClick={() => proceedToPayment()}
+                disabled={!hasAccepted || isPending}
                 className="flex-1 rounded-full border-white/40 bg-transparent py-6 text-base font-medium text-white hover:bg-white/10 disabled:opacity-50"
               >
-                {loading ? (
+                {isPending ? (
                   <ButtonLoadingSpinner />
                 ) : isFreeEvent ? (
                   "Confirm Booking"

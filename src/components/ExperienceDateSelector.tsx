@@ -100,7 +100,7 @@ export function EventDateSelector({ eventId, time, onDateSelect, selectedDate }:
 
   if (availableDates.length === 0) {
     return (
-      <div className="w-full rounded-lg border border-white/20 bg-white/5 p-3 text-sm text-white/50">
+      <div className="flex h-14 w-full items-center rounded-md border border-white/20 bg-white/5 px-3 text-[15px] text-white/50">
         No upcoming dates available
       </div>
     );
@@ -114,15 +114,15 @@ export function EventDateSelector({ eventId, time, onDateSelect, selectedDate }:
         onDateSelect(date);
       }}
     >
-      <SelectTrigger className="w-full border-white/20 bg-white/5 text-white">
+      <SelectTrigger className="h-14 w-full border-white/20 bg-white/5 py-5 text-[15px] text-white">
         <SelectValue placeholder="Select a date" />
       </SelectTrigger>
-      <SelectContent className="max-h-[300px] border-white/20 bg-[#1A1A1A]">
+      <SelectContent className="max-h-[300px] border-white/20 bg-[#1A1A1A] text-white">
         {availableDates.map((date) => (
           <SelectItem
             key={date.date}
             value={date.date}
-            className="text-white hover:bg-white/10 focus:bg-white/10"
+            className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white"
           >
             <div className="flex w-full items-center justify-between gap-4">
               <span>
