@@ -222,7 +222,7 @@ const ExperiencesContent = () => {
                 Experiences
               </h1>
               <p className="font-unica text-[clamp(1rem,1.15vw,1.1rem)] font-light text-white/60">
-                Live sessions, workshops, and gatherings — online and in-person
+                In person live sessions, workshops, and gatherings
               </p>
             </FadeUp>
           </div>
