@@ -297,60 +297,62 @@ const ExperiencesContent = () => {
                           )}
                         </p>
 
-                        <div className="flex items-center gap-4">
-                          <IconButton
-                            size="lg"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleShare(event);
-                            }}
-                          >
-                            <Share />
-                          </IconButton>
-
-                          <Popover
-                            open={openCalendarId === event.id}
-                            onOpenChange={(open) => setOpenCalendarId(open ? event.id : null)}
-                          >
-                            <PopoverTrigger asChild>
-                              <IconButton size="lg" onClick={(e) => e.stopPropagation()}>
-                                <Calendar />
-                              </IconButton>
-                            </PopoverTrigger>
-                            <PopoverContent
-                              className="w-auto rounded-full border border-[#E6DBC7]/15 bg-[#1A1A1A] p-0 shadow-lg"
-                              align="start"
-                              sideOffset={8}
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-4">
+                            <IconButton
+                              size="lg"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleShare(event);
+                              }}
                             >
-                              <div className="flex items-center gap-0.5 px-3 py-2">
-                                <button
-                                  onClick={() => handleDownloadICal(event)}
-                                  className="rounded-full px-2.5 py-1 text-[12px] font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:bg-white/5 hover:text-white"
-                                >
-                                  iCal
-                                </button>
-                                <button
-                                  onClick={() => handleGoogleCalendar(event)}
-                                  className="rounded-full px-2.5 py-1 text-[12px] font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:bg-white/5 hover:text-white"
-                                >
-                                  Google
-                                </button>
-                                <button
-                                  onClick={() => handleOutlookCalendar(event)}
-                                  className="rounded-full px-2.5 py-1 text-[12px] font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:bg-white/5 hover:text-white"
-                                >
-                                  Outlook
-                                </button>
-                              </div>
-                            </PopoverContent>
-                          </Popover>
+                              <Share />
+                            </IconButton>
+
+                            <Popover
+                              open={openCalendarId === event.id}
+                              onOpenChange={(open) => setOpenCalendarId(open ? event.id : null)}
+                            >
+                              <PopoverTrigger asChild>
+                                <IconButton size="lg" onClick={(e) => e.stopPropagation()}>
+                                  <Calendar />
+                                </IconButton>
+                              </PopoverTrigger>
+                              <PopoverContent
+                                className="w-auto rounded-full border border-[#E6DBC7]/15 bg-[#1A1A1A] p-0 shadow-lg"
+                                align="start"
+                                sideOffset={8}
+                              >
+                                <div className="flex items-center gap-0.5 px-3 py-2">
+                                  <button
+                                    onClick={() => handleDownloadICal(event)}
+                                    className="rounded-full px-2.5 py-1 text-[12px] font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:bg-white/5 hover:text-white"
+                                  >
+                                    iCal
+                                  </button>
+                                  <button
+                                    onClick={() => handleGoogleCalendar(event)}
+                                    className="rounded-full px-2.5 py-1 text-[12px] font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:bg-white/5 hover:text-white"
+                                  >
+                                    Google
+                                  </button>
+                                  <button
+                                    onClick={() => handleOutlookCalendar(event)}
+                                    className="rounded-full px-2.5 py-1 text-[12px] font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:bg-white/5 hover:text-white"
+                                  >
+                                    Outlook
+                                  </button>
+                                </div>
+                              </PopoverContent>
+                            </Popover>
+                          </div>
 
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
                               handleBookEvent(event);
                             }}
-                            className="flex justify-end rounded-full border border-[#E6DBC7]/30 px-10 py-2.5 text-[13px] font-normal tracking-wide text-[#E6DBC7] transition-colors duration-300 hover:border-[#E6DBC7]/50 hover:bg-white/[0.03] md:hidden"
+                            className="rounded-full border border-[#E6DBC7]/30 px-10 py-2.5 text-[13px] font-normal tracking-wide text-[#E6DBC7] transition-colors duration-300 hover:border-[#E6DBC7]/50 hover:bg-white/[0.03] md:hidden"
                           >
                             {event.cta}
                           </button>
@@ -409,14 +411,14 @@ const ExperiencesContent = () => {
                     className="absolute inset-0 hidden md:block"
                     style={{
                       background:
-                        "linear-gradient(to right, transparent 40%, rgba(0,0,0,0.6) 70%, rgba(0,0,0,1) 100%)",
+                        "linear-gradient(to right, transparent 20%, rgba(0,0,0,0.2) 45%, rgba(0,0,0,0.65) 70%, rgba(0,0,0,0.95) 100%)",
                     }}
                   />
                   <div
                     className="absolute inset-0 md:hidden"
                     style={{
                       background:
-                        "linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.9) 100%)",
+                        "linear-gradient(to bottom, transparent 20%, rgba(0,0,0,0.15) 45%, rgba(0,0,0,0.6) 72%, rgba(0,0,0,0.95) 100%)",
                     }}
                   />
                 </div>
