@@ -2,6 +2,7 @@ import { ArrowRight } from "lucide-react";
 import { Suspense, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
+import { FadeUp } from "@/components/FadeUp";
 import { Footer } from "@/components/Footer";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { NavBar } from "@/components/NavBar";
@@ -50,7 +51,7 @@ const Index = () => {
             src={getCloudImageUrl(CLOUD_IMAGES.threeWaysMushroom, { width: 1920, quality: 85 })}
             alt=""
             aria-hidden="true"
-            className="absolute inset-0 h-full w-full object-cover"
+            className="hero-zoom absolute inset-0 h-full w-full object-cover"
             style={{ objectPosition: "30% 40%" }}
             fetchPriority="high"
           />
@@ -68,40 +69,41 @@ const Index = () => {
             <div>
               {/* Micro-heading above mockups - centered */}
               <div className="px-5 py-10 text-center md:px-16 md:py-20">
-                <p
-                  className="text-center font-sans leading-[1.6] text-white"
-                  // style={{
-                  //   fontSize: "clamp(0.95rem, 1.5vw, 1.15rem)",
-                  //   fontWeight: 400,
-                  //   textShadow: "0 2px 12px rgba(0,0,0,0.5)",
-                  // }}
-                >
-                  <p className="font-editorial text-[24px] font-bold">
-                    Embers Studio is a place to come back to the body.
+                <FadeUp>
+                  <p
+                    className="text-center font-sans leading-[1.6] text-white"
+                  >
+                    <p className="font-editorial text-[24px] font-bold">
+                      Embers Studio is a place to come back to the body.
+                    </p>
+                    <br/>
+                    <p className="mt-4 text-[18px]">
+                      Through breath, movement, and sensory practice, it creates space for the nervous
+                      system to settle, <br className="hidden md:block" /> perception to soften, and
+                      experience to open.
+                    </p>
                   </p>
-                  <br/>
-                  <p className="mt-4 text-[18px]">
-                    Through breath, movement, and sensory practice, it creates space for the nervous
-                    system to settle, <br className="hidden md:block" /> perception to soften, and
-                    experience to open.
-                  </p>
-                </p>
-                <div className="my-12 flex flex-wrap justify-center gap-3 md:my-10">
-                  {[
-                    "Calm the Nervous System",
-                    "Sharpen Attention",
-                    "Restore Energy",
-                    "Sleep More Deeply",
-                  ].map((label) => (
-                    <Pill key={label} variant="dark">
-                      {label}
-                    </Pill>
-                  ))}
-                </div>
+                </FadeUp>
+                <FadeUp delay={150}>
+                  <div className="my-12 flex flex-wrap justify-center gap-3 md:my-10">
+                    {[
+                      "Calm the Nervous System",
+                      "Sharpen Attention",
+                      "Restore Energy",
+                      "Sleep More Deeply",
+                    ].map((label) => (
+                      <Pill key={label} variant="dark">
+                        {label}
+                      </Pill>
+                    ))}
+                  </div>
+                </FadeUp>
               </div>
 
               {/* Phone Mockups - centered */}
-              <PhoneMockups />
+              <FadeUp delay={100}>
+                <PhoneMockups />
+              </FadeUp>
 
               {/* Bottom Text - Full Width, 3 Lines */}
               <div className="absolute bottom-8 left-5 right-5 z-10 sm:bottom-10 sm:left-8 sm:right-6 md:bottom-12 md:left-16 md:right-8">
@@ -138,26 +140,31 @@ const Index = () => {
             </div>
             {/* Pills below mockups */}
             <div className="mt-14 flex flex-col items-center gap-6 md:mt-16 md:gap-6">
-              <div className="flex flex-wrap gap-4">
-                {["Daily Resets", "Sleep Stories", "Courses"].map((label) => (
-                  <Pill key={label} variant="dark">
-                    {label}
-                  </Pill>
-                ))}
-              </div>
-              <div className="flex flex-wrap gap-4">
-                {["Workshops + Guest Experts", "Live Gathering"].map((label) => (
-                  <Pill key={label} variant="dark">
-                    {label}
-                  </Pill>
-                ))}
-              </div>
+              <FadeUp delay={0}>
+                <div className="flex flex-wrap gap-4">
+                  {["Daily Resets", "Sleep Stories", "Courses"].map((label) => (
+                    <Pill key={label} variant="dark">
+                      {label}
+                    </Pill>
+                  ))}
+                </div>
+              </FadeUp>
+              <FadeUp delay={80}>
+                <div className="flex flex-wrap gap-4">
+                  {["Workshops + Guest Experts", "Live Gathering"].map((label) => (
+                    <Pill key={label} variant="dark">
+                      {label}
+                    </Pill>
+                  ))}
+                </div>
+              </FadeUp>
             </div>
           </div>
         </section>
 
         {/* Mental Reset Course Card - White-lined curved box */}
         <section className="w-full bg-background px-6 py-16 md:px-8 md:py-20 lg:px-12 lg:py-36">
+          <FadeUp>
           <SplitCard
             imageSrc={mentalResetImg}
             imageAlt="Mental Reset Course"
@@ -207,37 +214,40 @@ const Index = () => {
               Start Course
             </Button>
           </SplitCard>
+          </FadeUp>
         </section>
 
         {/* ========== EXPERIENCES ========== */}
         <section className="relative overflow-hidden bg-background py-20 md:py-24 lg:py-32">
           <div className="relative z-10 mx-auto max-w-[1400px] px-6 md:px-10 lg:px-12">
             {/* Section Header - Centered */}
-            <div className="my-20 text-center md:my-12">
-              <h2
-                className="mb-3 font-editorial leading-[1.15] text-white"
-                style={{
-                  fontSize: "clamp(2rem, 3.5vw, 3.5rem)",
-                  fontWeight: 300,
-                }}
-              >
-                Experiences
-              </h2>
-              <p
-                className="mx-auto max-w-lg px-2 leading-[1.6] text-white/65 md:px-0"
-                style={{
-                  fontSize: "clamp(0.95rem, 1.1vw, 1.1rem)",
-                }}
-              >
-                Online live sessions, workshops, and gatherings
-              </p>
-            </div>
+            <FadeUp>
+              <div className="my-20 text-center md:my-12">
+                <h2
+                  className="mb-3 font-editorial leading-[1.15] text-white"
+                  style={{
+                    fontSize: "clamp(2rem, 3.5vw, 3.5rem)",
+                    fontWeight: 300,
+                  }}
+                >
+                  Experiences
+                </h2>
+                <p
+                  className="mx-auto max-w-lg px-2 leading-[1.6] text-white/65 md:px-0"
+                  style={{
+                    fontSize: "clamp(0.95rem, 1.1vw, 1.1rem)",
+                  }}
+                >
+                  Online live sessions, workshops, and gatherings
+                </p>
+              </div>
+            </FadeUp>
 
             {/* Vertical Event Cards */}
             <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-6 md:grid-cols-3">
-              {liveSessionsData.map((event) => (
+              {liveSessionsData.map((event, index) => (
+                <FadeUp key={event.sessionType} delay={index * 100}>
                 <Link
-                  key={event.sessionType}
                   to="/online?tab=live"
                   className="group relative flex flex-col overflow-hidden rounded-xl border border-white/[0.12] bg-black/40 shadow-lg transition-colors duration-500 hover:border-white/25 md:shadow-[0_0_60px_rgba(230,219,199,0.25)]"
                 >
@@ -289,19 +299,22 @@ const Index = () => {
                     </div>
                   </div>
                 </Link>
+                </FadeUp>
               ))}
             </div>
 
             {/* View All Experiences CTA */}
-            <div className="mt-12 text-center">
-              <Link
-                to="/online?tab=live"
-                className="inline-flex min-h-[44px] items-center gap-2 text-[13px] font-light tracking-wide text-white/80 transition-colors duration-300 hover:text-white"
-              >
-                View All Lives
-                <ArrowRight className="h-5 w-5" />
-              </Link>
-            </div>
+            <FadeUp delay={200}>
+              <div className="mt-12 text-center">
+                <Link
+                  to="/online?tab=live"
+                  className="group inline-flex min-h-[44px] items-center gap-2 text-[13px] font-light tracking-wide text-white/80 transition-colors duration-300 hover:text-white"
+                >
+                  View All Lives
+                  <ArrowRight className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-1" />
+                </Link>
+              </div>
+            </FadeUp>
           </div>
         </section>
       </main>

@@ -346,3 +346,25 @@ img {
 .will-change-opacity {
   will-change: opacity;
 }
+
+/* Hero background slow zoom-out on load */
+@keyframes hero-zoom {
+  from { transform: scale(1.04); }
+  to   { transform: scale(1); }
+}
+
+.hero-zoom {
+  animation: hero-zoom 8s ease-out forwards;
+}
+
+/* Accessibility: disable all motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .hero-zoom {
+    animation: none;
+  }
+  .fade-up-motion {
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
