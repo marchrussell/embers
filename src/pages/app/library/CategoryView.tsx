@@ -38,7 +38,7 @@ const CategoryView = memo(
       <div className="min-h-screen bg-background pb-40">
         {/* Category Hero Header */}
         <div
-          className={`relative z-10 h-[300px] md:h-[420px] ${isEmbedded ? "-mx-6 mt-[150px] md:-mx-10 lg:-mx-12" : "mt-[160px] md:mt-[380px]"}`}
+          className={`relative z-10 h-[300px] md:h-[420px] ${isEmbedded ? "-mx-6 mt-[80px] md:-mx-10 lg:-mx-12" : "mt-[80px] md:mt-[380px]"}`}
         >
           <img
             src={getOptimizedImageUrl(category.image, IMAGE_PRESETS.hero)}
@@ -47,13 +47,7 @@ const CategoryView = memo(
             className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700"
           />
           <div
-            className={`absolute inset-0 ${
-              category.name === "AWAKEN" || category.name === "RELEASE"
-                ? "bg-black/20"
-                : category.name === "ENERGY"
-                  ? "bg-black/10"
-                  : "bg-black/15"
-            }`}
+            className={`absolute inset-0 bg-black/15`}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
 
@@ -63,7 +57,6 @@ const CategoryView = memo(
             aria-label="Back to Library"
           >
             <ArrowLeft className="h-5 w-5" />
-            {/* <span className="text-sm font-light tracking-wide">Library</span> */}
           </button>
 
           <div className="relative flex h-full items-end px-6 pb-8 md:px-10 lg:px-12">

@@ -8,7 +8,7 @@ export const LibraryEmbeddedSkeleton = () => (
     <div className="mb-20 pt-8 md:pt-[150px]">
       <div className="mb-2 h-8 w-40 animate-pulse rounded bg-muted" />
       <div className="mb-10 h-5 w-80 animate-pulse rounded bg-muted/50" />
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
         {[1, 2, 3, 4, 5, 6].map((i) => (
           <CategoryCardSkeleton key={i} />
         ))}
