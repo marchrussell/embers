@@ -34,7 +34,8 @@ Safety Disclosure for Breathwork Session
 
 By participating in this breathwork session, I acknowledge the following:
 
-1. Physical Considerations: Breathwork can induce powerful physical and emotional responses. I understand that I should not participate if I:
+1. Physical Considerations: 
+   Breathwork can induce powerful physical and emotional responses. I understand that I should not participate if I:
    - Am pregnant
    - Have a history of cardiovascular disease, including angina or heart attack
    - Have high blood pressure
@@ -43,11 +44,14 @@ By participating in this breathwork session, I acknowledge the following:
    - Have severe mental illness
    - Am taking heavy medication
 
-2. Personal Responsibility: I take full responsibility for my well-being during and after the session.
+2. Personal Responsibility:
+   I take full responsibility for my well-being during and after the session.
 
-3. Right to Stop: I understand I can stop at any time if I feel uncomfortable.
+3. Right to Stop: 
+   I understand I can stop at any time if I feel uncomfortable.
 
-4. Medical Disclaimer: This session is not a substitute for medical or psychological care.
+4. Medical Disclaimer: 
+   This session is not a substitute for medical or psychological care.
 `;
 
 export function ExperienceBookingModal({ event, open, onClose }: Props) {
@@ -241,7 +245,7 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
                 id="accept"
                 checked={hasAccepted}
                 onCheckedChange={(checked) => setHasAccepted(checked === true)}
-                className="mt-0.5 border-white/40 p-2 data-[state=checked]:bg-white data-[state=checked]:text-black"
+                className="mt-0.5 border-white/40 p-2 data-[state=checked]:bg-green-500 data-[state=checked]:text-black"
               />
               <label
                 htmlFor="accept"

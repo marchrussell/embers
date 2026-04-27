@@ -122,7 +122,7 @@ export function EventDateSelector({ eventId, time, onDateSelect, selectedDate }:
           <SelectItem
             key={date.date}
             value={date.date}
-            className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white"
+            className="min-h-[44px] py-3 text-[15px] text-white hover:bg-white/10 focus:bg-white/10 focus:text-white"
           >
             <div className="flex w-full items-center justify-between gap-4">
               <span>
