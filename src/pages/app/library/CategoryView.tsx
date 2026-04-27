@@ -38,7 +38,7 @@ const CategoryView = memo(
       <div className="min-h-screen bg-background pb-40">
         {/* Category Hero Header */}
         <div
-          className={`relative z-10 h-[420px] ${isEmbedded ? "-mx-6 mt-[150px] md:-mx-10 lg:-mx-12" : "mt-[340px] md:mt-[380px]"}`}
+          className={`relative z-10 h-[300px] md:h-[420px] ${isEmbedded ? "-mx-6 mt-[150px] md:-mx-10 lg:-mx-12" : "mt-[160px] md:mt-[380px]"}`}
         >
           <img
             src={getOptimizedImageUrl(category.image, IMAGE_PRESETS.hero)}
@@ -82,8 +82,8 @@ const CategoryView = memo(
         </div>
 
         {/* Main Content */}
-        <div className={`p-16 ${isEmbedded ? "px-6" : "px-6 md:px-12 lg:px-20"}`}>
-          <div className="grid gap-4 md:gap-5">
+        <div className={`px-6 pb-16 pt-10 md:pt-16 ${isEmbedded ? "" : "md:px-12 lg:px-20"}`}>
+          <div className="grid gap-6 md:gap-5">
             {sortedSessions.map((session, index) => {
               const isNew = session.created_at
                 ? Math.floor(
