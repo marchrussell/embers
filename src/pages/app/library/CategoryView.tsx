@@ -1,4 +1,3 @@
-import { ArrowLeft } from "lucide-react";
 import { memo } from "react";
 
 import { FadeUp } from "@/components/FadeUp";
@@ -46,18 +45,16 @@ const CategoryView = memo(
             aria-hidden="true"
             className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700"
           />
-          <div
-            className={`absolute inset-0 bg-black/15`}
-          />
+          <div className={`absolute inset-0 bg-black/15`} />
           <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
 
-          <button
+          {/* <button
             onClick={onBack}
             className="absolute left-6 top-6 z-[80] flex items-center gap-1 text-[#E6DBC7]/80 transition-colors hover:text-[#E6DBC7] md:left-10 lg:left-12"
             aria-label="Back to Library"
           >
             <ArrowLeft className="h-5 w-5" />
-          </button>
+          </button> */}
 
           <div className="relative flex h-full items-end px-6 pb-8 md:px-10 lg:px-12">
             <FadeUp className="w-full">
@@ -75,7 +72,7 @@ const CategoryView = memo(
         </div>
 
         {/* Main Content */}
-        <div className={`px-6 pb-16 pt-6 md:pt-16 ${isEmbedded ? "" : "md:px-12 lg:px-20"}`}>
+        {/* <div className={`px-6 pb-16 pt-6 md:pt-16 ${isEmbedded ? "" : "md:px-12 lg:px-20"}`}> */}
           <div className="grid gap-6 md:gap-5">
             {sortedSessions.map((session, index) => {
               const isNew = session.created_at
@@ -116,7 +113,7 @@ const CategoryView = memo(
               );
             })}
           </div>
-        </div>
+        {/* </div> */}
       </div>
     );
   }
