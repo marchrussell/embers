@@ -1,12 +1,6 @@
-import { Heart, Lock, MoreHorizontal } from "lucide-react";
+import { Heart, Lock } from "lucide-react";
 import { memo } from "react";
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useFavourites } from "@/hooks/useFavourites";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 
@@ -86,38 +80,7 @@ const SessionPlayCard = memo(
               <p className="text-xs font-light text-green-400 md:text-sm">{meta}</p>
             </div>
 
-            {/* Mobile: ellipsis dropdown */}
-            <div
-              className={`flex-shrink-0 md:hidden ${mobileStacked ? "self-end sm:self-center" : ""}`}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E6DBC7]/30 bg-[#E6DBC7]/5 transition-all hover:bg-[#E6DBC7]/10">
-                    <MoreHorizontal className="h-4 w-4 text-[#E6DBC7]" strokeWidth={1.5} />
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-40">
-                  <DropdownMenuItem onClick={onClick}>
-                    <svg className="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                    Play
-                  </DropdownMenuItem>
-                  {sessionId && (
-                    <DropdownMenuItem onClick={() => toggleFavourite(sessionId)}>
-                      <Heart
-                        className={`mr-2 h-4 w-4 ${isFavourite(sessionId) ? "fill-[#E6DBC7]" : ""}`}
-                        strokeWidth={1.5}
-                      />
-                      {isFavourite(sessionId) ? "Unfavourite" : "Favourite"}
-                    </DropdownMenuItem>
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-
-            {/* Desktop: heart + play buttons */}
+            {/* Favourite + Play buttons (desktop only) */}
             <div
               className={`hidden flex-shrink-0 items-center gap-3 md:flex ${mobileStacked ? "self-end sm:self-center" : ""}`}
             >
