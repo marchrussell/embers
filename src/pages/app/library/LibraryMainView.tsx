@@ -111,7 +111,7 @@ const LibraryMainView = memo(
                             key={category.id}
                             onClick={() => onCategorySelect(category)}
                             className={`group relative h-72 cursor-pointer overflow-hidden rounded-2xl border border-[#E6DBC7]/15 shadow-glow transition-all hover:border-[#E6DBC7]/25 ${
-                              isLastOdd ? "col-span-2" : ""
+                              isLastOdd ? "md:col-span-2" : ""
                             }`}
                           >
                             <OptimizedImage
@@ -154,8 +154,8 @@ const LibraryMainView = memo(
                         />
                       </Link>
 
-                      {favouriteSessions.length > 4 && (
-                        <div className="hidden items-center gap-2 md:flex">
+                      {favouriteSessions.length > 1 && (
+                        <div className="flex items-center gap-2">
                           <IconButton
                             size="sm"
                             onClick={() => onScrollFavourites("left")}

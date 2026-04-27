@@ -104,7 +104,6 @@ const HomeTab = ({
               {quickResets.length > 4 && (
                 <div className="hidden items-center gap-2 md:flex">
                   <IconButton
-                    size="sm"
                     onClick={() => scrollResets("left")}
                     disabled={!canScrollLeft}
                     className={
@@ -116,7 +115,6 @@ const HomeTab = ({
                     <ChevronLeft strokeWidth={1.5} />
                   </IconButton>
                   <IconButton
-                    size="sm"
                     onClick={() => scrollResets("right")}
                     disabled={!canScrollRight}
                     className={
