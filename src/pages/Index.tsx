@@ -67,7 +67,7 @@ const Index = () => {
           <div className="mx-auto w-full px-5 pb-20 pt-12 md:px-12 lg:px-20">
             <div>
               {/* Micro-heading above mockups - centered */}
-              <div className="px-5 pb-8 text-center sm:px-8 sm:pb-10 md:px-16 md:py-20">
+              <div className="px-5 py-8 text-center md:px-16 md:py-20">
                 <p
                   className="text-center font-sans leading-[1.6] text-white"
                   // style={{
@@ -79,15 +79,14 @@ const Index = () => {
                   <span className="font-editorial text-[24px] font-bold">
                     Embers Studio is a place to come back to the body.
                   </span>
-                  <br className="hidden md:block" />
-                  <br className="hidden md:block" />
-                  <span className="text-[18px]">
+                  <br/>
+                  <p className="mt-6 text-[18px]">
                     Through breath, movement, and sensory practice, it creates space for the nervous
                     system to settle, <br className="hidden md:block" /> perception to soften, and
                     experience to open.
-                  </span>
+                  </p>
                 </p>
-                <div className="mt-10 flex flex-wrap justify-center gap-2 md:gap-3">
+                <div className="my-10 flex flex-wrap justify-center gap-3">
                   {[
                     "Calm the Nervous System",
                     "Sharpen Attention",
@@ -138,7 +137,7 @@ const Index = () => {
               </p>
             </div>
             {/* Pills below mockups */}
-            <div className="mt-12 flex flex-col items-center gap-4 md:mt-16 md:gap-6">
+            <div className="mt-12 flex flex-col items-center gap-6 md:mt-16 md:gap-6">
               <div className="flex flex-wrap gap-4">
                 {["Daily Resets", "Sleep Stories", "Courses"].map((label) => (
                   <Pill key={label} variant="dark">
@@ -214,7 +213,7 @@ const Index = () => {
         <section className="relative overflow-hidden bg-background py-16 md:py-24 lg:py-32">
           <div className="relative z-10 mx-auto max-w-[1400px] px-6 md:px-10 lg:px-12">
             {/* Section Header - Centered */}
-            <div className="mb-10 text-center md:mb-14">
+            <div className="my-10 text-center">
               <h2
                 className="mb-3 font-editorial leading-[1.15] text-white"
                 style={{
