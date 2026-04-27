@@ -73,8 +73,8 @@ const openLessons = [{ num: 1, title: "Clear The Way", duration: "6 mins", image
 
 export const PhoneMockups = () => {
   return (
-    <div className="mx-auto w-full max-w-[1800px] px-4 py-8">
-      <div className="flex flex-wrap items-end justify-center gap-6 lg:flex-nowrap lg:gap-10 xl:gap-12">
+    <div className="mx-auto w-full max-w-[1800px] px-4 py-6">
+      <div className="flex flex-wrap items-end justify-center gap-6 lg:flex-nowrap">
         {/* Phone 1: Category Sessions */}
         <div className="relative">
           <div className={phoneFrameStyles}>
