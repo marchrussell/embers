@@ -234,7 +234,7 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
 
         {step === 2 && (
           <div className="space-y-6 pt-4 md:space-y-8">
-            <div className="prose prose-sm min-h-64 max-h-[50vh] max-w-none overflow-y-auto rounded-2xl border border-white/10 bg-white/5 p-5 md:min-h-80 md:p-6">
+            <div className="prose prose-sm max-h-[50vh] min-h-64 max-w-none overflow-y-auto rounded-2xl border border-white/10 bg-white/5 p-5 md:min-h-80 md:p-6">
               <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-white/90 md:text-base">
                 {SAFETY_DISCLOSURE}
               </pre>

@@ -97,7 +97,7 @@ export const FeedbackSection = () => {
                 value={feedback}
                 onChange={(e) => setFeedback(e.target.value)}
                 placeholder="Type your feedback or suggestion here..."
-                style={{ fontSize: '16px' }} // Ensure consistent font size across browsers
+                style={{ fontSize: "16px" }} // Ensure consistent font size across browsers
                 className="min-h-[200px] resize-none rounded-xl border-white/15 bg-white/5 p-5 text-base font-light text-white placeholder:text-white/40 focus:border-white/30 focus:ring-0"
                 disabled={isSubmitting}
               />

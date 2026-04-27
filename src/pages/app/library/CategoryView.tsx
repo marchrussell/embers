@@ -1,3 +1,4 @@
+import { ArrowLeft } from "lucide-react";
 import { memo } from "react";
 
 import { FadeUp } from "@/components/FadeUp";
@@ -5,6 +6,8 @@ import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimiza
 import SessionPlayCard from "@/pages/app/online/components/SessionPlayCard";
 
 import { LibraryCategory, LibrarySession } from "./types";
+
+const now = Date.now();
 
 interface CategoryViewProps {
   category: LibraryCategory;
@@ -24,8 +27,6 @@ const CategoryView = memo(
     onSessionClick,
     onSubscriptionRequired,
   }: CategoryViewProps) => {
-    const now = Date.now();
-
     const sortedSessions = [...category.sessions].sort((a: LibrarySession, b: LibrarySession) => {
       if (a.locked !== b.locked) return a.locked ? 1 : -1;
       const ai = a.order_index ?? Infinity;
@@ -37,7 +38,7 @@ const CategoryView = memo(
       <div className="min-h-screen bg-background pb-40">
         {/* Category Hero Header */}
         <div
-          className={`relative z-10 h-[300px] md:h-[420px] ${isEmbedded ? "-mx-6 -mt-44 md:-mx-10 md:-mt-72 lg:-mx-12" : "mt-[80px] md:mt-[380px]"}`}
+          className={`relative z-10 h-[420px] ${isEmbedded ? "-mx-6 mt-[150px] md:-mx-10 lg:-mx-12" : "mt-[340px] md:mt-[380px]"}`}
         >
           <img
             src={getOptimizedImageUrl(category.image, IMAGE_PRESETS.hero)}
@@ -45,16 +46,25 @@ const CategoryView = memo(
             aria-hidden="true"
             className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700"
           />
-          <div className={`absolute inset-0 bg-black/15`} />
+          <div
+            className={`absolute inset-0 ${
+              category.name === "AWAKEN" || category.name === "RELEASE"
+                ? "bg-black/20"
+                : category.name === "ENERGY"
+                  ? "bg-black/10"
+                  : "bg-black/15"
+            }`}
+          />
           <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
 
-          {/* <button
+          <button
             onClick={onBack}
             className="absolute left-6 top-6 z-[80] flex items-center gap-1 text-[#E6DBC7]/80 transition-colors hover:text-[#E6DBC7] md:left-10 lg:left-12"
             aria-label="Back to Library"
           >
             <ArrowLeft className="h-5 w-5" />
-          </button> */}
+            {/* <span className="text-sm font-light tracking-wide">Library</span> */}
+          </button>
 
           <div className="relative flex h-full items-end px-6 pb-8 md:px-10 lg:px-12">
             <FadeUp className="w-full">
@@ -72,8 +82,8 @@ const CategoryView = memo(
         </div>
 
         {/* Main Content */}
-        {/* <div className={`px-6 pb-16 pt-6 md:pt-16 ${isEmbedded ? "" : "md:px-12 lg:px-20"}`}> */}
-          <div className="grid gap-6 md:gap-5">
+        <div className={`p-16 ${isEmbedded ? "px-6" : "px-6 md:px-12 lg:px-20"}`}>
+          <div className="grid gap-4 md:gap-5">
             {sortedSessions.map((session, index) => {
               const isNew = session.created_at
                 ? Math.floor(
@@ -113,7 +123,7 @@ const CategoryView = memo(
               );
             })}
           </div>
-        {/* </div> */}
+        </div>
       </div>
     );
   }
