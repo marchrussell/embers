@@ -33,7 +33,6 @@ const HomeTab = ({
   onSubscriptionRequired,
   onSessionClick,
 }: HomeTabProps) => {
-  console.log("HomeTab render with liveSessionsData:", liveSessionsData);
   const navigate = useNavigate();
   const { featuredSession } = useFeaturedSession();
   const { quickResets } = useQuickResets();
