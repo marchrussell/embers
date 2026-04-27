@@ -40,7 +40,7 @@ const StartHere = () => {
       <OnlineHeader />
 
       {/* Hero Section - positioned to start where tab content begins */}
-      <div className="relative z-10 mt-[280px] h-[320px] sm:mt-[320px] sm:h-[380px] md:mt-[380px] md:h-[420px]">
+      <div className="relative z-10 mt-[160px] h-[280px] sm:mt-[320px] sm:h-[380px] md:mt-[380px] md:h-[420px]">
         <img
           src={startHereButterfly}
           alt=""
@@ -90,7 +90,7 @@ const StartHere = () => {
             Two gentle practices to help you settle in
           </p>
 
-          <div className="grid gap-4 sm:gap-6">
+          <div className="grid gap-6">
             {sessions.map((session) => (
               <SessionPlayCard
                 key={session.id}

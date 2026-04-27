@@ -126,7 +126,7 @@ export default function SessionDetailModal({
         }}
       >
         <DialogContent
-          className="max-h-[90vh] w-[95%] max-w-5xl overflow-y-auto rounded-xl border border-white/[0.08] bg-black/95 p-0 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-2xl md:w-[90%]"
+          className="max-h-[90dvh] w-[95%] max-w-5xl overflow-y-auto rounded-xl border border-white/[0.08] bg-black/95 p-0 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-2xl md:w-[90%]"
           onCloseAutoFocus={() => {}}
         >
           <DialogTitle className="sr-only">{session?.title || "Session Details"}</DialogTitle>
@@ -155,7 +155,7 @@ export default function SessionDetailModal({
             <div className="grid grid-cols-1 gap-6 p-6 md:p-10 lg:grid-cols-[55%_45%] lg:gap-8 lg:p-12">
               {/* Left side - Image with text overlay and action buttons */}
               <div className="space-y-6">
-                <div className="relative aspect-square overflow-hidden rounded-xl p-6 md:rounded-2xl md:p-7">
+                <div className="relative aspect-[4/3] overflow-hidden rounded-xl p-6 md:aspect-square md:rounded-2xl md:p-7">
                   <OptimizedImage
                     src={session.image_url}
                     alt={session.title}
