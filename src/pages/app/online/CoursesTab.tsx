@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { FadeUp } from "@/components/FadeUp";
 import { GlowButton } from "@/components/ui/glow-button";
 import SplitCard from "@/components/ui/split-card";
 
@@ -12,14 +13,14 @@ const CoursesTabContent = () => {
 
   return (
     <div className="pb-64 pt-8 md:pt-[150px]">
-      <div>
+      <FadeUp>
         <h2 className="mb-2 text-2xl font-medium tracking-wide text-[#E6DBC7] md:text-3xl">
           Guided Courses
         </h2>
         <p className="mb-10 text-base font-light text-[#E6DBC7]/60 md:text-lg">
           Structured pathways for lasting change and integration.
         </p>
-      </div>
+      </FadeUp>
 
       <div className="space-y-9 md:space-y-10 lg:space-y-12">
         {courses.length === 0 && (
@@ -28,9 +29,9 @@ const CoursesTabContent = () => {
           </div>
         )}
 
-        {courses.map((course) => (
+        {courses.map((course, index) => (
+          <FadeUp key={course.id} delay={index * 80}>
           <SplitCard
-            key={course.id}
             imageSrc={course.image_url}
             imageAlt={course.title}
             breakpoint="lg"
@@ -60,6 +61,7 @@ const CoursesTabContent = () => {
               <GlowButton size="sm">Start Course</GlowButton>
             </div>
           </SplitCard>
+          </FadeUp>
         ))}
       </div>
     </div>

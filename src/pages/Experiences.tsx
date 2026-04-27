@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ExperienceBookingModal } from "@/components/ExperienceBookingModal";
+import { FadeUp } from "@/components/FadeUp";
 import { Footer } from "@/components/Footer";
 import { NavBar } from "@/components/NavBar";
 import { ExperiencesSkeleton } from "@/components/skeletons";
@@ -199,12 +200,14 @@ const ExperiencesContent = () => {
         {/* Hero Section - Desktop Only */}
         <section className="hidden px-6 pb-12 pt-48 md:block md:px-10 md:pb-16 md:pt-44 lg:px-12 lg:pb-20 lg:pt-48">
           <div className="mx-auto max-w-[1600px]">
-            <h1 className="mb-3 font-editorial text-[clamp(2.4rem,4vw,4rem)] font-light tracking-[-0.02em] text-[#E6DBC7]">
-              Experiences
-            </h1>
-            <p className="font-unica text-[clamp(1rem,1.15vw,1.1rem)] font-light text-white/60">
-              In person live sessions, workshops, and gatherings
-            </p>
+            <FadeUp>
+              <h1 className="mb-3 font-editorial text-[clamp(2.4rem,4vw,4rem)] font-light tracking-[-0.02em] text-[#E6DBC7]">
+                Experiences
+              </h1>
+              <p className="font-unica text-[clamp(1rem,1.15vw,1.1rem)] font-light text-white/60">
+                In person live sessions, workshops, and gatherings
+              </p>
+            </FadeUp>
           </div>
         </section>
 
@@ -214,12 +217,14 @@ const ExperiencesContent = () => {
         {/* Events Grid */}
         <section className="px-6 pb-40 md:px-10 md:pb-56 lg:px-12 lg:pb-72">
           <div className="mb-6 max-w-[1600px] md:hidden">
-            <h1 className="mb-3 font-editorial text-[clamp(2.4rem,4vw,4rem)] font-light tracking-[-0.02em] text-[#E6DBC7]">
-              Experiences
-            </h1>
-            <p className="font-unica text-[clamp(1rem,1.15vw,1.1rem)] font-light text-white/60">
-              Live sessions, workshops, and gatherings — online and in-person
-            </p>
+            <FadeUp>
+              <h1 className="mb-3 font-editorial text-[clamp(2.4rem,4vw,4rem)] font-light tracking-[-0.02em] text-[#E6DBC7]">
+                Experiences
+              </h1>
+              <p className="font-unica text-[clamp(1rem,1.15vw,1.1rem)] font-light text-white/60">
+                Live sessions, workshops, and gatherings — online and in-person
+              </p>
+            </FadeUp>
           </div>
           <div className="mx-auto max-w-[1600px] space-y-9 md:space-y-10 lg:space-y-12">
             {experiences
@@ -227,7 +232,7 @@ const ExperiencesContent = () => {
                 const nextDate = getNextExperienceDate(event.recurrence, event.time);
                 return nextDate !== null;
               })
-              .map((event) => {
+              .map((event, index) => {
                 const nextDate = getNextExperienceDate(event.recurrence, event.time);
                 const formattedDate = formatExperienceDate(nextDate, event.time);
                 const isOnline = event.format === "Online";
@@ -235,8 +240,8 @@ const ExperiencesContent = () => {
                 const isFree = event.eventType === "free";
 
                 return (
+                  <FadeUp key={event.id} delay={index * 80}>
                   <SplitCard
-                    key={event.id}
                     id={event.id}
                     imageSrc={event.image}
                     imageAlt={event.title}
@@ -354,6 +359,7 @@ const ExperiencesContent = () => {
                       </button>
                     </div>
                   </SplitCard>
+                  </FadeUp>
                 );
               })}
           </div>
@@ -363,16 +369,19 @@ const ExperiencesContent = () => {
 
           {/* More Ways to Practice */}
           <div className="mx-auto max-w-[1600px] space-y-20">
-            <h2
-              className="mb-4 text-left font-editorial text-[#E6DBC7]"
-              style={{
-                fontSize: "clamp(2rem, 3.5vw, 3rem)",
-              }}
-            >
-              More Ways to Practice
-            </h2>
+            <FadeUp>
+              <h2
+                className="mb-4 text-left font-editorial text-[#E6DBC7]"
+                style={{
+                  fontSize: "clamp(2rem, 3.5vw, 3rem)",
+                }}
+              >
+                More Ways to Practice
+              </h2>
+            </FadeUp>
 
             {/* The Embers Studio Card - Horizontal Layout */}
+            <FadeUp delay={100}>
             <div
               className="group relative flex cursor-pointer flex-col overflow-hidden rounded-3xl border border-[#E6DBC7]/20 bg-black shadow-glow-strong transition-colors duration-500 md:flex-row"
               onClick={() => navigate("/online")}
@@ -416,6 +425,7 @@ const ExperiencesContent = () => {
                 <GlowButton>Explore</GlowButton>
               </div>
             </div>
+            </FadeUp>
           </div>
         </section>
       </main>

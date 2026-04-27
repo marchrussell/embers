@@ -1,5 +1,6 @@
 import { memo } from "react";
 
+import { FadeUp } from "@/components/FadeUp";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 import SessionPlayCard from "@/pages/app/online/components/SessionPlayCard";
 
@@ -40,7 +41,7 @@ const ProgramView = memo(
           <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
 
           <div className="relative flex h-full items-end px-6 pb-8">
-            <div className="flex w-full flex-col gap-4">
+            <FadeUp className="flex w-full flex-col gap-4">
               <h1 className="font-editorial text-5xl text-[#E6DBC7] md:text-6xl">
                 {program.title}
               </h1>
@@ -50,13 +51,13 @@ const ProgramView = memo(
               <p className="text-sm font-light uppercase tracking-[0.15em] text-[#EC9037] md:text-base">
                 {program.classCount} Classes
               </p>
-            </div>
+            </FadeUp>
           </div>
         </div>
 
         <div className="px-6 pt-12">
           <div className="grid gap-4 md:gap-5">
-            {sortedSessions.map((session: LibrarySession) => {
+            {sortedSessions.map((session: LibrarySession, index) => {
               const isNew = session.created_at
                 ? Math.floor(
                     (now - new Date(session.created_at).getTime()) / (1000 * 60 * 60 * 24)
@@ -64,8 +65,8 @@ const ProgramView = memo(
                 : false;
 
               return (
+                <FadeUp key={session.id} delay={index * 50}>
                 <SessionPlayCard
-                  key={session.id}
                   sessionId={session.id}
                   title={session.title}
                   description={session.description || `A ${session.duration} minute practice.`}
@@ -88,6 +89,7 @@ const ProgramView = memo(
                     }
                   }}
                 />
+                </FadeUp>
               );
             })}
           </div>

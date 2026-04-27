@@ -2,6 +2,7 @@ import { ChevronLeft, ChevronRight, Play, Video } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { FadeUp } from "@/components/FadeUp";
 import { RecordingModal } from "@/components/RecordingModal";
 import { IconButton } from "@/components/ui/icon-button";
 import {
@@ -121,19 +122,19 @@ const LiveTab = ({
 
   return (
     <div className="pb-24 pt-8 md:pt-[150px]">
-      <div>
+      <FadeUp>
         <h2 className="mb-2 text-2xl font-medium tracking-wide text-[#E6DBC7] md:text-3xl">
           Live Rhythm
         </h2>
         <p className="mb-10 text-base font-light text-[#E6DBC7]/60 md:text-lg">
           Regular moments to pause, regulate, and reconnect — together.
         </p>
-      </div>
+      </FadeUp>
 
       <div className="space-y-9 md:space-y-10 lg:space-y-12">
-        {liveSessionsData.map((session) => (
+        {liveSessionsData.map((session, index) => (
+          <FadeUp key={session.sessionType} delay={index * 80}>
           <LiveProgramCard
-            key={session.sessionType}
             sessionKey={session.sessionType}
             data={session}
             onClick={() => handleCardClick(`/online/live/${session.sessionType}`)}
@@ -153,10 +154,12 @@ const LiveTab = ({
             isCalendarOpen={openCalendarId === session.sessionType}
             onCalendarOpenChange={(open) => setOpenCalendarId(open ? session.sessionType : null)}
           />
+          </FadeUp>
         ))}
 
         {/* Live Replays Section */}
         <div className="mt-40">
+          <FadeUp>
           <div className="my-10">
             <h2 className="mb-2 text-2xl font-medium tracking-wide text-[#E6DBC7] md:text-3xl">
               Live Replays
@@ -165,6 +168,7 @@ const LiveTab = ({
               Catch up on sessions you may have missed
             </p>
           </div>
+          </FadeUp>
 
           {/* Weekly Reset & Monthly Presence Replays */}
           <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2">

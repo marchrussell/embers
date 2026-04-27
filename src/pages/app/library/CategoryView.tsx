@@ -1,6 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import { memo } from "react";
 
+import { FadeUp } from "@/components/FadeUp";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 import SessionPlayCard from "@/pages/app/online/components/SessionPlayCard";
 
@@ -66,7 +67,7 @@ const CategoryView = memo(
           </button>
 
           <div className="relative flex h-full items-end px-6 pb-8 md:px-10 lg:px-12">
-            <div className="w-full">
+            <FadeUp className="w-full">
               <p className="mb-3 text-sm font-light uppercase tracking-[0.15em] text-[#D4A574]">
                 {category.sessions.length} Sessions
               </p>
@@ -76,14 +77,14 @@ const CategoryView = memo(
               <p className="mt-6 mb-20 font-editorial text-xl italic leading-relaxed text-[#E6DBC7]/80 md:text-2xl">
                 {category.description}
               </p>
-            </div>
+            </FadeUp>
           </div>
         </div>
 
         {/* Main Content */}
         <div className={`p-16 ${isEmbedded ? "px-6" : "px-6 md:px-12 lg:px-20"}`}>
           <div className="grid gap-4 md:gap-5">
-            {sortedSessions.map((session) => {
+            {sortedSessions.map((session, index) => {
               const isNew = session.created_at
                 ? Math.floor(
                     (now - new Date(session.created_at).getTime()) / (1000 * 60 * 60 * 24)
@@ -91,8 +92,8 @@ const CategoryView = memo(
                 : false;
 
               return (
+                <FadeUp key={session.id} delay={index * 50}>
                 <SessionPlayCard
-                  key={session.id}
                   sessionId={session.id}
                   title={session.title}
                   description={
@@ -118,6 +119,7 @@ const CategoryView = memo(
                     }
                   }}
                 />
+                </FadeUp>
               );
             })}
           </div>

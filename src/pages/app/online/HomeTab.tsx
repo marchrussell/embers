@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
+import { FadeUp } from "@/components/FadeUp";
 import { Button } from "@/components/ui/button";
 import { IconButton } from "@/components/ui/icon-button";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
@@ -76,22 +77,27 @@ const HomeTab = ({
       {/* Start Here — Your First Two Weeks */}
       {showStartHere && (
         <section>
-          <h2 className="mb-2 text-2xl font-medium tracking-wide text-[#E6DBC7] md:text-3xl">
-            Start Here — Your First Two Weeks
-          </h2>
-          <p className="mb-10 text-base font-light text-[#E6DBC7]/60 md:text-lg">
-            A gentle way to arrive — nothing to keep up with.
-          </p>
-          <StartHereCard
-            locked={!hasSubscription && !isAdmin && !isTestUser}
-            onLockedClick={onSubscriptionRequired}
-          />
+          <FadeUp>
+            <h2 className="mb-2 text-2xl font-medium tracking-wide text-[#E6DBC7] md:text-3xl">
+              Start Here — Your First Two Weeks
+            </h2>
+            <p className="mb-10 text-base font-light text-[#E6DBC7]/60 md:text-lg">
+              A gentle way to arrive — nothing to keep up with.
+            </p>
+          </FadeUp>
+          <FadeUp delay={100}>
+            <StartHereCard
+              locked={!hasSubscription && !isAdmin && !isTestUser}
+              onLockedClick={onSubscriptionRequired}
+            />
+          </FadeUp>
         </section>
       )}
 
       {/* Quick Resets */}
       {quickResets.length > 0 && (
         <section className="pt-32">
+          <FadeUp>
           <div className="mb-2 flex items-center justify-between">
             <h2 className="text-2xl font-medium tracking-wide text-[#E6DBC7] md:text-3xl">
               Quick Resets
@@ -128,6 +134,7 @@ const HomeTab = ({
           <p className="mb-10 text-base font-light text-[#E6DBC7]/60 md:text-lg">
             Short practices, ready when you are.
           </p>
+          </FadeUp>
           <div
             ref={quickResetsScrollRef}
             onScroll={checkResetsScroll}
@@ -183,12 +190,15 @@ const HomeTab = ({
       {/* Featured This Week */}
       {featuredSession && (
         <section className="pt-32">
-          <h2 className="mb-2 text-2xl font-medium tracking-wide text-[#E6DBC7] md:text-3xl">
-            A Place to Land This Week
-          </h2>
-          <p className="mb-10 text-base font-light text-[#E6DBC7]/60 md:text-lg">
-            One gentle practice — that's enough.
-          </p>
+          <FadeUp>
+            <h2 className="mb-2 text-2xl font-medium tracking-wide text-[#E6DBC7] md:text-3xl">
+              A Place to Land This Week
+            </h2>
+            <p className="mb-10 text-base font-light text-[#E6DBC7]/60 md:text-lg">
+              One gentle practice — that's enough.
+            </p>
+          </FadeUp>
+          <FadeUp delay={100}>
           <SessionPlayCard
             sessionId={featuredSession.id}
             title={featuredSession.title}
@@ -215,19 +225,22 @@ const HomeTab = ({
               onSessionClick(featuredSession.id);
             }}
           />
+          </FadeUp>
         </section>
       )}
 
       {/* Live Rhythm */}
       <section className="pt-32">
-        <h2 className="mb-2 text-2xl font-medium tracking-wide text-[#E6DBC7] md:text-3xl">
-          Live Rhythm
-        </h2>
-        <p className="mb-10 text-base font-light text-[#E6DBC7]/60 md:text-lg">
-          Nothing to keep up with. Just somewhere to come back to.
-        </p>
+        <FadeUp>
+          <h2 className="mb-2 text-2xl font-medium tracking-wide text-[#E6DBC7] md:text-3xl">
+            Live Rhythm
+          </h2>
+          <p className="mb-10 text-base font-light text-[#E6DBC7]/60 md:text-lg">
+            Nothing to keep up with. Just somewhere to come back to.
+          </p>
+        </FadeUp>
         <div className="grid gap-6 md:grid-cols-3">
-          {liveSessionsData.map((session) => {
+          {liveSessionsData.map((session, index) => {
             const courseSubtitle = [
               session.nextDate,
               session.durationMinutes ? `${session.durationMinutes} min` : null,
@@ -235,17 +248,18 @@ const HomeTab = ({
               .filter(Boolean)
               .join(" · ");
             return (
-              <CourseCard
-                key={session.sessionType}
-                title={session.title}
-                subtitle={courseSubtitle || session.subtitle}
-                recurrenceLabel={session.recurrenceLabel}
-                description={session.description}
-                image={session.image}
-                badge={session.isLive ? "Live Now" : undefined}
-                locked={!hasSubscription && !isAdmin && !isTestUser}
-                onClick={() => handleLiveCardClick(`/online/live/${session.sessionType}`)}
-              />
+              <FadeUp key={session.sessionType} delay={index * 80}>
+                <CourseCard
+                  title={session.title}
+                  subtitle={courseSubtitle || session.subtitle}
+                  recurrenceLabel={session.recurrenceLabel}
+                  description={session.description}
+                  image={session.image}
+                  badge={session.isLive ? "Live Now" : undefined}
+                  locked={!hasSubscription && !isAdmin && !isTestUser}
+                  onClick={() => handleLiveCardClick(`/online/live/${session.sessionType}`)}
+                />
+              </FadeUp>
             );
           })}
         </div>
