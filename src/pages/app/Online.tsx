@@ -1,5 +1,4 @@
 import { Suspense, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { Footer } from "@/components/Footer";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
@@ -10,14 +9,13 @@ import { SafetyDisclosureModal } from "@/components/SafetyDisclosureModal";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLiveSessionsData } from "@/hooks/useLiveSessionsData";
+import { useOnlineTab } from "@/hooks/useOnlineTab";
 
 import LibraryTab from "./LibraryTab";
 import CoursesTab from "./online/CoursesTab";
 import HomeTab from "./online/HomeTab";
 import LiveTab from "./online/LiveTab";
 import SessionDetailModal from "./SessionDetail";
-
-const VALID_TABS = ["home", "library", "courses", "live"];
 
 const Online = () => {
   const {
@@ -29,8 +27,7 @@ const Online = () => {
     user,
     loading,
   } = useAuth();
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const { activeTab, handleTabChange } = useOnlineTab();
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const showSafetyModal = !loading && !hasAcceptedSafetyDisclosure;
 
@@ -39,12 +36,6 @@ const Online = () => {
   };
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const liveSessionsData = useLiveSessionsData();
-  const tabParam = searchParams.get("tab");
-  const activeTab = tabParam && VALID_TABS.includes(tabParam) ? tabParam : "home";
-
-  const handleTabChange = (tab: string) => {
-    navigate(`/online?tab=${tab}`, { replace: true });
-  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -64,14 +55,14 @@ const Online = () => {
           </TabsContent>
 
           <TabsContent value="library" className="mt-0 pb-24">
-            <LibraryTab isEmbedded={true}/> 
+            <LibraryTab isEmbedded={true} />
           </TabsContent>
 
-          <TabsContent value="courses" className="mt-0">
+          <TabsContent value="courses" className="mt-0 pb-24">
             <CoursesTab />
           </TabsContent>
 
-          <TabsContent value="live" className="mt-0">
+          <TabsContent value="live" className="mt-0 pb-24">
             <LiveTab
               liveSessionsData={liveSessionsData}
               hasSubscription={hasSubscription}

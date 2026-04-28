@@ -15,7 +15,7 @@ import {
 } from "@/components/profile";
 import { SafetyModal } from "@/components/SafetyModal";
 import { ProfileSkeleton } from "@/components/skeletons/ProfileSkeleton";
-import { TermsMicrocopy } from "@/components/TermsMicrocopy";
+import OnlineFooter from "@/components/OnlineFooter";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -404,8 +404,7 @@ const ProfileContent = ({ userId, user, signOut }: ProfileContentProps) => {
             Logged in as {user.email}
           </div>
 
-          {/* Terms Microcopy */}
-          <TermsMicrocopy />
+          <OnlineFooter />
         </div>
 
         {/* Shared Dialogs */}

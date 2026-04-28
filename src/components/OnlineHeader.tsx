@@ -1,5 +1,7 @@
 import { ArrowLeft } from "lucide-react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+import { useOnlineTab } from "@/hooks/useOnlineTab";
 
 interface OnlineHeaderProps {
   activeTab?: string;
@@ -17,48 +19,15 @@ const OnlineHeader = ({
   backButtonPath = "/online",
 }: OnlineHeaderProps) => {
   const navigate = useNavigate();
-  const location = useLocation();
+  const { activeTab: derivedTab, handleTabChange } = useOnlineTab();
 
-  // Determine active tab from URL if not provided
-  const getActiveTabFromPath = () => {
-    const path = location.pathname;
-    const search = location.search;
-
-    // Check URL params first
-    const params = new URLSearchParams(search);
-    const tabParam = params.get("tab");
-    if (tabParam && ["home", "library", "courses", "live"].includes(tabParam)) {
-      return tabParam;
-    }
-
-    // Infer from path
-    if (path.includes("/online/live")) return "live";
-    if (path.includes("/online/favourites")) return "library";
-    if (path.includes("/online/start-here")) return "home";
-    if (path === "/online") return "home";
-
-    // Category pages are part of library
-    const libraryCategories = [
-      "calm",
-      "energy",
-      "reset",
-      "sleep",
-      "awaken",
-      "release",
-      "meditations",
-    ];
-    if (libraryCategories.some((cat) => path.includes(`/online/${cat}`))) return "library";
-
-    return "home";
-  };
-
-  const currentTab = activeTab || getActiveTabFromPath();
+  const currentTab = activeTab ?? derivedTab;
 
   const handleTabClick = (tab: string) => {
     if (onTabChange) {
       onTabChange(tab);
     } else {
-      navigate(`/online?tab=${tab}`);
+      handleTabChange(tab);
     }
   };
 

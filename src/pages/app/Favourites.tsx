@@ -6,6 +6,7 @@ import favouritesHeroImage from "@/assets/favourites-hero.jpg";
 import { ClassPlayerModal } from "@/components/ClassPlayerModal";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { NavBar } from "@/components/NavBar";
+import OnlineFooter from "@/components/OnlineFooter";
 import OnlineHeader from "@/components/OnlineHeader";
 import { SessionCardSkeleton } from "@/components/skeletons/SessionCardSkeleton";
 import { useAuth } from "@/contexts/AuthContext";
@@ -202,6 +203,7 @@ const Favourites = () => {
             </div>
           )}
         </div>
+        <OnlineFooter />
       </div>
     </>
   );
