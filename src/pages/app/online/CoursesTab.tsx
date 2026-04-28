@@ -87,7 +87,7 @@ const CourseDetailContent = ({ slug }: { slug: string }) => {
         sessions={sessions}
         isEmbedded
         hasSubscription={hasSubscription}
-        onBack={() => navigate("/online?tab=courses", { replace: true })}
+        // onBack={() => navigate("/online?tab=courses", { replace: true })}
         onSessionClick={(id) => {
           analytics.courseStarted(course.id, course.title);
           setSelectedSessionId(id);
