@@ -27,7 +27,7 @@ const ProgramView = memo(
     return (
       <div className="min-h-screen bg-background pb-24">
         {/* Spacer for navbar and header */}
-        <div className="h-[284px] bg-background" />
+        <div className="hidden md:h-[284px] md:bg-background" />
 
         {/* Program Hero Header */}
         <div className="relative z-10 h-[280px]">
