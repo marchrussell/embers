@@ -15,7 +15,7 @@ import {
 import { experienceImages } from "@/lib/cloudImageUrls";
 import { copyLink } from "@/lib/copyLink";
 
-import LiveProgramCard from "./components/LiveProgramCard";
+import LiveSessionCard from "./components/LiveSessionCard";
 import { AVAILABILITY_DAYS, useLiveReplays } from "./hooks/useLiveReplays";
 import { LiveReplay, LiveSessionCardData } from "./types";
 
@@ -135,7 +135,7 @@ const LiveTab = ({
       <div className="space-y-9 md:space-y-10 lg:space-y-12">
         {liveSessionsData.map((session, index) => (
           <FadeUp key={session.sessionType} delay={index * 80}>
-            <LiveProgramCard
+            <LiveSessionCard
               sessionKey={session.sessionType}
               data={session}
               onClick={() => handleCardClick(`/online/live/${session.sessionType}`)}

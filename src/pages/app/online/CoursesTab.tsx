@@ -160,8 +160,11 @@ const CoursesListContent = () => {
                 <p className="mb-4 max-w-[340px] font-editorial text-[14px] italic leading-[1.5] text-[#E6DBC7]/65 lg:text-[15px]">
                   {course.short_description || course.description}
                 </p>
+                <div className="flex w-full justify-end md:hidden">
+                  <GlowButton size="sm">Start Course</GlowButton>
+                </div>
               </div>
-              <div className="mt-8 flex justify-start lg:ml-auto lg:mr-8 lg:mt-10">
+              <div className="mt-8 hidden justify-start md:flex lg:ml-auto lg:mr-8 lg:mt-10">
                 <GlowButton size="sm">Start Course</GlowButton>
               </div>
             </SplitCard>

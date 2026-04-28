@@ -8,7 +8,7 @@ import SplitCard from "@/components/ui/split-card";
 
 import { LiveSessionCardData } from "../types";
 
-interface LiveProgramCardProps {
+interface LiveSessionCardProps {
   sessionKey: string;
   data: LiveSessionCardData;
   onClick: () => void;
@@ -20,7 +20,7 @@ interface LiveProgramCardProps {
   onCalendarOpenChange: (open: boolean) => void;
 }
 
-const LiveProgramCard = memo(
+const LiveSessionCard = memo(
   ({
     data,
     onClick,
@@ -30,7 +30,7 @@ const LiveProgramCard = memo(
     onOutlookCalendar,
     isCalendarOpen,
     onCalendarOpenChange,
-  }: LiveProgramCardProps) => (
+  }: LiveSessionCardProps) => (
     <SplitCard
       imageSrc={data.image}
       imageAlt={data.title}
@@ -67,52 +67,58 @@ const LiveProgramCard = memo(
         </p>
       </div>
 
-      <div className="mt-6 flex items-center gap-4">
-        <IconButton size="lg" onClick={onShare}>
-          <Share />
-        </IconButton>
+      <div className="mt-6 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <IconButton size="lg" onClick={onShare}>
+            <Share />
+          </IconButton>
 
-        <Popover open={isCalendarOpen} onOpenChange={onCalendarOpenChange}>
-          <PopoverTrigger asChild>
-            <IconButton size="lg" onClick={(e) => e.stopPropagation()}>
-              <Calendar />
-            </IconButton>
-          </PopoverTrigger>
-          <PopoverContent
-            className="w-auto rounded-full border border-[#E6DBC7]/15 bg-[#1A1A1A] p-0 shadow-lg"
-            align="start"
-            sideOffset={8}
-          >
-            <div className="flex items-center gap-0.5 px-3 py-2">
-              <button
-                onClick={onDownloadICal}
-                className="rounded-full px-2.5 py-1 text-[12px] font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:bg-white/5 hover:text-white"
-              >
-                iCal
-              </button>
-              <button
-                onClick={onGoogleCalendar}
-                className="rounded-full px-2.5 py-1 text-[12px] font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:bg-white/5 hover:text-white"
-              >
-                Google
-              </button>
-              <button
-                onClick={onOutlookCalendar}
-                className="rounded-full px-2.5 py-1 text-[12px] font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:bg-white/5 hover:text-white"
-              >
-                Outlook
-              </button>
-            </div>
-          </PopoverContent>
-        </Popover>
+          <Popover open={isCalendarOpen} onOpenChange={onCalendarOpenChange}>
+            <PopoverTrigger asChild>
+              <IconButton size="lg" onClick={(e) => e.stopPropagation()}>
+                <Calendar />
+              </IconButton>
+            </PopoverTrigger>
+            <PopoverContent
+              className="w-auto rounded-full border border-[#E6DBC7]/15 bg-[#1A1A1A] p-0 shadow-lg"
+              align="start"
+              sideOffset={8}
+            >
+              <div className="flex items-center gap-0.5 px-3 py-2">
+                <button
+                  onClick={onDownloadICal}
+                  className="rounded-full px-2.5 py-1 text-[12px] font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:bg-white/5 hover:text-white"
+                >
+                  iCal
+                </button>
+                <button
+                  onClick={onGoogleCalendar}
+                  className="rounded-full px-2.5 py-1 text-[12px] font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:bg-white/5 hover:text-white"
+                >
+                  Google
+                </button>
+                <button
+                  onClick={onOutlookCalendar}
+                  className="rounded-full px-2.5 py-1 text-[12px] font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:bg-white/5 hover:text-white"
+                >
+                  Outlook
+                </button>
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
+
+        <GlowButton size="sm" className="flex justify-end md:hidden">
+          {data.isLive ? "Join Now" : "Join Live"}
+        </GlowButton>
       </div>
 
-      <div className="mt-6 flex justify-start lg:ml-auto lg:mr-8 lg:mt-8">
+      <div className="mt-6 hidden justify-start md:flex lg:ml-auto lg:mr-8 lg:mt-8">
         <GlowButton size="sm">{data.isLive ? "Join Now" : "Join Live"}</GlowButton>
       </div>
     </SplitCard>
   )
 );
 
-LiveProgramCard.displayName = "LiveProgramCard";
-export default LiveProgramCard;
+LiveSessionCard.displayName = "LiveProgramCard";
+export default LiveSessionCard;
