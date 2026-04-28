@@ -302,7 +302,7 @@ export default function SessionDetailModal({
                               {/* Full disclosure link */}
                               <button
                                 onClick={() => setShowFullSafetyDisclosure(true)}
-                                className="mt-2 flex items-center gap-1.5 text-[13px] font-medium text-white/90 underline underline-offset-2 transition-colors hover:text-white md:text-sm"
+                                className="flex items-center gap-1.5 text-[13px] font-medium text-white/90 underline underline-offset-2 transition-colors hover:text-white md:mt-2 md:text-sm"
                               >
                                 Read full Safety Disclosure
                                 <ArrowRight
