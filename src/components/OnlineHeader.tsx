@@ -74,7 +74,7 @@ const OnlineHeader = ({
 
       {/* Mobile Sticky Footer Tabs */}
       <div
-        className="fixed bottom-0 left-0 right-0 z-[9999] bg-background md:hidden"
+        className="fixed bottom-0 left-0 right-0 z-[9999] transform-gpu border-t border-[#E6DBC7]/10 bg-black bg-background md:hidden"
         style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
       >
         <div className="flex items-center justify-around px-2 py-3">

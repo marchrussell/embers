@@ -214,7 +214,8 @@ const LiveSession = () => {
       <OnlineHeader />
 
       {/* Hero Section - matches StartHere layout */}
-      <div className="relative z-10 mt-[340px] h-[500px] md:mt-[380px]">
+      {/* todo - assess margin layout here consistency and extract */}
+      <div className="relative z-10 h-[500px] md:mt-[380px]">
         <img
           src={session.image}
           alt={session.title}
@@ -253,7 +254,7 @@ const LiveSession = () => {
       </div>
 
       {/* Main Content */}
-      <div className="px-6 pb-24 md:px-10 lg:px-12">
+      <div className="px-6 pb-40 md:px-10 lg:px-12">
         <div className="mx-auto max-w-4xl">
           {/* Facilitator and What to expect - connected layout */}
           <div className="mb-36 mt-32 flex flex-col overflow-hidden rounded-2xl border border-[#E6DBC7]/20 md:flex-row">
@@ -366,10 +367,9 @@ const LiveSession = () => {
             </div>
           </div>
         </div>
-      </div>
 
-      {/* todo - consistency  */}
-      <OnlineFooter />
+        <OnlineFooter />
+      </div>
       <div className="hidden md:block">
         <Footer />
       </div>
