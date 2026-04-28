@@ -157,7 +157,6 @@ const LibraryMainView = memo(
                       {favouriteSessions.length > 1 && (
                         <div className="flex items-center gap-2">
                           <IconButton
-                            size="sm"
                             onClick={() => onScrollFavourites("left")}
                             disabled={!canScrollLeft}
                             className={
@@ -169,7 +168,6 @@ const LibraryMainView = memo(
                             <ChevronLeft strokeWidth={1.5} />
                           </IconButton>
                           <IconButton
-                            size="sm"
                             onClick={() => onScrollFavourites("right")}
                             disabled={!canScrollRight}
                             className={
