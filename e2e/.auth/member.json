@@ -1,0 +1,14 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "http://localhost:5173",
+      "localStorage": [
+        {
+          "name": "sb-127-auth-token",
+          "value": "{\"access_token\":\"eyJhbGciOiJFUzI1NiIsImtpZCI6ImI4MTI2OWYxLTIxZDgtNGYyZS1iNzE5LWMyMjQwYTg0MGQ5MCIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjU0MzIxL2F1dGgvdjEiLCJzdWIiOiJjNzY1YWVhNy1lZWFiLTRlMzUtYmNjNS00Yjk3MDAxNzYwZTgiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzczODQ5MjY5LCJpYXQiOjE3NzM4NDU2NjksImVtYWlsIjoiZW1pbHljaGFpLmRldkBnbWFpbC5jb20iLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc3Mzg0NTY2OX1dLCJzZXNzaW9uX2lkIjoiZjY4NGFjOTItZGRjYy00ZmY0LTgzNTctOTNjZWJhNTk4Njc3IiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.DU7Krk5LMt3IZ2VIWRYGtzmWFhmz_ulaOYV34_0rkkUI2b0hTcGQ4GF3CHB4AnIGeV_Ysq0Eoy71hJej_2p-fg\",\"token_type\":\"bearer\",\"expires_in\":3600,\"expires_at\":1773849269,\"refresh_token\":\"z4oqqvn2dlg5\",\"user\":{\"id\":\"c765aea7-eeab-4e35-bcc5-4b97001760e8\",\"aud\":\"authenticated\",\"role\":\"authenticated\",\"email\":\"emilychai.dev@gmail.com\",\"email_confirmed_at\":\"2026-02-19T05:33:25.786635Z\",\"phone\":\"\",\"confirmed_at\":\"2026-02-19T05:33:25.786635Z\",\"last_sign_in_at\":\"2026-03-18T14:54:29.085151627Z\",\"app_metadata\":{\"provider\":\"email\",\"providers\":[\"email\"]},\"user_metadata\":{\"email_verified\":true},\"identities\":[{\"identity_id\":\"a4162169-b6ab-40c5-8c41-44756d92e076\",\"id\":\"c765aea7-eeab-4e35-bcc5-4b97001760e8\",\"user_id\":\"c765aea7-eeab-4e35-bcc5-4b97001760e8\",\"identity_data\":{\"email\":\"emilychai.dev@gmail.com\",\"email_verified\":false,\"phone_verified\":false,\"sub\":\"c765aea7-eeab-4e35-bcc5-4b97001760e8\"},\"provider\":\"email\",\"last_sign_in_at\":\"2026-02-19T05:33:25.77834Z\",\"created_at\":\"2026-02-19T05:33:25.779475Z\",\"updated_at\":\"2026-02-19T05:33:25.779475Z\",\"email\":\"emilychai.dev@gmail.com\"}],\"created_at\":\"2026-02-19T05:33:25.766049Z\",\"updated_at\":\"2026-03-18T14:54:29.089881Z\",\"is_anonymous\":false},\"weak_password\":null}"
+        }
+      ]
+    }
+  ]
+}

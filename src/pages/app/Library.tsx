@@ -1,14 +1,6 @@
 // Library page - Categories: CALM, ENERGY, TRANSFORM, SLEEP, RESILIENCE & CAPACITY
 import { useQuery } from "@tanstack/react-query";
-import {
-  ReactElement,
-  Suspense,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { ReactElement, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { ArcCardsModal } from "@/components/ArcCardsModal";
@@ -78,9 +70,6 @@ const LibraryContent = ({
   const userProfile = metadataProfile ?? dbUserProfile;
   const [showArcCardsModal, setShowArcCardsModal] = useState(false);
   const nervousSystemProgramRef = useRef<HTMLDivElement>(null);
-  const favouritesScrollRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(false);
 
   // useSuspenseQuery — suspends until data is ready (no isLoading needed)
   const { categoriesWithSessions } = useLibraryData({ hasSubscription, isAdmin, isTestUser });
@@ -99,28 +88,6 @@ const LibraryContent = ({
     }
     return null;
   }, [searchParams, categoriesWithSessions]);
-
-  const checkFavouritesScroll = () => {
-    if (favouritesScrollRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = favouritesScrollRef.current;
-      setCanScrollLeft(scrollLeft > 0);
-      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
-    }
-  };
-
-  const scrollFavourites = (direction: "left" | "right") => {
-    if (favouritesScrollRef.current) {
-      favouritesScrollRef.current.scrollBy({
-        left: direction === "left" ? -280 : 280,
-        behavior: "smooth",
-      });
-    }
-  };
-
-  // Update scroll state when favourites change — useLayoutEffect to measure DOM before paint
-  useLayoutEffect(() => {
-    checkFavouritesScroll();
-  }, [favouriteSessions.length]);
 
   // Scroll to top when page loads
   useEffect(() => {
@@ -185,9 +152,6 @@ const LibraryContent = ({
       <LibraryMainView
         categoriesWithSessions={categoriesWithSessions}
         favouriteSessions={favouriteSessions}
-        favouritesScrollRef={favouritesScrollRef}
-        canScrollLeft={canScrollLeft}
-        canScrollRight={canScrollRight}
         userProfile={userProfile}
         user={user}
         isEmbedded={isEmbedded}
@@ -202,8 +166,6 @@ const LibraryContent = ({
         }
         onSessionClick={handleSessionClick}
         onSubscriptionRequired={() => setShowSubscriptionModal(true)}
-        onScrollFavourites={scrollFavourites}
-        onFavouritesScroll={checkFavouritesScroll}
         onArcCardsOpen={() => setShowArcCardsModal(true)}
       />
     );

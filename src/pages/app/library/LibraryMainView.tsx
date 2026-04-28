@@ -1,12 +1,13 @@
 import type { User } from "@supabase/supabase-js";
 import { ArrowRight, ChevronLeft, ChevronRight, Heart, Lock } from "lucide-react";
-import { memo } from "react";
+import { memo, useLayoutEffect } from "react";
 import { Link } from "react-router-dom";
 
 import { FeedbackSection } from "@/components/FeedbackSection";
 import { OptimizedImage } from "@/components/OptimizedImage";
 import { CategoryCardSkeleton } from "@/components/skeletons/CategoryCardSkeleton";
 import { IconButton } from "@/components/ui/icon-button";
+import { useHorizontalScroll } from "@/hooks/useHorizontalScroll";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 
 import { FavouriteSession, LibraryCategory } from "./types";
@@ -14,9 +15,6 @@ import { FavouriteSession, LibraryCategory } from "./types";
 interface LibraryMainViewProps {
   categoriesWithSessions: LibraryCategory[];
   favouriteSessions: FavouriteSession[];
-  favouritesScrollRef: React.RefObject<HTMLDivElement>;
-  canScrollLeft: boolean;
-  canScrollRight: boolean;
   userProfile: { full_name: string } | null;
   user: User | null;
   isEmbedded: boolean;
@@ -25,8 +23,6 @@ interface LibraryMainViewProps {
   onCategorySelect: (category: LibraryCategory) => void;
   onSessionClick: (id: string) => void;
   onSubscriptionRequired: () => void;
-  onScrollFavourites: (direction: "left" | "right") => void;
-  onFavouritesScroll: () => void;
   onArcCardsOpen: () => void;
 }
 
@@ -34,9 +30,6 @@ const LibraryMainView = memo(
   ({
     categoriesWithSessions,
     favouriteSessions,
-    favouritesScrollRef,
-    canScrollLeft,
-    canScrollRight,
     userProfile,
     user,
     isEmbedded,
@@ -45,10 +38,20 @@ const LibraryMainView = memo(
     onCategorySelect,
     onSessionClick,
     onSubscriptionRequired,
-    onScrollFavourites,
-    onFavouritesScroll,
     onArcCardsOpen,
   }: LibraryMainViewProps) => {
+    const {
+      ref: favouritesScrollRef,
+      canScrollLeft,
+      canScrollRight,
+      check: checkFavouritesScroll,
+      scrollTo: scrollFavourites,
+    } = useHorizontalScroll();
+
+    useLayoutEffect(() => {
+      checkFavouritesScroll();
+    }, [favouriteSessions.length, checkFavouritesScroll]);
+
     return (
       <div className="min-h-screen bg-background pb-24">
         {/* Sign In / Profile Button - positioned below navbar */}
@@ -157,7 +160,7 @@ const LibraryMainView = memo(
                       {favouriteSessions.length > 1 && (
                         <div className="flex items-center gap-2">
                           <IconButton
-                            onClick={() => onScrollFavourites("left")}
+                            onClick={() => scrollFavourites("left")}
                             disabled={!canScrollLeft}
                             className={
                               !canScrollLeft
@@ -168,7 +171,7 @@ const LibraryMainView = memo(
                             <ChevronLeft strokeWidth={1.5} />
                           </IconButton>
                           <IconButton
-                            onClick={() => onScrollFavourites("right")}
+                            onClick={() => scrollFavourites("right")}
                             disabled={!canScrollRight}
                             className={
                               !canScrollRight
@@ -185,7 +188,7 @@ const LibraryMainView = memo(
                     {favouriteSessions.length > 0 ? (
                       <div
                         ref={favouritesScrollRef}
-                        onScroll={onFavouritesScroll}
+                        onScroll={checkFavouritesScroll}
                         className="scrollbar-hide flex gap-10 overflow-x-auto pb-4"
                       >
                         {favouriteSessions.map((session) => (

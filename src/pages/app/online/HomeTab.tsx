@@ -1,5 +1,5 @@
 import { ArrowRight, ChevronLeft, ChevronRight, Lock } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -7,6 +7,7 @@ import { FadeUp } from "@/components/FadeUp";
 import OnlineTabLayout from "@/components/OnlineTabLayout";
 import { Button } from "@/components/ui/button";
 import { IconButton } from "@/components/ui/icon-button";
+import { useHorizontalScroll } from "@/hooks/useHorizontalScroll";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 
 import CourseCard from "./components/CourseCard";
@@ -39,30 +40,17 @@ const HomeTab = ({
   const { quickResets } = useQuickResets();
   const showStartHere = useStartHereVisibility();
 
-  const quickResetsScrollRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(false);
-
-  const checkResetsScroll = () => {
-    if (quickResetsScrollRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = quickResetsScrollRef.current;
-      setCanScrollLeft(scrollLeft > 0);
-      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
-    }
-  };
+  const {
+    ref: quickResetsScrollRef,
+    canScrollLeft,
+    canScrollRight,
+    check,
+    scrollTo,
+  } = useHorizontalScroll();
 
   useEffect(() => {
-    checkResetsScroll();
-  }, [quickResets]);
-
-  const scrollResets = (direction: "left" | "right") => {
-    if (quickResetsScrollRef.current) {
-      quickResetsScrollRef.current.scrollBy({
-        left: direction === "left" ? -280 : 280,
-        behavior: "smooth",
-      });
-    }
-  };
+    check();
+  }, [quickResets, check]);
 
   const handleLiveCardClick = (path: string) => {
     if (!hasSubscription && !isAdmin && !isTestUser) {
@@ -102,10 +90,10 @@ const HomeTab = ({
               <h2 className="text-2xl font-medium tracking-wide text-[#E6DBC7] md:text-3xl">
                 Quick Resets
               </h2>
-              {quickResets.length > 4 && (
-                <div className="hidden items-center gap-2 md:flex">
+              {quickResets.length > 1 && (
+                <div className="flex items-center gap-2">
                   <IconButton
-                    onClick={() => scrollResets("left")}
+                    onClick={() => scrollTo("left")}
                     disabled={!canScrollLeft}
                     className={
                       !canScrollLeft
@@ -116,7 +104,7 @@ const HomeTab = ({
                     <ChevronLeft strokeWidth={1.5} />
                   </IconButton>
                   <IconButton
-                    onClick={() => scrollResets("right")}
+                    onClick={() => scrollTo("right")}
                     disabled={!canScrollRight}
                     className={
                       !canScrollRight
@@ -135,7 +123,7 @@ const HomeTab = ({
           </FadeUp>
           <div
             ref={quickResetsScrollRef}
-            onScroll={checkResetsScroll}
+            onScroll={check}
             className="scrollbar-hide flex gap-10 overflow-x-auto pb-4"
           >
             {quickResets.map((session) => {

@@ -46,9 +46,7 @@ const CategoryView = memo(
             aria-hidden="true"
             className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700"
           />
-          <div
-            className={`absolute inset-0 bg-black/15`}
-          />
+          <div className={`absolute inset-0 bg-black/15`} />
           <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
 
           <button
