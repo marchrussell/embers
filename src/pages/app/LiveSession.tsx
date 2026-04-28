@@ -256,9 +256,9 @@ const LiveSession = () => {
       <div className="px-6 pb-24 md:px-10 lg:px-12">
         <div className="mx-auto max-w-4xl">
           {/* Facilitator and What to expect - connected layout */}
-          <div className="mb-36 mt-32 flex flex-col overflow-hidden rounded-2xl md:flex-row">
+          <div className="mb-36 mt-32 flex flex-col overflow-hidden rounded-2xl border border-[#E6DBC7]/20 md:flex-row">
             {/* Image on the left - height determined by content */}
-            <div className="relative flex-shrink-0 overflow-hidden rounded-l-2xl border-b border-l border-t border-[#E6DBC7]/20 md:w-1/2 md:border-r-0">
+            <div className="relative flex-shrink-0 overflow-hidden md:w-1/2">
               <img
                 src={teacherImage}
                 alt={session.teacher}
@@ -267,7 +267,7 @@ const LiveSession = () => {
             </div>
 
             {/* What to expect box on the right - black background with border on 3 sides */}
-            <div className="flex flex-col justify-center border-b border-r border-t border-[#E6DBC7]/20 bg-black p-8 md:w-1/2 md:rounded-r-2xl md:border-l-0 md:p-10">
+            <div className="flex flex-col justify-center p-10 md:w-1/2">
               <div>
                 <h3 className="mb-2 font-editorial text-2xl text-[#E6DBC7] md:text-3xl">
                   What to expect
@@ -368,6 +368,7 @@ const LiveSession = () => {
         </div>
       </div>
 
+      {/* todo - consistency  */}
       <OnlineFooter />
       <div className="hidden md:block">
         <Footer />
