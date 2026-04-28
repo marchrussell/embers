@@ -7,7 +7,7 @@ import SessionPlayCard from "@/pages/app/online/components/SessionPlayCard";
 
 import { LibrarySession } from "./types";
 
-interface LibraryViewLayoutProps {
+interface SessionsListLayoutProps {
   image: string | null;
   title: string;
   description: string | null;
@@ -21,7 +21,7 @@ interface LibraryViewLayoutProps {
   sessionDescriptionFallback?: (session: LibrarySession) => string;
 }
 
-const LibraryViewLayout = memo(
+const SessionsListLayout = memo(
   ({
     image,
     title,
@@ -34,7 +34,7 @@ const LibraryViewLayout = memo(
     onSessionClick,
     onSubscriptionRequired,
     sessionDescriptionFallback,
-  }: LibraryViewLayoutProps) => {
+  }: SessionsListLayoutProps) => {
     const now = Date.now();
 
     const sortedSessions = [...sessions].sort((a: LibrarySession, b: LibrarySession) => {
@@ -43,13 +43,11 @@ const LibraryViewLayout = memo(
     });
 
     return (
-      <div className="min-h-screen bg-background pb-40">
+      <div className="min-h-screen bg-background">
         {/* Hero Header */}
         <div
           className={`relative z-10 h-[420px] ${
-            isEmbedded
-              ? "-mx-6 mt-8 md:-mx-10 md:mt-[150px] lg:-mx-12"
-              : "mt-[340px] md:mt-[380px]"
+            isEmbedded ? "-mx-6 mt-8 md:-mx-10 md:mt-[150px] lg:-mx-12" : "mt-[340px] md:mt-[380px]"
           }`}
         >
           <img
@@ -64,30 +62,34 @@ const LibraryViewLayout = memo(
           {onBack && (
             <button
               onClick={onBack}
-              className="fixed top-14 left-6 z-[80] flex items-center gap-1 text-[#E6DBC7]/80 transition-colors hover:text-[#E6DBC7] md:absolute md:top-6 md:left-10 lg:left-12"
-              aria-label="Back to Library"
+              className="fixed left-6 top-14 z-[80] flex items-center gap-1 text-[#E6DBC7]/80 transition-colors hover:text-[#E6DBC7] md:absolute md:left-10 md:top-6 lg:left-12"
+              aria-label="Go back"
             >
               <ArrowLeft className="h-5 w-5" />
             </button>
           )}
 
-          <div className="relative flex h-full items-end px-6 pb-8 md:px-10 lg:px-12">
-            <FadeUp className="w-full">
+          <div className="relative flex h-full items-end px-6 pb-14 md:px-10 lg:px-12">
+            <FadeUp className="w-full max-w-3xl">
               <p className="mb-3 text-sm font-light uppercase tracking-[0.15em] text-[#D4A574]">
                 {countLabel}
               </p>
               <h1 className="font-editorial text-5xl text-[#E6DBC7] md:text-6xl">{title}</h1>
-              {description && (
-                <p className="mb-20 mt-6 font-editorial text-xl italic leading-relaxed text-[#E6DBC7]/80 md:text-2xl">
-                  {description}
-                </p>
-              )}
             </FadeUp>
           </div>
         </div>
 
-        {/* Session List */}
-        <div className="px-6 pt-16 md:pt-12">
+        {/* Description */}
+        {description && (
+          <div className="px-6 pb-8 pt-12 md:px-10 lg:px-12">
+            <p className="max-w-4xl font-editorial text-xl italic leading-relaxed text-[#E6DBC7]/70 md:text-2xl">
+              {description}
+            </p>
+          </div>
+        )}
+
+        {/* Sessions List */}
+        <div className="px-6 pb-24 pt-16 md:px-10 lg:px-12">
           <div className="grid gap-4 md:gap-5">
             {sortedSessions.map((session: LibrarySession, index) => {
               const isNew = session.created_at
@@ -134,6 +136,6 @@ const LibraryViewLayout = memo(
   }
 );
 
-LibraryViewLayout.displayName = "LibraryViewLayout";
+SessionsListLayout.displayName = "SessionsListLayout";
 
-export default LibraryViewLayout;
+export default SessionsListLayout;

@@ -11,7 +11,7 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLiveSessionsData } from "@/hooks/useLiveSessionsData";
 
-import Library from "./Library";
+import LibraryTab from "./LibraryTab";
 import CoursesTab from "./online/CoursesTab";
 import HomeTab from "./online/HomeTab";
 import LiveTab from "./online/LiveTab";
@@ -64,7 +64,7 @@ const Online = () => {
           </TabsContent>
 
           <TabsContent value="library" className="mt-0 pb-24">
-            <Library isEmbedded={true} />
+            <LibraryTab /> 
           </TabsContent>
 
           <TabsContent value="courses" className="mt-0">

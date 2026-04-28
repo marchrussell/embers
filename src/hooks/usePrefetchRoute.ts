@@ -31,7 +31,7 @@ export const usePrefetchRoute = () => {
         // Map paths to lazy loaded components for prefetching
         const routeModules: Record<string, () => Promise<any>> = {
           "/": () => import("@/pages/Index"),
-          "/online": () => import("@/pages/app/Library"),
+          "/online": () => import("@/pages/app/LibraryTab"),
           "/online/profile": () => import("@/pages/app/Profile"),
           "/online/favourites": () => import("@/pages/app/Favourites"),
           "/online/about": () => import("@/pages/app/About"),

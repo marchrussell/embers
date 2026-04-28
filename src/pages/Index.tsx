@@ -199,7 +199,7 @@ const Index = () => {
               </p>
               <Button
                 onClick={() => {
-                  window.open("/online/program/mental-reset", "_blank");
+                  window.open("/online?tab=courses&course=mental-reset", "_blank");
                 }}
                 className="mt-auto inline-flex w-fit items-center justify-center rounded-full border border-white bg-transparent text-white transition-all hover:bg-white/10"
                 style={{

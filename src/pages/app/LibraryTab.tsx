@@ -19,12 +19,10 @@ import CategoryView from "./library/CategoryView";
 import { useFavouriteSessions } from "./library/hooks/useFavouriteSessions";
 import { useLibraryData } from "./library/hooks/useLibraryData";
 import LibraryMainView from "./library/LibraryMainView";
-import ProgramView from "./library/ProgramView";
-import { LibraryProgram } from "./library/types";
 import { useFeaturedSession } from "./online/hooks/useFeaturedSession";
 import SessionDetailModal from "./SessionDetail";
 
-interface LibraryProps {
+interface LibraryTabProps {
   isEmbedded?: boolean;
 }
 
@@ -47,7 +45,6 @@ const LibraryContent = ({
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
-  const [selectedProgram, setSelectedProgram] = useState<LibraryProgram | null>(null);
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(() => {
     return new URLSearchParams(window.location.search).get("session");
   });
@@ -120,11 +117,6 @@ const LibraryContent = ({
     navigate(isEmbedded ? "/online?tab=library" : "/library", { replace: true });
   };
 
-  const handleCoursesBack = () => {
-    setSelectedProgram(null);
-    navigate(isEmbedded ? "/online?tab=courses" : "/courses", { replace: true });
-  };
-
   const handleSessionClick = (sessionId: string) => {
     if (!sessionId) return;
     setSelectedSessionId(sessionId);
@@ -139,16 +131,6 @@ const LibraryContent = ({
         isEmbedded={isEmbedded}
         hasSubscription={hasSubscription}
         onBack={handleLibraryBack}
-        onSessionClick={handleSessionClick}
-        onSubscriptionRequired={() => setShowSubscriptionModal(true)}
-      />
-    );
-  } else if (selectedProgram) {
-    viewContent = (
-      <ProgramView
-        program={selectedProgram}
-        hasSubscription={hasSubscription}
-        onBack={handleCoursesBack}
         onSessionClick={handleSessionClick}
         onSubscriptionRequired={() => setShowSubscriptionModal(true)}
       />
@@ -214,7 +196,7 @@ const LibraryContent = ({
   );
 };
 
-const Library = ({ isEmbedded = false }: LibraryProps) => {
+const LibraryTab = ({ isEmbedded = false }: LibraryTabProps) => {
   const { user, hasSubscription, isAdmin, isTestUser, loading: authLoading } = useAuth();
 
   const skeleton = isEmbedded ? <LibraryEmbeddedSkeleton /> : <LibraryPageSkeleton />;
@@ -234,4 +216,4 @@ const Library = ({ isEmbedded = false }: LibraryProps) => {
   );
 };
 
-export default Library;
+export default LibraryTab;

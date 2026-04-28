@@ -33,7 +33,6 @@ const OnlineHeader = ({
 
     // Infer from path
     if (path.includes("/online/live")) return "live";
-    if (path.includes("/online/program")) return "courses";
     if (path.includes("/online/favourites")) return "library";
     if (path.includes("/online/start-here")) return "home";
     if (path === "/online") return "home";

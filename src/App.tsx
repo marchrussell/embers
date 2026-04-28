@@ -28,9 +28,8 @@ const SharedSession = lazy(() => import("./pages/SharedSession"));
 
 // App pages (lazy loaded)
 const OnlinePage = lazy(() => import("./pages/app/Online"));
-const OnlineCourse = lazy(() => import("./pages/app/OnlineCourse"));
 const StartHere = lazy(() => import("./pages/app/StartHere"));
-const Library = lazy(() => import("./pages/app/Library"));
+const Library = lazy(() => import("./pages/app/LibraryTab"));
 const ClassPlayer = lazy(() => import("./pages/app/ClassPlayer"));
 const Profile = lazy(() => import("./pages/app/Profile"));
 const AppAbout = lazy(() => import("./pages/app/About"));
@@ -164,7 +163,6 @@ function AppContent() {
             {/* Online routes - Library and About are public, others protected */}
             <Route path="/online" element={<OnlinePage />} />
             <Route path="/online/start-here" element={<StartHere />} />
-            <Route path="/online/program/:slug" element={<OnlineCourse />} />
             <Route path="/online/about" element={<AppAbout />} />
             <Route
               path="/online/favourites"

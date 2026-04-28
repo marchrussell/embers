@@ -1,6 +1,6 @@
 import { memo } from "react";
 
-import LibraryViewLayout from "./LibraryViewLayout";
+import SessionsListLayout from "./SessionsListLayout";
 import { LibraryCategory } from "./types";
 
 interface CategoryViewProps {
@@ -21,7 +21,7 @@ const CategoryView = memo(
     onSessionClick,
     onSubscriptionRequired,
   }: CategoryViewProps) => (
-    <LibraryViewLayout
+    <SessionsListLayout
       image={category.image}
       title={category.name}
       description={category.description}
