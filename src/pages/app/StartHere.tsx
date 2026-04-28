@@ -130,7 +130,6 @@ const StartHere = () => {
                     .join(" • ")}
                   imageUrl={session.image_url || ""}
                   onClick={() => setSelectedSessionId(session.id)}
-                  mobileStacked
                 />
               </FadeUp>
             ))}
