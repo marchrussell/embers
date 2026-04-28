@@ -3,6 +3,7 @@ import { Calendar, Clock, Video } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
+import { FadeUp } from "@/components/FadeUp";
 import { Footer } from "@/components/Footer";
 import { NavBar } from "@/components/NavBar";
 import OnlineFooter from "@/components/OnlineFooter";
@@ -224,39 +225,46 @@ const LiveSession = () => {
         <div className="absolute inset-0 bg-black/30" />
         <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
 
-        <div className="relative flex h-full items-end justify-center px-6 pb-14 md:px-10 lg:px-12">
-          <div className="text-center">
-            <p className="mb-3 text-sm font-light uppercase tracking-[0.15em] text-[#D4A574]">
-              {session.subtitle}
-            </p>
-            <h1 className="font-editorial text-5xl text-[#E6DBC7] md:text-6xl">{session.title}</h1>
+        <FadeUp>
+          <div className="relative flex h-full items-end justify-center px-6 pb-14 md:px-10 lg:px-12">
+            <div className="text-center">
+              <p className="mb-3 text-sm font-light uppercase tracking-[0.15em] text-[#D4A574]">
+                {session.subtitle}
+              </p>
+              <h1 className="font-editorial text-5xl text-[#E6DBC7] md:text-6xl">{session.title}</h1>
+            </div>
           </div>
-        </div>
+        </FadeUp>
       </div>
 
       {/* Meta info - between title and description */}
-      <div className="flex items-center justify-center gap-8 px-6 pb-6 pt-10 text-base text-[#E6DBC7]/60">
-        <span className="flex items-center gap-3">
-          <Clock className="h-5 w-5" />
-          {session.duration}
-        </span>
-        <span className="flex items-center gap-3">
-          <Calendar className="h-5 w-5" />
-          {session.nextDate} at {session.time}
-        </span>
-      </div>
+      <FadeUp delay={100}>
+        <div className="flex items-center justify-center gap-8 px-6 pb-6 pt-10 text-base text-[#E6DBC7]/60">
+          <span className="flex items-center gap-3">
+            <Clock className="h-5 w-5" />
+            {session.duration}
+          </span>
+          <span className="flex items-center gap-3">
+            <Calendar className="h-5 w-5" />
+            {session.nextDate} at {session.time}
+          </span>
+        </div>
+      </FadeUp>
 
       {/* Description - italic editorial style like category pages */}
-      <div className="px-6 pb-16 pt-6 md:px-10 lg:px-12">
-        <p className="mx-auto max-w-4xl text-center font-editorial text-xl italic leading-relaxed text-[#E6DBC7]/70 md:text-2xl lg:text-3xl">
-          {session.description}
-        </p>
-      </div>
+      <FadeUp delay={150}>
+        <div className="px-6 pb-16 pt-6 md:px-10 lg:px-12">
+          <p className="mx-auto max-w-4xl text-center font-editorial text-xl italic leading-relaxed text-[#E6DBC7]/70 md:text-2xl lg:text-3xl">
+            {session.description}
+          </p>
+        </div>
+      </FadeUp>
 
       {/* Main Content */}
       <div className="px-6 pb-40 md:px-10 lg:px-12">
         <div className="mx-auto max-w-4xl">
           {/* Facilitator and What to expect - connected layout */}
+          <FadeUp>
           <div className="mb-36 mt-32 flex flex-col overflow-hidden rounded-2xl border border-[#E6DBC7]/20 md:flex-row">
             {/* Image on the left - height determined by content */}
             <div className="relative flex-shrink-0 overflow-hidden md:w-1/2">
@@ -287,8 +295,10 @@ const LiveSession = () => {
               </div>
             </div>
           </div>
+          </FadeUp>
 
           {/* Countdown / Status Box - video container size with 16:9 aspect ratio */}
+          <FadeUp delay={100}>
           <div>
             <div className="relative mx-auto flex aspect-[16/9] max-w-6xl items-center justify-center overflow-hidden rounded-2xl border border-[#E6DBC7]/10">
               {/* Background Image */}
@@ -366,6 +376,7 @@ const LiveSession = () => {
               )}
             </div>
           </div>
+          </FadeUp>
         </div>
 
         <OnlineFooter />
