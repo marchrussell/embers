@@ -1,6 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { Calendar, Clock, Video } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { FadeUp } from "@/components/FadeUp";
@@ -8,12 +8,10 @@ import { Footer } from "@/components/Footer";
 import { NavBar } from "@/components/NavBar";
 import OnlineFooter from "@/components/OnlineFooter";
 import OnlineHeader from "@/components/OnlineHeader";
+import { LiveSessionSkeleton } from "@/components/skeletons/LiveSessionSkeleton";
 import { Button } from "@/components/ui/button";
-import { LiveSessionConfig, useLiveSessionConfigs } from "@/hooks/useLiveSessionConfigs";
-import {
-  LiveSessionEnrichment,
-  useNextLiveSessionDetails,
-} from "@/hooks/useNextLiveSessionDetails";
+import { LiveSessionConfig } from "@/hooks/useLiveSessionConfigs";
+import { LiveSessionEnrichment } from "@/hooks/useNextLiveSessionDetails";
 import { supabase } from "@/integrations/supabase/client";
 import { CLOUD_IMAGES, experienceImages, getCloudImageUrl } from "@/lib/cloudImageUrls";
 import {
@@ -22,6 +20,9 @@ import {
   parseUTCDateForDisplay,
 } from "@/lib/experienceDateUtils";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const db = supabase as any;
+
 const guestSessionImg = experienceImages.guestSession;
 const monthlyPresenceImg = experienceImages.monthlyBreathOnline;
 const weeklyResetImg = experienceImages.weeklyReset;
@@ -29,7 +30,6 @@ const weeklyResetImg = experienceImages.weeklyReset;
 const marchPortrait = getCloudImageUrl(CLOUD_IMAGES.march);
 const liveSessionCountdownBg = getCloudImageUrl(CLOUD_IMAGES.liveSessionCountdownBg);
 
-// Fallback images keyed by session_type slug
 const SESSION_TYPE_IMAGES: Record<string, string> = {
   "weekly-reset": weeklyResetImg,
   "monthly-presence": monthlyPresenceImg,
@@ -102,14 +102,50 @@ function buildSessionDisplay(
   };
 }
 
-const LiveSession = () => {
-  const { sessionId } = useParams<{ sessionId: string }>();
+interface LiveSessionContentProps {
+  sessionId: string;
+}
+
+const LiveSessionContent = ({ sessionId }: LiveSessionContentProps) => {
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
-  const { data: configs = [], isLoading: configsLoading } = useLiveSessionConfigs();
-  const { data: enrichment = null, isLoading: detailsLoading } = useNextLiveSessionDetails(
-    sessionId!
-  );
+  const { data: configs } = useSuspenseQuery<LiveSessionConfig[]>({
+    queryKey: ["live-session-configs"],
+    queryFn: async () => {
+      const { data, error } = await db
+        .from("live_session_configs")
+        .select("*")
+        .eq("is_active", true)
+        .order("created_at");
+      if (error) throw error;
+      return (data ?? []) as LiveSessionConfig[];
+    },
+    staleTime: 10 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+  });
+
+  const { data: enrichment } = useSuspenseQuery<LiveSessionEnrichment | null>({
+    queryKey: ["next-session-details", sessionId],
+    queryFn: async () => {
+      const now = new Date().toISOString();
+      const { data, error } = (await db
+        .from("live_sessions")
+        .select("id, start_time, session_type, live_session_details!linked_session_id(*)")
+        .eq("session_type", sessionId)
+        .gte("start_time", now)
+        .order("start_time", { ascending: true })
+        .limit(1)
+        .maybeSingle()) as { data: { id: string; start_time: string; session_type: string; live_session_details: LiveSessionEnrichment | LiveSessionEnrichment[] | null } | null; error: unknown };
+      if (error) throw error;
+      if (!data) return null;
+      const details = Array.isArray(data.live_session_details)
+        ? (data.live_session_details[0] ?? null)
+        : data.live_session_details;
+      return details;
+    },
+    staleTime: 10 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+  });
 
   // Poll for a currently-live session of this type so we can link the Join button
   const { data: liveSession } = useQuery({
@@ -118,7 +154,7 @@ const LiveSession = () => {
       const { data } = await supabase
         .from("live_sessions")
         .select("id, status")
-        .eq("session_type", sessionId!)
+        .eq("session_type", sessionId)
         .eq("status", "live")
         .order("start_time", { ascending: false })
         .limit(1)
@@ -126,31 +162,14 @@ const LiveSession = () => {
       return data;
     },
     refetchInterval: 15_000,
-    enabled: !!sessionId,
   });
 
   const config = configs.find((c) => c.session_type === sessionId) ?? null;
-
-  const isLoading = configsLoading || detailsLoading;
-
   const nextDateObj = config ? getNextDateFromConfig(config) : null;
-
   const session: SessionDisplay | null = config
-    ? buildSessionDisplay(config, enrichment, nextDateObj)
+    ? buildSessionDisplay(config, enrichment ?? null, nextDateObj)
     : null;
 
-  console.log(
-    "LiveSession render - session: ",
-    session,
-    "liveSession: ",
-    liveSession,
-    "enrichment: ",
-    enrichment,
-    "config: ",
-    config
-  );
-
-  // Calculate countdown to next session
   useEffect(() => {
     if (!config) return;
 
@@ -188,14 +207,6 @@ const LiveSession = () => {
     return () => clearInterval(interval);
   }, [config, enrichment]);
 
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <p className="text-[#E6DBC7]/50">Loading...</p>
-      </div>
-    );
-  }
-
   if (!session) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
@@ -214,8 +225,7 @@ const LiveSession = () => {
       <NavBar />
       <OnlineHeader />
 
-      {/* Hero Section - matches StartHere layout */}
-      {/* todo - assess margin layout here consistency and extract */}
+      {/* Hero Section */}
       <div className="relative z-10 h-[500px] md:mt-[380px]">
         <img
           src={session.image}
@@ -239,7 +249,7 @@ const LiveSession = () => {
         </FadeUp>
       </div>
 
-      {/* Meta info - between title and description */}
+      {/* Meta info */}
       <FadeUp delay={100}>
         <div className="flex items-center justify-center gap-8 px-6 pb-6 pt-10 text-base text-[#E6DBC7]/60">
           <span className="flex items-center gap-3">
@@ -253,7 +263,7 @@ const LiveSession = () => {
         </div>
       </FadeUp>
 
-      {/* Description - italic editorial style like category pages */}
+      {/* Description */}
       <FadeUp delay={150}>
         <div className="px-6 pb-16 pt-6 md:px-10 lg:px-12">
           <p className="mx-auto max-w-4xl text-center font-editorial text-xl italic leading-relaxed text-[#E6DBC7]/70 md:text-2xl lg:text-3xl">
@@ -265,10 +275,9 @@ const LiveSession = () => {
       {/* Main Content */}
       <div className="px-6 pb-40 md:px-10 lg:px-12">
         <div className="mx-auto max-w-4xl">
-          {/* Facilitator and What to expect - connected layout */}
+          {/* Facilitator and What to expect */}
           <FadeUp>
             <div className="mb-36 mt-32 flex flex-col overflow-hidden rounded-2xl border border-[#E6DBC7]/20 md:flex-row">
-              {/* Image on the left - height determined by content */}
               <div className="relative flex-shrink-0 overflow-hidden md:w-1/2">
                 <img
                   src={teacherImage}
@@ -277,7 +286,6 @@ const LiveSession = () => {
                 />
               </div>
 
-              {/* What to expect box on the right - black background with border on 3 sides */}
               <div className="flex flex-col justify-center p-10 md:w-1/2">
                 <div>
                   <h3 className="mb-2 font-editorial text-2xl text-[#E6DBC7] md:text-3xl">
@@ -299,16 +307,14 @@ const LiveSession = () => {
             </div>
           </FadeUp>
 
-          {/* Countdown / Status Box - video container size with 16:9 aspect ratio */}
+          {/* Countdown / Status Box */}
           <FadeUp delay={100}>
             <div>
               <div className="relative mx-auto flex aspect-[16/9] max-w-6xl items-center justify-center overflow-hidden rounded-2xl border border-[#E6DBC7]/10">
-                {/* Background Image */}
                 <div
                   className="absolute inset-0 bg-[length:100%_100%] bg-center"
                   style={{ backgroundImage: `url('${liveSessionCountdownBg}')` }}
                 />
-                {/* Glassmorphism Overlay */}
                 <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
                 {isLive ? (
                   <div className="relative z-10 p-8 text-center">
@@ -334,7 +340,6 @@ const LiveSession = () => {
                       Next live gathering begins in
                     </p>
 
-                    {/* Countdown */}
                     <div className="mb-12 flex items-center justify-center gap-4 md:gap-8">
                       <div className="text-center">
                         <div className="mb-1 font-editorial text-4xl text-[#E6DBC7] md:text-5xl lg:text-6xl">
@@ -389,6 +394,16 @@ const LiveSession = () => {
         <Footer />
       </div>
     </div>
+  );
+};
+
+const LiveSession = () => {
+  const { sessionId } = useParams<{ sessionId: string }>();
+
+  return (
+    <Suspense fallback={<LiveSessionSkeleton />}>
+      <LiveSessionContent sessionId={sessionId!} />
+    </Suspense>
   );
 };
 
