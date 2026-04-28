@@ -3,6 +3,7 @@ import { Heart, Play, Share2 } from "lucide-react";
 import { Suspense, useState } from "react";
 
 import favouritesHeroImage from "@/assets/favourites-hero.jpg";
+import { FadeUp } from "@/components/FadeUp";
 import { ClassPlayerModal } from "@/components/ClassPlayerModal";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { NavBar } from "@/components/NavBar";
@@ -100,16 +101,18 @@ const Favourites = () => {
           <div className="absolute inset-0 bg-black/30" />
           <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
 
-          <div className="relative flex h-full items-end px-6 pb-14 md:px-10 lg:px-12">
-            <div className="w-full">
-              <p className="mb-3 text-sm font-light uppercase tracking-[0.15em] text-[#D4A574]">
-                {favourites.length} Sessions Saved
-              </p>
-              <h1 className="font-editorial text-5xl text-[#E6DBC7] md:text-6xl">
-                Your Favourites
-              </h1>
+          <FadeUp>
+            <div className="relative flex h-full items-end px-6 pb-14 md:px-10 lg:px-12">
+              <div className="w-full">
+                <p className="mb-3 text-sm font-light uppercase tracking-[0.15em] text-[#D4A574]">
+                  {favourites.length} Sessions Saved
+                </p>
+                <h1 className="font-editorial text-5xl text-[#E6DBC7] md:text-6xl">
+                  Your Favourites
+                </h1>
+              </div>
             </div>
-          </div>
+          </FadeUp>
         </div>
 
         {/* Main Content - matches StartHere layout */}
@@ -127,9 +130,9 @@ const Favourites = () => {
             </p>
           ) : (
             <div className="space-y-3 md:space-y-4">
-              {favourites.map((session) => (
+              {favourites.map((session, index) => (
+                <FadeUp key={session.id} delay={index * 40}>
                 <div
-                  key={session.id}
                   onClick={() => handleSessionClick(session.id, session.locked)}
                   className="group relative flex cursor-pointer items-center gap-3 overflow-hidden py-2 md:gap-4"
                 >
@@ -199,6 +202,7 @@ const Favourites = () => {
                     </button>
                   </div>
                 </div>
+                </FadeUp>
               ))}
             </div>
           )}

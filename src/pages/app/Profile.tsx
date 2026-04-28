@@ -5,6 +5,7 @@ import { Suspense, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
+import { FadeUp } from "@/components/FadeUp";
 import { PrivacyModal, TermsModal } from "@/components/LegalModals";
 import {
   ChangeEmailDialog,
@@ -265,130 +266,140 @@ const ProfileContent = ({ userId, user, signOut }: ProfileContentProps) => {
         {/* Header */}
         <div className="px-6 pt-16 md:pt-24">
           {/* Welcome Message with Back Button */}
-          <div className="my-8 flex items-center justify-between">
-            <h1 className="font-editorial text-3xl text-[#E6DBC7] md:text-4xl">
-              Welcome {capitalizedFirstName}
-            </h1>
-            <Link
-              to="/online"
-              className="inline-flex shrink-0 items-center gap-2 text-sm tracking-wide text-[#E6DBC7]/70 transition-colors hover:text-[#E6DBC7] md:text-base"
-            >
-              <ArrowLeft className="h-5 w-5" />
-              <span className="hidden sm:inline">Back</span>
-              <span className="sm:hidden">Back</span>
-            </Link>
-          </div>
+          <FadeUp>
+            <div className="my-8 flex items-center justify-between">
+              <h1 className="font-editorial text-3xl text-[#E6DBC7] md:text-4xl">
+                Welcome {capitalizedFirstName}
+              </h1>
+              <Link
+                to="/online"
+                className="inline-flex shrink-0 items-center gap-2 text-sm tracking-wide text-[#E6DBC7]/70 transition-colors hover:text-[#E6DBC7] md:text-base"
+              >
+                <ArrowLeft className="h-5 w-5" />
+                <span className="hidden sm:inline">Back</span>
+                <span className="sm:hidden">Back</span>
+              </Link>
+            </div>
+          </FadeUp>
 
           {/* Progress Section */}
-          <div className="my-12 mb-10 border-b border-[#E6DBC7]/10 pb-10">
-            <h2 className="mb-6 text-sm font-light uppercase tracking-[0.2em] text-[#E6DBC7]/60 md:my-8">
-              Your Progress
-            </h2>
-            <div className="mb-8 grid grid-cols-2 gap-x-6 gap-y-8 md:mb-10 md:gap-x-10 md:gap-y-10">
-              <div>
-                <div className="mb-2 text-4xl font-light text-[#E6DBC7] md:mb-3 md:text-5xl lg:text-6xl">
-                  {stats.currentStreak}
+          <FadeUp delay={100}>
+            <div className="my-12 mb-10 border-b border-[#E6DBC7]/10 pb-10">
+              <h2 className="mb-6 text-sm font-light uppercase tracking-[0.2em] text-[#E6DBC7]/60 md:my-8">
+                Your Progress
+              </h2>
+              <div className="mb-8 grid grid-cols-2 gap-x-6 gap-y-8 md:mb-10 md:gap-x-10 md:gap-y-10">
+                <div>
+                  <div className="mb-2 text-4xl font-light text-[#E6DBC7] md:mb-3 md:text-5xl lg:text-6xl">
+                    {stats.currentStreak}
+                  </div>
+                  <div className="text-xs font-light uppercase tracking-wider text-[#E6DBC7]/60 md:text-sm">
+                    Current Streak
+                  </div>
                 </div>
-                <div className="text-xs font-light uppercase tracking-wider text-[#E6DBC7]/60 md:text-sm">
-                  Current Streak
+                <div>
+                  <div className="mb-2 text-4xl font-light text-[#E6DBC7] md:mb-3 md:text-5xl lg:text-6xl">
+                    {stats.longestStreak}
+                  </div>
+                  <div className="text-xs font-light uppercase tracking-wider text-[#E6DBC7]/60 md:text-sm">
+                    Best Streak
+                  </div>
+                </div>
+                <div>
+                  <div className="mb-2 text-4xl font-light text-[#E6DBC7] md:mb-3 md:text-5xl lg:text-6xl">
+                    {stats.totalSessions}
+                  </div>
+                  <div className="text-xs font-light uppercase tracking-wider text-[#E6DBC7]/60 md:text-sm">
+                    Classes Taken
+                  </div>
+                </div>
+                <div>
+                  <div className="mb-2 text-4xl font-light text-[#E6DBC7] md:mb-3 md:text-5xl lg:text-6xl">
+                    {stats.totalMinutes}
+                  </div>
+                  <div className="text-xs font-light uppercase tracking-wider text-[#E6DBC7]/60 md:text-sm">
+                    Minutes Practiced
+                  </div>
                 </div>
               </div>
-              <div>
-                <div className="mb-2 text-4xl font-light text-[#E6DBC7] md:mb-3 md:text-5xl lg:text-6xl">
-                  {stats.longestStreak}
-                </div>
-                <div className="text-xs font-light uppercase tracking-wider text-[#E6DBC7]/60 md:text-sm">
-                  Best Streak
-                </div>
-              </div>
-              <div>
-                <div className="mb-2 text-4xl font-light text-[#E6DBC7] md:mb-3 md:text-5xl lg:text-6xl">
-                  {stats.totalSessions}
-                </div>
-                <div className="text-xs font-light uppercase tracking-wider text-[#E6DBC7]/60 md:text-sm">
-                  Classes Taken
-                </div>
-              </div>
-              <div>
-                <div className="mb-2 text-4xl font-light text-[#E6DBC7] md:mb-3 md:text-5xl lg:text-6xl">
-                  {stats.totalMinutes}
-                </div>
-                <div className="text-xs font-light uppercase tracking-wider text-[#E6DBC7]/60 md:text-sm">
-                  Minutes Practiced
-                </div>
+              <div className="text-base font-light text-[#E6DBC7]/60 md:text-lg">
+                Member Since: <span className="text-[#E6DBC7]">{stats.memberSince}</span>
               </div>
             </div>
-            <div className="text-base font-light text-[#E6DBC7]/60 md:text-lg">
-              Member Since: <span className="text-[#E6DBC7]">{stats.memberSince}</span>
-            </div>
-          </div>
+          </FadeUp>
 
           {/* Account Section */}
-          <div className="mb-10 border-b border-[#E6DBC7]/10 pb-8 md:mb-12 md:pb-10">
-            <h2 className="mb-6 text-sm font-light uppercase tracking-[0.2em] text-[#E6DBC7]/60 md:mb-8">
-              Account
-            </h2>
-            <div className="space-y-2">
-              <ProfileMenuItem
-                label={isLoadingPortal ? "Opening portal..." : "Manage Subscription"}
-                onClick={openCustomerPortal}
-                disabled={isLoadingPortal}
-              />
-              <ProfileMenuItem
-                label="Change Password"
-                onClick={() => setShowPasswordDialog(true)}
-              />
-              <ProfileMenuItem label="Change Email" onClick={() => setShowEmailDialog(true)} />
+          <FadeUp>
+            <div className="mb-10 border-b border-[#E6DBC7]/10 pb-8 md:mb-12 md:pb-10">
+              <h2 className="mb-6 text-sm font-light uppercase tracking-[0.2em] text-[#E6DBC7]/60 md:mb-8">
+                Account
+              </h2>
+              <div className="space-y-2">
+                <ProfileMenuItem
+                  label={isLoadingPortal ? "Opening portal..." : "Manage Subscription"}
+                  onClick={openCustomerPortal}
+                  disabled={isLoadingPortal}
+                />
+                <ProfileMenuItem
+                  label="Change Password"
+                  onClick={() => setShowPasswordDialog(true)}
+                />
+                <ProfileMenuItem label="Change Email" onClick={() => setShowEmailDialog(true)} />
+              </div>
             </div>
-          </div>
+          </FadeUp>
 
           {/* Information Section */}
-          <div className="mb-10 border-b border-[#E6DBC7]/10 pb-8 md:mb-12 md:pb-10">
-            <h2 className="mb-6 text-sm font-light uppercase tracking-[0.2em] text-[#E6DBC7]/60 md:mb-8">
-              Information
-            </h2>
-            <div className="space-y-2">
-              <ProfileMenuItem label="About the App" onClick={() => navigate("/online/about")} />
-              <ProfileMenuItem
-                label="Leave Feedback / Make Suggestion"
-                onClick={() => setShowFeedbackDialog(true)}
-              />
-              <ProfileMenuItem
-                label="Contact Support"
-                onClick={() =>
-                  (window.location.href = "mailto:support@embersstudio.io?subject=Support Request")
-                }
-              />
-              <ProfileMenuItem
-                label="Safety Information"
-                onClick={() => setShowSafetyModal(true)}
-              />
+          <FadeUp>
+            <div className="mb-10 border-b border-[#E6DBC7]/10 pb-8 md:mb-12 md:pb-10">
+              <h2 className="mb-6 text-sm font-light uppercase tracking-[0.2em] text-[#E6DBC7]/60 md:mb-8">
+                Information
+              </h2>
+              <div className="space-y-2">
+                <ProfileMenuItem label="About the App" onClick={() => navigate("/online/about")} />
+                <ProfileMenuItem
+                  label="Leave Feedback / Make Suggestion"
+                  onClick={() => setShowFeedbackDialog(true)}
+                />
+                <ProfileMenuItem
+                  label="Contact Support"
+                  onClick={() =>
+                    (window.location.href = "mailto:support@embersstudio.io?subject=Support Request")
+                  }
+                />
+                <ProfileMenuItem
+                  label="Safety Information"
+                  onClick={() => setShowSafetyModal(true)}
+                />
+              </div>
             </div>
-          </div>
+          </FadeUp>
 
           {/* Data & Privacy Section */}
-          <div className="mb-10 pb-8 md:mb-12 md:pb-10">
-            <h2 className="mb-6 text-sm font-light uppercase tracking-[0.2em] text-[#E6DBC7]/60 md:mb-8">
-              Data & Privacy
-            </h2>
-            <div className="space-y-2">
-              <ProfileMenuItem label="Privacy Policy" onClick={() => setShowPrivacyModal(true)} />
-              <ProfileMenuItem label="Terms of Use" onClick={() => setShowTermsModal(true)} />
-              <ProfileMenuItem
-                label={isExporting ? "Exporting..." : "Download My Data"}
-                onClick={exportUserData}
-                disabled={isExporting}
-              />
-              {/* <ProfileMenuItem
-                label="Delete March Chat Data"
-                onClick={() => setShowDeleteDataDialog(true)}
-              /> */}
-              <ProfileMenuItem
-                label="Delete Account & All Data"
-                onClick={() => setShowDeleteAccountDialog(true)}
-              />
+          <FadeUp>
+            <div className="mb-10 pb-8 md:mb-12 md:pb-10">
+              <h2 className="mb-6 text-sm font-light uppercase tracking-[0.2em] text-[#E6DBC7]/60 md:mb-8">
+                Data & Privacy
+              </h2>
+              <div className="space-y-2">
+                <ProfileMenuItem label="Privacy Policy" onClick={() => setShowPrivacyModal(true)} />
+                <ProfileMenuItem label="Terms of Use" onClick={() => setShowTermsModal(true)} />
+                <ProfileMenuItem
+                  label={isExporting ? "Exporting..." : "Download My Data"}
+                  onClick={exportUserData}
+                  disabled={isExporting}
+                />
+                {/* <ProfileMenuItem
+                  label="Delete March Chat Data"
+                  onClick={() => setShowDeleteDataDialog(true)}
+                /> */}
+                <ProfileMenuItem
+                  label="Delete Account & All Data"
+                  onClick={() => setShowDeleteAccountDialog(true)}
+                />
+              </div>
             </div>
-          </div>
+          </FadeUp>
 
           {/* Sign Out Button */}
           <button

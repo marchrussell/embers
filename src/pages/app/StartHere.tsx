@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Suspense, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { FadeUp } from "@/components/FadeUp";
 import { Footer } from "@/components/Footer";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { NavBar } from "@/components/NavBar";
@@ -50,50 +51,54 @@ const StartHere = () => {
         <div className="absolute inset-0 bg-black/30" />
         <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
 
-        <div className="relative flex h-full items-end px-6 pb-16 md:px-10 lg:px-12">
-          <div className="w-full">
-            <p className="mb-2 text-xs font-light uppercase tracking-[0.15em] text-[#D4A574] sm:mb-3 sm:text-sm">
-              Your First Two Weeks
-            </p>
-            <h1 className="font-editorial text-3xl text-[#E6DBC7] sm:text-4xl md:text-5xl lg:text-6xl">
-              A Simple Place to Begin
-            </h1>
+        <FadeUp>
+          <div className="relative flex h-full items-end px-6 pb-16 md:px-10 lg:px-12">
+            <div className="w-full">
+              <p className="mb-2 text-xs font-light uppercase tracking-[0.15em] text-[#D4A574] sm:mb-3 sm:text-sm">
+                Your First Two Weeks
+              </p>
+              <h1 className="font-editorial text-3xl text-[#E6DBC7] sm:text-4xl md:text-5xl lg:text-6xl">
+                A Simple Place to Begin
+              </h1>
+            </div>
           </div>
-        </div>
+        </FadeUp>
       </div>
 
       {/* Main Content */}
       <div className="px-6 pb-16 pt-10 sm:pb-20 sm:pt-14 md:px-10 md:pb-24 md:pt-16 lg:px-12">
         {/* Subtitle - moved below hero */}
-        <p className="mb-8 font-editorial text-lg italic leading-relaxed text-[#E6DBC7]/80 sm:mb-16 sm:text-xl md:text-2xl">
-          No pressure. No expectations. Just a gentle way to arrive.
-        </p>
-
-        {/* Introduction Text - no box */}
-        <div className="mb-10 max-w-3xl text-sm font-light leading-relaxed text-white sm:mb-20 sm:text-base md:mb-28 md:text-lg">
-          <p>
-            This space is designed to help you arrive gently and find your footing — without
-            pressure or expectation. If all you do in your first two weeks is try these few
-            practices and come to the Weekly Reset, that's more than enough.
+        <FadeUp>
+          <p className="mb-8 font-editorial text-lg italic leading-relaxed text-[#E6DBC7]/80 sm:mb-16 sm:text-xl md:text-2xl">
+            No pressure. No expectations. Just a gentle way to arrive.
           </p>
-        </div>
+          <div className="mb-10 max-w-3xl text-sm font-light leading-relaxed text-white sm:mb-20 sm:text-base md:mb-28 md:text-lg">
+            <p>
+              This space is designed to help you arrive gently and find your footing — without
+              pressure or expectation. If all you do in your first two weeks is try these few
+              practices and come to the Weekly Reset, that's more than enough.
+            </p>
+          </div>
+        </FadeUp>
 
         {/* Section 1: Recommended Practices */}
         <div className="mb-16 sm:mb-20 md:mb-28">
-          <div className="mb-6 flex items-baseline gap-3 sm:gap-5">
-            <span className="font-editorial text-xl text-white sm:text-2xl md:text-3xl">1</span>
-            <h2 className="font-editorial text-xl font-light text-[#E6DBC7] sm:text-2xl md:text-3xl">
-              Try These First
-            </h2>
-          </div>
-          <p className="mb-8 ml-7 text-xs font-light text-[#E6DBC7]/50 sm:mb-10 sm:ml-10 sm:text-sm md:mb-12 md:text-base">
-            Two gentle practices to help you settle in
-          </p>
+          <FadeUp>
+            <div className="mb-6 flex items-baseline gap-3 sm:gap-5">
+              <span className="font-editorial text-xl text-white sm:text-2xl md:text-3xl">1</span>
+              <h2 className="font-editorial text-xl font-light text-[#E6DBC7] sm:text-2xl md:text-3xl">
+                Try These First
+              </h2>
+            </div>
+            <p className="mb-8 ml-7 text-xs font-light text-[#E6DBC7]/50 sm:mb-10 sm:ml-10 sm:text-sm md:mb-12 md:text-base">
+              Two gentle practices to help you settle in
+            </p>
+          </FadeUp>
 
           <div className="grid gap-6">
-            {sessions.map((session) => (
+            {sessions.map((session, index) => (
+              <FadeUp key={session.id} delay={index * 80}>
               <SessionPlayCard
-                key={session.id}
                 sessionId={session.id}
                 title={session.title}
                 description={session.short_description || session.description || ""}
@@ -109,32 +114,37 @@ const StartHere = () => {
                 onClick={() => setSelectedSessionId(session.id)}
                 mobileStacked
               />
+              </FadeUp>
             ))}
           </div>
         </div>
 
         {/* Section 2: Weekly Reset */}
         <div className="mb-10 sm:mb-20 md:mb-28">
-          <div className="mb-3 flex items-baseline gap-3 sm:mb-4 sm:gap-5">
-            <span className="font-editorial text-xl text-white sm:text-2xl md:text-3xl">2</span>
-            <h2 className="font-editorial text-xl font-light text-[#E6DBC7] sm:text-2xl md:text-3xl">
-              Join the Weekly Reset
-            </h2>
-          </div>
-          <p className="mb-10 ml-7 text-xs font-light text-[#E6DBC7]/50 sm:ml-10 sm:text-sm md:mb-12 md:text-base">
-            A live session every Wednesday to reset and reconnect
-          </p>
-
-          {/* Weekly Reset Card - now using shared component */}
-          <WeeklyResetCard onClick={() => navigate("/online?tab=live")} />
+          <FadeUp>
+            <div className="mb-3 flex items-baseline gap-3 sm:mb-4 sm:gap-5">
+              <span className="font-editorial text-xl text-white sm:text-2xl md:text-3xl">2</span>
+              <h2 className="font-editorial text-xl font-light text-[#E6DBC7] sm:text-2xl md:text-3xl">
+                Join the Weekly Reset
+              </h2>
+            </div>
+            <p className="mb-10 ml-7 text-xs font-light text-[#E6DBC7]/50 sm:ml-10 sm:text-sm md:mb-12 md:text-base">
+              A live session every Wednesday to reset and reconnect
+            </p>
+          </FadeUp>
+          <FadeUp delay={100}>
+            <WeeklyResetCard onClick={() => navigate("/online?tab=live")} />
+          </FadeUp>
         </div>
 
         {/* Closing */}
-        <div className="pb-16 pt-6 text-center sm:pb-20 sm:pt-8 md:pb-24">
-          <p className="px-4 text-sm font-light text-[#E6DBC7]/50 sm:text-base">
-            That's it. Start here, go gently, and trust the process.
-          </p>
-        </div>
+        <FadeUp>
+          <div className="pb-16 pt-6 text-center sm:pb-20 sm:pt-8 md:pb-24">
+            <p className="px-4 text-sm font-light text-[#E6DBC7]/50 sm:text-base">
+              That's it. Start here, go gently, and trust the process.
+            </p>
+          </div>
+        </FadeUp>
 
         <OnlineFooter />
       </div>

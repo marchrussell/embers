@@ -3,6 +3,7 @@ import { ArrowRight, ChevronLeft, ChevronRight, Heart, Lock } from "lucide-react
 import { memo, useLayoutEffect } from "react";
 import { Link } from "react-router-dom";
 
+import { FadeUp } from "@/components/FadeUp";
 import { FeedbackSection } from "@/components/FeedbackSection";
 import { OptimizedImage } from "@/components/OptimizedImage";
 import { CategoryCardSkeleton } from "@/components/skeletons/CategoryCardSkeleton";
@@ -94,12 +95,14 @@ const LibraryMainView = memo(
             <>
               {/* Categories Grid */}
               <div>
-                <h2 className="mb-2 text-2xl font-medium tracking-wide text-[#E6DBC7] md:text-3xl">
-                  Browse by Category
-                </h2>
-                <p className="mb-10 text-base font-light text-[#E6DBC7]/60 md:text-lg">
-                  Move at your own pace — return anytime.
-                </p>
+                <FadeUp>
+                  <h2 className="mb-2 text-2xl font-medium tracking-wide text-[#E6DBC7] md:text-3xl">
+                    Browse by Category
+                  </h2>
+                  <p className="mb-10 text-base font-light text-[#E6DBC7]/60 md:text-lg">
+                    Move at your own pace — return anytime.
+                  </p>
+                </FadeUp>
                 {(() => {
                   const filteredCategories = categoriesWithSessions.filter(
                     (category) => category && category.image && category.name !== "MEDITATIONS"
@@ -110,30 +113,29 @@ const LibraryMainView = memo(
                       {filteredCategories.map((category, index) => {
                         const isLastOdd = isOdd && index === filteredCategories.length - 1;
                         return (
-                          <div
-                            key={category.id}
-                            onClick={() => onCategorySelect(category)}
-                            className={`group relative h-72 cursor-pointer overflow-hidden rounded-2xl border border-[#E6DBC7]/15 shadow-glow transition-all hover:border-[#E6DBC7]/25 ${
-                              isLastOdd ? "md:col-span-2" : ""
-                            }`}
-                          >
-                            <OptimizedImage
-                              src={category.image}
-                              alt={category.name}
-                              className="absolute inset-0 h-full w-full object-cover"
-                              optimizationOptions={IMAGE_PRESETS.categoryCard}
-                              loading="lazy"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                            <div className="relative flex h-full flex-col justify-end p-6">
-                              <h3 className="mb-2 font-editorial text-4xl text-[#E6DBC7]">
-                                {category.name}
-                              </h3>
-                              <p className="text-sm font-light text-[#E6DBC7]/60 md:text-base">
-                                {category.sessions.length} sessions
-                              </p>
+                          <FadeUp key={category.id} delay={index * 60} className={isLastOdd ? "md:col-span-2" : ""}>
+                            <div
+                              onClick={() => onCategorySelect(category)}
+                              className="group relative h-72 cursor-pointer overflow-hidden rounded-2xl border border-[#E6DBC7]/15 shadow-glow transition-all hover:border-[#E6DBC7]/25 w-full"
+                            >
+                              <OptimizedImage
+                                src={category.image}
+                                alt={category.name}
+                                className="absolute inset-0 h-full w-full object-cover"
+                                optimizationOptions={IMAGE_PRESETS.categoryCard}
+                                loading="lazy"
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                              <div className="relative flex h-full flex-col justify-end p-6">
+                                <h3 className="mb-2 font-editorial text-4xl text-[#E6DBC7]">
+                                  {category.name}
+                                </h3>
+                                <p className="text-sm font-light text-[#E6DBC7]/60 md:text-base">
+                                  {category.sessions.length} sessions
+                                </p>
+                              </div>
                             </div>
-                          </div>
+                          </FadeUp>
                         );
                       })}
                     </div>
@@ -252,22 +254,24 @@ const LibraryMainView = memo(
               </div>
 
               {/* ARC Mentorship CTA */}
-              <div className="mx-auto max-w-xl px-6 text-center">
-                <p className="mb-2 text-lg font-semibold leading-relaxed md:text-xl">
-                  Looking for deeper, guided support?
-                </p>
-                <p className="mb-6 font-light leading-relaxed">
-                  For those wanting a more personalised, relational process, ARC mentorship is
-                  available by application.
-                </p>
-                <button
-                  onClick={onArcCardsOpen}
-                  className="inline-flex items-center gap-3 text-base font-light transition-colors hover:text-white"
-                >
-                  <span>Learn about ARC</span>
-                  <ArrowRight className="h-5 w-5" />
-                </button>
-              </div>
+              <FadeUp>
+                <div className="mx-auto max-w-xl px-6 text-center">
+                  <p className="mb-2 text-lg font-semibold leading-relaxed md:text-xl">
+                    Looking for deeper, guided support?
+                  </p>
+                  <p className="mb-6 font-light leading-relaxed">
+                    For those wanting a more personalised, relational process, ARC mentorship is
+                    available by application.
+                  </p>
+                  <button
+                    onClick={onArcCardsOpen}
+                    className="inline-flex items-center gap-3 text-base font-light transition-colors hover:text-white"
+                  >
+                    <span>Learn about ARC</span>
+                    <ArrowRight className="h-5 w-5" />
+                  </button>
+                </div>
+              </FadeUp>
             </>
           )}
         </div>

@@ -2,6 +2,7 @@ import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+import { FadeUp } from "@/components/FadeUp";
 import { FeedbackSection } from "@/components/FeedbackSection";
 import { Footer } from "@/components/Footer";
 import { PrivacyModal, TermsModal } from "@/components/LegalModals";
@@ -23,20 +24,23 @@ const About = () => {
       <main className="flex-1 pb-16 pt-36 md:pb-24 md:pt-20">
         <div className="mx-auto max-w-[1600px] px-6 md:px-10 lg:px-16 xl:px-24">
           {/* Header row */}
-          <div className="mb-12 mt-20 flex items-center justify-between">
-            <h1 className="font-editorial text-3xl text-[#E6DBC7] md:text-5xl lg:text-6xl">
-              Welcome
-            </h1>
-            <button
-              onClick={() => navigate("/online/profile")}
-              className="inline-flex shrink-0 items-center gap-2 text-sm tracking-wide text-[#E6DBC7]/70 transition-colors hover:text-[#E6DBC7] md:text-base"
-            >
-              <ArrowLeft className="h-5 w-5" />
-              Back
-            </button>
-          </div>
+          <FadeUp>
+            <div className="mb-12 mt-20 flex items-center justify-between">
+              <h1 className="font-editorial text-3xl text-[#E6DBC7] md:text-5xl lg:text-6xl">
+                Welcome
+              </h1>
+              <button
+                onClick={() => navigate("/online/profile")}
+                className="inline-flex shrink-0 items-center gap-2 text-sm tracking-wide text-[#E6DBC7]/70 transition-colors hover:text-[#E6DBC7] md:text-base"
+              >
+                <ArrowLeft className="h-5 w-5" />
+                Back
+              </button>
+            </div>
+          </FadeUp>
 
           {/* Desktop: Side-by-side hero layout */}
+          <FadeUp delay={100}>
           <div className="mb-20 md:mb-32">
             {/* Mobile: Stacked layout */}
             <div className="md:hidden">
@@ -122,6 +126,7 @@ const About = () => {
               </div>
             </div>
           </div>
+          </FadeUp>
         </div>
 
         {/* Content Sections */}
@@ -129,6 +134,7 @@ const About = () => {
           {/* All content sections stacked with dividers */}
           <div className="mb-16 md:mb-32">
             {/* About the App Section */}
+            <FadeUp>
             <div className="border-t border-muted-foreground/20 py-10 md:py-14">
               <h2 className="mb-6 font-editorial text-2xl text-[#E6DBC7] md:mb-8 md:text-3xl">
                 About the App
@@ -146,8 +152,10 @@ const About = () => {
                 </p>
               </div>
             </div>
+            </FadeUp>
 
             {/* How It Works Section */}
+            <FadeUp>
             <div className="border-t border-muted-foreground/20 py-10 md:py-14">
               <h2 className="mb-6 font-editorial text-2xl text-[#E6DBC7] md:mb-8 md:text-3xl">
                 How It Works
@@ -164,8 +172,10 @@ const About = () => {
                 </p>
               </div>
             </div>
+            </FadeUp>
 
             {/* Music & Sound Section */}
+            <FadeUp>
             <div className="border-t border-muted-foreground/20 py-10 md:py-14">
               <h2 className="mb-6 font-editorial text-2xl text-[#E6DBC7] md:mb-8 md:text-3xl">
                 Music & Sound
@@ -176,8 +186,10 @@ const About = () => {
                 designed for each session, enhancing your journey and deepening the experience.
               </p>
             </div>
+            </FadeUp>
 
             {/* Breathwork Safety Section */}
+            <FadeUp>
             <div className="border-t border-muted-foreground/20 py-10 md:py-14">
               <h2 className="mb-6 font-editorial text-2xl text-[#E6DBC7] md:mb-8 md:text-3xl">
                 Breathwork Safety
@@ -210,8 +222,10 @@ const About = () => {
                 </Link>
               </div>
             </div>
+            </FadeUp>
 
             {/* Your Journey Section */}
+            <FadeUp>
             <div className="border-t border-muted-foreground/20 py-10 md:py-14">
               <h2 className="mb-6 font-editorial text-2xl text-[#E6DBC7] md:mb-8 md:text-3xl">
                 Your Journey
@@ -228,8 +242,10 @@ const About = () => {
                 </p>
               </div>
             </div>
+            </FadeUp>
 
             {/* Contact section */}
+            <FadeUp>
             <div className="border-t border-muted-foreground/20 pt-8 md:pt-10">
               <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-2 lg:gap-16">
                 <div className="space-y-4">
@@ -250,6 +266,7 @@ const About = () => {
                 </div>
               </div>
             </div>
+            </FadeUp>
           </div>
         </div>
       </main>
