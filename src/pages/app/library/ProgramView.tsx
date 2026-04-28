@@ -1,102 +1,30 @@
 import { memo } from "react";
 
-import { FadeUp } from "@/components/FadeUp";
-import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
-import SessionPlayCard from "@/pages/app/online/components/SessionPlayCard";
-
-import { LibraryProgram, LibrarySession } from "./types";
+import LibraryViewLayout from "./LibraryViewLayout";
+import { LibraryProgram } from "./types";
 
 interface ProgramViewProps {
   program: LibraryProgram;
   hasSubscription: boolean;
+  onBack: () => void;
   onSessionClick: (id: string) => void;
   onSubscriptionRequired: () => void;
 }
 
 const ProgramView = memo(
-  ({ program, hasSubscription, onSessionClick, onSubscriptionRequired }: ProgramViewProps) => {
-    const now = Date.now();
-
-    const sortedSessions = [...program.sessions].sort((a: LibrarySession, b: LibrarySession) => {
-      if (a.locked !== b.locked) return a.locked ? 1 : -1;
-      const ai = a.order_index ?? Infinity;
-      const bi = b.order_index ?? Infinity;
-      return ai - bi;
-    });
-
-    return (
-      <div className="min-h-screen bg-background pb-24">
-        {/* Spacer for navbar and header */}
-        <div className="hidden md:h-[284px] md:bg-background" />
-
-        {/* Program Hero Header */}
-        <div className="relative z-10 h-[280px]">
-          <img
-            src={getOptimizedImageUrl(program.image, IMAGE_PRESETS.hero)}
-            alt=""
-            aria-hidden="true"
-            className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700"
-          />
-          <div className="absolute inset-0 bg-black/20" />
-          <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
-
-          <div className="relative flex h-full items-end px-6 pb-8">
-            <FadeUp className="flex w-full flex-col gap-4">
-              <h1 className="font-editorial text-5xl text-[#E6DBC7] md:text-6xl">
-                {program.title}
-              </h1>
-              <p className="max-w-2xl text-base font-light leading-relaxed text-[#E6DBC7]/80 md:text-lg">
-                {program.description}
-              </p>
-              <p className="text-sm font-light uppercase tracking-[0.15em] text-[#EC9037] md:text-base">
-                {program.classCount} Classes
-              </p>
-            </FadeUp>
-          </div>
-        </div>
-
-        <div className="px-6 pt-12">
-          <div className="grid gap-4 md:gap-5">
-            {sortedSessions.map((session: LibrarySession, index) => {
-              const isNew = session.created_at
-                ? Math.floor(
-                    (now - new Date(session.created_at).getTime()) / (1000 * 60 * 60 * 24)
-                  ) <= 7
-                : false;
-
-              return (
-                <FadeUp key={session.id} delay={index * 50}>
-                  <SessionPlayCard
-                    sessionId={session.id}
-                    title={session.title}
-                    description={session.description || `A ${session.duration} minute practice.`}
-                    meta={[
-                      session.teacher,
-                      session.duration != null && `${session.duration} min`,
-                      session.intensity,
-                      session.technique,
-                    ]
-                      .filter(Boolean)
-                      .join(" • ")}
-                    imageUrl={session.image}
-                    locked={session.locked}
-                    isNew={isNew}
-                    onClick={() => {
-                      if (session.locked && !hasSubscription) {
-                        onSubscriptionRequired();
-                      } else {
-                        onSessionClick(session.id);
-                      }
-                    }}
-                  />
-                </FadeUp>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    );
-  }
+  ({ program, hasSubscription, onBack, onSessionClick, onSubscriptionRequired }: ProgramViewProps) => (
+    <LibraryViewLayout
+      image={program.image}
+      title={program.title}
+      description={program.description}
+      countLabel={`${program.classCount} Classes`}
+      sessions={program.sessions}
+      hasSubscription={hasSubscription}
+      onBack={onBack}
+      onSessionClick={onSessionClick}
+      onSubscriptionRequired={onSubscriptionRequired}
+    />
+  )
 );
 
 ProgramView.displayName = "ProgramView";

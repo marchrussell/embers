@@ -1,4 +1,5 @@
 // Library page - Categories: CALM, ENERGY, TRANSFORM, SLEEP, RESILIENCE & CAPACITY
+import { User } from "@supabase/supabase-js";
 import { useQuery } from "@tanstack/react-query";
 import { ReactElement, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -13,7 +14,6 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavourites } from "@/hooks/useFavourites";
 import { supabase } from "@/integrations/supabase/client";
-import { User } from "@supabase/supabase-js";
 
 import CategoryView from "./library/CategoryView";
 import { useFavouriteSessions } from "./library/hooks/useFavouriteSessions";
@@ -47,7 +47,7 @@ const LibraryContent = ({
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
-  const [selectedProgram] = useState<LibraryProgram | null>(null);
+  const [selectedProgram, setSelectedProgram] = useState<LibraryProgram | null>(null);
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(() => {
     return new URLSearchParams(window.location.search).get("session");
   });
@@ -116,8 +116,13 @@ const LibraryContent = ({
     }
   }, [activeCategory]);
 
-  const handleBack = () => {
+  const handleLibraryBack = () => {
     navigate(isEmbedded ? "/online?tab=library" : "/library", { replace: true });
+  };
+
+  const handleCoursesBack = () => {
+    setSelectedProgram(null);
+    navigate(isEmbedded ? "/online?tab=courses" : "/courses", { replace: true });
   };
 
   const handleSessionClick = (sessionId: string) => {
@@ -133,7 +138,7 @@ const LibraryContent = ({
         category={activeCategory}
         isEmbedded={isEmbedded}
         hasSubscription={hasSubscription}
-        onBack={handleBack}
+        onBack={handleLibraryBack}
         onSessionClick={handleSessionClick}
         onSubscriptionRequired={() => setShowSubscriptionModal(true)}
       />
@@ -143,6 +148,7 @@ const LibraryContent = ({
       <ProgramView
         program={selectedProgram}
         hasSubscription={hasSubscription}
+        onBack={handleCoursesBack}
         onSessionClick={handleSessionClick}
         onSubscriptionRequired={() => setShowSubscriptionModal(true)}
       />
