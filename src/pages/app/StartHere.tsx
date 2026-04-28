@@ -113,7 +113,7 @@ const StartHere = () => {
             />
           </FadeUp>
 
-          <div className="grid gap-6">
+          {/* <div className="md:grid md:gap-6"> */}
             {sessions.map((session, index) => (
               <FadeUp key={session.id} delay={index * 80}>
                 <SessionPlayCard
@@ -134,7 +134,7 @@ const StartHere = () => {
                 />
               </FadeUp>
             ))}
-          </div>
+          {/* </div> */}
         </div>
 
         {/* Section 2: Weekly Reset */}
