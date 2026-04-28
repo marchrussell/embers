@@ -113,9 +113,9 @@ const LibraryContent = ({
     }
   }, [activeCategory]);
 
-  const handleLibraryBack = () => {
-    navigate(isEmbedded ? "/online?tab=library" : "/library", { replace: true });
-  };
+  // const handleLibraryBack = () => {
+  //   navigate(isEmbedded ? "/online?tab=library" : "/library", { replace: true });
+  // };
 
   const handleSessionClick = (sessionId: string) => {
     if (!sessionId) return;
@@ -130,7 +130,7 @@ const LibraryContent = ({
         category={activeCategory}
         isEmbedded={isEmbedded}
         hasSubscription={hasSubscription}
-        onBack={handleLibraryBack}
+        // onBack={handleLibraryBack}
         onSessionClick={handleSessionClick}
         onSubscriptionRequired={() => setShowSubscriptionModal(true)}
       />
