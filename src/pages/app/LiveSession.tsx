@@ -231,7 +231,9 @@ const LiveSession = () => {
               <p className="mb-3 text-sm font-light uppercase tracking-[0.15em] text-[#D4A574]">
                 {session.subtitle}
               </p>
-              <h1 className="font-editorial text-5xl text-[#E6DBC7] md:text-6xl">{session.title}</h1>
+              <h1 className="font-editorial text-5xl text-[#E6DBC7] md:text-6xl">
+                {session.title}
+              </h1>
             </div>
           </div>
         </FadeUp>
@@ -265,117 +267,119 @@ const LiveSession = () => {
         <div className="mx-auto max-w-4xl">
           {/* Facilitator and What to expect - connected layout */}
           <FadeUp>
-          <div className="mb-36 mt-32 flex flex-col overflow-hidden rounded-2xl border border-[#E6DBC7]/20 md:flex-row">
-            {/* Image on the left - height determined by content */}
-            <div className="relative flex-shrink-0 overflow-hidden md:w-1/2">
-              <img
-                src={teacherImage}
-                alt={session.teacher}
-                className="h-80 w-full object-cover object-[center_40%] md:absolute md:inset-0 md:h-full"
-              />
-            </div>
+            <div className="mb-36 mt-32 flex flex-col overflow-hidden rounded-2xl border border-[#E6DBC7]/20 md:flex-row">
+              {/* Image on the left - height determined by content */}
+              <div className="relative flex-shrink-0 overflow-hidden md:w-1/2">
+                <img
+                  src={teacherImage}
+                  alt={session.teacher}
+                  className="h-80 w-full object-cover object-[center_40%] md:absolute md:inset-0 md:h-full"
+                />
+              </div>
 
-            {/* What to expect box on the right - black background with border on 3 sides */}
-            <div className="flex flex-col justify-center p-10 md:w-1/2">
-              <div>
-                <h3 className="mb-2 font-editorial text-2xl text-[#E6DBC7] md:text-3xl">
-                  What to expect
-                </h3>
-                <p className="mb-6 text-xs font-light uppercase tracking-[0.15em] text-[#D4A574]">
-                  Held live by {session.teacher}
-                </p>
-                <ul className="space-y-3 text-sm font-light text-[#E6DBC7]/70">
-                  {whatToExpectItems.map((item, index) => (
-                    <li key={index} className="flex items-start gap-2">
-                      <span className="mt-0.5 text-[#E6DBC7]/40">–</span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
+              {/* What to expect box on the right - black background with border on 3 sides */}
+              <div className="flex flex-col justify-center p-10 md:w-1/2">
+                <div>
+                  <h3 className="mb-2 font-editorial text-2xl text-[#E6DBC7] md:text-3xl">
+                    What to expect
+                  </h3>
+                  <p className="mb-6 text-xs font-light uppercase tracking-[0.15em] text-[#D4A574]">
+                    Held live by {session.teacher}
+                  </p>
+                  <ul className="space-y-3 text-sm font-light text-[#E6DBC7]/70">
+                    {whatToExpectItems.map((item, index) => (
+                      <li key={index} className="flex items-start gap-2">
+                        <span className="mt-0.5 text-[#E6DBC7]/40">–</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
-          </div>
           </FadeUp>
 
           {/* Countdown / Status Box - video container size with 16:9 aspect ratio */}
           <FadeUp delay={100}>
-          <div>
-            <div className="relative mx-auto flex aspect-[16/9] max-w-6xl items-center justify-center overflow-hidden rounded-2xl border border-[#E6DBC7]/10">
-              {/* Background Image */}
-              <div
-                className="absolute inset-0 bg-[length:100%_100%] bg-center"
-                style={{ backgroundImage: `url('${liveSessionCountdownBg}')` }}
-              />
-              {/* Glassmorphism Overlay */}
-              <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
-              {isLive ? (
-                <div className="relative z-10 p-8 text-center">
-                  <div className="mb-6 flex items-center justify-center gap-3">
-                    <Video className="h-6 w-6 animate-pulse text-red-500" />
-                    <span className="font-editorial text-xl text-[#E6DBC7] md:text-2xl">
-                      We're Live
-                    </span>
+            <div>
+              <div className="relative mx-auto flex aspect-[16/9] max-w-6xl items-center justify-center overflow-hidden rounded-2xl border border-[#E6DBC7]/10">
+                {/* Background Image */}
+                <div
+                  className="absolute inset-0 bg-[length:100%_100%] bg-center"
+                  style={{ backgroundImage: `url('${liveSessionCountdownBg}')` }}
+                />
+                {/* Glassmorphism Overlay */}
+                <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
+                {isLive ? (
+                  <div className="relative z-10 p-8 text-center">
+                    <div className="mb-6 flex items-center justify-center gap-3">
+                      <Video className="h-6 w-6 animate-pulse text-red-500" />
+                      <span className="font-editorial text-xl text-[#E6DBC7] md:text-2xl">
+                        We're Live
+                      </span>
+                    </div>
+                    <p className="mb-8 font-light text-[#E6DBC7]/70">
+                      The session is open now. <br /> Join when you're ready.
+                    </p>
+                    <Button
+                      className="rounded-full bg-[#E6DBC7] px-12 py-6 text-base font-medium text-[#1A1A1A] hover:bg-[#E6DBC7]/90"
+                      onClick={() => window.open(`/live/${liveSession!.id}`, "_blank")}
+                    >
+                      Join Live Session
+                    </Button>
                   </div>
-                  <p className="mb-8 font-light text-[#E6DBC7]/70">
-                    The session is open now. <br /> Join when you're ready.
-                  </p>
-                  <Button
-                    className="rounded-full bg-[#E6DBC7] px-12 py-6 text-base font-medium text-[#1A1A1A] hover:bg-[#E6DBC7]/90"
-                    onClick={() => window.open(`/live/${liveSession!.id}`, "_blank")}
-                  >
-                    Join Live Session
-                  </Button>
-                </div>
-              ) : (
-                <div className="relative z-10 p-8 text-center">
-                  <p className="mb-6 font-light text-[#E6DBC7]/40">Next live gathering begins in</p>
+                ) : (
+                  <div className="relative z-10 p-8 text-center">
+                    <p className="mb-6 font-light text-[#E6DBC7]/40">
+                      Next live gathering begins in
+                    </p>
 
-                  {/* Countdown */}
-                  <div className="mb-12 flex items-center justify-center gap-4 md:gap-8">
-                    <div className="text-center">
-                      <div className="mb-1 font-editorial text-4xl text-[#E6DBC7] md:text-5xl lg:text-6xl">
-                        {String(countdown.days).padStart(2, "0")}
+                    {/* Countdown */}
+                    <div className="mb-12 flex items-center justify-center gap-4 md:gap-8">
+                      <div className="text-center">
+                        <div className="mb-1 font-editorial text-4xl text-[#E6DBC7] md:text-5xl lg:text-6xl">
+                          {String(countdown.days).padStart(2, "0")}
+                        </div>
+                        <p className="text-xs font-light uppercase tracking-wider text-[#E6DBC7]/40">
+                          Days
+                        </p>
                       </div>
-                      <p className="text-xs font-light uppercase tracking-wider text-[#E6DBC7]/40">
-                        Days
-                      </p>
-                    </div>
-                    <span className="text-2xl text-[#E6DBC7]/30 md:text-3xl">:</span>
-                    <div className="text-center">
-                      <div className="mb-1 font-editorial text-4xl text-[#E6DBC7] md:text-5xl lg:text-6xl">
-                        {String(countdown.hours).padStart(2, "0")}
+                      <span className="text-2xl text-[#E6DBC7]/30 md:text-3xl">:</span>
+                      <div className="text-center">
+                        <div className="mb-1 font-editorial text-4xl text-[#E6DBC7] md:text-5xl lg:text-6xl">
+                          {String(countdown.hours).padStart(2, "0")}
+                        </div>
+                        <p className="text-xs font-light uppercase tracking-wider text-[#E6DBC7]/40">
+                          Hours
+                        </p>
                       </div>
-                      <p className="text-xs font-light uppercase tracking-wider text-[#E6DBC7]/40">
-                        Hours
-                      </p>
-                    </div>
-                    <span className="text-2xl text-[#E6DBC7]/30 md:text-3xl">:</span>
-                    <div className="text-center">
-                      <div className="mb-1 font-editorial text-4xl text-[#E6DBC7] md:text-5xl lg:text-6xl">
-                        {String(countdown.minutes).padStart(2, "0")}
+                      <span className="text-2xl text-[#E6DBC7]/30 md:text-3xl">:</span>
+                      <div className="text-center">
+                        <div className="mb-1 font-editorial text-4xl text-[#E6DBC7] md:text-5xl lg:text-6xl">
+                          {String(countdown.minutes).padStart(2, "0")}
+                        </div>
+                        <p className="text-xs font-light uppercase tracking-wider text-[#E6DBC7]/40">
+                          Mins
+                        </p>
                       </div>
-                      <p className="text-xs font-light uppercase tracking-wider text-[#E6DBC7]/40">
-                        Mins
-                      </p>
-                    </div>
-                    <span className="text-2xl text-[#E6DBC7]/30 md:text-3xl">:</span>
-                    <div className="text-center">
-                      <div className="mb-1 font-editorial text-4xl text-[#E6DBC7] md:text-5xl lg:text-6xl">
-                        {String(countdown.seconds).padStart(2, "0")}
+                      <span className="text-2xl text-[#E6DBC7]/30 md:text-3xl">:</span>
+                      <div className="text-center">
+                        <div className="mb-1 font-editorial text-4xl text-[#E6DBC7] md:text-5xl lg:text-6xl">
+                          {String(countdown.seconds).padStart(2, "0")}
+                        </div>
+                        <p className="text-xs font-light uppercase tracking-wider text-[#E6DBC7]/40">
+                          Secs
+                        </p>
                       </div>
-                      <p className="text-xs font-light uppercase tracking-wider text-[#E6DBC7]/40">
-                        Secs
-                      </p>
                     </div>
+
+                    <p className="font-light text-[#E6DBC7]/40">
+                      {session.nextDate} at {session.time}
+                    </p>
                   </div>
-
-                  <p className="font-light text-[#E6DBC7]/40">
-                    {session.nextDate} at {session.time}
-                  </p>
-                </div>
-              )}
+                )}
+              </div>
             </div>
-          </div>
           </FadeUp>
         </div>
 

@@ -113,10 +113,14 @@ const LibraryMainView = memo(
                       {filteredCategories.map((category, index) => {
                         const isLastOdd = isOdd && index === filteredCategories.length - 1;
                         return (
-                          <FadeUp key={category.id} delay={index * 60} className={isLastOdd ? "md:col-span-2" : ""}>
+                          <FadeUp
+                            key={category.id}
+                            delay={index * 60}
+                            className={isLastOdd ? "md:col-span-2" : ""}
+                          >
                             <div
                               onClick={() => onCategorySelect(category)}
-                              className="group relative h-72 cursor-pointer overflow-hidden rounded-2xl border border-[#E6DBC7]/15 shadow-glow transition-all hover:border-[#E6DBC7]/25 w-full"
+                              className="group relative h-72 w-full cursor-pointer overflow-hidden rounded-2xl border border-[#E6DBC7]/15 shadow-glow transition-all hover:border-[#E6DBC7]/25"
                             >
                               <OptimizedImage
                                 src={category.image}

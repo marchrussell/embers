@@ -132,76 +132,76 @@ const Favourites = () => {
             <div className="space-y-3 md:space-y-4">
               {favourites.map((session, index) => (
                 <FadeUp key={session.id} delay={index * 40}>
-                <div
-                  onClick={() => handleSessionClick(session.id, session.locked)}
-                  className="group relative flex cursor-pointer items-center gap-3 overflow-hidden py-2 md:gap-4"
-                >
-                  {/* Thumbnail */}
-                  <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded md:h-24 md:w-24">
-                    <img
-                      src={getOptimizedImageUrl(session.image, IMAGE_PRESETS.thumbnail)}
-                      alt=""
-                      aria-hidden="true"
-                      className="absolute inset-0 h-full w-full object-cover object-center"
-                    />
-                  </div>
-
-                  {/* Info */}
-                  <div className="min-w-0 flex-1">
-                    <p className="mb-0.5 text-xs font-medium uppercase tracking-widest text-[#EC9037] md:mb-1 md:text-sm">
-                      {session.category}
-                    </p>
-                    <h3 className="mb-0.5 truncate text-base font-normal text-white md:text-xl">
-                      {session.title}
-                    </h3>
-                    <p className="text-sm font-light text-white/60 md:text-base">
-                      {session.teacher}
-                    </p>
-                    <p className="text-sm font-light text-white/50 md:text-base">
-                      {session.duration} min
-                    </p>
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="flex items-center gap-1 pr-2 md:gap-2 md:pr-4">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleRemoveFavourite(session.id);
-                      }}
-                      className="p-1.5 transition-all md:p-2"
-                    >
-                      <Heart
-                        className="h-5 w-5 fill-white text-white transition-all"
-                        strokeWidth={1.5}
+                  <div
+                    onClick={() => handleSessionClick(session.id, session.locked)}
+                    className="group relative flex cursor-pointer items-center gap-3 overflow-hidden py-2 md:gap-4"
+                  >
+                    {/* Thumbnail */}
+                    <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded md:h-24 md:w-24">
+                      <img
+                        src={getOptimizedImageUrl(session.image, IMAGE_PRESETS.thumbnail)}
+                        alt=""
+                        aria-hidden="true"
+                        className="absolute inset-0 h-full w-full object-cover object-center"
                       />
-                    </button>
+                    </div>
 
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleShare(session);
-                      }}
-                      className="p-1.5 transition-all md:p-2"
-                    >
-                      <Share2 className="h-5 w-5 text-white transition-all" strokeWidth={1.5} />
-                    </button>
+                    {/* Info */}
+                    <div className="min-w-0 flex-1">
+                      <p className="mb-0.5 text-xs font-medium uppercase tracking-widest text-[#EC9037] md:mb-1 md:text-sm">
+                        {session.category}
+                      </p>
+                      <h3 className="mb-0.5 truncate text-base font-normal text-white md:text-xl">
+                        {session.title}
+                      </h3>
+                      <p className="text-sm font-light text-white/60 md:text-base">
+                        {session.teacher}
+                      </p>
+                      <p className="text-sm font-light text-white/50 md:text-base">
+                        {session.duration} min
+                      </p>
+                    </div>
 
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleSessionClick(session.id, session.locked);
-                      }}
-                      className="p-1.5 transition-all md:p-2"
-                    >
-                      <Play
-                        className="h-5 w-5 text-white transition-all"
-                        strokeWidth={1.5}
-                        fill="none"
-                      />
-                    </button>
+                    {/* Action Buttons */}
+                    <div className="flex items-center gap-1 pr-2 md:gap-2 md:pr-4">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleRemoveFavourite(session.id);
+                        }}
+                        className="p-1.5 transition-all md:p-2"
+                      >
+                        <Heart
+                          className="h-5 w-5 fill-white text-white transition-all"
+                          strokeWidth={1.5}
+                        />
+                      </button>
+
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleShare(session);
+                        }}
+                        className="p-1.5 transition-all md:p-2"
+                      >
+                        <Share2 className="h-5 w-5 text-white transition-all" strokeWidth={1.5} />
+                      </button>
+
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleSessionClick(session.id, session.locked);
+                        }}
+                        className="p-1.5 transition-all md:p-2"
+                      >
+                        <Play
+                          className="h-5 w-5 text-white transition-all"
+                          strokeWidth={1.5}
+                          fill="none"
+                        />
+                      </button>
+                    </div>
                   </div>
-                </div>
                 </FadeUp>
               ))}
             </div>

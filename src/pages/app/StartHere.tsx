@@ -17,6 +17,28 @@ import SessionDetailModal from "@/pages/app/SessionDetail";
 
 const startHereButterfly = getCloudImageUrl(CLOUD_IMAGES.startHereButterfly);
 
+const SectionHeader = ({
+  number,
+  title,
+  subtitle,
+}: {
+  number: number;
+  title: string;
+  subtitle: string;
+}) => (
+  <>
+    <div className="mb-6 flex items-baseline gap-3 sm:gap-5">
+      <span className="font-editorial text-xl text-white sm:text-2xl md:text-3xl">{number}</span>
+      <h2 className="font-editorial text-xl font-light text-[#E6DBC7] sm:text-2xl md:text-3xl">
+        {title}
+      </h2>
+    </div>
+    <p className="mb-8 text-sm font-light text-[#E6DBC7]/50 sm:mb-10 md:mb-12 md:text-base">
+      {subtitle}
+    </p>
+  </>
+);
+
 const StartHere = () => {
   const navigate = useNavigate();
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
@@ -84,36 +106,32 @@ const StartHere = () => {
         {/* Section 1: Recommended Practices */}
         <div className="mb-16 sm:mb-20 md:mb-28">
           <FadeUp>
-            <div className="mb-6 flex items-baseline gap-3 sm:gap-5">
-              <span className="font-editorial text-xl text-white sm:text-2xl md:text-3xl">1</span>
-              <h2 className="font-editorial text-xl font-light text-[#E6DBC7] sm:text-2xl md:text-3xl">
-                Try These First
-              </h2>
-            </div>
-            <p className="mb-8 ml-7 text-xs font-light text-[#E6DBC7]/50 sm:mb-10 sm:ml-10 sm:text-sm md:mb-12 md:text-base">
-              Two gentle practices to help you settle in
-            </p>
+            <SectionHeader
+              number={1}
+              title="Try These First"
+              subtitle="Two gentle practices to help you settle in"
+            />
           </FadeUp>
 
           <div className="grid gap-6">
             {sessions.map((session, index) => (
               <FadeUp key={session.id} delay={index * 80}>
-              <SessionPlayCard
-                sessionId={session.id}
-                title={session.title}
-                description={session.short_description || session.description || ""}
-                meta={[
-                  session.teacher_name,
-                  session.duration_minutes != null && `${session.duration_minutes} min`,
-                  session.intensity,
-                  session.technique,
-                ]
-                  .filter(Boolean)
-                  .join(" • ")}
-                imageUrl={session.image_url || ""}
-                onClick={() => setSelectedSessionId(session.id)}
-                mobileStacked
-              />
+                <SessionPlayCard
+                  sessionId={session.id}
+                  title={session.title}
+                  description={session.short_description || session.description || ""}
+                  meta={[
+                    session.teacher_name,
+                    session.duration_minutes != null && `${session.duration_minutes} min`,
+                    session.intensity,
+                    session.technique,
+                  ]
+                    .filter(Boolean)
+                    .join(" • ")}
+                  imageUrl={session.image_url || ""}
+                  onClick={() => setSelectedSessionId(session.id)}
+                  mobileStacked
+                />
               </FadeUp>
             ))}
           </div>
@@ -122,15 +140,11 @@ const StartHere = () => {
         {/* Section 2: Weekly Reset */}
         <div className="mb-10 sm:mb-20 md:mb-28">
           <FadeUp>
-            <div className="mb-3 flex items-baseline gap-3 sm:mb-4 sm:gap-5">
-              <span className="font-editorial text-xl text-white sm:text-2xl md:text-3xl">2</span>
-              <h2 className="font-editorial text-xl font-light text-[#E6DBC7] sm:text-2xl md:text-3xl">
-                Join the Weekly Reset
-              </h2>
-            </div>
-            <p className="mb-10 ml-7 text-xs font-light text-[#E6DBC7]/50 sm:ml-10 sm:text-sm md:mb-12 md:text-base">
-              A live session every Wednesday to reset and reconnect
-            </p>
+            <SectionHeader
+              number={2}
+              title="Join the Weekly Reset"
+              subtitle="A live session every Wednesday to reset and reconnect"
+            />
           </FadeUp>
           <FadeUp delay={100}>
             <WeeklyResetCard onClick={() => navigate("/online?tab=live")} />
