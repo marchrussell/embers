@@ -64,7 +64,7 @@ const Online = () => {
           </TabsContent>
 
           <TabsContent value="library" className="mt-0 pb-24">
-            <LibraryTab /> 
+            <LibraryTab isEmbedded={true}/> 
           </TabsContent>
 
           <TabsContent value="courses" className="mt-0">
