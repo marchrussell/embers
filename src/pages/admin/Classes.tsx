@@ -2,6 +2,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { BookOpen, Pencil, Plus, Star, Trash2, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { z } from "zod";
 
 import {
   AdminLayout,
@@ -60,15 +61,20 @@ interface Class {
   categories?: { id: string; name: string }[];
 }
 
-interface Category {
-  id: string;
-  name: string;
-}
-
-interface Program {
-  id: string;
-  title: string;
-}
+const classFormSchema = z
+  .object({
+    title: z.string().min(1, "Title is required"),
+    description: z.string().min(1, "Description is required"),
+    image_url: z.string().min(1, "Please upload a class image"),
+    duration_minutes: z.string().min(1, "Duration is required"),
+    category_ids: z.array(z.string()).min(1, "Please select at least one category"),
+    audio_url: z.string(),
+    video_url: z.string(),
+  })
+  .refine((data) => data.audio_url || data.video_url, {
+    message: "Please upload at least one audio or video file",
+    path: ["audio_url"],
+  });
 
 const AdminClasses = () => {
   const { isAdmin, loading } = useAuth();
@@ -240,18 +246,13 @@ const AdminClasses = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (
-      !formData.title ||
-      !formData.description ||
-      (!formData.audio_url && !formData.video_url) ||
-      !formData.image_url ||
-      !formData.duration_minutes ||
-      formData.category_ids.length === 0
-    ) {
+    console.log('Submitting form with data:', formData); // Debug log
+    const validation = classFormSchema.safeParse(formData);
+    if (!validation.success) {
+      const firstError = validation.error.errors[0];
       toast({
         title: "Missing required fields",
-        description: "Please fill in all required fields including at least one category",
+        description: firstError.message,
         variant: "destructive",
       });
       return;
