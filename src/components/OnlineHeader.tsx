@@ -93,7 +93,6 @@ const OnlineHeader = ({
               >
                 {tab.label}
               </span>
-              {currentTab === tab.id && <span className="h-1 w-1 rounded-full bg-[#E6DBC7]" />}
             </button>
           ))}
         </div>
