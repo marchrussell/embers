@@ -246,7 +246,6 @@ const AdminClasses = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Submitting form with data:', formData); // Debug log
     const validation = classFormSchema.safeParse(formData);
     if (!validation.success) {
       const firstError = validation.error.errors[0];

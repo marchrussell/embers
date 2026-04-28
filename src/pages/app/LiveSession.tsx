@@ -135,7 +135,15 @@ const LiveSessionContent = ({ sessionId }: LiveSessionContentProps) => {
         .gte("start_time", now)
         .order("start_time", { ascending: true })
         .limit(1)
-        .maybeSingle()) as { data: { id: string; start_time: string; session_type: string; live_session_details: LiveSessionEnrichment | LiveSessionEnrichment[] | null } | null; error: unknown };
+        .maybeSingle()) as {
+        data: {
+          id: string;
+          start_time: string;
+          session_type: string;
+          live_session_details: LiveSessionEnrichment | LiveSessionEnrichment[] | null;
+        } | null;
+        error: unknown;
+      };
       if (error) throw error;
       if (!data) return null;
       const details = Array.isArray(data.live_session_details)

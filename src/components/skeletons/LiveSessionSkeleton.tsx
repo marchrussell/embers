@@ -39,7 +39,7 @@ export const LiveSessionSkeleton = () => {
       {/* Description */}
       <div className="px-6 pb-16 pt-6 md:px-10 lg:px-12">
         <div className="mx-auto max-w-4xl space-y-3 text-center">
-          <Skeleton className="mx-auto h-7 w-full max-w-2xl bg-[#E6DBC7]/8" />
+          <Skeleton className="bg-[#E6DBC7]/8 mx-auto h-7 w-full max-w-2xl" />
           <Skeleton className="mx-auto h-7 w-3/4 max-w-xl bg-[#E6DBC7]/5" />
         </div>
       </div>
@@ -51,7 +51,7 @@ export const LiveSessionSkeleton = () => {
           <div className="mb-36 mt-32 flex flex-col overflow-hidden rounded-2xl border border-[#E6DBC7]/20 md:flex-row">
             {/* Image placeholder */}
             <div className="relative flex-shrink-0 md:w-1/2">
-              <Skeleton className="h-80 w-full bg-[#E6DBC7]/8 md:absolute md:inset-0 md:h-full rounded-none" />
+              <Skeleton className="bg-[#E6DBC7]/8 h-80 w-full rounded-none md:absolute md:inset-0 md:h-full" />
             </div>
 
             {/* What to expect placeholder */}
@@ -62,9 +62,7 @@ export const LiveSessionSkeleton = () => {
                 {[1, 2, 3, 4].map((i) => (
                   <div key={i} className="flex items-start gap-2">
                     <Skeleton className="mt-0.5 h-3 w-3 flex-shrink-0 bg-[#E6DBC7]/10" />
-                    <Skeleton
-                      className={`h-3 bg-[#E6DBC7]/8 ${i === 4 ? "w-2/3" : "w-full"}`}
-                    />
+                    <Skeleton className={`bg-[#E6DBC7]/8 h-3 ${i === 4 ? "w-2/3" : "w-full"}`} />
                   </div>
                 ))}
               </div>
@@ -82,11 +80,9 @@ export const LiveSessionSkeleton = () => {
                   <div key={i} className="flex items-center gap-4 md:gap-8">
                     <div className="text-center">
                       <Skeleton className="mb-1 h-12 w-14 bg-[#E6DBC7]/15 md:h-16 md:w-16 lg:h-20 lg:w-20" />
-                      <Skeleton className="mx-auto mt-1 h-2.5 w-8 bg-[#E6DBC7]/8" />
+                      <Skeleton className="bg-[#E6DBC7]/8 mx-auto mt-1 h-2.5 w-8" />
                     </div>
-                    {i < 3 && (
-                      <Skeleton className="h-8 w-3 bg-[#E6DBC7]/10 md:h-10" />
-                    )}
+                    {i < 3 && <Skeleton className="h-8 w-3 bg-[#E6DBC7]/10 md:h-10" />}
                   </div>
                 ))}
               </div>

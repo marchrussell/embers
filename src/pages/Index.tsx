@@ -51,7 +51,7 @@ const Index = () => {
             src={getCloudImageUrl(CLOUD_IMAGES.threeWaysMushroom, { width: 1920, quality: 85 })}
             alt=""
             aria-hidden="true"
-            className="absolute inset-0 h-full w-full object-contain"
+            className="absolute inset-0 h-full w-full object-cover"
             style={{ objectPosition: "30% 40%" }}
             fetchPriority="high"
           />
