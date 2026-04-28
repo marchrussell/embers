@@ -51,7 +51,7 @@ const Index = () => {
             src={getCloudImageUrl(CLOUD_IMAGES.threeWaysMushroom, { width: 1920, quality: 85 })}
             alt=""
             aria-hidden="true"
-            className="hero-zoom absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-contain"
             style={{ objectPosition: "30% 40%" }}
             fetchPriority="high"
           />
@@ -199,7 +199,7 @@ const Index = () => {
               </p>
               <Button
                 onClick={() => {
-                  window.open("/online?tab=courses&course=mental-reset", "_blank");
+                  window.open("/online/course/mental-reset", "_blank");
                 }}
                 className="mt-auto inline-flex w-fit items-center justify-center rounded-full border border-white bg-transparent text-white transition-all hover:bg-white/10"
                 style={{
