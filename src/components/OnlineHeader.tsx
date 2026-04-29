@@ -87,9 +87,7 @@ const OnlineHeader = ({
               }`}
             >
               <span
-                className={`font-light tracking-wide ${
-                  currentTab === tab.id ? "font-normal" : ""
-                }`}
+                className={`font-light tracking-wide ${currentTab === tab.id ? "font-normal" : ""}`}
               >
                 {tab.label}
               </span>

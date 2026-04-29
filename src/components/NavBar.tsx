@@ -11,15 +11,11 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 
-// Sheet import removed - using custom overlay menu instead
-
 export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) => {
   const { user, isAdmin } = useAuth();
   const location = useLocation();
 
   const isOnlineRoute = location.pathname.startsWith("/online");
-  const isMyCoursesRoute = location.pathname.startsWith("/my-courses");
-  const isAppRoute = isOnlineRoute || isMyCoursesRoute;
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -46,7 +42,8 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
   }, []);
 
   const firstName = profileData?.full_name?.split(" ")[0] ?? null;
-  const displayName = user ? firstName || user.email?.split("@")[0] || "PROFILE" : null;
+  const displayName = user ? firstName || user.email?.split("@")[0] : null;
+  const formattedDisplayName = displayName.replace(/^./, (char) => char.toUpperCase());
 
   return (
     <>
@@ -234,11 +231,11 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
             <div className="flex shrink-0 items-center">
               {user ? (
                 <Link
-                  to={isMyCoursesRoute ? "/my-courses/profile" : "/online/profile"}
+                  to={"/online/profile"}
                   className="flex items-center gap-2.5 rounded-full border border-[#E6DBC7]/30 px-5 py-2.5 text-sm font-light text-[#E6DBC7] transition-colors duration-300 hover:border-[#E6DBC7]/50 hover:bg-white/[0.03]"
                 >
                   <User className="h-5 w-5" />
-                  <span>{displayName.replace(/^./, (char) => char.toUpperCase())}</span>
+                  <span>{formattedDisplayName}</span>
                 </Link>
               ) : (
                 <button
@@ -329,15 +326,15 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                 </Link>
               )}
 
-              {isAppRoute && (
+              {isOnlineRoute && (
                 <div className="mt-8 border-t border-[#E6DBC7]/20 pt-10 md:pt-12">
                   {user ? (
                     <Link
-                      to={isMyCoursesRoute ? "/my-courses/profile" : "/online/profile"}
+                      to="/online/profile"
                       onClick={handleCloseMobileMenu}
                       className="font-editorial text-3xl font-light tracking-wide text-white/90 transition-colors hover:text-white md:text-4xl"
                     >
-                      {displayName}
+                      {formattedDisplayName}
                     </Link>
                   ) : (
                     <Button
