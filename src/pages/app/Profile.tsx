@@ -7,27 +7,17 @@ import { toast } from "sonner";
 
 import { FadeUp } from "@/components/FadeUp";
 import { PrivacyModal, TermsModal } from "@/components/LegalModals";
+import OnlineFooter from "@/components/OnlineFooter";
 import {
   ChangeEmailDialog,
   ChangePasswordDialog,
-  DeleteAccountDialog,
   FeedbackDialog,
   ProfileMenuItem,
 } from "@/components/profile";
 import { SafetyModal } from "@/components/SafetyModal";
 import { ProfileSkeleton } from "@/components/skeletons/ProfileSkeleton";
-import OnlineFooter from "@/components/OnlineFooter";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAccountSettings } from "@/hooks/useAccountSettings";
-import { useDataDeletion } from "@/hooks/useDataDeletion";
 import { useDataExport } from "@/hooks/useDataExport";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -62,14 +52,11 @@ const ProfileContent = ({ userId, user, signOut }: ProfileContentProps) => {
   const [showSafetyModal, setShowSafetyModal] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
-  const [showDeleteDataDialog, setShowDeleteDataDialog] = useState(false);
-  const [showDeleteAccountDialog, setShowDeleteAccountDialog] = useState(false);
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
   const [showEmailDialog, setShowEmailDialog] = useState(false);
   const [showFeedbackDialog, setShowFeedbackDialog] = useState(false);
 
   const { exportUserData, isExporting } = useDataExport();
-  const { deleteAccount, deleteMarchData, isDeleting } = useDataDeletion();
   const [isLoadingPortal, setIsLoadingPortal] = useState(false);
 
   const {
@@ -83,8 +70,6 @@ const ProfileContent = ({ userId, user, signOut }: ProfileContentProps) => {
     setNewEmail,
     feedback,
     setFeedback,
-    deleteConfirmText,
-    setDeleteConfirmText,
     handlePasswordChange,
     handleEmailChange,
     handleFeedbackSubmit,
@@ -243,16 +228,6 @@ const ProfileContent = ({ userId, user, signOut }: ProfileContentProps) => {
     }
   };
 
-  const handleDeleteAccount = async () => {
-    if (deleteConfirmText === "DELETE") {
-      await deleteAccount();
-      setShowDeleteAccountDialog(false);
-      setDeleteConfirmText("");
-    } else {
-      toast.error("Please type DELETE to confirm");
-    }
-  };
-
   const firstName = userProfile?.full_name?.split(" ")[0] || user.email?.split("@")[0] || "User";
   const capitalizedFirstName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
 
@@ -390,14 +365,6 @@ const ProfileContent = ({ userId, user, signOut }: ProfileContentProps) => {
                   onClick={exportUserData}
                   disabled={isExporting}
                 />
-                {/* <ProfileMenuItem
-                  label="Delete March Chat Data"
-                  onClick={() => setShowDeleteDataDialog(true)}
-                /> */}
-                <ProfileMenuItem
-                  label="Delete Account & All Data"
-                  onClick={() => setShowDeleteAccountDialog(true)}
-                />
               </div>
             </div>
           </FadeUp>
@@ -449,68 +416,6 @@ const ProfileContent = ({ userId, user, signOut }: ProfileContentProps) => {
           onSubmit={() => handleFeedbackSubmit(() => setShowFeedbackDialog(false))}
           isSubmitting={isSubmittingFeedback}
         />
-
-        <DeleteAccountDialog
-          open={showDeleteAccountDialog}
-          onOpenChange={setShowDeleteAccountDialog}
-          confirmText={deleteConfirmText}
-          setConfirmText={setDeleteConfirmText}
-          onDelete={handleDeleteAccount}
-          isDeleting={isDeleting}
-          title="Delete Account & All Data"
-          deleteItems={[
-            "Your account and profile",
-            "All March Chat conversations and preferences",
-            "All session progress and history",
-            "Mood logs and favorites",
-            "All other personal data",
-          ]}
-        />
-
-        {/* Delete March Data Dialog (unique to this page) */}
-        <Dialog open={showDeleteDataDialog} onOpenChange={setShowDeleteDataDialog}>
-          <DialogContent className="max-w-md overflow-hidden rounded-xl border border-white/30 bg-black/50 p-0 backdrop-blur-xl">
-            <div className="p-8 md:p-10">
-              <DialogHeader className="mb-6">
-                <DialogTitle className="mb-3 font-editorial text-xl text-white md:text-2xl">
-                  Delete March Chat Data
-                </DialogTitle>
-                <DialogDescription className="text-sm font-light text-white/60">
-                  This will permanently delete:
-                </DialogDescription>
-              </DialogHeader>
-              <ul className="list-disc space-y-2 pl-6 text-sm font-light text-white/60">
-                <li>All March Chat conversations and preferences</li>
-                <li>Learned session recommendations</li>
-                <li>Interaction history</li>
-              </ul>
-              <p className="mt-6 text-sm font-light text-white/60">
-                Your account, progress, and favorites will remain intact. This action cannot be
-                undone.
-              </p>
-              <div className="flex gap-3 pt-6">
-                <Button
-                  variant="outline"
-                  onClick={() => setShowDeleteDataDialog(false)}
-                  className="h-12 flex-1 border-2 border-white/20 bg-transparent font-light text-white hover:border-white/40 hover:bg-white/10"
-                  disabled={isDeleting}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={async () => {
-                    await deleteMarchData();
-                    setShowDeleteDataDialog(false);
-                  }}
-                  className="h-12 flex-1 border-2 border-red-500 bg-red-500/10 font-light text-red-400 hover:bg-red-500/20"
-                  disabled={isDeleting}
-                >
-                  {isDeleting ? "Deleting..." : "Delete March Chat Data"}
-                </Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
       </div>
     </>
   );
