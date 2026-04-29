@@ -32,17 +32,18 @@ serve(async (req) => {
     if (!user?.email) throw new Error("User not authenticated");
     logStep("User authenticated", { userId: user.id, email: user.email });
 
-    const { 
-      eventType, 
+    const {
+      eventType,
       eventTitle,
-      eventDate, 
+      eventDescription,
+      eventDate,
       eventDisplayDate,
       eventTime,
       eventLocation,
-      quantity, 
-      attendeeName, 
+      quantity,
+      attendeeName,
       attendeeEmail,
-      priceInPence 
+      priceInPence
     } = await req.json();
     
     logStep("Request body parsed", { eventType, eventDate, quantity, attendeeName, eventLocation });
@@ -132,6 +133,7 @@ serve(async (req) => {
         eventDisplayDate,
         eventTime,
         eventLocation: eventLocation || '',
+        eventDescription: (eventDescription || '').slice(0, 500),
         userId: user.id,
         quantity: quantity.toString(),
         attendeeName,

@@ -248,6 +248,7 @@ serve(async (req) => {
             eventDisplayDate,
             eventTime,
             eventLocation,
+            eventDescription,
             userId,
             quantity,
             attendeeName,
@@ -354,10 +355,18 @@ serve(async (req) => {
             if (attendeeEmail) {
               await upsertLoopsContact(attendeeEmail, {
                 lastEventBookedAt: new Date().toISOString(),
+                eventTitle,
+                eventDescription: eventDescription || '',
+                eventDate: eventDisplayDate,
+                eventTime,
+                eventLocation: location,
               });
               await fireLoopsEvent(attendeeEmail, "eventBookingCompleted", {
                 eventTitle,
+                eventDescription: eventDescription || '',
                 eventDate: eventDisplayDate,
+                eventTime,
+                eventLocation: location,
                 quantity: parseInt(quantity),
               });
               logStep("Loops eventBookingCompleted event fired");

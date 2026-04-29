@@ -43,7 +43,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
 
   const firstName = profileData?.full_name?.split(" ")[0] ?? null;
   const displayName = user ? firstName || user.email?.split("@")[0] : null;
-  const formattedDisplayName = displayName.replace(/^./, (char) => char.toUpperCase());
+  const formattedDisplayName = displayName?.replace(/^./, (char) => char.toUpperCase()) ?? null;
 
   return (
     <>

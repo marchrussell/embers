@@ -90,6 +90,7 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
         body: {
           eventType: event.id,
           eventTitle: event.title,
+          eventDescription: event.subtitle,
           eventDate: selectedDate.date,
           eventDisplayDate: selectedDate.displayDate,
           eventTime: selectedDate.time,
