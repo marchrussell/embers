@@ -25,15 +25,15 @@ const TermsOfService = () => {
             style={{ fontSize: "clamp(0.9rem, 1vw, 1rem)", lineHeight: 1.7 }}
           >
             <p>
-              Thank you for choosing March, operated by Embers Studio Ltd ("March", "we", "us", or
-              "our"), registered in England and Wales.
+              Thank you for choosing Embers Studio ("we", "us", or "our"), registered in England and
+              Wales.
             </p>
 
             <p>
               These Terms of Use ("Terms") govern your access to and use of our digital products and
               services, including our website{" "}
-              <a href="https://www.marchrussell.com" className="underline hover:text-[#E6DBC7]">
-                www.marchrussell.com
+              <a href="https://www.embersstudio.io" className="underline hover:text-[#E6DBC7]">
+                www.embersstudio.io
               </a>
               , our mobile and web applications (the "App"), Embers Studio membership, digital
               courses, live events, and all related content, materials, and features (collectively,
@@ -47,11 +47,13 @@ const TermsOfService = () => {
 
             {/* Section 1 */}
             <section className="space-y-4">
-              <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">1. About March</h2>
+              <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
+                1. About Embers Studio
+              </h2>
               <p>
-                March provides breathwork education, nervous system training, and wellbeing content
-                designed for informational and educational purposes only. Our Services, including
-                March Chat AI, do not provide medical, psychological, or therapeutic advice.
+                Embers Studio provides breathwork education, nervous system training, and wellbeing
+                content designed for informational and educational purposes only. Our Services do
+                not provide medical, psychological, or therapeutic advice.
               </p>
               <p>
                 Always consult a qualified healthcare professional before beginning any new
@@ -93,8 +95,8 @@ const TermsOfService = () => {
               <p>
                 Embers Studio membership, digital courses, and ticketed events are purchased through
                 Stripe at{" "}
-                <a href="https://www.marchrussell.com" className="underline hover:text-[#E6DBC7]">
-                  www.marchrussell.com
+                <a href="https://www.embersstudio.io" className="underline hover:text-[#E6DBC7]">
+                  www.embersstudio.io
                 </a>
                 .
               </p>

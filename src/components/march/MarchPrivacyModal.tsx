@@ -34,8 +34,7 @@ export const MarchPrivacyModal = ({ open, onAccept, onReadFullPolicy }: MarchPri
             </DialogTitle>
             <DialogDescription className="text-center text-sm font-light text-white/80">
               We care deeply about your privacy and the safety of your personal data. When you use
-              our app and March Chat AI, we collect only what's needed to personalise your
-              breathwork journey.
+              our app, we collect only what's needed to personalise your breathwork journey.
             </DialogDescription>
           </DialogHeader>
 
@@ -43,9 +42,6 @@ export const MarchPrivacyModal = ({ open, onAccept, onReadFullPolicy }: MarchPri
             <div>
               <h3 className="mb-2 text-base font-medium text-[#E6DBC7]">What we collect</h3>
               <ul className="space-y-1.5 pl-5">
-                <li className="list-disc">
-                  Your chat messages and March Chat's responses (to give you tailored support)
-                </li>
                 <li className="list-disc">
                   Activity such as sessions viewed, completed, or favourited
                 </li>
@@ -59,7 +55,7 @@ export const MarchPrivacyModal = ({ open, onAccept, onReadFullPolicy }: MarchPri
               <h3 className="mb-2 text-base font-medium text-[#E6DBC7]">How it's used</h3>
               <ul className="space-y-1.5 pl-5">
                 <li className="list-disc">To guide your breathwork practice and track progress</li>
-                <li className="list-disc">To improve the app and your March Chat experience</li>
+                <li className="list-disc">To improve the app experience</li>
                 <li className="list-disc">Never for advertising or resale</li>
               </ul>
             </div>

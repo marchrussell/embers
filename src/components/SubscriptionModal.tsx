@@ -67,7 +67,7 @@ export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => 
         <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md transition-opacity duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
         <DialogPrimitive.Content className="fixed left-[50%] top-[50%] z-50 max-h-[92vh] w-[96%] max-w-[1200px] translate-x-[-50%] translate-y-[-50%] overflow-hidden overflow-y-auto rounded-[28px] border border-white/20 bg-black/75 p-0 backdrop-blur-xl duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 sm:max-h-[88vh] sm:w-[92%]">
           <div className="sr-only" role="heading" aria-level={2}>
-            Subscribe to MARCH
+            Subscribe to Embers
           </div>
           <div className="sr-only">Choose your subscription plan and become a member</div>
 

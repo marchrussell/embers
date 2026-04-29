@@ -32,9 +32,9 @@ const RefundPolicy = memo(() => {
               style={{ fontSize: "clamp(0.9rem, 1vw, 1rem)", lineHeight: 1.7 }}
             >
               <p>
-                Thank you for choosing to learn and practise with Embers Studio Ltd ("March", "we",
-                "us" or "our"). This Refund Policy outlines your rights and our responsibilities
-                regarding purchases of digital courses, memberships, workshops, and live events.
+                Thank you for choosing to learn and practise with Embers Studio Ltd ("we", "us" or
+                "our"). This Refund Policy outlines your rights and our responsibilities regarding
+                purchases of digital courses, memberships, workshops, and live events.
               </p>
 
               <p>
@@ -114,7 +114,9 @@ const RefundPolicy = memo(() => {
                   <li>If no alternative dates exist, the ticket remains non-refundable.</li>
                 </ul>
 
-                <h3 className="mt-6 font-medium text-[#E6DBC7]">2.2 Cancellations by March</h3>
+                <h3 className="mt-6 font-medium text-[#E6DBC7]">
+                  2.2 Cancellations by Embers Studio
+                </h3>
                 <p>If we cancel or reschedule an event:</p>
                 <ul className="list-disc space-y-1 pl-6 text-[#E6DBC7]/80">
                   <li>You may choose between:</li>

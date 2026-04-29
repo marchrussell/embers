@@ -56,7 +56,6 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 // March (lazy loaded)
 const MarchOnboarding = lazy(() => import("./pages/MarchOnboarding"));
 const MarchDashboard = lazy(() => import("./pages/app/MarchDashboard"));
-const MarchChat = lazy(() => import("./pages/app/MarchChat"));
 
 // Legal pages (lazy loaded)
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
@@ -151,15 +150,6 @@ function AppContent() {
                 </ProtectedRoute>
               }
             />
-            <Route
-              path="/online/march-chat"
-              element={
-                <ProtectedRoute>
-                  <MarchChat />
-                </ProtectedRoute>
-              }
-            />
-
             {/* Online routes - Library and About are public, others protected */}
             <Route path="/online" element={<OnlinePage />} />
             <Route path="/online/start-here" element={<StartHere />} />
