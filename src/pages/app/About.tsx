@@ -14,9 +14,7 @@ const marchBioPhoto = getCloudImageUrl(CLOUD_IMAGES.march);
 
 const BioCopy = () => (
   <div className="space-y-6">
-    <p className="font-editorial text-lg text-[#E6DBC7] lg:text-3xl">
-      Hey, welcome to this space.
-    </p>
+    <p className="font-editorial text-lg text-[#E6DBC7] lg:text-3xl">Hey, welcome to this space.</p>
     <div>
       <p>Everything we seek already lives within us.</p>
       <p>This studio is an invitation to remember that.</p>
@@ -26,8 +24,8 @@ const BioCopy = () => (
       <p>Just something to gently return to.</p>
     </div>
     <p>
-      These practices are here to help you slow down, listen, and come back to yourself — gently,
-      in your own way.
+      These practices are here to help you slow down, listen, and come back to yourself — gently, in
+      your own way.
     </p>
     <div>
       <p>I'm right here with you.</p>

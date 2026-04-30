@@ -162,6 +162,28 @@ const Index = () => {
 
         {/* Mental Reset Course Card - White-lined curved box */}
         <section className="w-full bg-background px-6 py-16 md:px-8 md:py-20 lg:px-12 lg:py-36">
+          {/* Section Header - Centered */}
+          <FadeUp>
+            <div className="my-20 text-center md:my-12">
+              <h2
+                className="mb-3 font-editorial leading-[1.15] text-white"
+                style={{
+                  fontSize: "clamp(2rem, 3.5vw, 3.5rem)",
+                  fontWeight: 300,
+                }}
+              >
+                Courses
+              </h2>
+              <p
+                className="mx-auto max-w-lg px-2 leading-[1.6] text-white/65 md:px-0"
+                style={{
+                  fontSize: "clamp(0.95rem, 1.1vw, 1.1rem)",
+                }}
+              >
+                Structured pathways for lasting change and integration
+              </p>
+            </div>
+          </FadeUp>
           <FadeUp>
             <SplitCard
               imageSrc={mentalResetImg}
