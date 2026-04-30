@@ -21,7 +21,7 @@ const session3 = getCloudImageUrl(
   { width: 600, quality: 80 },
   "class-images"
 );
-const session4 = getCloudImageUrl(CLOUD_IMAGES.nervousSystemReset, { width: 600, quality: 80 });
+const session4 = getCloudImageUrl(CLOUD_IMAGES.gentleHummingForCalm, { width: 600, quality: 80 });
 const session5 = getCloudImageUrl(
   CLOUD_IMAGES.softeningTension,
   { width: 600, quality: 80 },
@@ -53,7 +53,7 @@ const sessions = [
   { title: "NSDR: Gentle Reset", duration: "11 min", image: session1 },
   { title: "Finding Steady Ground", duration: "8 min", image: session2 },
   { title: "Physiological Sign for Immediate Relief", duration: "4 min", image: session3 },
-  { title: "Gentle Nervous System Reset", duration: "8 min", image: session4 },
+  { title: "Gentle Humming for Calm", duration: "5 min", image: session4 },
   { title: "Softening Tension", duration: "7 min", image: session5 },
 ];
 
