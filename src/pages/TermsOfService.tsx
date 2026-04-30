@@ -18,7 +18,7 @@ const TermsOfService = () => {
           >
             Terms of Use
           </h1>
-          <p className="mb-12 text-center text-sm text-[#E6DBC7]/60">Last Updated: December 2025</p>
+          <p className="mb-12 text-center text-sm text-[#E6DBC7]/60">Last Updated: April 2026</p>
 
           <div
             className="space-y-8 text-[#E6DBC7]/90"
@@ -251,32 +251,7 @@ const TermsOfService = () => {
             {/* Section 6 */}
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                6. March Chat AI – Disclaimers and Use
-              </h2>
-              <p>
-                March Chat AI is a supportive companion, not a therapist, clinician, or medical
-                provider.
-              </p>
-              <p>March Chat must not be used for:</p>
-              <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
-                <li>emergencies or crisis situations</li>
-                <li>diagnosis or medical decision-making</li>
-                <li>mental health treatment</li>
-                <li>self-harm concerns</li>
-              </ul>
-              <p className="text-[#E6DBC7]">
-                If you are in crisis, contact local emergency services or crisis hotlines.
-              </p>
-              <p>
-                AI-generated responses may be inaccurate or incomplete. Use personal judgment and
-                seek professional guidance when needed.
-              </p>
-            </section>
-
-            {/* Section 7 */}
-            <section className="space-y-4">
-              <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                7. Contraindications & Safety
+                6. Contraindications & Safety
               </h2>
               <p>By using the Services, you confirm that you:</p>
               <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
@@ -287,10 +262,10 @@ const TermsOfService = () => {
               </ul>
             </section>
 
-            {/* Section 8 */}
+            {/* Section 7 */}
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                8. Intellectual Property
+                7. Intellectual Property
               </h2>
               <p>
                 All content, materials, video/audio sessions, trademarks, and software are owned by
@@ -303,10 +278,10 @@ const TermsOfService = () => {
               </p>
             </section>
 
-            {/* Section 9 */}
+            {/* Section 8 */}
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                9. Availability and Maintenance
+                8. Availability and Maintenance
               </h2>
               <p>
                 We aim to provide reliable access but cannot guarantee uninterrupted service.
@@ -316,10 +291,10 @@ const TermsOfService = () => {
               </p>
             </section>
 
-            {/* Section 10 */}
+            {/* Section 9 */}
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                10. Limitation of Liability
+                9. Limitation of Liability
               </h2>
               <p>To the fullest extent permitted by law:</p>
               <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
@@ -341,9 +316,9 @@ const TermsOfService = () => {
               </p>
             </section>
 
-            {/* Section 11 */}
+            {/* Section 10 */}
             <section className="space-y-4">
-              <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">11. Indemnity</h2>
+              <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">10. Indemnity</h2>
               <p>
                 You agree to indemnify and hold harmless Embers Studio Ltd from claims arising from:
               </p>
@@ -354,20 +329,20 @@ const TermsOfService = () => {
               </ul>
             </section>
 
-            {/* Section 12 */}
+            {/* Section 11 */}
             <section className="space-y-4">
-              <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">12. Termination</h2>
+              <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">11. Termination</h2>
               <p>
                 We may suspend or terminate your account if you violate these Terms or misuse
-                content or AI features. If we discontinue the Services, you will receive a pro-rata
+                content. If we discontinue the Services, you will receive a pro-rata
                 refund for any unused subscription period.
               </p>
             </section>
 
-            {/* Section 13 */}
+            {/* Section 12 */}
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                13. Governing Law and Jurisdiction
+                12. Governing Law and Jurisdiction
               </h2>
               <p>
                 These Terms are governed by the laws of England and Wales. Both parties submit to
@@ -375,9 +350,9 @@ const TermsOfService = () => {
               </p>
             </section>
 
-            {/* Section 14 */}
+            {/* Section 13 */}
             <section className="space-y-4">
-              <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">14. Contact</h2>
+              <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">13. Contact</h2>
               <p>For questions, concerns, or support:</p>
               <p className="text-[#E6DBC7]">
                 📧{" "}

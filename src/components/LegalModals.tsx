@@ -26,7 +26,7 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
             Terms of Use
           </h1>
 
-          <p className="mb-12 text-center text-sm text-[#E6DBC7]/60">Last Updated: December 2025</p>
+          <p className="mb-12 text-center text-sm text-[#E6DBC7]/60">Last Updated: April 2026</p>
 
           <div
             className="mx-auto max-w-[46rem] space-y-8"
@@ -60,8 +60,8 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
               </h2>
               <p>
                 Embers Studio provides breathwork education, nervous system training, and wellbeing
-                content designed for informational and educational purposes only. Our Services do not provide medical, psychological, or
-                therapeutic advice.
+                content designed for informational and educational purposes only. Our Services do
+                not provide medical, psychological, or therapeutic advice.
               </p>
               <p>
                 Always consult a qualified healthcare professional before beginning any new
@@ -408,7 +408,6 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => {
                   Digital products (e.g., Anxiety Reset, Emotional Regulation Toolkit, Sleep & NSDR
                   Pack)
                 </li>
-                <li>Embers Studio Chat AI</li>
                 <li>Events, workshops, and ticketed sessions</li>
                 <li>
                   Third-party services that support our platform (Lovable, Stripe, AI providers)
@@ -450,58 +449,29 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => {
             {/* Section 3 */}
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                3. Embers Studio Chat AI Data Collection
+                3. Third-Party Providers
               </h2>
-              <p>
-                When you use Embers Studio Chat AI, we collect: your conversation messages,
-                AI-generated response history, message timestamps, session engagement (e.g.,
-                practices completed, saved, skipped), and personalisation preferences.
-              </p>
-              <p>
-                Chat data is only used to provide personalised guidance, improve response relevance,
-                and support your experience in Embers Studio or digital courses.
-              </p>
-              <p>
-                We do not use Embers Studio Chat data for marketing or resale. You may delete your
-                Embers Studio Chat history at any time from your account settings.
-              </p>
-            </section>
-
-            {/* Section 4 */}
-            <section className="space-y-4">
-              <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                4. AI Processing & Third-Party Providers
-              </h2>
-              <p>
-                Embers Studio Chat uses AI models hosted through trusted third-party providers
-                (e.g., OpenAI, Google, or equivalents). Data may be securely transmitted to these
-                processors solely for generating responses.
-              </p>
               <p>
                 These providers operate under data processing agreements, do not retain your data
-                for independent purposes, and do not use your data to train public models.
+                for independent purposes.
               </p>
-              <p>
-                Lovable Labs, Inc. provides the platform that hosts our App. Stripe processes all
-                payments as an independent data controller.
-              </p>
+              <p>Stripe processes all payments as an independent data controller.</p>
             </section>
 
             {/* Section 5-15 condensed */}
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                5. How We Store & Process Data
+                4. How We Store & Process Data
               </h2>
               <p>
-                Our platform is built and hosted on Lovable, which uses secure cloud infrastructure
-                (e.g., Supabase, AWS, Google Cloud). Data may be transferred and stored outside the
-                UK/EU under approved international safeguards.
+                Our platform is built and hosted on Vercel and Supabase. Data may be transferred and
+                stored outside the UK/EU under approved international safeguards.
               </p>
             </section>
 
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                6. Health & Wellness Data
+                5. Health & Wellness Data
               </h2>
               <p>
                 We do not collect clinical medical information. Any wellness insights you log in the
@@ -512,19 +482,14 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => {
 
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                7. Data Retention
+                6. Data Retention
               </h2>
-              <p>
-                Account data is retained while your account is active. Embers Studio Chat
-                conversations are stored up to 24 months unless deleted by you. You may delete your
-                entire account, which permanently erases chat history and personal data except
-                legally required records.
-              </p>
+              <p>Account data is retained while your account is active.</p>
             </section>
 
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                8. Cookies & Analytics
+                7. Cookies & Analytics
               </h2>
               <p>
                 We use cookies and analytics tools to understand usage patterns, improve product
@@ -535,7 +500,7 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => {
 
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                9. International Data Transfers
+                8. International Data Transfers
               </h2>
               <p>
                 If your data is transferred outside your region, we rely on UK/EU Standard
@@ -545,7 +510,7 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => {
 
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                10. Your Rights (UK & EU GDPR)
+                9. Your Rights (UK & EU GDPR)
               </h2>
               <p>
                 You have the right to access, correct, delete, restrict, object to processing,
@@ -556,7 +521,7 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => {
 
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                11. California Residents (CCPA)
+                10. California Residents (CCPA)
               </h2>
               <p>
                 You have the right to know what data is collected, request deletion, opt out of the
@@ -567,7 +532,7 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => {
 
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                12. Children & Age Restrictions
+                11. Children & Age Restrictions
               </h2>
               <p>
                 Our Services are designed for individuals aged 16 and over. We do not knowingly
@@ -577,7 +542,7 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => {
 
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                13. Event & Workshop Data
+                12. Event & Workshop Data
               </h2>
               <p>
                 When you register for an event or workshop, we process name, email, ticket
@@ -588,7 +553,7 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => {
 
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                14. Updates to This Policy
+                13. Updates to This Policy
               </h2>
               <p>
                 We may update this Privacy Policy to reflect new technologies, legal requirements,
@@ -597,7 +562,7 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => {
             </section>
 
             <section className="space-y-4">
-              <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">15. Contact Us</h2>
+              <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">14. Contact Us</h2>
               <p>
                 For questions, concerns, or requests regarding this Policy or your personal data,
                 contact:
