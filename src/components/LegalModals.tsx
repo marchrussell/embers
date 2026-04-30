@@ -43,7 +43,7 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
 
             <p>
               These Terms of Use ("Terms") govern your access to and use of our digital products and
-              services, including our website www.embers-space.com, our mobile and web applications
+              services, including our website www.embersstudio.io, our mobile and web applications
               (the "App"), Embers Studio membership, digital courses, live events, and all related
               content, materials, and features (collectively, the "Services").
             </p>
@@ -60,8 +60,7 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
               </h2>
               <p>
                 Embers Studio provides breathwork education, nervous system training, and wellbeing
-                content designed for informational and educational purposes only. Our Services,
-                including Embers Studio Chat AI, do not provide medical, psychological, or
+                content designed for informational and educational purposes only. Our Services do not provide medical, psychological, or
                 therapeutic advice.
               </p>
               <p>
@@ -97,7 +96,7 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
               </h2>
               <p>
                 Embers Studio membership, digital courses, and ticketed events are purchased through
-                Stripe at www.embers-space.com.
+                Stripe at www.embersstudio.io.
               </p>
             </section>
 
@@ -232,29 +231,7 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
             {/* Section 6 */}
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                6. Embers Studio Chat AI – Disclaimers and Use
-              </h2>
-              <p>
-                Embers Studio Chat AI is a supportive companion, not a therapist, clinician, or
-                medical provider.
-              </p>
-              <p>
-                Embers Studio Chat must not be used for emergencies or crisis situations, diagnosis
-                or medical decision-making, mental health treatment, or self-harm concerns.
-              </p>
-              <p className="text-[#E6DBC7]">
-                If you are in crisis, contact local emergency services or crisis hotlines.
-              </p>
-              <p>
-                AI-generated responses may be inaccurate or incomplete. Use personal judgment and
-                seek professional guidance when needed.
-              </p>
-            </section>
-
-            {/* Section 7 */}
-            <section className="space-y-4">
-              <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                7. Contraindications & Safety
+                6. Contraindications & Safety
               </h2>
               <p>
                 By using the Services, you confirm that you understand breathwork may produce
@@ -264,10 +241,10 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
               </p>
             </section>
 
-            {/* Section 8 */}
+            {/* Section 7 */}
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                8. Intellectual Property
+                7. Intellectual Property
               </h2>
               <p>
                 All content, materials, video/audio sessions, trademarks, and software are owned by
@@ -280,10 +257,10 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
               </p>
             </section>
 
-            {/* Section 9-14 */}
+            {/* Section 8-13 */}
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                9. Availability and Maintenance
+                8. Availability and Maintenance
               </h2>
               <p>
                 We aim to provide reliable access but cannot guarantee uninterrupted service.
@@ -295,7 +272,7 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
 
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                10. Limitation of Liability
+                9. Limitation of Liability
               </h2>
               <p>
                 To the fullest extent permitted by law: Embers Studio Ltd is not liable for
@@ -310,7 +287,7 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
             </section>
 
             <section className="space-y-4">
-              <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">11. Indemnity</h2>
+              <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">10. Indemnity</h2>
               <p>
                 You agree to indemnify and hold harmless Embers Studio Ltd from claims arising from
                 your misuse of the Services, violation of these Terms, or unlawful or harmful
@@ -319,7 +296,7 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
             </section>
 
             <section className="space-y-4">
-              <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">12. Termination</h2>
+              <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">11. Termination</h2>
               <p>
                 We may suspend or terminate your account if you violate these Terms or misuse
                 content or AI features. If we discontinue the Services, you will receive a pro-rata
@@ -329,7 +306,7 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
 
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                13. Governing Law and Jurisdiction
+                12. Governing Law and Jurisdiction
               </h2>
               <p>
                 These Terms are governed by the laws of England and Wales. Both parties submit to
@@ -338,7 +315,7 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
             </section>
 
             <section className="space-y-4">
-              <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">14. Contact</h2>
+              <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">13. Contact</h2>
               <p>For questions, concerns, or support:</p>
               <p className="text-[#E6DBC7]">
                 📧{" "}
@@ -352,10 +329,10 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => {
               <p className="text-[#E6DBC7]">
                 🌐{" "}
                 <a
-                  href="https://www.embers-space.com"
+                  href="https://www.embersstudio.io"
                   className="underline transition-colors hover:text-[#E6DBC7]/80"
                 >
-                  www.embers-space.com
+                  www.embersstudio.io
                 </a>
               </p>
             </section>
@@ -403,7 +380,7 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => {
             </p>
 
             <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
-              <li>Visit or use our website (www.embers-space.com)</li>
+              <li>Visit or use our website (www.embersstudio.io)</li>
               <li>Use our mobile or web applications (the "App"), including Embers Studio</li>
               <li>Purchase or access digital courses, toolkits, or pre-sale products</li>
               <li>Interact with Embers Studio Chat AI</li>
@@ -637,10 +614,10 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => {
               <p className="text-[#E6DBC7]">
                 🌐{" "}
                 <a
-                  href="https://www.embers-space.com"
+                  href="https://www.embersstudio.io"
                   className="underline transition-colors hover:text-[#E6DBC7]/80"
                 >
-                  www.embers-space.com
+                  www.embersstudio.io
                 </a>
               </p>
               <p>
