@@ -104,7 +104,7 @@ export const CLOUD_IMAGES = {
   sleepTransition: "os2kvez50f8-1772472742856.webp",
 
   // Course images in program-images bucket
-  mentalReset: "qnqbmxjlqufzrqxptqsd.webp",
+  mentalReset: "h72m2t4o86v-1777038459720.webp",
 } as const;
 
 // Pre-resolved experience image URLs
