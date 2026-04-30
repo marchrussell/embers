@@ -7,7 +7,7 @@ const phoneFrameStyles =
   "w-[280px] h-[560px] bg-black rounded-[28px] overflow-hidden shadow-glow-strong border border-white/20";
 const nowPlayingBg = getCloudImageUrl(CLOUD_IMAGES.exploreAudioPlayer, { width: 600, quality: 80 });
 const programHero = getCloudImageUrl(CLOUD_IMAGES.breathPresence, { width: 600, quality: 80 });
-const categoryCalm = getCloudImageUrl(CLOUD_IMAGES.startHereButterfly, { width: 600, quality: 80 });
+const categoryCalm = getCloudImageUrl(CLOUD_IMAGES.calmAndRestore, { width: 600, quality: 80 });
 const reviewsBg = getCloudImageUrl(CLOUD_IMAGES.exploreTestimonials, { width: 600, quality: 80 });
 
 const session1 = getCloudImageUrl(CLOUD_IMAGES.nsdr, { width: 600, quality: 80 }, "class-images");
@@ -101,9 +101,6 @@ export const PhoneMockups = () => {
                       alt={session.title}
                       className="h-full w-full object-cover"
                     />
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                      <Play className="h-4 w-4 fill-white text-white" />
-                    </div>
                   </div>
                   <div className="flex-1">
                     <p className="text-[14px] font-medium text-white">{session.title}</p>

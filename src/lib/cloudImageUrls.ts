@@ -105,6 +105,9 @@ export const CLOUD_IMAGES = {
 
   // Course images in program-images bucket
   mentalReset: "h72m2t4o86v-1777038459720.webp",
+
+  // Category images in category-images bucket
+  calmAndRestore: "0.04925420292293503.webp",
 } as const;
 
 // Pre-resolved experience image URLs
