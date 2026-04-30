@@ -12,6 +12,33 @@ import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
 
 const marchBioPhoto = getCloudImageUrl(CLOUD_IMAGES.march);
 
+const BioCopy = () => (
+  <div className="space-y-4">
+    <p className="font-editorial text-lg text-[#E6DBC7] lg:text-3xl">
+      Hey, welcome to this space.
+    </p>
+    <div>
+      <p>Everything we seek already lives within us.</p>
+      <p>This studio is an invitation to remember that.</p>
+    </div>
+    <div>
+      <p>There's nothing here to fix.</p>
+      <p>Just something to gently return to.</p>
+    </div>
+    <p>
+      These practices are here to help you slow down, listen, and come back to yourself — gently,
+      in your own way.
+    </p>
+    <div>
+      <p>I'm right here with you.</p>
+      <p>Reach out anytime with questions, reflections, or requests.</p>
+      <p>Like you, I'm learning too, a curious explorer.</p>
+    </div>
+    <p>Thank you for being here.</p>
+    <p>Big love, March x</p>
+  </div>
+);
+
 const About = () => {
   const navigate = useNavigate();
   const [showTerms, setShowTerms] = useState(false);
@@ -58,35 +85,8 @@ const About = () => {
                       className="absolute inset-0 h-full w-full object-cover object-center"
                     />
                     <div className="absolute inset-0 bg-black/60 backdrop-blur-2xl" />
-                    <div className="relative z-10 space-y-4 p-6 text-base leading-relaxed text-foreground/90">
-                      <p className="font-editorial text-lg text-[#E6DBC7]">
-                        Hey, welcome to this space.
-                      </p>
-                      <p>
-                        Everything we seek already lives within us. This studio is an invitation to
-                        experience that for yourself.
-                      </p>
-                      <p>
-                        Here, we'll explore how to care for our inner world, not by forcing change,
-                        but by meeting ourselves with warmth, understanding, presence, and
-                        connection.
-                      </p>
-                      <p>
-                        Try letting go of the word "heal." Nothing here needs fixing. Every feeling,
-                        every pattern, every reaction is a signal - your body's way of
-                        communicating. I hope these practices help you listen, understand, and
-                        return to a sense of wholeness.
-                      </p>
-                      <p>
-                        I'm right here with you. Reach out anytime with questions, reflections, or
-                        requests. Like you, I'm learning too - a curious explorer.
-                      </p>
-                      <p>
-                        Thank you for giving yourself this space, and for being here on this journey
-                        with me.
-                      </p>
-                      <p>Big love,</p>
-                      <p className="font-editorial text-lg text-[#E6DBC7]">March x</p>
+                    <div className="relative z-10 p-6 text-base leading-relaxed text-foreground/90">
+                      <BioCopy />
                     </div>
                   </div>
                 </div>
@@ -104,26 +104,8 @@ const About = () => {
                 </div>
 
                 {/* Text column */}
-                <div className="space-y-6 text-base leading-relaxed text-foreground/90 md:text-lg lg:col-span-3">
-                  <p className="font-editorial text-[#E6DBC7] lg:text-3xl">
-                    Hey, welcome to this space.
-                  </p>
-                  <p>
-                    Everything we seek already lives within us.This studio is an invitation to
-                    remember that.
-                  </p>
-                  <p>There’s nothing here to fix. Just something to gently return to.</p>
-                  <p>
-                    These practices are here to help you slow down, listen, and come back to
-                    yourself - gently, in your own way.
-                  </p>
-                  <p>
-                    I’m right here with you.Reach out anytime with questions, reflections, or
-                    requests.
-                  </p>
-                  <p>Like you, I’m learning too, a curious explorer.</p>
-                  <p>Thank you for being here.</p>
-                  <p>Big love, March x</p>
+                <div className="text-base leading-relaxed text-foreground/90 md:text-lg lg:col-span-3">
+                  <BioCopy />
                 </div>
               </div>
             </div>
