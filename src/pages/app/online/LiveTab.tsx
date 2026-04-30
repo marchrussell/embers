@@ -12,6 +12,7 @@ import {
   getGoogleCalendarUrl,
   getOutlookCalendarUrl,
 } from "@/lib/calendarUtils";
+import { Skeleton } from "@/components/ui/skeleton";
 import { experienceImages } from "@/lib/cloudImageUrls";
 import { copyLink } from "@/lib/copyLink";
 
@@ -62,7 +63,7 @@ const LiveTab = ({
   const [activeRecording, setActiveRecording] = useState<{ url: string; title: string } | null>(
     null
   );
-  const { data: replays = [] } = useLiveReplays();
+  const { data: replays = [], isLoading } = useLiveReplays();
 
   const latestWeeklyReplay = replays.find((r) => r.session_type === "weekly-reset");
   const latestMonthlyReplay = replays.find((r) => r.session_type === "monthly-presence");
@@ -119,8 +120,6 @@ const LiveTab = ({
     copyLink(shareText + "\n\n" + shareUrl, "Session details copied to clipboard");
   };
 
-  console.log("Rendering LiveTab with sessions: ", liveSessionsData);
-
   return (
     <OnlineTabLayout className="pb-24">
       <FadeUp>
@@ -173,38 +172,47 @@ const LiveTab = ({
 
           {/* Weekly Reset & Monthly Presence Replays */}
           <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2">
-            <ReplayBox
-              image={weeklyResetImg}
-              alt="Weekly Reset Replay"
-              availability={formatAvailability("weekly-reset")}
-              category="Weekly Reset"
-              date={latestWeeklyReplay ? formatReplayDate(latestWeeklyReplay) : null}
-              onClick={
-                latestWeeklyReplay
-                  ? () =>
-                      setActiveRecording({
-                        url: latestWeeklyReplay.recording_url,
-                        title: "Weekly Reset",
-                      })
-                  : undefined
-              }
-            />
-            <ReplayBox
-              image={monthlyPresenceImg}
-              alt="Monthly Presence Replay"
-              availability={formatAvailability("monthly-presence")}
-              category="Monthly Breath & Presence"
-              date={latestMonthlyReplay ? formatReplayDate(latestMonthlyReplay) : null}
-              onClick={
-                latestMonthlyReplay
-                  ? () =>
-                      setActiveRecording({
-                        url: latestMonthlyReplay.recording_url,
-                        title: "Monthly Breath & Presence",
-                      })
-                  : undefined
-              }
-            />
+            {isLoading ? (
+              <>
+                <ReplayBoxSkeleton />
+                <ReplayBoxSkeleton />
+              </>
+            ) : (
+              <>
+                <ReplayBox
+                  image={weeklyResetImg}
+                  alt="Weekly Reset Replay"
+                  availability={formatAvailability("weekly-reset")}
+                  category="Weekly Reset"
+                  date={latestWeeklyReplay ? formatReplayDate(latestWeeklyReplay) : null}
+                  onClick={
+                    latestWeeklyReplay
+                      ? () =>
+                          setActiveRecording({
+                            url: latestWeeklyReplay.recording_url,
+                            title: "Weekly Reset",
+                          })
+                      : undefined
+                  }
+                />
+                <ReplayBox
+                  image={monthlyPresenceImg}
+                  alt="Monthly Presence Replay"
+                  availability={formatAvailability("monthly-presence")}
+                  category="Monthly Breath & Presence"
+                  date={latestMonthlyReplay ? formatReplayDate(latestMonthlyReplay) : null}
+                  onClick={
+                    latestMonthlyReplay
+                      ? () =>
+                          setActiveRecording({
+                            url: latestMonthlyReplay.recording_url,
+                            title: "Monthly Breath & Presence",
+                          })
+                      : undefined
+                  }
+                />
+              </>
+            )}
           </div>
 
           {/* Guest Teacher Replays */}
@@ -227,7 +235,13 @@ const LiveTab = ({
             </div>
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-              {guestReplays.length > 0 ? (
+              {isLoading ? (
+                <>
+                  <GuestReplayCardSkeleton />
+                  <GuestReplayCardSkeleton />
+                  <GuestReplayCardSkeleton />
+                </>
+              ) : guestReplays.length > 0 ? (
                 guestReplays
                   .slice(0, 3)
                   .map((replay) => (
@@ -368,7 +382,6 @@ const GuestReplayComingSoon = () => (
         <h3 className="mb-1 font-editorial text-base leading-tight text-[#E6DBC7]">
           Guest Teacher Session
         </h3>
-        {/* <p className="text-xs font-light text-[#E6DBC7]/50">First session coming January 2025</p> */}
       </div>
     </div>
 
@@ -384,6 +397,28 @@ const GuestReplayComingSoon = () => (
       </p>
     </div>
   </>
+);
+
+const ReplayBoxSkeleton = () => (
+  <div className="overflow-hidden rounded-2xl border border-[#E6DBC7]/15 bg-black/40">
+    <Skeleton className="h-48 w-full rounded-none bg-[#E6DBC7]/5" />
+    <div className="min-h-[88px] space-y-2 p-6">
+      <Skeleton className="h-3 w-1/4 bg-[#E6DBC7]/10" />
+      <Skeleton className="h-5 w-2/3 bg-[#E6DBC7]/10" />
+      <Skeleton className="h-3 w-1/3 bg-[#E6DBC7]/8" />
+    </div>
+  </div>
+);
+
+const GuestReplayCardSkeleton = () => (
+  <div className="overflow-hidden rounded-2xl border border-[#E6DBC7]/15 bg-black/40">
+    <Skeleton className="h-44 w-full rounded-none bg-[#E6DBC7]/5" />
+    <div className="min-h-[80px] space-y-2 p-5">
+      <Skeleton className="h-2.5 w-1/4 bg-[#E6DBC7]/10" />
+      <Skeleton className="h-5 w-3/4 bg-[#E6DBC7]/10" />
+      <Skeleton className="h-3 w-1/3 bg-[#E6DBC7]/8" />
+    </div>
+  </div>
 );
 
 export default LiveTab;
