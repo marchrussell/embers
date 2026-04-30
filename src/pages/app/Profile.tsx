@@ -239,7 +239,7 @@ const ProfileContent = ({ userId, user, signOut }: ProfileContentProps) => {
 
       <div className="min-h-screen bg-background pb-24">
         {/* Header */}
-        <div className="px-6 pt-16 md:pt-24">
+        <div className="px-6 pt-40">
           {/* Welcome Message with Back Button */}
           <FadeUp>
             <div className="my-8 flex items-center justify-between">
@@ -247,12 +247,13 @@ const ProfileContent = ({ userId, user, signOut }: ProfileContentProps) => {
                 Welcome {capitalizedFirstName}
               </h1>
               <Link
+                aria-label="Back to app"
                 to="/online"
                 className="inline-flex shrink-0 items-center gap-2 text-sm tracking-wide text-[#E6DBC7]/70 transition-colors hover:text-[#E6DBC7] md:text-base"
               >
                 <ArrowLeft className="h-5 w-5" />
-                <span className="hidden sm:inline">Back</span>
-                <span className="sm:hidden">Back</span>
+                {/* <span className="hidden sm:inline">Back</span>
+                <span className="sm:hidden">Back</span> */}
               </Link>
             </div>
           </FadeUp>
@@ -311,7 +312,7 @@ const ProfileContent = ({ userId, user, signOut }: ProfileContentProps) => {
               </h2>
               <div className="space-y-2">
                 <ProfileMenuItem
-                  label={isLoadingPortal ? "Opening portal..." : "Manage Subscription"}
+                  label={isLoadingPortal ? "Opening portal" : "Manage Subscription"}
                   onClick={openCustomerPortal}
                   disabled={isLoadingPortal}
                 />
