@@ -7,7 +7,11 @@ const phoneFrameStyles =
   "w-[280px] h-[560px] bg-black rounded-[28px] overflow-hidden shadow-glow-strong border border-white/20";
 const nowPlayingBg = getCloudImageUrl(CLOUD_IMAGES.exploreAudioPlayer, { width: 600, quality: 80 });
 const programHero = getCloudImageUrl(CLOUD_IMAGES.breathPresence, { width: 600, quality: 80 });
-const categoryCalm = getCloudImageUrl(CLOUD_IMAGES.calmAndRestore, { width: 600, quality: 80 }, "category-images");
+const categoryCalm = getCloudImageUrl(
+  CLOUD_IMAGES.calmAndRestore,
+  { width: 600, quality: 80 },
+  "category-images"
+);
 const reviewsBg = getCloudImageUrl(CLOUD_IMAGES.exploreTestimonials, { width: 600, quality: 80 });
 
 const session1 = getCloudImageUrl(CLOUD_IMAGES.nsdr, { width: 600, quality: 80 }, "class-images");
@@ -21,7 +25,11 @@ const session3 = getCloudImageUrl(
   { width: 600, quality: 80 },
   "class-images"
 );
-const session4 = getCloudImageUrl(CLOUD_IMAGES.gentleHummingForCalm, { width: 600, quality: 80 });
+const session4 = getCloudImageUrl(
+  CLOUD_IMAGES.gentleHummingForCalm,
+  { width: 600, quality: 80 },
+  "class-images"
+);
 const session5 = getCloudImageUrl(
   CLOUD_IMAGES.softeningTension,
   { width: 600, quality: 80 },
