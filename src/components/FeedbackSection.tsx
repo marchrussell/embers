@@ -46,24 +46,22 @@ export const FeedbackSection = () => {
 
   return (
     <>
-      <div className="mb-28">
-        <button
-          onClick={() => setOpen(true)}
-          className="group w-full rounded-2xl border border-white/20 bg-transparent px-8 py-6 transition-colors duration-300 hover:border-white/40 hover:bg-white/5"
-        >
-          <div className="flex items-center justify-between">
-            <div className="pl-2 text-left">
-              <h3 className="font-editorial text-2xl text-[#E6DBC7] md:text-3xl">
-                Give Feedback / Make A Suggestion
-              </h3>
-              <p className="mt-1 text-base font-light text-[#E6DBC7]/60">
-                Help us improve your experience
-              </p>
-            </div>
-            <Send className="mr-6 h-5 w-5 text-[#E6DBC7]/60 transition-colors group-hover:text-[#E6DBC7]" />
+      <button
+        onClick={() => setOpen(true)}
+        className="group w-full rounded-2xl border border-white/20 bg-transparent px-8 py-6 transition-colors duration-300 hover:border-white/40 hover:bg-white/5"
+      >
+        <div className="flex items-center justify-between">
+          <div className="pl-2 text-left">
+            <h3 className="font-editorial text-2xl text-[#E6DBC7] md:text-3xl">
+              Give Feedback / Make A Suggestion
+            </h3>
+            <p className="mt-1 text-base font-light text-[#E6DBC7]/60">
+              Help us improve your experience
+            </p>
           </div>
-        </button>
-      </div>
+          <Send className="mr-6 h-5 w-5 text-[#E6DBC7]/60 transition-colors group-hover:text-[#E6DBC7]" />
+        </div>
+      </button>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent

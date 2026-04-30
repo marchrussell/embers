@@ -260,7 +260,7 @@ const LibraryMainView = memo(
               {/* ARC Mentorship CTA */}
               <FadeUp>
                 <div className="mx-auto max-w-xl px-6 text-center">
-                  <p className="mb-2 text-lg font-semibold leading-relaxed md:text-xl">
+                  <p className="mb-2 mt-10 text-lg font-semibold leading-relaxed md:text-xl">
                     Looking for deeper, guided support?
                   </p>
                   <p className="mb-6 font-light leading-relaxed">

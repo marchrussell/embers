@@ -249,8 +249,8 @@ const About = () => {
 
             {/* Contact section */}
             <FadeUp>
-              <div className="border-t border-muted-foreground/20 pt-8 md:pt-10">
-                <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-2 lg:gap-16">
+              <div className="border-t border-muted-foreground/20 pt-10">
+                <div className="mb-6 grid grid-cols-1 items-start gap-8 lg:grid-cols-2 lg:gap-16">
                   <div className="space-y-4">
                     <p className="text-base text-foreground/70 md:text-lg">
                       For any questions or support, please reach out to March on{" "}
@@ -263,11 +263,8 @@ const About = () => {
                       .
                     </p>
                   </div>
-
-                  <div className="lg:justify-self-end">
-                    <FeedbackSection />
-                  </div>
                 </div>
+                <FeedbackSection />
               </div>
             </FadeUp>
           </div>
