@@ -13,7 +13,7 @@ import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
 const marchBioPhoto = getCloudImageUrl(CLOUD_IMAGES.march);
 
 const BioCopy = () => (
-  <div className="space-y-4">
+  <div className="space-y-6">
     <p className="font-editorial text-lg text-[#E6DBC7] lg:text-3xl">
       Hey, welcome to this space.
     </p>
