@@ -334,8 +334,8 @@ const TermsOfService = () => {
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">11. Termination</h2>
               <p>
                 We may suspend or terminate your account if you violate these Terms or misuse
-                content. If we discontinue the Services, you will receive a pro-rata
-                refund for any unused subscription period.
+                content. If we discontinue the Services, you will receive a pro-rata refund for any
+                unused subscription period.
               </p>
             </section>
 

@@ -1,21 +1,24 @@
-import { AlertTriangle, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+
+import DisclosureNote from "@/components/DisclosureNote";
+import DisclosureSection from "@/components/DisclosureSection";
 
 const SafetyDisclosure = () => {
   return (
     <div className="min-h-screen bg-background pb-24">
       {/* Header */}
       <div className="px-6 pb-10 pt-6">
-        <Link to="/online/about" className="mb-12 inline-block">
+        <Link to="/online/about" className="mb-12 inline-block" aria-label="Back to About Page">
           <div className="group flex cursor-pointer items-center gap-3">
             <ArrowLeft className="h-6 w-6 text-white transition-colors group-hover:text-[#E6DBC7]" />
-            <span className="text-base font-semibold text-white transition-colors group-hover:text-[#E6DBC7] md:text-lg">
-              Back to About
-            </span>
+            {/* <span className="text-base font-semibold text-white transition-colors group-hover:text-[#E6DBC7] md:text-lg">
+              Back
+            </span> */}
           </div>
         </Link>
 
-        <h1 className="mb-4 text-3xl font-normal text-white">Safety Disclosure</h1>
+        <h1 className="mb-8 text-3xl font-normal text-white">Safety Disclosure</h1>
         <p className="mb-8 text-base font-light text-white/70">
           Please read all of the information below before continuing.
         </p>
@@ -40,22 +43,12 @@ const SafetyDisclosure = () => {
           </p>
         </div>
 
-        {/* Warning Box */}
-        <div className="mb-10 rounded-lg border border-[#5B9C9E]/30 bg-[#5B9C9E]/10 p-4">
-          <div className="flex gap-3">
-            <AlertTriangle className="mt-0.5 h-5 w-5 flex-shrink-0 text-white" />
-            <p className="text-base font-light leading-relaxed text-white/90">
-              If you experience faintness, dizziness, pain or shortness of breath at any time while
-              using the app, you should stop immediately and seek immediate medical attention.
-            </p>
-          </div>
-        </div>
+        <DisclosureNote icon className="my-10">
+          If you experience faintness, dizziness, pain or shortness of breath at any time while
+          using the app, you should stop immediately and seek immediate medical attention.
+        </DisclosureNote>
 
-        {/* Contraindications */}
-        <div className="mb-10 border-b border-white/10 pb-8">
-          <h2 className="mb-4 text-xl font-light uppercase tracking-wider text-white">
-            Contraindications
-          </h2>
+        <DisclosureSection title="Contraindications">
           <p className="mb-4 text-base font-light leading-relaxed text-white/80">
             The breathing classes and techniques in this App are not suitable for anyone with the
             following conditions. Please do not practice breathwork, Online or In-Person, without
@@ -80,13 +73,9 @@ const SafetyDisclosure = () => {
             <li className="list-disc">Spinal disorders</li>
             <li className="list-disc">Any conditions requiring regular medication</li>
           </ul>
-        </div>
+        </DisclosureSection>
 
-        {/* Breath Holds */}
-        <div className="mb-10 border-b border-white/10 pb-8">
-          <h2 className="mb-4 text-lg font-light uppercase tracking-wider text-white">
-            Breath Holds
-          </h2>
+        <DisclosureSection title="Breath Holds">
           <p className="mb-4 font-light leading-relaxed text-white/80">
             Breath retention exercises (breath holds) are only appropriate for individuals in good
             health. If you have any concerns, it's advisable to consult your doctor before
@@ -110,13 +99,9 @@ const SafetyDisclosure = () => {
             <li className="list-disc">Arterial aneurysm</li>
             <li className="list-disc">Diabetes</li>
           </ul>
-        </div>
+        </DisclosureSection>
 
-        {/* Where Not to Practice */}
-        <div className="mb-10 border-b border-white/10 pb-8">
-          <h2 className="mb-4 text-lg font-light uppercase tracking-wider text-white">
-            Where Not to Practice
-          </h2>
+        <DisclosureSection title="Where Not to Practice">
           <p className="font-light leading-relaxed text-white/80">
             Do not use the Services while driving, in water, while operating machinery or performing
             other tasks that require attention and concentration. You understand that you are solely
@@ -124,11 +109,9 @@ const SafetyDisclosure = () => {
             suffered while practicing the techniques presented in the Services. It is important to
             only practice breathwork when you are in a safe place.
           </p>
-        </div>
+        </DisclosureSection>
 
-        {/* Pregnancy */}
-        <div className="mb-10 border-b border-white/10 pb-8">
-          <h2 className="mb-4 text-lg font-light uppercase tracking-wider text-white">Pregnancy</h2>
+        <DisclosureSection title="Pregnancy">
           <p className="mb-4 font-light leading-relaxed text-white/80">
             If you are currently attempting to conceive, are pregnant or in the postpartum phase,
             please take note of the following precautions when practicing breathwork:
@@ -148,19 +131,13 @@ const SafetyDisclosure = () => {
             Instead of practicing the aforementioned techniques, allow your breath to flow back to
             its natural rhythm and you can then continue as normal afterwards.
           </p>
-          <div className="mt-4 rounded-lg border border-[#5B9C9E]/30 bg-[#5B9C9E]/10 p-4">
-            <p className="text-sm font-light text-white/90">
-              <strong>Please note:</strong> Breathwork is not a suitable practice for you, if you
-              are in your first trimester of pregnancy.
-            </p>
-          </div>
-        </div>
+          <DisclosureNote className="mt-6" icon>
+            <strong>Please note:</strong> Breathwork is not a suitable practice for you, if you are
+            in your first trimester of pregnancy.
+          </DisclosureNote>
+        </DisclosureSection>
 
-        {/* Cardiovascular Problems */}
-        <div className="mb-10 border-b border-white/10 pb-8">
-          <h2 className="mb-4 text-lg font-light uppercase tracking-wider text-white">
-            Cardiovascular Problems
-          </h2>
+        <DisclosureSection title="Cardiovascular Problems">
           <p className="mb-4 font-light leading-relaxed text-white/80">
             If you have cardiovascular problems, please note:
           </p>
@@ -174,19 +151,13 @@ const SafetyDisclosure = () => {
               attention to your body and choose the actions that feel appropriate for you.
             </li>
           </ul>
-          <div className="mt-4 rounded-lg border border-[#5B9C9E]/30 bg-[#5B9C9E]/10 p-4">
-            <p className="text-sm font-light text-white/90">
-              <strong>Please note:</strong> Breathwork is not a suitable practice for you if you
-              have severe cardiovascular problems.
-            </p>
-          </div>
-        </div>
+          <DisclosureNote className="mt-6" icon>
+            <strong>Please note:</strong> Breathwork is not a suitable practice for you if you have
+            severe cardiovascular problems.
+          </DisclosureNote>
+        </DisclosureSection>
 
-        {/* Neurodiverse People */}
-        <div className="mb-10 border-b border-white/10 pb-8">
-          <h2 className="mb-4 text-lg font-light uppercase tracking-wider text-white">
-            Neurodiverse People
-          </h2>
+        <DisclosureSection title="Neurodiverse People">
           <p className="mb-4 font-light leading-relaxed text-white/80">
             If you are neurodiverse or have any psychological conditions like anxiety and
             depression, these breathing exercises can be beneficial. However, it is important to
@@ -199,17 +170,15 @@ const SafetyDisclosure = () => {
             intensive breathing practice. People with existing mental health conditions should speak
             with their healthcare providers before starting a breathing practice.
           </p>
-        </div>
+        </DisclosureSection>
 
-        {/* Tips */}
-        <div className="mb-10 border-b border-white/10 pb-8">
-          <h2 className="mb-4 text-lg font-light uppercase tracking-wider text-white">Tips</h2>
+        <DisclosureSection title="Tips">
           <ul className="pl-5 font-light text-white/70">
             <li className="list-disc">
               It is advisable to practice breathwork on an empty stomach.
             </li>
           </ul>
-        </div>
+        </DisclosureSection>
 
         {/* Legal Disclaimer */}
         <div className="mb-10">

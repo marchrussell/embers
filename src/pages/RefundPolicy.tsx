@@ -23,9 +23,7 @@ const RefundPolicy = memo(() => {
               Refund Policy
             </h1>
 
-            <p className="mb-12 text-center text-sm text-[#E6DBC7]/60">
-              Last Updated: April 2026
-            </p>
+            <p className="mb-12 text-center text-sm text-[#E6DBC7]/60">Last Updated: April 2026</p>
 
             <div
               className="space-y-8 text-[#E6DBC7]/90"
