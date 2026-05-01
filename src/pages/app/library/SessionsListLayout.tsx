@@ -89,7 +89,7 @@ const SessionsListLayout = memo(
 
           {/* Sessions List */}
           <div className="px-6 pb-24 pt-16 md:px-10 lg:px-12">
-            <div className="grid gap-4 md:gap-5">
+            <div className="grid gap-5 md:gap-6">
               {sortedSessions.map((session: LibrarySession, index) => {
                 const isNew = session.created_at
                   ? Math.floor(
