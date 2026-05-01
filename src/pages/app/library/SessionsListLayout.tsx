@@ -77,58 +77,58 @@ const SessionsListLayout = memo(
               <h1 className="font-editorial text-5xl text-[#E6DBC7] md:text-6xl">{title}</h1>
             </FadeUp>
           </div>
-        </div>
 
-        {/* Description */}
-        {description && (
-          <div className="px-6 pb-8 pt-12 md:px-10 lg:px-12">
-            <p className="max-w-4xl font-editorial text-xl italic leading-relaxed text-[#E6DBC7]/70 md:text-2xl">
-              {description}
-            </p>
-          </div>
-        )}
+          {/* Description */}
+          {description && (
+            <div className="px-6 pb-8 pt-4 md:px-10 lg:px-12">
+              <p className="max-w-4xl font-editorial text-xl italic leading-relaxed text-[#E6DBC7]/70 md:text-2xl">
+                {description}
+              </p>
+            </div>
+          )}
 
-        {/* Sessions List */}
-        <div className="px-6 pb-24 pt-16 md:px-10 lg:px-12">
-          <div className="grid gap-4 md:gap-5">
-            {sortedSessions.map((session: LibrarySession, index) => {
-              const isNew = session.created_at
-                ? Math.floor(
-                    (now - new Date(session.created_at).getTime()) / (1000 * 60 * 60 * 24)
-                  ) <= 7
-                : false;
+          {/* Sessions List */}
+          <div className="px-6 pb-24 pt-16 md:px-10 lg:px-12">
+            <div className="grid gap-4 md:gap-5">
+              {sortedSessions.map((session: LibrarySession, index) => {
+                const isNew = session.created_at
+                  ? Math.floor(
+                      (now - new Date(session.created_at).getTime()) / (1000 * 60 * 60 * 24)
+                    ) <= 7
+                  : false;
 
-              const fallback =
-                sessionDescriptionFallback?.(session) ?? `A ${session.duration} minute practice.`;
+                const fallback =
+                  sessionDescriptionFallback?.(session) ?? `A ${session.duration} minute practice.`;
 
-              return (
-                <FadeUp key={session.id} delay={index * 50}>
-                  <SessionPlayCard
-                    sessionId={session.id}
-                    title={session.title}
-                    description={session.description || fallback}
-                    meta={[
-                      session.teacher,
-                      session.duration != null && `${session.duration} min`,
-                      session.intensity,
-                      session.technique,
-                    ]
-                      .filter(Boolean)
-                      .join(" • ")}
-                    imageUrl={session.image}
-                    locked={session.locked}
-                    isNew={isNew}
-                    onClick={() => {
-                      if (session.locked && !hasSubscription) {
-                        onSubscriptionRequired();
-                      } else {
-                        onSessionClick(session.id);
-                      }
-                    }}
-                  />
-                </FadeUp>
-              );
-            })}
+                return (
+                  <FadeUp key={session.id} delay={index * 50}>
+                    <SessionPlayCard
+                      sessionId={session.id}
+                      title={session.title}
+                      description={session.description || fallback}
+                      meta={[
+                        session.teacher,
+                        session.duration != null && `${session.duration} min`,
+                        session.intensity,
+                        session.technique,
+                      ]
+                        .filter(Boolean)
+                        .join(" • ")}
+                      imageUrl={session.image}
+                      locked={session.locked}
+                      isNew={isNew}
+                      onClick={() => {
+                        if (session.locked && !hasSubscription) {
+                          onSubscriptionRequired();
+                        } else {
+                          onSessionClick(session.id);
+                        }
+                      }}
+                    />
+                  </FadeUp>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
