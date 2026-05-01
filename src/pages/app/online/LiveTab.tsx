@@ -63,7 +63,7 @@ const LiveTab = ({
   const [activeRecording, setActiveRecording] = useState<{ url: string; title: string } | null>(
     null
   );
-  const { data: replays = [], isLoading } = useLiveReplays();
+  const { data: replays = [], isPending } = useLiveReplays();
 
   const latestWeeklyReplay = replays.find((r) => r.session_type === "weekly-reset");
   const latestMonthlyReplay = replays.find((r) => r.session_type === "monthly-presence");
@@ -172,7 +172,7 @@ const LiveTab = ({
 
           {/* Weekly Reset & Monthly Presence Replays */}
           <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2">
-            {isLoading ? (
+            {isPending ? (
               <>
                 <ReplayBoxSkeleton />
                 <ReplayBoxSkeleton />
@@ -235,7 +235,7 @@ const LiveTab = ({
             </div>
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-              {isLoading ? (
+              {isPending ? (
                 <>
                   <GuestReplayCardSkeleton />
                   <GuestReplayCardSkeleton />
@@ -295,7 +295,7 @@ const ReplayBox = ({ image, alt, availability, category, date, onClick }: Replay
       className={`group relative overflow-hidden rounded-2xl border border-[#E6DBC7]/15 bg-black/40 transition-colors duration-500 ${hasReplay ? "cursor-pointer hover:border-[#E6DBC7]/30" : "cursor-default opacity-60"}`}
       onClick={hasReplay ? onClick : undefined}
     >
-      <div className="relative h-48 overflow-hidden">
+      <div className="relative h-48 overflow-hidden bg-[#E6DBC7]/8">
         <img
           src={image}
           alt={alt}
@@ -337,7 +337,7 @@ const GuestReplayCard = ({ replay, onPlay }: { replay: LiveReplay; onPlay: () =>
     className="group relative cursor-pointer overflow-hidden rounded-2xl border border-[#E6DBC7]/15 bg-black/40 transition-colors duration-500 hover:border-[#E6DBC7]/30"
     onClick={onPlay}
   >
-    <div className="relative h-44 overflow-hidden">
+    <div className="relative h-44 overflow-hidden bg-[#E6DBC7]/8">
       <img
         src={replay.teacher_photo || guestSessionImg}
         alt={replay.title}
