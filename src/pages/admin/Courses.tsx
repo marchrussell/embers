@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { BookOpen, Eye, EyeOff, Pencil, Plus, Search, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { BookOpen, Eye, EyeOff, GripVertical, Pencil, Plus, Search, Trash2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { AdminLayout, AdminStatsCard } from "@/components/admin";
@@ -311,18 +311,28 @@ const AdminPrograms = () => {
     );
   };
 
-  const moveClass = (index: number, direction: "up" | "down") => {
-    const newSelectedClasses = [...selectedClasses];
-    const newIndex = direction === "up" ? index - 1 : index + 1;
+  const dragIndexRef = useRef<number | null>(null);
+  const dragOverIndexRef = useRef<number | null>(null);
 
-    if (newIndex < 0 || newIndex >= newSelectedClasses.length) return;
+  const handleDragStart = (index: number) => {
+    dragIndexRef.current = index;
+  };
 
-    [newSelectedClasses[index], newSelectedClasses[newIndex]] = [
-      newSelectedClasses[newIndex],
-      newSelectedClasses[index],
-    ];
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    dragOverIndexRef.current = index;
+  };
 
-    setSelectedClasses(newSelectedClasses);
+  const handleDrop = () => {
+    const from = dragIndexRef.current;
+    const to = dragOverIndexRef.current;
+    if (from === null || to === null || from === to) return;
+    const reordered = [...selectedClasses];
+    const [moved] = reordered.splice(from, 1);
+    reordered.splice(to, 0, moved);
+    setSelectedClasses(reordered);
+    dragIndexRef.current = null;
+    dragOverIndexRef.current = null;
   };
 
   const filteredCourses = courses.filter(
@@ -477,29 +487,17 @@ const AdminPrograms = () => {
                   {selectedClasses.map((classId, index) => {
                     const classItem = classes.find((c) => c.id === classId);
                     return (
-                      <div key={classId} className="flex items-center gap-2 rounded bg-white/5 p-2">
+                      <div
+                        key={classId}
+                        draggable
+                        onDragStart={() => handleDragStart(index)}
+                        onDragOver={(e) => handleDragOver(e, index)}
+                        onDrop={handleDrop}
+                        className="flex cursor-grab items-center gap-2 rounded bg-white/5 p-2 active:cursor-grabbing"
+                      >
+                        <GripVertical className="h-4 w-4 flex-shrink-0 text-white/40" />
                         <span className="w-6 text-xs text-white/50">{index + 1}.</span>
                         <span className="flex-1 text-sm text-white">{classItem?.title}</span>
-                        <div className="flex gap-1">
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            onClick={() => moveClass(index, "up")}
-                            disabled={index === 0}
-                            className="h-6 w-6 p-0 text-white/60 hover:text-white"
-                          >
-                            ↑
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            onClick={() => moveClass(index, "down")}
-                            disabled={index === selectedClasses.length - 1}
-                            className="h-6 w-6 p-0 text-white/60 hover:text-white"
-                          >
-                            ↓
-                          </Button>
-                        </div>
                       </div>
                     );
                   })}
