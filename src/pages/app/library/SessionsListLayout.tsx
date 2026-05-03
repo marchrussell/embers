@@ -70,23 +70,20 @@ const SessionsListLayout = memo(
           )}
 
           <div className="relative flex h-full items-end px-6 pb-14 md:px-10 lg:px-12">
-            <FadeUp className="w-full max-w-3xl">
-              <p className="mb-3 text-sm font-light uppercase tracking-[0.15em] text-[#D4A574]">
+            <FadeUp className="space-y-6 w-full max-w-4xl">
+              <p className="text-sm font-light uppercase tracking-[0.15em] text-[#D4A574]">
                 {countLabel}
               </p>
               <h1 className="font-editorial text-5xl text-[#E6DBC7] md:text-6xl">{title}</h1>
+              {/* Description */}
+              {description && (
+                <p className="font-editorial text-xl italic leading-relaxed text-[#E6DBC7]/70 md:text-2xl">
+                  {description}
+                </p>
+              )}
             </FadeUp>
           </div>
         </div>
-
-        {/* Description */}
-        {description && (
-          <div className="px-6 pb-8 pt-4 md:px-10 lg:px-12">
-            <p className="max-w-4xl font-editorial text-xl italic leading-relaxed text-[#E6DBC7]/70 md:text-2xl">
-              {description}
-            </p>
-          </div>
-        )}
 
         {/* Sessions List */}
         <div className="px-6 pb-24 pt-16 md:px-10 lg:px-12">
