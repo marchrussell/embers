@@ -89,6 +89,194 @@ const DEFAULT_WHAT_TO_EXPECT = [
 ];
 
 // ────────────────────────────────────────────────────────
+// Shared sub-components
+// ────────────────────────────────────────────────────────
+
+const SessionImageUpload = ({
+  value,
+  onChange,
+  filePathPrefix,
+}: {
+  value: string;
+  onChange: (url: string) => void;
+  filePathPrefix: string;
+}) => {
+  const { upload, uploading } = useStorageUpload("session-images");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const ext = file.name.split(".").pop();
+      const url = await upload(file, `${filePathPrefix}-${Date.now()}.${ext}`);
+      if (url) onChange(url);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to upload image");
+    }
+  };
+
+  return (
+    <div className="space-y-2">
+      <Label>Session Type Image</Label>
+      {value ? (
+        <div className="relative h-36 w-full overflow-hidden rounded-lg border border-border">
+          <img src={value} alt="Preview" className="h-full w-full object-cover" />
+        </div>
+      ) : (
+        <div className="flex h-36 w-full items-center justify-center rounded-lg border border-dashed border-border">
+          <ImageIcon className="h-6 w-6 text-muted-foreground" />
+        </div>
+      )}
+      <div className="flex gap-2">
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleFile}
+          disabled={uploading}
+          className="hidden"
+        />
+        <Button
+          type="button"
+          variant="outline"
+          disabled={uploading}
+          onClick={() => inputRef.current?.click()}
+        >
+          {uploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+          {uploading ? "Uploading…" : "Upload Image"}
+        </Button>
+        {value && (
+          <Button type="button" variant="ghost" size="sm" onClick={() => onChange("")}>
+            Remove
+          </Button>
+        )}
+      </div>
+      <Input
+        placeholder="Or paste an image URL"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      />
+    </div>
+  );
+};
+
+const RecurrenceSection = ({
+  form,
+  setForm,
+}: {
+  form: {
+    recurrence_type: "weekly" | "nthWeekday" | null;
+    weekdays: number[] | null;
+    weekday: number | null;
+    nth: number | null;
+    recurrence_label: string | null;
+  };
+  setForm: React.Dispatch<React.SetStateAction<any>>;
+}) => {
+  const toggleWeekday = (day: number) => {
+    const current = form.weekdays ?? [];
+    setForm((prev: any) => ({
+      ...prev,
+      weekdays: current.includes(day) ? current.filter((d: number) => d !== day) : [...current, day],
+    }));
+  };
+
+  return (
+    <div className="space-y-6 rounded-lg border border-border p-6">
+      <div className="space-y-2">
+        <Label>Recurrence Type</Label>
+        <Select
+          value={form.recurrence_type ?? "none"}
+          onValueChange={(v) =>
+            setForm((p: any) => ({
+              ...p,
+              recurrence_type: v === "none" ? null : (v as "weekly" | "nthWeekday"),
+            }))
+          }
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="none">No fixed recurrence</SelectItem>
+            <SelectItem value="weekly">Weekly</SelectItem>
+            <SelectItem value="nthWeekday">Nth Weekday of month</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {form.recurrence_type === "weekly" && (
+        <div className="space-y-2">
+          <Label>Weekdays</Label>
+          <div className="flex flex-wrap gap-2">
+            {WEEKDAY_LABELS.map((label, i) => (
+              <label key={i} className="flex cursor-pointer items-center gap-1.5 text-sm">
+                <Checkbox
+                  checked={(form.weekdays ?? []).includes(i)}
+                  onCheckedChange={() => toggleWeekday(i)}
+                />
+                {label}
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {form.recurrence_type === "nthWeekday" && (
+        <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-2">
+            <Label>Occurrence</Label>
+            <Select
+              value={String(form.nth ?? 1)}
+              onValueChange={(v) => setForm((p: any) => ({ ...p, nth: Number(v) }))}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {[1, 2, 3, 4].map((n) => (
+                  <SelectItem key={n} value={String(n)}>
+                    {NTH_LABELS[n]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label>Weekday</Label>
+            <Select
+              value={String(form.weekday ?? 0)}
+              onValueChange={(v) => setForm((p: any) => ({ ...p, weekday: Number(v) }))}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {WEEKDAY_LABELS.map((label, i) => (
+                  <SelectItem key={i} value={String(i)}>
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      )}
+
+      <div className="space-y-2">
+        <Label>Recurrence Label</Label>
+        <Input
+          placeholder="e.g. Every Tuesday"
+          value={form.recurrence_label ?? ""}
+          onChange={(e) => setForm((p: any) => ({ ...p, recurrence_label: e.target.value }))}
+        />
+      </div>
+    </div>
+  );
+};
+
+// ────────────────────────────────────────────────────────
 // Config Edit Dialog
 // ────────────────────────────────────────────────────────
 
@@ -118,29 +306,6 @@ const ConfigEditDialog = ({ config, onSaved }: ConfigEditDialogProps) => {
     is_active: config.is_active,
     image_url: config.image_url ?? "",
   });
-  const { upload: uploadImage, uploading: uploadingImage } = useStorageUpload("session-images");
-  const imageInputRef = useRef<HTMLInputElement>(null);
-
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    try {
-      const fileExt = file.name.split(".").pop();
-      const filePath = `session-type-${config.session_type}-${Date.now()}.${fileExt}`;
-      const publicUrl = await uploadImage(file, filePath);
-      if (publicUrl) setForm((p) => ({ ...p, image_url: publicUrl }));
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Failed to upload image");
-    }
-  };
-
-  const toggleWeekday = (day: number) => {
-    const current = form.weekdays ?? [];
-    setForm((prev) => ({
-      ...prev,
-      weekdays: current.includes(day) ? current.filter((d) => d !== day) : [...current, day],
-    }));
-  };
 
   const handleSave = async () => {
     setSaving(true);
@@ -234,97 +399,7 @@ const ConfigEditDialog = ({ config, onSaved }: ConfigEditDialogProps) => {
             </div>
           </div>
 
-          {/* Recurrence */}
-          <div className="space-y-6 rounded-lg border border-border p-6">
-            <div className="space-y-6">
-              <Label>Recurrence Type</Label>
-              <Select
-                value={form.recurrence_type ?? "none"}
-                onValueChange={(v) =>
-                  setForm((p) => ({
-                    ...p,
-                    recurrence_type: v === "none" ? null : (v as "weekly" | "nthWeekday"),
-                  }))
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">No fixed recurrence</SelectItem>
-                  <SelectItem value="weekly">Weekly</SelectItem>
-                  <SelectItem value="nthWeekday">Nth Weekday of month</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {form.recurrence_type === "weekly" && (
-              <div className="space-y-2">
-                <Label>Weekdays</Label>
-                <div className="flex flex-wrap gap-2">
-                  {WEEKDAY_LABELS.map((label, i) => (
-                    <label key={i} className="flex cursor-pointer items-center gap-1.5 text-sm">
-                      <Checkbox
-                        checked={(form.weekdays ?? []).includes(i)}
-                        onCheckedChange={() => toggleWeekday(i)}
-                      />
-                      {label}
-                    </label>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {form.recurrence_type === "nthWeekday" && (
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-2">
-                  <Label>Occurrence</Label>
-                  <Select
-                    value={String(form.nth ?? 1)}
-                    onValueChange={(v) => setForm((p) => ({ ...p, nth: Number(v) }))}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {[1, 2, 3, 4].map((n) => (
-                        <SelectItem key={n} value={String(n)}>
-                          {NTH_LABELS[n]}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label>Weekday</Label>
-                  <Select
-                    value={String(form.weekday ?? 0)}
-                    onValueChange={(v) => setForm((p) => ({ ...p, weekday: Number(v) }))}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {WEEKDAY_LABELS.map((label, i) => (
-                        <SelectItem key={i} value={String(i)}>
-                          {label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            )}
-
-            <div className="space-y-2">
-              <Label>Recurrence Label</Label>
-              <Input
-                placeholder="e.g. Every Tuesday"
-                value={form.recurrence_label ?? ""}
-                onChange={(e) => setForm((p) => ({ ...p, recurrence_label: e.target.value }))}
-              />
-            </div>
-          </div>
+          <RecurrenceSection form={form} setForm={setForm} />
 
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
@@ -370,54 +445,13 @@ const ConfigEditDialog = ({ config, onSaved }: ConfigEditDialogProps) => {
             <Label>Active</Label>
           </div>
 
-          <div className="space-y-2">
-            <Label>Session Type Image</Label>
-            {form.image_url ? (
-              <div className="relative h-36 w-full overflow-hidden rounded-lg border border-border">
-                <img src={form.image_url} alt="Preview" className="h-full w-full object-cover" />
-              </div>
-            ) : (
-              <div className="flex h-36 w-full items-center justify-center rounded-lg border border-dashed border-border">
-                <ImageIcon className="h-6 w-6 text-muted-foreground" />
-              </div>
-            )}
-            <div className="flex gap-2">
-              <input
-                ref={imageInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                disabled={uploadingImage}
-                className="hidden"
-              />
-              <Button
-                type="button"
-                variant="outline"
-                disabled={uploadingImage}
-                onClick={() => imageInputRef.current?.click()}
-              >
-                {uploadingImage ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                {uploadingImage ? "Uploading…" : "Upload Image"}
-              </Button>
-              {form.image_url && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setForm((p) => ({ ...p, image_url: "" }))}
-                >
-                  Remove
-                </Button>
-              )}
-            </div>
-            <Input
-              placeholder="Or paste an image URL"
-              value={form.image_url ?? ""}
-              onChange={(e) => setForm((p) => ({ ...p, image_url: e.target.value }))}
-            />
-          </div>
+          <SessionImageUpload
+            value={form.image_url ?? ""}
+            onChange={(url) => setForm((p) => ({ ...p, image_url: url }))}
+            filePathPrefix={`session-type-${config.session_type}`}
+          />
 
-          <Button onClick={handleSave} disabled={saving || uploadingImage} className="w-full">
+          <Button onClick={handleSave} disabled={saving} className="w-full">
             {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
             Save Changes
           </Button>
@@ -456,30 +490,6 @@ const CreateConfigDialog = ({ onCreated }: CreateConfigDialogProps) => {
     is_active: true,
     image_url: "",
   });
-  const { upload: uploadImage, uploading: uploadingImage } = useStorageUpload("session-images");
-  const imageInputRef = useRef<HTMLInputElement>(null);
-
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    try {
-      const fileExt = file.name.split(".").pop();
-      const filePath = `session-type-${form.session_type || "new"}-${Date.now()}.${fileExt}`;
-      const publicUrl = await uploadImage(file, filePath);
-      if (publicUrl) setForm((p) => ({ ...p, image_url: publicUrl }));
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Failed to upload image");
-    }
-  };
-
-  const toggleWeekday = (day: number) => {
-    setForm((prev) => ({
-      ...prev,
-      weekdays: prev.weekdays.includes(day)
-        ? prev.weekdays.filter((d) => d !== day)
-        : [...prev.weekdays, day],
-    }));
-  };
 
   const handleCreate = async () => {
     if (!form.session_type.trim() || !form.title.trim()) {
@@ -616,96 +626,7 @@ const CreateConfigDialog = ({ onCreated }: CreateConfigDialogProps) => {
             </div>
           </div>
 
-          <div className="space-y-6 rounded-lg border border-border p-6">
-            <div className="space-y-2">
-              <Label>Recurrence Type</Label>
-              <Select
-                value={form.recurrence_type ?? "none"}
-                onValueChange={(v) =>
-                  setForm((p) => ({
-                    ...p,
-                    recurrence_type: v === "none" ? null : (v as "weekly" | "nthWeekday"),
-                  }))
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">No fixed recurrence</SelectItem>
-                  <SelectItem value="weekly">Weekly</SelectItem>
-                  <SelectItem value="nthWeekday">Nth Weekday of month</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {form.recurrence_type === "weekly" && (
-              <div className="space-y-2">
-                <Label>Weekdays</Label>
-                <div className="flex flex-wrap gap-2">
-                  {WEEKDAY_LABELS.map((label, i) => (
-                    <label key={i} className="flex cursor-pointer items-center gap-1.5 text-sm">
-                      <Checkbox
-                        checked={form.weekdays.includes(i)}
-                        onCheckedChange={() => toggleWeekday(i)}
-                      />
-                      {label}
-                    </label>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {form.recurrence_type === "nthWeekday" && (
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-2">
-                  <Label>Occurrence</Label>
-                  <Select
-                    value={String(form.nth ?? 1)}
-                    onValueChange={(v) => setForm((p) => ({ ...p, nth: Number(v) }))}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {[1, 2, 3, 4].map((n) => (
-                        <SelectItem key={n} value={String(n)}>
-                          {NTH_LABELS[n]}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label>Weekday</Label>
-                  <Select
-                    value={String(form.weekday ?? 0)}
-                    onValueChange={(v) => setForm((p) => ({ ...p, weekday: Number(v) }))}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {WEEKDAY_LABELS.map((label, i) => (
-                        <SelectItem key={i} value={String(i)}>
-                          {label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            )}
-
-            <div className="space-y-2">
-              <Label>Recurrence Label</Label>
-              <Input
-                placeholder="e.g. Every Tuesday"
-                value={form.recurrence_label}
-                onChange={(e) => setForm((p) => ({ ...p, recurrence_label: e.target.value }))}
-              />
-            </div>
-          </div>
+          <RecurrenceSection form={form} setForm={setForm} />
 
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
@@ -751,54 +672,13 @@ const CreateConfigDialog = ({ onCreated }: CreateConfigDialogProps) => {
             <Label>Active</Label>
           </div>
 
-          <div className="space-y-2">
-            <Label>Session Type Image</Label>
-            {form.image_url ? (
-              <div className="relative h-36 w-full overflow-hidden rounded-lg border border-border">
-                <img src={form.image_url} alt="Preview" className="h-full w-full object-cover" />
-              </div>
-            ) : (
-              <div className="flex h-36 w-full items-center justify-center rounded-lg border border-dashed border-border">
-                <ImageIcon className="h-6 w-6 text-muted-foreground" />
-              </div>
-            )}
-            <div className="flex gap-2">
-              <input
-                ref={imageInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                disabled={uploadingImage}
-                className="hidden"
-              />
-              <Button
-                type="button"
-                variant="outline"
-                disabled={uploadingImage}
-                onClick={() => imageInputRef.current?.click()}
-              >
-                {uploadingImage ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                {uploadingImage ? "Uploading…" : "Upload Image"}
-              </Button>
-              {form.image_url && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setForm((p) => ({ ...p, image_url: "" }))}
-                >
-                  Remove
-                </Button>
-              )}
-            </div>
-            <Input
-              placeholder="Or paste an image URL"
-              value={form.image_url}
-              onChange={(e) => setForm((p) => ({ ...p, image_url: e.target.value }))}
-            />
-          </div>
+          <SessionImageUpload
+            value={form.image_url}
+            onChange={(url) => setForm((p) => ({ ...p, image_url: url }))}
+            filePathPrefix={`session-type-${form.session_type || "new"}`}
+          />
 
-          <Button onClick={handleCreate} disabled={saving || uploadingImage} className="w-full">
+          <Button onClick={handleCreate} disabled={saving} className="w-full">
             {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
             Create Session Type
           </Button>
