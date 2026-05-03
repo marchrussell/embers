@@ -312,7 +312,7 @@ const AdminPrograms = () => {
   };
 
   const dragIndexRef = useRef<number | null>(null);
-  const dragOverIndexRef = useRef<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
   const handleDragStart = (index: number) => {
     dragIndexRef.current = index;
@@ -320,19 +320,27 @@ const AdminPrograms = () => {
 
   const handleDragOver = (e: React.DragEvent, index: number) => {
     e.preventDefault();
-    dragOverIndexRef.current = index;
+    setDragOverIndex(index);
   };
 
   const handleDrop = () => {
     const from = dragIndexRef.current;
-    const to = dragOverIndexRef.current;
-    if (from === null || to === null || from === to) return;
+    const to = dragOverIndex;
+    if (from === null || to === null || from === to) {
+      setDragOverIndex(null);
+      return;
+    }
     const reordered = [...selectedClasses];
     const [moved] = reordered.splice(from, 1);
     reordered.splice(to, 0, moved);
     setSelectedClasses(reordered);
     dragIndexRef.current = null;
-    dragOverIndexRef.current = null;
+    setDragOverIndex(null);
+  };
+
+  const handleDragEnd = () => {
+    setDragOverIndex(null);
+    dragIndexRef.current = null;
   };
 
   const filteredCourses = courses.filter(
@@ -493,7 +501,12 @@ const AdminPrograms = () => {
                         onDragStart={() => handleDragStart(index)}
                         onDragOver={(e) => handleDragOver(e, index)}
                         onDrop={handleDrop}
-                        className="flex cursor-grab items-center gap-2 rounded bg-white/5 p-2 active:cursor-grabbing"
+                        onDragEnd={handleDragEnd}
+                        className={`flex cursor-grab items-center gap-2 rounded p-2 transition-colors active:cursor-grabbing ${
+                          dragOverIndex === index
+                            ? "border border-[#E6DBC7]/60 bg-[#E6DBC7]/10"
+                            : "bg-white/5"
+                        }`}
                       >
                         <GripVertical className="h-4 w-4 flex-shrink-0 text-white/40" />
                         <span className="w-6 text-xs text-white/50">{index + 1}.</span>
