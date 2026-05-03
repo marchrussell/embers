@@ -62,7 +62,7 @@ function buildSessionDisplay(
   enrichment: LiveSessionEnrichment | null,
   nextDateObj: Date | null
 ): SessionDisplay {
-  const fallbackImage = SESSION_TYPE_IMAGES[config.session_type] ?? guestSessionImg;
+  const fallbackImage = config.image_url ?? SESSION_TYPE_IMAGES[config.session_type] ?? guestSessionImg;
 
   const computedNextDate = (() => {
     if (enrichment?.session_date) {

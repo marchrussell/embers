@@ -48,4 +48,5 @@ export interface LiveSessionConfig {
   event_type: string | null;
   format: string | null;
   is_active: boolean;
+  image_url: string | null;
 }

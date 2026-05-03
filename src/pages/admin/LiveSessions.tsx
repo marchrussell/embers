@@ -116,7 +116,23 @@ const ConfigEditDialog = ({ config, onSaved }: ConfigEditDialogProps) => {
     event_type: config.event_type ?? "online-member",
     format: config.format ?? "",
     is_active: config.is_active,
+    image_url: config.image_url ?? "",
   });
+  const { upload: uploadImage, uploading: uploadingImage } = useStorageUpload("session-images");
+  const imageInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const fileExt = file.name.split(".").pop();
+      const filePath = `session-type-${config.session_type}-${Date.now()}.${fileExt}`;
+      const publicUrl = await uploadImage(file, filePath);
+      if (publicUrl) setForm((p) => ({ ...p, image_url: publicUrl }));
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to upload image");
+    }
+  };
 
   const toggleWeekday = (day: number) => {
     const current = form.weekdays ?? [];
@@ -144,6 +160,7 @@ const ConfigEditDialog = ({ config, onSaved }: ConfigEditDialogProps) => {
         event_type: form.event_type || null,
         format: form.format || null,
         is_active: form.is_active,
+        image_url: form.image_url || null,
       };
 
       const { error } = await db
@@ -353,7 +370,54 @@ const ConfigEditDialog = ({ config, onSaved }: ConfigEditDialogProps) => {
             <Label>Active</Label>
           </div>
 
-          <Button onClick={handleSave} disabled={saving} className="w-full">
+          <div className="space-y-2">
+            <Label>Session Type Image</Label>
+            {form.image_url ? (
+              <div className="relative h-36 w-full overflow-hidden rounded-lg border border-border">
+                <img src={form.image_url} alt="Preview" className="h-full w-full object-cover" />
+              </div>
+            ) : (
+              <div className="flex h-36 w-full items-center justify-center rounded-lg border border-dashed border-border">
+                <ImageIcon className="h-6 w-6 text-muted-foreground" />
+              </div>
+            )}
+            <div className="flex gap-2">
+              <input
+                ref={imageInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                disabled={uploadingImage}
+                className="hidden"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                disabled={uploadingImage}
+                onClick={() => imageInputRef.current?.click()}
+              >
+                {uploadingImage ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                {uploadingImage ? "Uploading…" : "Upload Image"}
+              </Button>
+              {form.image_url && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setForm((p) => ({ ...p, image_url: "" }))}
+                >
+                  Remove
+                </Button>
+              )}
+            </div>
+            <Input
+              placeholder="Or paste an image URL"
+              value={form.image_url ?? ""}
+              onChange={(e) => setForm((p) => ({ ...p, image_url: e.target.value }))}
+            />
+          </div>
+
+          <Button onClick={handleSave} disabled={saving || uploadingImage} className="w-full">
             {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
             Save Changes
           </Button>
@@ -390,7 +454,23 @@ const CreateConfigDialog = ({ onCreated }: CreateConfigDialogProps) => {
     event_type: "studio-member",
     format: "For Studio Members",
     is_active: true,
+    image_url: "",
   });
+  const { upload: uploadImage, uploading: uploadingImage } = useStorageUpload("session-images");
+  const imageInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const fileExt = file.name.split(".").pop();
+      const filePath = `session-type-${form.session_type || "new"}-${Date.now()}.${fileExt}`;
+      const publicUrl = await uploadImage(file, filePath);
+      if (publicUrl) setForm((p) => ({ ...p, image_url: publicUrl }));
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to upload image");
+    }
+  };
 
   const toggleWeekday = (day: number) => {
     setForm((prev) => ({
@@ -428,6 +508,7 @@ const CreateConfigDialog = ({ onCreated }: CreateConfigDialogProps) => {
         event_type: form.event_type || null,
         format: form.format || null,
         is_active: form.is_active,
+        image_url: form.image_url || null,
       };
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -457,6 +538,7 @@ const CreateConfigDialog = ({ onCreated }: CreateConfigDialogProps) => {
         event_type: "studio-member",
         format: "For Studio Members",
         is_active: true,
+        image_url: "",
       });
       toast.success("Session type created");
     } catch (err) {
@@ -669,7 +751,54 @@ const CreateConfigDialog = ({ onCreated }: CreateConfigDialogProps) => {
             <Label>Active</Label>
           </div>
 
-          <Button onClick={handleCreate} disabled={saving} className="w-full">
+          <div className="space-y-2">
+            <Label>Session Type Image</Label>
+            {form.image_url ? (
+              <div className="relative h-36 w-full overflow-hidden rounded-lg border border-border">
+                <img src={form.image_url} alt="Preview" className="h-full w-full object-cover" />
+              </div>
+            ) : (
+              <div className="flex h-36 w-full items-center justify-center rounded-lg border border-dashed border-border">
+                <ImageIcon className="h-6 w-6 text-muted-foreground" />
+              </div>
+            )}
+            <div className="flex gap-2">
+              <input
+                ref={imageInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                disabled={uploadingImage}
+                className="hidden"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                disabled={uploadingImage}
+                onClick={() => imageInputRef.current?.click()}
+              >
+                {uploadingImage ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                {uploadingImage ? "Uploading…" : "Upload Image"}
+              </Button>
+              {form.image_url && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setForm((p) => ({ ...p, image_url: "" }))}
+                >
+                  Remove
+                </Button>
+              )}
+            </div>
+            <Input
+              placeholder="Or paste an image URL"
+              value={form.image_url}
+              onChange={(e) => setForm((p) => ({ ...p, image_url: e.target.value }))}
+            />
+          </div>
+
+          <Button onClick={handleCreate} disabled={saving || uploadingImage} className="w-full">
             {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
             Create Session Type
           </Button>

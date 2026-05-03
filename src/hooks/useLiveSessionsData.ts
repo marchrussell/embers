@@ -7,7 +7,6 @@ import { LiveSessionCardData } from "@/pages/app/online/types";
 import { useLiveSessionConfigs } from "./useLiveSessionConfigs";
 import { useNextLiveSessionDetailsByType } from "./useNextLiveSessionDetailsByType";
 
-// todo - add control in admin
 const SESSION_TYPE_IMAGES: Record<string, string> = {
   "weekly-reset": experienceImages.weeklyReset,
   "monthly-presence": experienceImages.monthlyBreathOnline,
@@ -32,7 +31,7 @@ export function useLiveSessionsData(): LiveSessionCardData[] {
       const subtitle = subtitleParts.join(" · ");
 
       const fallbackImage =
-        SESSION_TYPE_IMAGES[config.session_type] ?? experienceImages.guestSession;
+        config.image_url ?? SESSION_TYPE_IMAGES[config.session_type] ?? experienceImages.guestSession;
       const durationMinutes = config.duration ? parseInt(config.duration) || 60 : 60;
       console.log("Live Session Config:", config);
       console.log(
