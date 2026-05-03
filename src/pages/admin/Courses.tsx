@@ -502,7 +502,8 @@ const AdminPrograms = () => {
                         onDragOver={(e) => handleDragOver(e, index)}
                         onDrop={handleDrop}
                         onDragEnd={handleDragEnd}
-                        className={`flex cursor-grab items-center gap-2 rounded p-2 transition-colors active:cursor-grabbing ${
+                        style={{ cursor: "grab" }}
+                        className={`flex items-center gap-2 rounded p-2 transition-colors ${
                           dragOverIndex === index
                             ? "border border-[#E6DBC7]/60 bg-[#E6DBC7]/10"
                             : "bg-white/5"
