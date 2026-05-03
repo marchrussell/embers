@@ -1,4 +1,4 @@
-import { Heart, Pause, Play, Star } from "lucide-react";
+import { Heart, Pause, Star } from "lucide-react";
 
 import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
 
@@ -184,9 +184,6 @@ export const PhoneMockups = () => {
                       alt={lesson.title}
                       className="h-full w-full object-cover"
                     />
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                      <Play className="h-4 w-4 fill-white text-white" />
-                    </div>
                   </div>
                   <div className="flex-1">
                     <p className="text-[14px] text-white">{lesson.title}</p>
@@ -206,9 +203,6 @@ export const PhoneMockups = () => {
                       alt={lesson.title}
                       className="h-full w-full object-cover"
                     />
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                      <Play className="h-4 w-4 fill-white text-white" />
-                    </div>
                   </div>
                   <div className="flex-1">
                     <p className="text-[14px] text-white">{lesson.title}</p>

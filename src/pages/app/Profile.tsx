@@ -238,23 +238,22 @@ const ProfileContent = ({ userId, user, signOut }: ProfileContentProps) => {
       <PrivacyModal open={showPrivacyModal} onOpenChange={setShowPrivacyModal} />
 
       <div className="min-h-screen bg-background pb-24">
-        {/* Header */}
+        {/* Header with Back Button */}
         <div className="px-6 pt-40">
+          <Link
+            aria-label="Back to app"
+            to="/online"
+            className="inline-flex shrink-0 items-center gap-2 text-sm tracking-wide text-[#E6DBC7]/70 transition-colors hover:text-[#E6DBC7] md:text-base"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Link>
+
           {/* Welcome Message with Back Button */}
           <FadeUp>
-            <div className="my-8 flex items-center justify-between">
+            <div className="my-6 flex flex-col items-start justify-start gap-6">
               <h1 className="font-editorial text-3xl text-[#E6DBC7] md:text-4xl">
                 Welcome {capitalizedFirstName}
               </h1>
-              <Link
-                aria-label="Back to app"
-                to="/online"
-                className="inline-flex shrink-0 items-center gap-2 text-sm tracking-wide text-[#E6DBC7]/70 transition-colors hover:text-[#E6DBC7] md:text-base"
-              >
-                <ArrowLeft className="h-5 w-5" />
-                {/* <span className="hidden sm:inline">Back</span>
-                <span className="sm:hidden">Back</span> */}
-              </Link>
             </div>
           </FadeUp>
 

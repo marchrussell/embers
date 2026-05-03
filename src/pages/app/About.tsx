@@ -1,4 +1,3 @@
-import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -50,17 +49,16 @@ const About = () => {
         <div className="mx-auto max-w-[1600px] px-6 md:px-10 lg:px-16 xl:px-24">
           {/* Header row */}
           <FadeUp>
-            <div className="mb-12 mt-20 flex items-center justify-between">
-              <h1 className="font-editorial text-3xl text-[#E6DBC7] md:text-5xl lg:text-6xl">
-                Welcome
-              </h1>
-              <button
+            <div className="mb-12 flex flex-col items-start gap-6 md:mt-20">
+              {/* <button
                 onClick={() => navigate("/online/profile")}
                 className="inline-flex shrink-0 items-center gap-2 text-sm tracking-wide text-[#E6DBC7]/70 transition-colors hover:text-[#E6DBC7] md:text-base"
               >
                 <ArrowLeft className="h-5 w-5" />
-                Back
-              </button>
+              </button> */}
+              <h1 className="font-editorial text-3xl text-[#E6DBC7] md:text-5xl lg:text-6xl">
+                Welcome
+              </h1>
             </div>
           </FadeUp>
 
