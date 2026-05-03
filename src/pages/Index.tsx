@@ -8,7 +8,7 @@ import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { NavBar } from "@/components/NavBar";
 import { PhoneMockups } from "@/components/PhoneMockups";
 import { TermsMicrocopy } from "@/components/TermsMicrocopy";
-import { Button } from "@/components/ui/button";
+import { GlowButton } from "@/components/ui/glow-button";
 import { Pill } from "@/components/ui/pill";
 import SplitCard from "@/components/ui/split-card";
 import { useLiveSessionsData } from "@/hooks/useLiveSessionsData";
@@ -219,7 +219,7 @@ const Index = () => {
               >
                 A guided reset to clear mental noise, reduce overstimulation, and restore clarity.
               </p>
-              <Button
+              <GlowButton
                 onClick={() => {
                   window.open("/online/course/mental-reset", "_blank");
                 }}
@@ -232,7 +232,7 @@ const Index = () => {
                 }}
               >
                 Start Course
-              </Button>
+              </GlowButton>
             </SplitCard>
           </FadeUp>
         </section>
