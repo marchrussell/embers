@@ -74,7 +74,7 @@ const SessionPlayCard = memo(
               <h3 className="mb-1.5 font-editorial text-base text-[#E6DBC7] sm:mb-2 sm:text-lg md:text-xl">
                 {title}
               </h3>
-              <p className="mb-1.5 line-clamp-1 text-xs font-light leading-relaxed text-[#E6DBC7]/60 md:mb-2 md:line-clamp-2 md:text-base">
+              <p className="hidden md:block mb-1.5 line-clamp-1 text-xs font-light leading-relaxed text-[#E6DBC7]/60 md:mb-2 md:line-clamp-2 md:text-base">
                 {description}
               </p>
               <p className="text-xs font-light text-green-400 md:text-sm">{meta}</p>

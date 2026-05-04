@@ -7,7 +7,6 @@ interface CategoryViewProps {
   category: LibraryCategory;
   isEmbedded: boolean;
   hasSubscription: boolean;
-  // onBack: () => void;
   onSessionClick: (id: string) => void;
   onSubscriptionRequired: () => void;
 }
@@ -17,7 +16,6 @@ const CategoryView = memo(
     category,
     isEmbedded,
     hasSubscription,
-    // onBack,
     onSessionClick,
     onSubscriptionRequired,
   }: CategoryViewProps) => (
@@ -29,7 +27,6 @@ const CategoryView = memo(
       sessions={category.sessions}
       isEmbedded={isEmbedded}
       hasSubscription={hasSubscription}
-      // onBack={onBack}
       onSessionClick={onSessionClick}
       onSubscriptionRequired={onSubscriptionRequired}
       sessionDescriptionFallback={(s) =>
