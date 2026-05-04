@@ -39,7 +39,7 @@ const SessionPlayCard = memo(
         className="group cursor-pointer overflow-hidden rounded-xl border border-[#E6DBC7]/20 shadow-glow transition-all hover:border-[#E6DBC7]/30"
       >
         <div
-          className={`flex ${mobileStacked ? "h-auto flex-col sm:h-[140px] sm:flex-row md:h-[160px] lg:h-[180px]" : "md:h-[160px] lg:h-[180px]"}`}
+          className={`flex ${mobileStacked ? "h-auto flex-col sm:h-[140px] sm:flex-row md:h-[160px] lg:h-[180px]" : "h-[80px] md:h-[160px] lg:h-[180px]"}`}
         >
           {/* Image */}
           <div
