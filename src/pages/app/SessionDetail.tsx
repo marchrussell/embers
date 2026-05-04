@@ -279,7 +279,7 @@ export default function SessionDetailModal({
                     {/* Safety Card */}
                     <div className="group relative mt-8 overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.02]">
                       <div className="p-4 md:p-6">
-                        <div className="flex items-start gap-3">
+                        <div className="flex items-center gap-3 md:items-start">
                           <span className="flex-shrink-0 text-base text-white md:text-xl">
                             ⚠
                           </span>
@@ -288,7 +288,7 @@ export default function SessionDetailModal({
                               Safety Reminder
                             </h4>
 
-                            <div className="mt-4 space-y-4 border-white/[0.08] pt-4 md:border-t">
+                            <div className="md:mt-4 md:space-y-4 md:border-t md:border-white/[0.08] md:pt-4">
                               {/* Practice safely */}
                               <p className="hidden text-[13px] font-light leading-relaxed text-white/70 md:block md:text-sm">
                                 Practice in a safe, comfortable space - never in water, while
