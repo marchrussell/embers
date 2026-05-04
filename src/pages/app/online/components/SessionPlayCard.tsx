@@ -39,7 +39,7 @@ const SessionPlayCard = memo(
         className="group cursor-pointer overflow-hidden rounded-xl border border-[#E6DBC7]/20 shadow-glow transition-all hover:border-[#E6DBC7]/30"
       >
         <div
-          className={`flex ${mobileStacked ? "h-auto flex-col sm:h-[140px] sm:flex-row md:h-[160px] lg:h-[180px]" : "h-[140px] md:h-[160px] lg:h-[180px]"}`}
+          className={`flex ${mobileStacked ? "h-auto flex-col sm:h-[140px] sm:flex-row md:h-[160px] lg:h-[180px]" : "h-[100px] md:h-[160px] lg:h-[180px]"}`}
         >
           {/* Image */}
           <div
@@ -68,7 +68,7 @@ const SessionPlayCard = memo(
 
           {/* Content */}
           <div
-            className={`flex flex-1 ${mobileStacked ? "flex-col items-start sm:flex-row sm:items-center" : "items-center"} justify-between gap-4 ${mobileStacked ? "px-5 py-4 sm:px-6 sm:py-6 md:px-10" : "p-2 md:p-6 md:px-10"} bg-black/30 backdrop-blur-xl ${mobileStacked ? "border-t border-white/5 sm:border-l sm:border-t-0" : ""}`}
+            className={`flex flex-1 ${mobileStacked ? "flex-col items-start sm:flex-row sm:items-center" : "items-center"} justify-between gap-4 ${mobileStacked ? "px-5 py-4 sm:px-6 sm:py-6 md:px-10" : "px-6 md:py-6 md:px-10"} bg-black/30 backdrop-blur-xl ${mobileStacked ? "border-t border-white/5 sm:border-l sm:border-t-0" : ""}`}
           >
             <div className="min-w-0 flex-1 pr-4">
               <h3 className="mb-1.5 font-editorial text-base text-[#E6DBC7] sm:mb-2 sm:text-lg md:text-xl">
