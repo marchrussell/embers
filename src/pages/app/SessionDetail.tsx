@@ -238,7 +238,7 @@ export default function SessionDetailModal({
               </div>
 
               {/* Right side - Tabs for Explore, Description, and Safety */}
-              <div className="flex flex-col px-7 md:px-10 lg:px-6 lg:pr-6">
+              <div className="flex flex-col px-7 text-base md:px-10 lg:px-6 lg:pr-6">
                 {/* Category badges - aligned with content */}
                 {sessionCategories.length > 0 && (
                   <div className="mb-5 flex flex-wrap gap-2">
@@ -272,7 +272,7 @@ export default function SessionDetailModal({
 
                   <TabsContent value="description" className="mt-8 flex flex-col justify-between">
                     {/* Description */}
-                    <p className="text-[15px] font-light leading-[1.7] text-white/80 md:text-base">
+                    <p className="font-light leading-[1.7] text-white/80">
                       {session.description}
                     </p>
 
@@ -318,11 +318,11 @@ export default function SessionDetailModal({
                   </TabsContent>
 
                   <TabsContent value="explore" className="mt-8">
-                    <h3 className="mb-7 font-light md:font-editorial text-[clamp(1.5rem,2.5vw,1.85rem)] leading-[1.2] text-white">
+                    <h3 className="mb-7 font-light text-lg font-editorial leading-[1.2] text-white">
                       If you're wanting more support
                     </h3>
 
-                    <div className="space-y-4 text-[15px] font-light leading-[1.7] text-white/80 md:text-base">
+                    <div className="space-y-4 font-light leading-[1.7] text-white/80">
                       <p>Some people find daily practices are enough.</p>
                       <p>
                         Others need guided support to shift deeper patterns of stress, shutdown, or
@@ -337,7 +337,7 @@ export default function SessionDetailModal({
 
                     <button
                       onClick={() => setShowArcCardsModal(true)}
-                      className="mt-8 inline-flex items-center gap-3 text-[15px] font-medium text-white transition-colors hover:text-white/80 md:text-base"
+                      className="mt-8 inline-flex items-center gap-3 font-medium text-white transition-colors hover:text-white/80"
                     >
                       Learn about the ARC Method
                       <ArrowRight className="h-5 w-5" strokeWidth={1.5} />
