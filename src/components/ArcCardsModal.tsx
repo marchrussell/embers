@@ -35,7 +35,7 @@ function ArcCard({
   onClick,
 }: ArcCardProps) {
   return (
-    <div className="relative flex min-h-[420px] flex-col overflow-hidden rounded-[24px] border border-white/[0.12] text-left transition-colors duration-300">
+    <div className="relative flex min-h-[420px] flex-col overflow-hidden rounded-[24px] border border-white/[0.12] bg-transparent text-left transition-colors duration-300">
       <div className="absolute inset-0 z-0">
         <img
           src={backgroundImage}
