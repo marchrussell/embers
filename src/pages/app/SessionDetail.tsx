@@ -278,7 +278,7 @@ export default function SessionDetailModal({
 
                     {/* Safety Card */}
                     <div className="group relative mt-8 overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.02]">
-                      <div className="p-4 md:p-6">
+                      <div className="p-6">
                         <div className="flex items-center gap-3 md:items-start">
                           <span className="flex-shrink-0 text-base text-white md:text-xl">
                             ⚠
@@ -318,7 +318,7 @@ export default function SessionDetailModal({
                   </TabsContent>
 
                   <TabsContent value="explore" className="mt-8">
-                    <h3 className="mb-7 font-editorial text-[clamp(1.5rem,2.5vw,1.85rem)] leading-[1.2] text-white">
+                    <h3 className="mb-7 font-light md:font-editorial text-[clamp(1.5rem,2.5vw,1.85rem)] leading-[1.2] text-white">
                       If you're wanting more support
                     </h3>
 
