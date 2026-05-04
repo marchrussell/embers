@@ -280,7 +280,7 @@ export default function SessionDetailModal({
                     <div className="group relative mt-8 overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.02]">
                       <div className="p-4 md:p-6">
                         <div className="flex items-start gap-3">
-                          <span className="mt-0.5 flex-shrink-0 text-base text-white md:text-xl">
+                          <span className="flex-shrink-0 text-base text-white md:text-xl">
                             ⚠
                           </span>
                           <div className="min-w-0 flex-1">
