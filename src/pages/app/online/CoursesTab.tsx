@@ -31,7 +31,6 @@ interface ClassItem {
 // --- Course Detail View ---
 
 const CourseDetailContent = ({ slug }: { slug: string }) => {
-  const navigate = useNavigate();
   const { hasSubscription, isAdmin, isTestUser } = useAuth();
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
@@ -87,7 +86,6 @@ const CourseDetailContent = ({ slug }: { slug: string }) => {
         sessions={sessions}
         isEmbedded
         hasSubscription={hasSubscription}
-        // onBack={() => navigate("/online?tab=courses", { replace: true })}
         onSessionClick={(id) => {
           analytics.courseStarted(course.id, course.title);
           setSelectedSessionId(id);
@@ -160,7 +158,7 @@ const CoursesListContent = () => {
                 <p className="mb-4 max-w-[340px] font-editorial text-[14px] italic leading-[1.5] text-[#E6DBC7]/65 lg:text-[15px]">
                   {course.short_description || course.description}
                 </p>
-                <div className="mt-4 flex w-full justify-end md:hidden">
+                <div className="mt-12 flex w-full justify-start md:hidden">
                   <GlowButton size="sm">Start Course</GlowButton>
                 </div>
               </div>
