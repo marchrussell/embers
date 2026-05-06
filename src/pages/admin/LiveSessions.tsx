@@ -178,7 +178,9 @@ const RecurrenceSection = ({
     const current = form.weekdays ?? [];
     setForm((prev: any) => ({
       ...prev,
-      weekdays: current.includes(day) ? current.filter((d: number) => d !== day) : [...current, day],
+      weekdays: current.includes(day)
+        ? current.filter((d: number) => d !== day)
+        : [...current, day],
     }));
   };
 

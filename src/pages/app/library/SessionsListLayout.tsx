@@ -70,7 +70,7 @@ const SessionsListLayout = memo(
           )}
 
           <div className="relative flex h-full items-end px-6 pb-14 md:px-10 lg:px-12">
-            <FadeUp className="space-y-6 w-full max-w-4xl">
+            <FadeUp className="w-full max-w-4xl space-y-6">
               <p className="text-sm font-light uppercase tracking-[0.15em] text-[#D4A574]">
                 {countLabel}
               </p>

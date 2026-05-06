@@ -31,7 +31,9 @@ export function useLiveSessionsData(): LiveSessionCardData[] {
       const subtitle = subtitleParts.join(" · ");
 
       const fallbackImage =
-        config.image_url ?? SESSION_TYPE_IMAGES[config.session_type] ?? experienceImages.guestSession;
+        config.image_url ??
+        SESSION_TYPE_IMAGES[config.session_type] ??
+        experienceImages.guestSession;
       const durationMinutes = config.duration ? parseInt(config.duration) || 60 : 60;
       console.log("Live Session Config:", config);
       console.log(

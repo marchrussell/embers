@@ -68,13 +68,13 @@ const SessionPlayCard = memo(
 
           {/* Content */}
           <div
-            className={`flex flex-1 ${mobileStacked ? "flex-col items-start sm:flex-row sm:items-center" : "items-center"} justify-between gap-4 ${mobileStacked ? "px-5 py-4 sm:px-6 sm:py-6 md:px-10" : "px-6 md:py-6 md:px-10"} bg-black/30 backdrop-blur-xl ${mobileStacked ? "border-t border-white/5 sm:border-l sm:border-t-0" : ""}`}
+            className={`flex flex-1 ${mobileStacked ? "flex-col items-start sm:flex-row sm:items-center" : "items-center"} justify-between gap-4 ${mobileStacked ? "px-5 py-4 sm:px-6 sm:py-6 md:px-10" : "px-6 md:px-10 md:py-6"} bg-black/30 backdrop-blur-xl ${mobileStacked ? "border-t border-white/5 sm:border-l sm:border-t-0" : ""}`}
           >
             <div className="min-w-0 flex-1 pr-4">
               <h3 className="mb-1.5 font-editorial text-base text-[#E6DBC7] sm:mb-2 sm:text-lg md:text-xl">
                 {title}
               </h3>
-              <p className="hidden md:block mb-1.5 line-clamp-1 text-xs font-light leading-relaxed text-[#E6DBC7]/60 md:mb-2 md:line-clamp-2 md:text-base">
+              <p className="mb-1.5 line-clamp-1 hidden text-xs font-light leading-relaxed text-[#E6DBC7]/60 md:mb-2 md:line-clamp-2 md:block md:text-base">
                 {description}
               </p>
               <p className="text-xs font-light text-green-400 md:text-sm">{meta}</p>
