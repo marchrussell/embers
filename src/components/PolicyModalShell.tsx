@@ -19,7 +19,7 @@ export const PolicyModalShell = ({
   <Dialog open={open} onOpenChange={onOpenChange}>
     <DialogContent
       hideClose
-      className="max-h-[calc(90dvh-5rem)] w-[92vw] max-w-4xl overflow-y-auto scroll-smooth overscroll-contain rounded-xl border border-white/30 bg-black/75 p-0 backdrop-blur-xl md:max-h-[90dvh]"
+      className="max-h-[calc(90dvh-4rem)] w-[92vw] max-w-4xl overflow-y-auto scroll-smooth overscroll-contain rounded-xl border border-white/30 bg-black/75 p-0 backdrop-blur-xl md:max-h-[90dvh]"
     >
       <DialogTitle className="sr-only">{title}</DialogTitle>
       <ModalCloseButton onClose={() => onOpenChange(false)} size="md" />
