@@ -127,7 +127,7 @@ export default function SessionDetailModal({
         }}
       >
         <DialogContent
-          className="max-h-[calc(90dvh-5rem)] w-[95%] max-w-5xl scroll-smooth overscroll-contain overflow-y-auto rounded-xl border border-white/[0.08] bg-black/95 p-0 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-2xl md:max-h-[90dvh] md:w-[90%]"
+          className="max-h-[calc(90dvh-4rem)] w-[95%] max-w-5xl scroll-smooth overscroll-contain overflow-y-auto rounded-xl border border-white/[0.08] bg-black/95 p-0 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-2xl md:max-h-[90dvh] md:w-[90%]"
           onCloseAutoFocus={() => {}}
         >
           <DialogTitle className="sr-only">{session?.title || "Session Details"}</DialogTitle>
@@ -279,7 +279,7 @@ export default function SessionDetailModal({
                     <div className="group relative mt-8 overflow-hidden">
                       <div className="flex items-center gap-3 text-sm md:items-start text-white">
                         <div className="min-w-0 flex-1">
-                          <h4 className="flex items-baseline gap-4 font-light tracking-wide md:text-base">
+                          <h4 className="flex items-baseline gap-4 font-light tracking-wide">
                             <span className="flex-shrink-0 text-base md:text-xl">⚠</span>
                             Safety Reminder 
                           </h4>
