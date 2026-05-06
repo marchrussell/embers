@@ -284,7 +284,7 @@ export default function SessionDetailModal({
                             Safety Reminder 
                           </h4>
 
-                          <div className="md:mt-4 md:space-y-4 md:border-t md:border-white/[0.08] md:pt-4">
+                          <div className="mt-4 space-y-4 md:border-t border-white/[0.08] pt-4">
                             {/* Practice safely */}
                             <p className="font-light leading-relaxed text-white/70 md:text-sm">
                               Practice in a safe, comfortable space - never in water, while
