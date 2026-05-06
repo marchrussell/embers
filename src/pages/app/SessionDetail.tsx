@@ -127,7 +127,7 @@ export default function SessionDetailModal({
         }}
       >
         <DialogContent
-          className="max-h-[calc(90dvh-4rem)] w-[95%] max-w-5xl scroll-smooth overscroll-contain overflow-y-auto rounded-xl border border-white/[0.08] bg-black/95 p-0 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-2xl md:max-h-[90dvh] md:w-[90%]"
+          className="max-h-[calc(90dvh-3rem)] w-[95%] max-w-5xl scroll-smooth overscroll-contain overflow-y-auto rounded-xl border border-white/[0.08] bg-black/95 p-0 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-2xl md:max-h-[90dvh] md:w-[90%]"
           onCloseAutoFocus={() => {}}
         >
           <DialogTitle className="sr-only">{session?.title || "Session Details"}</DialogTitle>
