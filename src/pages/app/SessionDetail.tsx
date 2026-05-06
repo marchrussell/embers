@@ -277,38 +277,35 @@ export default function SessionDetailModal({
 
                     {/* Safety Card */}
                     <div className="group relative mt-8 overflow-hidden">
-                      <div className="p-6">
-                        <div className="flex items-center gap-3 text-sm md:items-start text-white">
-                          {/* <span className="flex-shrink-0 text-base md:text-xl">⚠</span> */}
-                          <div className="min-w-0 flex-1">
-                            <h4 className="font-light tracking-wide md:text-base">
-                              Safety Reminder 
-                              <span className="flex-shrink-0 text-base md:text-xl">⚠</span>
-                            </h4>
+                      <div className="flex items-center gap-3 text-sm md:items-start text-white">
+                        <div className="min-w-0 flex-1">
+                          <h4 className="flex gap-4 font-light tracking-wide md:text-base">
+                            <span className="flex-shrink-0 text-base md:text-xl">⚠</span>
+                            Safety Reminder 
+                          </h4>
 
-                            <div className="md:mt-4 md:space-y-4 md:border-t md:border-white/[0.08] md:pt-4">
-                              {/* Practice safely */}
-                              <p className="font-light leading-relaxed text-white/70 md:text-sm">
-                                Practice in a safe, comfortable space - never in water, while
-                                driving, or operating machinery. Consult your doctor if you have
-                                health conditions or concerns and do not practice breath holds or
-                                fast-paced breathing if pregnant, or if you have epilepsy, serious
-                                mental health conditions, or significant medical issues. Always
-                                listen to your body and move at your own pace.
-                              </p>
+                          <div className="md:mt-4 md:space-y-4 md:border-t md:border-white/[0.08] md:pt-4">
+                            {/* Practice safely */}
+                            <p className="font-light leading-relaxed text-white/70 md:text-sm">
+                              Practice in a safe, comfortable space - never in water, while
+                              driving, or operating machinery. Consult your doctor if you have
+                              health conditions or concerns and do not practice breath holds or
+                              fast-paced breathing if pregnant, or if you have epilepsy, serious
+                              mental health conditions, or significant medical issues. Always
+                              listen to your body and move at your own pace.
+                            </p>
 
-                              {/* Full disclosure link */}
-                              <button
-                                onClick={() => setShowFullSafetyDisclosure(true)}
-                                className="flex items-center gap-1.5 font-medium text-white/90 underline underline-offset-2 transition-colors hover:text-white md:mt-2 md:text-sm"
-                              >
-                                Read full Safety Information
-                                <ArrowRight
-                                  className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
-                                  strokeWidth={2}
-                                />
-                              </button>
-                            </div>
+                            {/* Full disclosure link */}
+                            <button
+                              onClick={() => setShowFullSafetyDisclosure(true)}
+                              className="flex items-center gap-1.5 font-medium text-white/90 underline underline-offset-2 transition-colors hover:text-white md:mt-2 md:text-sm"
+                            >
+                              Read full Safety Information
+                              <ArrowRight
+                                className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
+                                strokeWidth={2}
+                              />
+                            </button>
                           </div>
                         </div>
                       </div>
