@@ -52,7 +52,7 @@ function DialogContent({
         {children}
         {!hideClose && (
           <DialogPrimitive.Close className="absolute right-5 top-5 rounded-full bg-white/0 p-2 opacity-80 ring-offset-background transition-all hover:bg-white/[0.07] hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:text-muted-foreground">
-            <X className="h-5 w-5 text-white" />
+            <X className="h-5 w-5 text-white z-10" />
             <span className="sr-only">Close</span>
           </DialogPrimitive.Close>
         )}
@@ -115,5 +115,6 @@ export {
   DialogOverlay,
   DialogPortal,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 };
+

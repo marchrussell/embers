@@ -276,7 +276,7 @@ export default function SessionDetailModal({
                     <p className="font-light leading-[1.7] text-white/80">{session.description}</p>
 
                     {/* Safety Card */}
-                    <div className="group relative mt-8 overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.02]">
+                    <div className="group relative mt-8 overflow-hidden">
                       <div className="p-6">
                         <div className="flex items-center gap-3 text-sm md:items-start">
                           <span className="flex-shrink-0 text-base text-white md:text-xl">⚠</span>
