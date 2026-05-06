@@ -161,7 +161,7 @@ const Index = () => {
         </section>
 
         {/* Mental Reset Course Card - White-lined curved box */}
-        <section className="relative overflow-hidden w-full px-6 py-16 md:px-8 md:py-20 lg:px-12 lg:py-36">
+        <section className="relative w-full overflow-hidden px-6 py-16 md:px-8 md:py-20 lg:px-12 lg:py-36">
           {/* Section Header - Centered */}
           <FadeUp>
             <div className="my-20 text-center md:my-12">

@@ -14,7 +14,7 @@ import {
   FeedbackDialog,
   ProfileMenuItem,
 } from "@/components/profile";
-import { SafetyModal } from "@/components/SafetyModal";
+import { SafetyInformationModal } from "@/components/SafetyInformationModal";
 import { ProfileSkeleton } from "@/components/skeletons/ProfileSkeleton";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAccountSettings } from "@/hooks/useAccountSettings";
@@ -233,7 +233,7 @@ const ProfileContent = ({ userId, user, signOut }: ProfileContentProps) => {
 
   return (
     <>
-      <SafetyModal open={showSafetyModal} onOpenChange={setShowSafetyModal} />
+      <SafetyInformationModal open={showSafetyModal} onOpenChange={setShowSafetyModal} />
       <TermsModal open={showTermsModal} onOpenChange={setShowTermsModal} />
       <PrivacyModal open={showPrivacyModal} onOpenChange={setShowPrivacyModal} />
 

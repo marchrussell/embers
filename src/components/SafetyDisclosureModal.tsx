@@ -2,7 +2,7 @@ import { AlertTriangle, Wind } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { SafetyDisclosureContent } from "@/components/SafetyDisclosureContent";
+import { SafetyInformationContent } from "@/components/SafetyInformationContent";
 import { ButtonLoadingSpinner } from "@/components/skeletons";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -89,7 +89,7 @@ export const SafetyDisclosureModal = ({ isOpen, onAccept, userId }: SafetyDisclo
         hideClose
         className="max-h-[90vh] w-[92vw] max-w-4xl overflow-y-auto rounded-xl border border-white/30 bg-black/75 p-0 backdrop-blur-xl"
       >
-        <DialogTitle className="sr-only">Safety Disclosure</DialogTitle>
+        <DialogTitle className="sr-only">Safety Information</DialogTitle>
         <ModalCloseButton onClose={() => {}} size="md" className="pointer-events-none opacity-0" />
         <div className="px-6 pb-10 pt-12 md:px-10 md:pt-16 lg:px-12">
           {/* Header */}
@@ -131,7 +131,7 @@ export const SafetyDisclosureModal = ({ isOpen, onAccept, userId }: SafetyDisclo
               color: "rgba(230, 219, 199, 0.9)",
             }}
           >
-            <SafetyDisclosureContent />
+            <SafetyInformationContent />
 
             {/* Checkbox Agreement */}
             <div className="flex items-start gap-4 rounded-lg border border-[#E6DBC7]/10 bg-background/20 p-5">

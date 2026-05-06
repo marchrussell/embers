@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 
 import { FadeUp } from "@/components/FadeUp";
 import { FeedbackSection } from "@/components/FeedbackSection";
@@ -7,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { PrivacyModal, TermsModal } from "@/components/LegalModals";
 import { NavBar } from "@/components/NavBar";
 import { OptimizedImage } from "@/components/OptimizedImage";
+import { SafetyInformationModal } from "@/components/SafetyInformationModal";
 import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
 
 const marchBioPhoto = getCloudImageUrl(CLOUD_IMAGES.march);
@@ -37,9 +37,9 @@ const BioCopy = () => (
 );
 
 const About = () => {
-  const navigate = useNavigate();
   const [showTerms, setShowTerms] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
+  const [showSafety, setShowSafety] = useState(false);
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -192,15 +192,15 @@ const About = () => {
                   </p>
                   <p className="pt-2">
                     <strong className="text-[#E6DBC7]">
-                      Please read the full Safety Disclosure:
+                      Please read the full Safety Information:
                     </strong>
                   </p>
-                  <Link
-                    to="/safety-disclosure"
+                  <button
+                    onClick={() => setShowSafety(true)}
                     className="inline-block text-[#E6DBC7] underline transition-colors hover:text-[#E6DBC7]/80"
                   >
-                    View Safety Disclosure
-                  </Link>
+                    View Safety Information
+                  </button>
                 </div>
               </div>
             </FadeUp>
@@ -253,6 +253,7 @@ const About = () => {
 
       <TermsModal open={showTerms} onOpenChange={setShowTerms} />
       <PrivacyModal open={showPrivacy} onOpenChange={setShowPrivacy} />
+      <SafetyInformationModal open={showSafety} onOpenChange={setShowSafety} />
     </div>
   );
 };

@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { ArcCardsModal } from "@/components/ArcCardsModal";
 import { ClassPlayerModal } from "@/components/ClassPlayerModal";
 import { OptimizedImage } from "@/components/OptimizedImage";
+import { SafetyInformationModal } from "@/components/SafetyInformationModal";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -34,7 +35,7 @@ export default function SessionDetailModal({
   onShowSubscription,
   isFeaturedClass = false,
 }: SessionDetailModalProps) {
-  const { user, hasSubscription, isAdmin, isTestUser } = useAuth();
+  const { hasSubscription, isAdmin, isTestUser } = useAuth();
   const { isFavourite, toggleFavourite } = useFavourites();
   const [showPlayer, setShowPlayer] = useState(false);
   const [showSafetyModal, setShowSafetyModal] = useState(false);
@@ -272,25 +273,21 @@ export default function SessionDetailModal({
 
                   <TabsContent value="description" className="mt-8 flex flex-col justify-between">
                     {/* Description */}
-                    <p className="font-light leading-[1.7] text-white/80">
-                      {session.description}
-                    </p>
+                    <p className="font-light leading-[1.7] text-white/80">{session.description}</p>
 
                     {/* Safety Card */}
                     <div className="group relative mt-8 overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.02]">
                       <div className="p-6">
-                        <div className="flex items-center gap-3 md:items-start">
-                          <span className="flex-shrink-0 text-base text-white md:text-xl">
-                            ⚠
-                          </span>
+                        <div className="flex items-center gap-3 text-sm md:items-start">
+                          <span className="flex-shrink-0 text-base text-white md:text-xl">⚠</span>
                           <div className="min-w-0 flex-1">
-                            <h4 className="hidden text-sm font-light tracking-wide text-white md:block md:text-base">
+                            <h4 className="hidden font-light tracking-wide text-white md:block md:text-base">
                               Safety Reminder
                             </h4>
 
                             <div className="md:mt-4 md:space-y-4 md:border-t md:border-white/[0.08] md:pt-4">
                               {/* Practice safely */}
-                              <p className="hidden text-[13px] font-light leading-relaxed text-white/70 md:block md:text-sm">
+                              <p className="font-light leading-relaxed text-white/70 md:text-sm">
                                 Practice in a safe, comfortable space - never in water, while
                                 driving, or operating machinery. Consult your doctor if you have
                                 health conditions or concerns and do not practice breath holds or
@@ -302,9 +299,9 @@ export default function SessionDetailModal({
                               {/* Full disclosure link */}
                               <button
                                 onClick={() => setShowFullSafetyDisclosure(true)}
-                                className="flex items-center gap-1.5 text-[13px] font-medium text-white/90 underline underline-offset-2 transition-colors hover:text-white md:mt-2 md:text-sm"
+                                className="flex items-center gap-1.5 font-medium text-white/90 underline underline-offset-2 transition-colors hover:text-white md:mt-2 md:text-sm"
                               >
-                                Read full Safety Disclosure
+                                Read full Safety Information
                                 <ArrowRight
                                   className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
                                   strokeWidth={2}
@@ -318,7 +315,7 @@ export default function SessionDetailModal({
                   </TabsContent>
 
                   <TabsContent value="explore" className="mt-8">
-                    <h3 className="mb-7 font-light text-lg font-editorial leading-[1.2] text-white">
+                    <h3 className="text-md mb-7 font-editorial font-light leading-[1.2] text-white">
                       If you're wanting more support
                     </h3>
 
@@ -353,7 +350,7 @@ export default function SessionDetailModal({
       {/* Safety Reminder Modal */}
       {(session?.show_safety_reminder || session?.safety_note) && (
         <Dialog open={showSafetyModal} onOpenChange={setShowSafetyModal}>
-          <DialogContent className="max-w-2xl rounded-xl border border-white/30 bg-black/30 backdrop-blur-xl">
+          <DialogContent className="bg-black/30 backdrop-blur-xl">
             <DialogHeader>
               <DialogTitle className="font-editorial text-3xl text-white">
                 Safety Reminder
@@ -385,247 +382,10 @@ export default function SessionDetailModal({
         </Dialog>
       )}
 
-      {/* Full Safety Disclosure Modal */}
-      <Dialog open={showFullSafetyDisclosure} onOpenChange={setShowFullSafetyDisclosure}>
-        <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto rounded-xl border border-white/30 bg-black/30 backdrop-blur-xl">
-          <DialogHeader>
-            <DialogTitle className="font-editorial text-3xl text-white md:text-4xl">
-              Safety Disclosure
-            </DialogTitle>
-            <DialogDescription className="text-base text-white/70 md:text-lg">
-              Please read all of the information below before continuing.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-6 text-white/80">
-            {/* Introduction */}
-            <div>
-              <p className="mb-4 text-base leading-relaxed">
-                You will be guided through simple Breathwork techniques which can have a powerful
-                and profound effect on your:
-              </p>
-              <ul className="space-y-2 pl-6 text-base">
-                <li className="list-disc">Nervous system</li>
-                <li className="list-disc">Respiratory system</li>
-                <li className="list-disc">Lymphatic System</li>
-                <li className="list-disc">Endocrine system</li>
-                <li className="list-disc">Cardiovascular system</li>
-              </ul>
-              <p className="mt-4 text-base leading-relaxed">
-                For your safety, it is important and advisable to consult a medical professional if
-                you have any medical history or issues related to the aforementioned bodily systems
-                to ensure that the breathwork is safe and appropriate for you.
-              </p>
-            </div>
-
-            {/* Warning */}
-            <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-4">
-              <p className="text-base leading-relaxed text-red-200">
-                ⚠️ If you experience faintness, dizziness, pain or shortness of breath at any time
-                while using the app, you should stop immediately and seek immediate medical
-                attention.
-              </p>
-            </div>
-
-            {/* Contraindications */}
-            <div className="border-b border-white/10 pb-6">
-              <h3 className="mb-4 text-xl font-light uppercase tracking-wider text-white md:text-2xl">
-                Contraindications
-              </h3>
-              <p className="mb-4 text-base leading-relaxed">
-                The breathing classes and techniques in this App are not suitable for anyone with
-                the following conditions. Please do not practice breathwork, Online or In-Person,
-                without consulting your doctor if you have experienced or have any of the following
-                conditions:
-              </p>
-              <div className="grid grid-cols-1 gap-2 text-base md:grid-cols-2">
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Pregnancy</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Epilepsy</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Serious mental illness</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Respiratory conditions</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Seizures</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>High Blood Pressure</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Eye conditions (detached retina, cataracts, glaucoma)</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Cardiovascular disease</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Heart conditions</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Osteoporosis</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Panic attacks</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Family history of aneurysms</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Recent surgery or injury</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Spiritual emergence</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Vertigo</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Spinal disorders</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Any conditions requiring regular medication</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Breath Holds */}
-            <div className="border-b border-white/10 pb-6">
-              <h3 className="mb-4 text-xl font-light uppercase tracking-wider text-white md:text-2xl">
-                Breath Holds
-              </h3>
-              <p className="mb-4 text-base leading-relaxed">
-                Breath retention exercises (breath holds) are only appropriate for individuals in
-                good health. If you have any concerns, it&apos;s advisable to consult your doctor
-                before participating in these exercises. Please do not practice breath holds if you
-                have any of the following:
-              </p>
-              <div className="grid grid-cols-1 gap-2 text-base md:grid-cols-2">
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Cancer</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Uncontrolled hyperthyroidism</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Schizophrenia</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Sleep apnea</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Pregnancy</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>High blood pressure</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Kidney disease</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Cardiovascular issues</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Epilepsy</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Chest pains or heart problems</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Near water</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Panic disorder and anxiety</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Sickle cell anemia</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Arterial aneurysm</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Diabetes</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Where Not to Practice */}
-            <div className="border-b border-white/10 pb-6">
-              <h3 className="mb-4 text-xl font-light uppercase tracking-wider text-white md:text-2xl">
-                Where Not to Practice
-              </h3>
-              <p className="text-base leading-relaxed">
-                Do not use the Services while driving, in water, while operating machinery or
-                performing other tasks that require attention and concentration. You understand that
-                you are solely responsible for your use of the Services. We assume no responsibility
-                for injuries suffered while practicing the techniques presented in the Services. It
-                is important to only practice breathwork when you are in a safe place.
-              </p>
-            </div>
-
-            {/* Legal Disclaimer */}
-            <div>
-              <p className="mb-4 text-base leading-relaxed">
-                Embers Studio Ltd. assumes no responsibility for injuries suffered while practicing
-                these techniques and Embers Studio Ltd. shall not be held liable for any damages,
-                circumstances, conditions or injuries that may occur, directly or indirectly, from
-                engaging in any activities or ideas presented in any Application made by Embers
-                Studio Ltd.
-              </p>
-              <p className="mb-4 text-base leading-relaxed">
-                By continuing to access and use the March app, you agree that you have read and
-                understood the above Safety Disclosure and accept all responsibility for your
-                physical and mental health and any resultant injury or mishap that may affect your
-                well-being or health in any way.
-              </p>
-              <p className="text-base leading-relaxed">
-                If you have questions or comments, you may email us at{" "}
-                <a
-                  href="mailto:support@embersstudio.io"
-                  className="text-orange-400 hover:underline"
-                >
-                  support@embersstudio.io
-                </a>
-              </p>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <SafetyInformationModal
+        open={showFullSafetyDisclosure}
+        onOpenChange={setShowFullSafetyDisclosure}
+      />
 
       {showPlayer && (
         <ClassPlayerModal
