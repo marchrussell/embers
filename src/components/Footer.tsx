@@ -67,16 +67,13 @@ export const Footer = memo(() => {
       <PrivacyModal open={showPrivacyModal} onOpenChange={handlePrivacyModalChange} />
       <RefundModal open={showRefundModal} onOpenChange={handleRefundModalChange} />
 
-      <footer
-        className="relative flex flex-col bg-[#E6E0D4] pt-6 font-unica md:min-h-[240px] md:pb-10 md:pt-8 lg:min-h-[280px] lg:pb-12 lg:pt-10"
-        style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom, 1.5rem))" }}
-      >
+      <footer className="relative flex flex-col bg-[#E6E0D4] pt-6 font-unica md:min-h-[240px] md:pb-10 md:pt-8 lg:min-h-[280px] lg:pb-12 lg:pt-10">
         {/* Extend cream background below footer to cover overscroll on mobile */}
         <div
           className="pointer-events-none absolute bottom-0 left-0 right-0 h-[100px] translate-y-full bg-[#E6E0D4] md:hidden"
           aria-hidden="true"
         />
-        <div className="flex flex-1 flex-col justify-between px-5 md:px-14 lg:px-20">
+        <div className="flex flex-col justify-between px-5 md:px-14 lg:px-20">
           {/* Mobile: Categorized footer layout */}
           <div className="flex flex-col md:hidden">
             {/* Connect & Legal Sections - Side by Side */}
@@ -133,8 +130,8 @@ export const Footer = memo(() => {
             </div>
 
             {/* Newsletter Section */}
-            <div className="py-6">
-              <form onSubmit={handleNewsletterSubmit} className="flex-1">
+            <div className="">
+              <form onSubmit={handleNewsletterSubmit} className="">
                 <div className="flex w-full items-center overflow-hidden rounded-full border border-[#1A1A1A]/80 bg-transparent">
                   <input
                     type="email"
