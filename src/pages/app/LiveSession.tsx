@@ -62,7 +62,8 @@ function buildSessionDisplay(
   enrichment: LiveSessionEnrichment | null,
   nextDateObj: Date | null
 ): SessionDisplay {
-  const fallbackImage = config.image_url ?? SESSION_TYPE_IMAGES[config.session_type] ?? guestSessionImg;
+  const fallbackImage =
+    config.image_url ?? SESSION_TYPE_IMAGES[config.session_type] ?? guestSessionImg;
 
   const computedNextDate = (() => {
     if (enrichment?.session_date) {
@@ -243,7 +244,7 @@ const LiveSessionContent = ({ sessionId }: LiveSessionContentProps) => {
         <div className="absolute inset-0 bg-black/30" />
         <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
 
-        <FadeUp>
+        <FadeUp className="h-full">
           <div className="relative flex h-full items-end justify-center px-6 pb-14 md:px-10 lg:px-12">
             <div className="text-center">
               <p className="mb-3 text-sm font-light uppercase tracking-[0.15em] text-[#D4A574]">
@@ -285,7 +286,7 @@ const LiveSessionContent = ({ sessionId }: LiveSessionContentProps) => {
         <div className="mx-auto max-w-4xl">
           {/* Facilitator and What to expect */}
           <FadeUp>
-            <div className="mb-36 mt-32 flex flex-col overflow-hidden rounded-2xl border border-[#E6DBC7]/20 md:flex-row">
+            <div className="mb-10 md:mb-36 mt-32 flex flex-col overflow-hidden rounded-2xl border border-[#E6DBC7]/20 md:flex-row">
               <div className="relative flex-shrink-0 overflow-hidden md:w-1/2">
                 <img
                   src={teacherImage}
