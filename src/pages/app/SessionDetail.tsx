@@ -271,7 +271,8 @@ export default function SessionDetailModal({
                     </TabsTrigger>
                   </TabsList>
 
-                  <TabsContent value="description" className="mt-8 flex flex-col justify-between">
+                  <div className="mt-8 grid">
+                  <TabsContent forceMount value="description" className="[grid-area:1/1] flex flex-col justify-between [&[hidden]]:block data-[state=inactive]:invisible data-[state=inactive]:pointer-events-none">
                     {/* Description */}
                     <p className="font-light leading-[1.7] text-white/80">{session.description}</p>
 
@@ -281,7 +282,7 @@ export default function SessionDetailModal({
                         <div className="min-w-0 flex-1">
                           <h4 className="flex items-baseline gap-4 font-light tracking-wide">
                             <span className="flex-shrink-0 text-base md:text-xl">⚠</span>
-                            Safety Reminder 
+                            Safety Reminder
                           </h4>
 
                           <div className="mt-4 space-y-4 md:border-t border-white/[0.08] pt-4">
@@ -312,7 +313,7 @@ export default function SessionDetailModal({
                     </div>
                   </TabsContent>
 
-                  <TabsContent value="explore" className="mt-8">
+                  <TabsContent forceMount value="explore" className="[grid-area:1/1] [&[hidden]]:block data-[state=inactive]:invisible data-[state=inactive]:pointer-events-none">
                     <h3 className="text-md mb-7 font-editorial font-light leading-[1.2] text-white">
                       If you're wanting more support
                     </h3>
@@ -338,6 +339,7 @@ export default function SessionDetailModal({
                       <ArrowRight className="h-5 w-5" strokeWidth={1.5} />
                     </button>
                   </TabsContent>
+                  </div>
                 </Tabs>
               </div>
             </div>
