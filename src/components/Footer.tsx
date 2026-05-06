@@ -68,8 +68,8 @@ export const Footer = memo(() => {
       <RefundModal open={showRefundModal} onOpenChange={handleRefundModalChange} />
 
       <footer
-        className="relative flex flex-col bg-[#E6E0D4] pb-4 pt-6 font-unica md:min-h-[240px] md:pb-10 md:pt-8 lg:min-h-[280px] lg:pb-12 lg:pt-10"
-        style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom, 1rem))" }}
+        className="relative flex flex-col bg-[#E6E0D4] pt-6 font-unica md:min-h-[240px] md:pb-10 md:pt-8 lg:min-h-[280px] lg:pb-12 lg:pt-10"
+        style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom, 1.5rem))" }}
       >
         {/* Extend cream background below footer to cover overscroll on mobile */}
         <div
@@ -133,7 +133,7 @@ export const Footer = memo(() => {
             </div>
 
             {/* Newsletter Section */}
-            <div className="pt-6">
+            <div className="py-6">
               <form onSubmit={handleNewsletterSubmit} className="flex-1">
                 <div className="flex w-full items-center overflow-hidden rounded-full border border-[#1A1A1A]/80 bg-transparent">
                   <input
