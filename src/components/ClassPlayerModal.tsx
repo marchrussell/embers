@@ -450,7 +450,7 @@ export const ClassPlayerModal = ({
                         e.stopPropagation();
                         handleFavourite();
                       }}
-                      className="rounded-lg p-2 transition-all hover:bg-[#E6DBC7]/10"
+                      className="rounded-lg p-3 transition-all hover:bg-[#E6DBC7]/10"
                     >
                       <Heart
                         className={`h-5 w-5 ${
@@ -466,7 +466,7 @@ export const ClassPlayerModal = ({
                         e.stopPropagation();
                         handleShare();
                       }}
-                      className="rounded-lg p-2 transition-all hover:bg-[#E6DBC7]/10"
+                      className="rounded-lg p-3 transition-all hover:bg-[#E6DBC7]/10"
                     >
                       <Share2 className="h-5 w-5 text-[#E6DBC7]" strokeWidth={1.5} />
                     </button>
@@ -475,14 +475,14 @@ export const ClassPlayerModal = ({
                     variant="ghost"
                     size="icon"
                     onClick={handleClose}
-                    className="rounded-lg p-2 text-[#E6DBC7] hover:bg-[#E6DBC7]/10"
+                    className="rounded-lg p-3 text-[#E6DBC7] hover:bg-[#E6DBC7]/10"
                   >
                     <X className="h-5 w-5" />
                   </Button>
                 </div>
 
                 {/* Title and Info */}
-                <div className="relative z-10 px-4 pt-2">
+                <div className="relative z-10 px-6 pt-2">
                   <h2 className="mb-2 font-editorial text-3xl leading-tight text-[#E6DBC7]">
                     {classData?.title}
                   </h2>
