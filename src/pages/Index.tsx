@@ -64,7 +64,7 @@ const Index = () => {
         </section>
 
         {/* Second Screen Section */}
-        <section className="bg-background">
+        <section>
           <div className="mx-auto w-full px-5 py-20 md:px-12 lg:px-20">
             <div>
               {/* Micro-heading above mockups - centered */}
@@ -161,7 +161,7 @@ const Index = () => {
         </section>
 
         {/* Mental Reset Course Card - White-lined curved box */}
-        <section className="w-full bg-background px-6 py-16 md:px-8 md:py-20 lg:px-12 lg:py-36">
+        <section className="w-full px-6 py-16 md:px-8 md:py-20 lg:px-12 lg:py-36">
           {/* Section Header - Centered */}
           <FadeUp>
             <div className="my-20 text-center md:my-12">
