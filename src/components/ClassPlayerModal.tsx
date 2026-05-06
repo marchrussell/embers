@@ -404,7 +404,7 @@ export const ClassPlayerModal = ({
         }}
       >
         <DialogContent
-          className="h-[95vh] w-[98%] max-w-6xl overflow-hidden rounded-xl border border-white/30 bg-black/75 p-0 backdrop-blur-xl md:h-auto md:w-[95%]"
+          className="max-h-[calc(90dvh-4rem)] w-[98%] max-w-6xl scroll-smooth overscroll-contain overflow-hidden rounded-xl border border-white/30 bg-black/75 p-0 backdrop-blur-xl md:h-auto md:w-[95%]"
           hideClose
         >
           <DialogTitle className="sr-only">{classData?.title || "Audio Player"}</DialogTitle>
