@@ -25,7 +25,7 @@ export const PolicyModalShell = ({
       <ModalCloseButton onClose={() => onOpenChange(false)} size="md" />
       <div className="px-6 pb-10 pt-16 md:px-10 md:pt-20 lg:px-12">
         <h1
-          className="mb-4 text-center font-editorial tracking-[0.01em] text-[#E6DBC7]"
+          className="my-4 text-center font-editorial tracking-[0.01em] text-[#E6DBC7]"
           style={{ fontSize: "clamp(1.8rem, 2.2vw, 2.4rem)", lineHeight: 1.15, fontWeight: 400 }}
         >
           {title}
