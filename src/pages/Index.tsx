@@ -161,7 +161,7 @@ const Index = () => {
         </section>
 
         {/* Mental Reset Course Card - White-lined curved box */}
-        <section className="w-full px-6 py-16 md:px-8 md:py-20 lg:px-12 lg:py-36">
+        <section className="relative overflow-hidden w-full px-6 py-16 md:px-8 md:py-20 lg:px-12 lg:py-36">
           {/* Section Header - Centered */}
           <FadeUp>
             <div className="my-20 text-center md:my-12">
@@ -235,6 +235,7 @@ const Index = () => {
               </GlowButton>
             </SplitCard>
           </FadeUp>
+          <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent to-black md:h-20" />
         </section>
 
         {/* ========== EXPERIENCES ========== */}
