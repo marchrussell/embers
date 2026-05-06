@@ -2,14 +2,14 @@
  * Global setup: logs in as each test role and saves browser storage state.
  * Runs once before all tests. Requires .env.test with valid credentials.
  */
-import {test as setup } from "@playwright/test";
+import { test as setup } from "@playwright/test";
 import path from "path";
 
 const ADMIN_STORAGE = path.resolve("e2e/.auth/admin.json");
 const MEMBER_STORAGE = path.resolve("e2e/.auth/member.json");
 
 /**
- * Sign in via the Embers login page and save the resulting localStorage/cookies.
+ * Sign in via the Studio Hom login page and save the resulting localStorage/cookies.
  * Supabase stores the session in localStorage under "sb-*-auth-token".
  */
 async function signIn(

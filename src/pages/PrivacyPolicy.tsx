@@ -25,20 +25,20 @@ const PrivacyPolicy = () => {
             style={{ fontSize: "clamp(0.9rem, 1vw, 1rem)", lineHeight: 1.7 }}
           >
             <p>
-              Embers Studio Ltd ("we", "us", or "our") is committed to protecting your personal
-              information and respecting your privacy rights. This Privacy Policy explains how we
-              collect, use, store, and safeguard your personal data when you:
+              Studio Hom ("we", "us", or "our") is committed to protecting your personal information
+              and respecting your privacy rights. This Privacy Policy explains how we collect, use,
+              store, and safeguard your personal data when you:
             </p>
 
             <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
               <li>
                 Visit or use our website (
-                <a href="https://www.embersstudio.io" className="underline hover:text-[#E6DBC7]">
-                  www.embersstudio.io
+                <a href="https://www.studiohom.co" className="underline hover:text-[#E6DBC7]">
+                  www.studiohom.co
                 </a>
                 )
               </li>
-              <li>Use our mobile or web applications (the "App"), including Embers Studio</li>
+              <li>Use our mobile or web applications (the "App"), including Studio Hom</li>
               <li>Purchase or access digital courses, toolkits, or pre-sale products</li>
               <li>Attend our events or workshops</li>
               <li>Make payments through Stripe</li>
@@ -51,8 +51,8 @@ const PrivacyPolicy = () => {
 
             <p>
               For any questions, contact:{" "}
-              <a href="mailto:support@embersstudio.io" className="underline hover:text-[#E6DBC7]">
-                support@embersstudio.io
+              <a href="mailto:support@studiohom.co" className="underline hover:text-[#E6DBC7]">
+                support@studiohom.co
               </a>
             </p>
 
@@ -64,7 +64,7 @@ const PrivacyPolicy = () => {
               <p>This Policy applies to all information collected through:</p>
               <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
                 <li>The website</li>
-                <li>Embers Studio membership</li>
+                <li>Studio Hom membership</li>
                 <li>
                   Digital products (e.g., Anxiety Reset, Emotional Regulation Toolkit, Sleep & NSDR
                   Pack)
@@ -155,7 +155,6 @@ const PrivacyPolicy = () => {
               <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
                 <li>Account data: retained while your account is active</li>
                 <li>Course purchases: retained to administer your access rights</li>
-                <li>March Chat conversations: stored up to 24 months unless deleted by you</li>
                 <li>Pre-sale products: your enrolment data is retained until release</li>
                 <li>Event registration data: retained for event administration</li>
                 <li>Legal/accounting records: retained for statutory periods</li>
@@ -184,10 +183,10 @@ const PrivacyPolicy = () => {
               <p>
                 See our Cookie Notice at{" "}
                 <a
-                  href="https://www.embersstudio.io/cookies"
+                  href="https://www.studiohom.co/cookies"
                   className="underline hover:text-[#E6DBC7]"
                 >
-                  www.embersstudio.io/cookies
+                  www.studiohom.co/cookies
                 </a>
                 .
               </p>
@@ -225,8 +224,8 @@ const PrivacyPolicy = () => {
               </ul>
               <p>
                 To exercise your rights, email{" "}
-                <a href="mailto:support@embersstudio.io" className="underline hover:text-[#E6DBC7]">
-                  support@embersstudio.io
+                <a href="mailto:support@studiohom.co" className="underline hover:text-[#E6DBC7]">
+                  support@studiohom.co
                 </a>
                 . We will respond within 30 days as required by law.
               </p>
@@ -246,8 +245,8 @@ const PrivacyPolicy = () => {
               </ul>
               <p>
                 Requests can be emailed to{" "}
-                <a href="mailto:support@embersstudio.io" className="underline hover:text-[#E6DBC7]">
-                  support@embersstudio.io
+                <a href="mailto:support@studiohom.co" className="underline hover:text-[#E6DBC7]">
+                  support@studiohom.co
                 </a>
                 .
               </p>
@@ -296,10 +295,10 @@ const PrivacyPolicy = () => {
                 We may update this Privacy Policy to reflect new technologies, legal requirements,
                 or service changes. The most recent version will always be posted at{" "}
                 <a
-                  href="https://www.embersstudio.io/privacy"
+                  href="https://www.studiohom.co/privacy"
                   className="underline hover:text-[#E6DBC7]"
                 >
-                  www.embersstudio.io/privacy
+                  www.studiohom.co/privacy
                 </a>{" "}
                 with the "Last Updated" date.
               </p>
@@ -318,17 +317,14 @@ const PrivacyPolicy = () => {
               </p>
               <p className="text-[#E6DBC7]">
                 📧{" "}
-                <a
-                  href="mailto:support@embersstudio.io"
-                  className="underline hover:text-[#E6DBC7]/80"
-                >
-                  support@embersstudio.io
+                <a href="mailto:support@studiohom.co" className="underline hover:text-[#E6DBC7]/80">
+                  support@studiohom.co
                 </a>
               </p>
               <p className="text-[#E6DBC7]">
                 🌐{" "}
-                <a href="https://www.embersstudio.io" className="underline hover:text-[#E6DBC7]/80">
-                  www.embersstudio.io
+                <a href="https://www.studiohom.co" className="underline hover:text-[#E6DBC7]/80">
+                  www.studiohom.co
                 </a>
               </p>
               <p>

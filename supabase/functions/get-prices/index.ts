@@ -2,6 +2,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 
+// todo - update 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -12,14 +13,14 @@ const corsHeaders = {
 const PRICE_IDS = {
   // Test mode
   test: {
-    embers: {
+    studioHom: {
       annual: 'price_1TAr6X2M0UKIRm2M8me1ayrP',
       monthly: 'price_1TAr6p2M0UKIRm2MPQzZQp0b',
     },
   },
   // Live mode
   live: {
-    embers: {
+    studioHom: {
       annual: 'price_1TA9Tr2N5TUgC2sKTHGanZgb',
       monthly: 'price_1TA9Tr2N5TUgC2sKtnlCgeGj',
     },
@@ -60,7 +61,7 @@ serve(async (req) => {
     });
 
     // Parse request body for optional filtering
-    let category = 'embers'; // Default to subscription prices
+    let category = 'studioHom'; // Default to subscription prices
     try {
       const body = await req.json();
       if (body.category) {

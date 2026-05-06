@@ -91,7 +91,7 @@ serve(async (req) => {
     }
 
     // Construct the guest join URL
-    const baseUrl = req.headers.get('origin') || Deno.env.get('VITE_SITE_URL') || 'https://embersstudio.io';
+    const baseUrl = req.headers.get('origin') || Deno.env.get('VITE_SITE_URL') || 'https://www.studiohom.co';
     const guestJoinUrl = `${baseUrl}/live/${sessionId}?role=guest&token=${guestToken}`;
 
     console.log('Generated guest link for session:', sessionId);

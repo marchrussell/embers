@@ -30,7 +30,7 @@ export const MarchPrivacyModal = ({ open, onAccept, onReadFullPolicy }: MarchPri
               <Shield className="h-12 w-12 text-[#E6DBC7]" />
             </div>
             <DialogTitle className="mb-3 text-center font-editorial text-2xl text-white md:text-3xl">
-              Your Privacy at Embers Studio
+              Your Privacy at Studio Hom
             </DialogTitle>
             <DialogDescription className="text-center text-sm font-light text-white/80">
               We care deeply about your privacy and the safety of your personal data. When you use
@@ -85,10 +85,10 @@ export const MarchPrivacyModal = ({ open, onAccept, onReadFullPolicy }: MarchPri
               <p>
                 💬 Questions or requests?{" "}
                 <a
-                  href="mailto:support@embersstudio.io"
+                  href="mailto:support@studiohom.co"
                   className="text-[#E6DBC7] underline hover:text-[#E6DBC7]/80"
                 >
-                  support@embersstudio.io
+                  support@studiohom.co
                 </a>
               </p>
               <p>
@@ -98,7 +98,7 @@ export const MarchPrivacyModal = ({ open, onAccept, onReadFullPolicy }: MarchPri
                   target="_blank"
                   className="text-[#E6DBC7] underline hover:text-[#E6DBC7]/80"
                 >
-                  www.embersstudio.io/privacy
+                  www.studiohom.co/privacy
                 </a>
               </p>
             </div>

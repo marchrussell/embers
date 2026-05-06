@@ -25,19 +25,19 @@ const TermsOfService = () => {
             style={{ fontSize: "clamp(0.9rem, 1vw, 1rem)", lineHeight: 1.7 }}
           >
             <p>
-              Thank you for choosing Embers Studio ("we", "us", or "our"), registered in England and
+              Thank you for choosing Studio Hom ("we", "us", or "our"), registered in England and
               Wales.
             </p>
 
             <p>
               These Terms of Use ("Terms") govern your access to and use of our digital products and
               services, including our website{" "}
-              <a href="https://www.embersstudio.io" className="underline hover:text-[#E6DBC7]">
-                www.embersstudio.io
+              <a href="https://www.studiohom.co" className="underline hover:text-[#E6DBC7]">
+                www.studiohom.co
               </a>
-              , our mobile and web applications (the "App"), Embers Studio membership, digital
-              courses, live events, and all related content, materials, and features (collectively,
-              the "Services").
+              , our mobile and web applications (the "App"), Studio Hom membership, digital courses,
+              live events, and all related content, materials, and features (collectively, the
+              "Services").
             </p>
 
             <p>
@@ -48,10 +48,10 @@ const TermsOfService = () => {
             {/* Section 1 */}
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                1. About Embers Studio
+                1. About Studio Hom
               </h2>
               <p>
-                Embers Studio provides breathwork education, nervous system training, and wellbeing
+                Studio Hom provides breathwork education, nervous system training, and wellbeing
                 content designed for informational and educational purposes only. Our Services do
                 not provide medical, psychological, or therapeutic advice.
               </p>
@@ -66,7 +66,7 @@ const TermsOfService = () => {
             <section className="space-y-4">
               <h3 className="text-lg font-medium text-[#E6DBC7]">1.1 Membership and Accounts</h3>
               <p>
-                To access certain features, including Embers Studio and digital courses, you must
+                To access certain features, including Studio Hom and digital courses, you must
                 create an account by providing accurate and complete information. By creating an
                 account, you agree to:
               </p>
@@ -93,10 +93,10 @@ const TermsOfService = () => {
                 2. Paid Services
               </h2>
               <p>
-                Embers Studio membership, digital courses, and ticketed events are purchased through
+                Studio Hom membership, digital courses, and ticketed events are purchased through
                 Stripe at{" "}
-                <a href="https://www.embersstudio.io" className="underline hover:text-[#E6DBC7]">
-                  www.embersstudio.io
+                <a href="https://www.studiohom.co" className="underline hover:text-[#E6DBC7]">
+                  www.studiohom.co
                 </a>
                 .
               </p>
@@ -105,9 +105,9 @@ const TermsOfService = () => {
             {/* Section 2.1 */}
             <section className="space-y-4">
               <h3 className="text-lg font-medium text-[#E6DBC7]">
-                2.1 Embers Studio Membership (Subscription Service)
+                2.1 Studio Hom Membership (Subscription Service)
               </h3>
-              <p>Embers Studio is offered as a monthly or annual subscription.</p>
+              <p>Studio Hom is offered as a monthly or annual subscription.</p>
 
               <h4 className="font-medium text-[#E6DBC7]/90">Subscription Terms</h4>
               <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
@@ -115,11 +115,8 @@ const TermsOfService = () => {
                 <li>Renewal charges are processed through your original payment method.</li>
                 <li>
                   You may cancel anytime through your account settings or by emailing{" "}
-                  <a
-                    href="mailto:support@embersstudio.io"
-                    className="underline hover:text-[#E6DBC7]"
-                  >
-                    support@embersstudio.io
+                  <a href="mailto:support@studiohom.co" className="underline hover:text-[#E6DBC7]">
+                    support@studiohom.co
                   </a>
                   .
                 </li>
@@ -129,7 +126,7 @@ const TermsOfService = () => {
               <h4 className="mt-4 font-medium text-[#E6DBC7]/90">Cooling-Off Period</h4>
               <p>
                 Under UK consumer law, you have a 14-day cooling-off period for subscription
-                purchases. You acknowledge that by accessing Embers Studio content immediately, you
+                purchases. You acknowledge that by accessing Studio Hom content immediately, you
                 waive the right to withdraw during this period.
               </p>
 
@@ -137,8 +134,8 @@ const TermsOfService = () => {
               <p>
                 Refunds are only provided if the service is faulty, unavailable, or not as
                 described. Refund requests may be made at{" "}
-                <a href="mailto:support@embersstudio.io" className="underline hover:text-[#E6DBC7]">
-                  support@embersstudio.io
+                <a href="mailto:support@studiohom.co" className="underline hover:text-[#E6DBC7]">
+                  support@studiohom.co
                 </a>
                 .
               </p>
@@ -269,8 +266,8 @@ const TermsOfService = () => {
               </h2>
               <p>
                 All content, materials, video/audio sessions, trademarks, and software are owned by
-                Embers Studio Ltd. You receive a personal, non-transferable, non-commercial licence
-                to use the Services.
+                Studio Hom. You receive a personal, non-transferable, non-commercial licence to use
+                the Services.
               </p>
               <p>
                 You may not copy, modify, resell, distribute, or create derivative works without our
@@ -299,8 +296,7 @@ const TermsOfService = () => {
               <p>To the fullest extent permitted by law:</p>
               <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
                 <li>
-                  Embers Studio Ltd is not liable for indirect, incidental, or consequential
-                  damages.
+                  Studio Hom is not liable for indirect, incidental, or consequential damages.
                 </li>
                 <li>
                   We make no guarantees of specific outcomes or results from any practice or course.
@@ -319,9 +315,7 @@ const TermsOfService = () => {
             {/* Section 10 */}
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">10. Indemnity</h2>
-              <p>
-                You agree to indemnify and hold harmless Embers Studio Ltd from claims arising from:
-              </p>
+              <p>You agree to indemnify and hold harmless Studio Hom from claims arising from:</p>
               <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
                 <li>Your misuse of the Services</li>
                 <li>Violation of these Terms</li>
@@ -356,11 +350,8 @@ const TermsOfService = () => {
               <p>For questions, concerns, or support:</p>
               <p className="text-[#E6DBC7]">
                 📧{" "}
-                <a
-                  href="mailto:support@embersstudio.io"
-                  className="underline hover:text-[#E6DBC7]/80"
-                >
-                  support@embersstudio.io
+                <a href="mailto:support@studiohom.co" className="underline hover:text-[#E6DBC7]/80">
+                  support@studiohom.co
                 </a>
               </p>
               <p className="text-[#E6DBC7]">

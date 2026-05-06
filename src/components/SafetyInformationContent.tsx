@@ -162,21 +162,20 @@ export const SafetyInformationContent = () => (
     {/* Legal Disclaimer */}
     <div className="mb-10 space-y-4">
       <p className="text-sm font-light leading-relaxed text-[#E6DBC7]/50">
-        Embers Studio Ltd. assumes no responsibility for injuries suffered while practicing these
-        techniques and Embers Studio Ltd. shall not be held liable for any damages, circumstances,
+        Studio Hom. assumes no responsibility for injuries suffered while practicing these
+        techniques and Studio Hom. shall not be held liable for any damages, circumstances,
         conditions or injuries that may occur, directly or indirectly, from engaging in any
-        activities or ideas presented in any Application made by Embers Studio Ltd.
+        activities or ideas presented in any Application made by Studio Hom.
       </p>
       <p className="text-sm font-light leading-relaxed text-[#E6DBC7]/60">
-        By continuing to access and use Embers Studio, you agree that you have read and understood
-        the above Safety Information and accept all responsibility for your physical and mental
-        health and any resultant injury or mishap that may affect your well-being or health in any
-        way.
+        By continuing to access and use Studio Hom, you agree that you have read and understood the
+        above Safety Information and accept all responsibility for your physical and mental health
+        and any resultant injury or mishap that may affect your well-being or health in any way.
       </p>
       <p className="text-sm font-light text-[#E6DBC7]/50">
         If you have questions or comments, you may email us at{" "}
-        <a href="mailto:support@embersstudio.io" className="text-[#EC9037] hover:underline">
-          support@embersstudio.io
+        <a href="mailto:support@studiohom.co" className="text-[#EC9037] hover:underline">
+          support@studiohom.co
         </a>
       </p>
     </div>

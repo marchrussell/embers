@@ -152,11 +152,11 @@ serve(async (req) => {
 
     // Send email via Resend
     const { error: sendError } = await resend.emails.send({
-      from: "Embers Studio <march@embersstudio.io>",
+      from: "Studio Hom <march@studiohom.co>",
       to: [to],
       subject: config.subject,
       html,
-      reply_to: "march@embersstudio.io",
+      reply_to: "march@studiohom.co",
     });
 
     if (sendError) {

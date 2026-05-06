@@ -10,17 +10,17 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => (
     open={open}
     onOpenChange={onOpenChange}
     title="Terms of Use"
-    subtitle="Last Updated: April 2026"
+    subtitle="Last Updated: May 2026"
   >
     <p>
-      Thank you for choosing Embers Studio, operated by Embers Studio Ltd ("Embers Studio", "we",
-      "us", or "our"), registered in England and Wales.
+      Thank you for choosing Studio Hom ("Studio Hom", "we", "us", or "our"), registered in England
+      and Wales.
     </p>
 
     <p>
       These Terms of Use ("Terms") govern your access to and use of our digital products and
-      services, including our website www.embersstudio.io, our mobile and web applications (the
-      "App"), Embers Studio membership, digital courses, live events, and all related content,
+      services, including our website https://www.studiohom.co/, our mobile and web applications
+      (the "App"), Studio Hom membership, digital courses, live events, and all related content,
       materials, and features (collectively, the "Services").
     </p>
 
@@ -31,9 +31,9 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => (
 
     {/* Section 1 */}
     <section className="space-y-4">
-      <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">1. About Embers Studio</h2>
+      <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">1. About Studio Hom</h2>
       <p>
-        Embers Studio provides breathwork education, nervous system training, and wellbeing content
+        Studio Hom provides breathwork education, nervous system training, and wellbeing content
         designed for informational and educational purposes only. Our Services do not provide
         medical, psychological, or therapeutic advice.
       </p>
@@ -47,7 +47,7 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => (
     <section className="space-y-4">
       <h3 className="text-lg font-medium text-[#E6DBC7]">1.1 Membership and Accounts</h3>
       <p>
-        To access certain features, including Embers Studio and digital courses, you must create an
+        To access certain features, including Studio Hom and digital courses, you must create an
         account by providing accurate and complete information. By creating an account, you agree
         to:
       </p>
@@ -66,25 +66,24 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => (
     <section className="space-y-4">
       <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">2. Paid Services</h2>
       <p>
-        Embers Studio membership, digital courses, and ticketed events are purchased through Stripe
-        at www.embersstudio.io.
+        Studio Hom membership, digital courses, and ticketed events are purchased through Stripe at
+        https://www.studiohom.co/.
       </p>
     </section>
 
     {/* Section 2.1 */}
     <section className="space-y-4">
       <h3 className="text-lg font-medium text-[#E6DBC7]">
-        2.1 Embers Studio Membership (Subscription Service)
+        2.1 Studio Hom Membership (Subscription Service)
       </h3>
-      <p>Embers Studio is offered as a monthly or annual subscription.</p>
+      <p>Studio Hom is offered as a monthly or annual subscription.</p>
 
       <h4 className="font-medium text-[#E6DBC7]/90">Subscription Terms</h4>
       <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
         <li>Subscriptions renew automatically unless cancelled.</li>
         <li>Renewal charges are processed through your original payment method.</li>
         <li>
-          You may cancel anytime through your account settings or by emailing
-          support@embersstudio.io.
+          You may cancel anytime through your account settings or by emailing support@studiohom.co.
         </li>
         <li>You will retain access until the end of your current billing period.</li>
       </ul>
@@ -92,14 +91,14 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => (
       <h4 className="mt-4 font-medium text-[#E6DBC7]/90">Cooling-Off Period</h4>
       <p>
         Under UK consumer law, you have a 14-day cooling-off period for subscription purchases. You
-        acknowledge that by accessing Embers Studio content immediately, you waive the right to
+        acknowledge that by accessing Studio Hom content immediately, you waive the right to
         withdraw during this period.
       </p>
 
       <h4 className="mt-4 font-medium text-[#E6DBC7]/90">Refunds</h4>
       <p>
         Refunds are only provided if the service is faulty, unavailable, or not as described. Refund
-        requests may be made at support@embersstudio.io.
+        requests may be made at support@studiohom.co.
       </p>
 
       <h4 className="mt-4 font-medium text-[#E6DBC7]/90">Price Changes</h4>
@@ -215,9 +214,8 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => (
         7. Intellectual Property
       </h2>
       <p>
-        All content, materials, video/audio sessions, trademarks, and software are owned by Embers
-        Studio Ltd. You receive a personal, non-transferable, non-commercial licence to use the
-        Services.
+        All content, materials, video/audio sessions, trademarks, and software are owned by Studio
+        Hom. You receive a personal, non-transferable, non-commercial licence to use the Services.
       </p>
       <p>
         You may not copy, modify, resell, distribute, or create derivative works without our written
@@ -241,10 +239,10 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => (
         9. Limitation of Liability
       </h2>
       <p>
-        To the fullest extent permitted by law: Embers Studio Ltd is not liable for indirect,
-        incidental, or consequential damages. We make no guarantees of specific outcomes or results
-        from any practice or course. Total liability shall not exceed the amount paid by you in the
-        preceding 12 months.
+        To the fullest extent permitted by law: Studio Hom is not liable for indirect, incidental,
+        or consequential damages. We make no guarantees of specific outcomes or results from any
+        practice or course. Total liability shall not exceed the amount paid by you in the preceding
+        12 months.
       </p>
       <p>
         Nothing in these Terms excludes liability where unlawful to do so (e.g., negligence
@@ -255,8 +253,8 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => (
     <section className="space-y-4">
       <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">10. Indemnity</h2>
       <p>
-        You agree to indemnify and hold harmless Embers Studio Ltd from claims arising from your
-        misuse of the Services, violation of these Terms, or unlawful or harmful conduct.
+        You agree to indemnify and hold harmless Studio Hom from claims arising from your misuse of
+        the Services, violation of these Terms, or unlawful or harmful conduct.
       </p>
     </section>
 
@@ -285,19 +283,19 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => (
       <p className="text-[#E6DBC7]">
         📧{" "}
         <a
-          href="mailto:support@embersstudio.io"
+          href="mailto:support@studiohom.co"
           className="underline transition-colors hover:text-[#E6DBC7]/80"
         >
-          support@embersstudio.io
+          support@studiohom.co
         </a>
       </p>
       <p className="text-[#E6DBC7]">
         🌐{" "}
         <a
-          href="https://www.embersstudio.io"
+          href="https://www.studiohom.co"
           className="underline transition-colors hover:text-[#E6DBC7]/80"
         >
-          www.embersstudio.io
+          www.studiohom.co
         </a>
       </p>
     </section>
@@ -312,16 +310,15 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => (
     subtitle="Last Updated: December 2025"
   >
     <p>
-      Embers Studio Ltd ("Embers Studio", "we", "us", or "our") is committed to protecting your
-      personal information and respecting your privacy rights. This Privacy Policy explains how we
-      collect, use, store, and safeguard your personal data when you:
+      Studio Hom ("Studio Hom", "we", "us", or "our") is committed to protecting your personal
+      information and respecting your privacy rights. This Privacy Policy explains how we collect,
+      use, store, and safeguard your personal data when you:
     </p>
 
     <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
-      <li>Visit or use our website (www.embersstudio.io)</li>
-      <li>Use our mobile or web applications (the "App"), including Embers Studio</li>
+      <li>Visit or use our website (www.studiohom.co)</li>
+      <li>Use our mobile or web applications (the "App"), including Studio Hom</li>
       <li>Purchase or access digital courses, toolkits, or pre-sale products</li>
-      <li>Interact with Embers Studio Chat AI</li>
       <li>Attend our events or workshops</li>
       <li>Make payments through Stripe</li>
     </ul>
@@ -331,7 +328,7 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => (
       laws.
     </p>
 
-    <p>For any questions, contact: support@embersstudio.io</p>
+    <p>For any questions, contact: support@studiohom.co</p>
 
     {/* Section 1 */}
     <section className="space-y-4">
@@ -341,7 +338,7 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => (
       <p>This Policy applies to all information collected through:</p>
       <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
         <li>The website</li>
-        <li>Embers Studio membership</li>
+        <li>Studio Hom membership</li>
         <li>
           Digital products (e.g., Anxiety Reset, Emotional Regulation Toolkit, Sleep & NSDR Pack)
         </li>
@@ -441,8 +438,8 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => (
       </h2>
       <p>
         You have the right to access, correct, delete, restrict, object to processing, withdraw
-        consent, and request data portability. To exercise your rights, email
-        support@embersstudio.io. We will respond within 30 days.
+        consent, and request data portability. To exercise your rights, email support@studiohom.co.
+        We will respond within 30 days.
       </p>
     </section>
 
@@ -453,7 +450,7 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => (
       <p>
         You have the right to know what data is collected, request deletion, opt out of the sale of
         personal data (we do not sell data), and access your personal information. Requests can be
-        emailed to support@embersstudio.io.
+        emailed to support@studiohom.co.
       </p>
     </section>
 
@@ -496,19 +493,19 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => (
       <p className="text-[#E6DBC7]">
         📧{" "}
         <a
-          href="mailto:support@embersstudio.io"
+          href="mailto:support@studiohom.co"
           className="underline transition-colors hover:text-[#E6DBC7]/80"
         >
-          support@embersstudio.io
+          support@studiohom.co
         </a>
       </p>
       <p className="text-[#E6DBC7]">
         🌐{" "}
         <a
-          href="https://www.embersstudio.io"
+          href="https://www.studiohom.co"
           className="underline transition-colors hover:text-[#E6DBC7]/80"
         >
-          www.embersstudio.io
+          www.studiohom.co
         </a>
       </p>
       <p>
@@ -527,9 +524,9 @@ export const RefundModal = ({ open, onOpenChange }: LegalModalProps) => (
     subtitle="Last Updated: December 2025"
   >
     <p>
-      Thank you for choosing to learn and practise with Embers Studio Ltd ("Embers Studio", "we",
-      "us" or "our"). This Refund Policy outlines your rights and our responsibilities regarding
-      purchases of digital courses, memberships, workshops, and live events.
+      Thank you for choosing to learn and practise with Studio Hom ("Studio Hom", "we", "us" or
+      "our"). This Refund Policy outlines your rights and our responsibilities regarding purchases
+      of digital courses, memberships, workshops, and live events.
     </p>
 
     <p>
@@ -606,7 +603,7 @@ export const RefundModal = ({ open, onOpenChange }: LegalModalProps) => (
         <li>If no alternative dates exist, the ticket remains non-refundable.</li>
       </ul>
 
-      <h3 className="mt-6 font-medium text-[#E6DBC7]">2.2 Cancellations by Embers Studio</h3>
+      <h3 className="mt-6 font-medium text-[#E6DBC7]">2.2 Cancellations by Studio Hom</h3>
       <p>If we cancel or reschedule an event, you may choose between:</p>
       <ul className="list-disc space-y-1 pl-6 text-[#E6DBC7]/80">
         <li>A full refund, or</li>
@@ -620,7 +617,7 @@ export const RefundModal = ({ open, onOpenChange }: LegalModalProps) => (
     {/* Section 3 */}
     <section className="space-y-4">
       <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-        3. Memberships (Embers Studio)
+        3. Memberships (Studio Hom)
       </h2>
       <p>Covered under the Terms of Use, but summarised here for clarity:</p>
       <ul className="list-disc space-y-1 pl-6 text-[#E6DBC7]/80">
@@ -655,10 +652,10 @@ export const RefundModal = ({ open, onOpenChange }: LegalModalProps) => (
       <p className="text-[#E6DBC7]">
         📧{" "}
         <a
-          href="mailto:support@embersstudio.io"
+          href="mailto:support@studiohom.co"
           className="underline transition-colors hover:text-[#E6DBC7]/80"
         >
-          support@embersstudio.io
+          support@studiohom.co
         </a>
       </p>
       <p className="mt-4">Include:</p>

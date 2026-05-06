@@ -2,10 +2,10 @@
  * Stripe Price IDs & Payment Links - Central reference for all products
  * Updated: March 2026
  *
- * EMBERS (Subscriptions)
+ * Studio Hom (Subscriptions)
  * - Annual: price_1TA9Tr2N5TUgC2sKTHGanZgb
  * - Monthly: price_1TA9Tr2N5TUgC2sKtnlCgeGj
- *
+ *todo - update prices
  */
 
 export const isTestMode = import.meta.env.VITE_STRIPE_MODE === "test";
@@ -32,7 +32,7 @@ export const SUBSCRIPTION_DISPLAY_PRICES = {
 } as const;
 
 export const SUBSCRIPTION_BENEFITS = [
-  "Unlimited access to the full Embers practice library",
+  "Unlimited access to the full Studio Hom practice library",
   "Breathwork, meditation, and nervous system regulation",
   "Short daily resets and deeper guided sessions",
   "Weekly live sessions and guest workshops",

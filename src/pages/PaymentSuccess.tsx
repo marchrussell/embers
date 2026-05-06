@@ -125,8 +125,8 @@ const PaymentSuccess = () => {
             <p className="text-xl font-light text-white">Payment verification failed</p>
             {isError && sessionId && (
               <p className="mt-3 px-4 text-center text-sm font-light text-white/60">
-                Your payment was successful — please contact support@embersstudio.io with session
-                ID: {sessionId.slice(-8)}
+                Your payment was successful — please contact support@studiohom.co with session ID:{" "}
+                {sessionId.slice(-8)}
               </p>
             )}
           </CardContent>

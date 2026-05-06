@@ -91,7 +91,7 @@ export const Footer = memo(() => {
                     Contact <ArrowRight className="h-5 w-5" />
                   </button>
                   <a
-                    href="https://www.instagram.com/embers.io"
+                    href="https://www.instagram.com/studiohom.co"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex min-h-[44px] items-center gap-2 text-[13px] tracking-[0.02em] text-[#1A1A1A] transition-opacity duration-200 md:hover:opacity-60"
@@ -170,7 +170,7 @@ export const Footer = memo(() => {
               Contact <ArrowRight className="h-5 w-5" />
             </button>
             <a
-              href="https://instagram.com/embers.io"
+              href="https://instagram.com/studiohom.co"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.06em] text-[#1A1A1A] transition-opacity duration-200 hover:opacity-60"

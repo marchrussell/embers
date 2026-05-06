@@ -72,7 +72,7 @@ const Index = () => {
                 <FadeUp>
                   <p className="text-center font-sans leading-[1.6] text-white">
                     <p className="font-editorial text-[24px] font-bold">
-                      Embers Studio is a place to come back to the body.
+                      Studio Hom is a place to come back to the body.
                     </p>
                     <br />
                     <p className="mt-4 text-[18px]">

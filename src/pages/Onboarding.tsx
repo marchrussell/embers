@@ -58,7 +58,7 @@ const Onboarding = () => {
       // Force refresh the auth context to pick up the new onboarding status
       await refreshOnboardingStatus();
 
-      toast.success("Welcome to Embers Studio! You're all set.");
+      toast.success("Welcome to Studio Hom! You're all set.");
 
       // Check if there's a redirect intent for nervous system program
       const redirectIntent = localStorage.getItem("postOnboardingRedirect");

@@ -24,8 +24,8 @@ export const FeedbackSection = () => {
     try {
       const { error } = await supabase.functions.invoke("send-contact-email", {
         body: {
-          name: user?.user_metadata?.full_name || user?.email || "Embers User",
-          email: user?.email || "noreply@embersstudio.io",
+          name: user?.user_metadata?.full_name || user?.email || "Studio Hom User",
+          email: user?.email || "noreply@studiohom.co",
           message: feedback.trim(),
           type: "contact",
         },

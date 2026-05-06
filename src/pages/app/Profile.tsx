@@ -339,8 +339,7 @@ const ProfileContent = ({ userId, user, signOut }: ProfileContentProps) => {
                 <ProfileMenuItem
                   label="Contact Support"
                   onClick={() =>
-                    (window.location.href =
-                      "mailto:support@embersstudio.io?subject=Support Request")
+                    (window.location.href = "mailto:support@studiohom.co?subject=Support Request")
                   }
                 />
                 <ProfileMenuItem
