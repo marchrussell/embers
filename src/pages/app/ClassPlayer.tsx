@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Pause, Play, SkipBack, SkipForward } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { OptimizedImage } from "@/components/OptimizedImage";
@@ -17,7 +17,6 @@ import {
 import { GlowButton } from "@/components/ui/glow-button";
 import { Slider } from "@/components/ui/slider";
 import { useAuth } from "@/contexts/AuthContext";
-import { useMediaPlayer } from "@/hooks/useMediaPlayer";
 import { supabase } from "@/integrations/supabase/client";
 import { getOptimizedVideoUrl, preloadVideoMetadata } from "@/lib/mediaOptimization";
 import { IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
@@ -27,6 +26,11 @@ const ClassPlayer = () => {
   const navigate = useNavigate();
   const { user, hasAcceptedSafetyDisclosure, refreshOnboardingStatus } = useAuth();
   const [hasStarted, setHasStarted] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const { data: classData, isLoading: loading } = useQuery({
     queryKey: ["class", id],
@@ -37,20 +41,86 @@ const ClassPlayer = () => {
     enabled: !!id,
   });
 
-  const optimizedVideoUrl = classData?.video_url ? getOptimizedVideoUrl(classData.video_url) : null;
+  const isVideo = !!classData?.video_url;
+  const optimizedVideoUrl = classData?.video_url
+    ? getOptimizedVideoUrl(classData.video_url)
+    : null;
 
-  // Preload video metadata before the user starts so playback begins quickly
+  const getMedia = (): HTMLAudioElement | HTMLVideoElement | null =>
+    isVideo ? videoRef.current : audioRef.current;
+
+  // Preload video metadata before the user starts
   useEffect(() => {
     if (optimizedVideoUrl) preloadVideoMetadata(optimizedVideoUrl);
   }, [optimizedVideoUrl]);
 
-  const { videoRef, currentTime, duration, isPlaying, setIsPlaying, seek, isVideo } =
-    useMediaPlayer({
-      audioUrl: hasStarted && !optimizedVideoUrl ? classData?.audio_url : null,
-      videoUrl: hasStarted ? optimizedVideoUrl : null,
+  // Audio setup — runs when user starts an audio session
+  useEffect(() => {
+    if (!hasStarted || isVideo || !classData?.audio_url) return;
+
+    const audio = new Audio();
+    audio.preload = "metadata";
+    audio.src = classData.audio_url;
+
+    audio.addEventListener("loadedmetadata", () => {
+      setDuration(audio.duration);
+      audio.play().catch(() => {});
+    });
+    audio.addEventListener("timeupdate", () => {
+      setCurrentTime(audio.currentTime);
+    });
+    audio.addEventListener("ended", () => {
+      setIsPlaying(false);
     });
 
-  // Derive modal visibility directly from props/data — no effects needed
+    audioRef.current = audio;
+
+    return () => {
+      audio.pause();
+      audioRef.current = null;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasStarted, classData?.audio_url]);
+
+  // Attach video events once the video element is in the DOM
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !classData?.video_url) return;
+
+    video.preload = "metadata";
+
+    const onLoadedMetadata = () => {
+      setDuration(video.duration);
+      video.play().catch(() => {});
+    };
+    const onTimeUpdate = () => setCurrentTime(video.currentTime);
+    const onEnded = () => setIsPlaying(false);
+
+    video.addEventListener("loadedmetadata", onLoadedMetadata);
+    video.addEventListener("timeupdate", onTimeUpdate);
+    video.addEventListener("ended", onEnded);
+
+    return () => {
+      video.removeEventListener("loadedmetadata", onLoadedMetadata);
+      video.removeEventListener("timeupdate", onTimeUpdate);
+      video.removeEventListener("ended", onEnded);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [classData?.video_url, hasStarted]);
+
+  // Play/pause sync
+  useEffect(() => {
+    const media = getMedia();
+    if (media) {
+      if (isPlaying && hasStarted) {
+        media.play().catch(() => {});
+      } else {
+        media.pause();
+      }
+    }
+  }, [isPlaying, hasStarted, isVideo]);
+
+  // Derive modal visibility
   const showGlobalSafetyModal = !hasAcceptedSafetyDisclosure;
   const sessionNeedsSafetyDisclosure = !!classData?.show_safety_reminder;
 
@@ -61,6 +131,8 @@ const ClassPlayer = () => {
   const handleStart = () => {
     setHasStarted(true);
     setIsPlaying(true);
+    const media = getMedia();
+    if (media) media.play().catch(() => {});
   };
 
   const handlePlayPause = () => {
@@ -68,15 +140,27 @@ const ClassPlayer = () => {
   };
 
   const handleRewind = () => {
-    seek(currentTime - 10);
+    const media = getMedia();
+    if (media) {
+      media.currentTime = Math.max(0, media.currentTime - 10);
+      setCurrentTime(media.currentTime);
+    }
   };
 
   const handleForward = () => {
-    seek(currentTime + 10);
+    const media = getMedia();
+    if (media) {
+      media.currentTime = Math.min(media.duration || 0, media.currentTime + 10);
+      setCurrentTime(media.currentTime);
+    }
   };
 
   const handleSliderChange = (value: number[]) => {
-    seek(value[0]);
+    const media = getMedia();
+    if (media) {
+      media.currentTime = value[0];
+      setCurrentTime(value[0]);
+    }
   };
 
   const formatTime = (seconds: number) => {
@@ -91,7 +175,7 @@ const ClassPlayer = () => {
 
   return (
     <>
-      {/* Global Safety Disclosure Modal - Must accept before accessing any sessions */}
+      {/* Global Safety Disclosure Modal */}
       {user && (
         <SafetyDisclosureModal
           isOpen={showGlobalSafetyModal}
@@ -122,19 +206,14 @@ const ClassPlayer = () => {
                   <p className="whitespace-pre-wrap text-sm">{classData.safety_note}</p>
                 </div>
               )}
-              <GlowButton
-                onClick={handleStart}
-                // className="w-full bg-white text-black hover:bg-white/90"
-              >
-                I Understand, Begin Class
-              </GlowButton>
+              <GlowButton onClick={handleStart}>I Understand, Begin Class</GlowButton>
             </div>
           </DialogContent>
         </Dialog>
       )}
 
       <div className="relative min-h-screen overflow-hidden">
-        {/* Blurred Background Image */}
+        {/* Blurred Background */}
         {classData?.image_url && (
           <>
             <OptimizedImage
@@ -145,7 +224,6 @@ const ClassPlayer = () => {
               responsive
               showSkeleton={false}
             />
-            {/* Glassmorphism Overlay */}
             <div className="absolute inset-0 bg-black/40 backdrop-blur-3xl" />
           </>
         )}
@@ -165,8 +243,8 @@ const ClassPlayer = () => {
           {/* Main Content */}
           <div className="flex flex-1 items-center justify-center px-8">
             {!hasStarted && !sessionNeedsSafetyDisclosure ? (
+              /* Pre-play info view */
               <div className="mx-auto grid w-full max-w-4xl grid-cols-1 items-center gap-16 md:grid-cols-2">
-                {/* Session Image Card */}
                 <div className="relative aspect-square overflow-hidden rounded-2xl border border-white/20 shadow-2xl">
                   <OptimizedImage
                     src={classData?.image_url}
@@ -178,7 +256,6 @@ const ClassPlayer = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                 </div>
 
-                {/* Session Info */}
                 <div className="space-y-6 text-center md:text-left">
                   <h1 className="font-editorial text-4xl text-white md:text-5xl">
                     {classData?.title}
@@ -188,7 +265,9 @@ const ClassPlayer = () => {
                     <p className="text-base">
                       Duration: {classData?.duration_minutes || 3} minutes
                     </p>
-                    <p className="text-sm">Teacher: {classData?.teacher_name || "March Russell"}</p>
+                    <p className="text-sm">
+                      Teacher: {classData?.teacher_name || "March Russell"}
+                    </p>
                   </div>
                   <Button
                     onClick={handleStart}
@@ -201,9 +280,10 @@ const ClassPlayer = () => {
                 </div>
               </div>
             ) : (
+              /* Active player view */
               <div className="mx-auto w-full max-w-4xl">
                 <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-16">
-                  {/* Session Media Card */}
+                  {/* Media card */}
                   <div className="relative aspect-square overflow-hidden rounded-2xl border border-white/20 shadow-2xl">
                     {isVideo ? (
                       <video
@@ -238,7 +318,7 @@ const ClassPlayer = () => {
                     <div className="space-y-2">
                       <Slider
                         value={[currentTime]}
-                        max={duration}
+                        max={duration || 1}
                         step={1}
                         onValueChange={handleSliderChange}
                         className="cursor-pointer"
