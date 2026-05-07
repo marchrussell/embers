@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Heart, Pause, Play, Share, Share2, X } from "lucide-react";
+import { Heart, Pause, Play, Share, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { OptimizedImage } from "@/components/OptimizedImage";
@@ -78,7 +78,7 @@ export const ClassPlayerModal = ({
 
   const classData = classQueryData?.session ?? null;
   const classCategories = classQueryData?.sessionCategories ?? [];
-  const { handleShare } = useShareSession(classId, classData?.is_published, true);
+  const { handleShare } = useShareSession();
 
   // Reset playback state when modal opens
   useEffect(() => {
@@ -456,7 +456,7 @@ export const ClassPlayerModal = ({
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleShare();
+                        handleShare(classId, classData?.is_published);
                       }}
                       className="rounded-lg p-3 transition-all hover:bg-[#E6DBC7]/10"
                     >
@@ -589,11 +589,11 @@ export const ClassPlayerModal = ({
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleShare();
+                          handleShare(classId, classData?.is_published);
                         }}
                         className="rounded-lg border border-[#E6DBC7]/20 p-2.5 transition-all hover:bg-[#E6DBC7]/10"
                       >
-                        <Share2 className="h-5 w-5 text-[#E6DBC7]" strokeWidth={1.5} />
+                        <Share className="h-5 w-5 text-[#E6DBC7]" strokeWidth={1.5} />
                       </button>
                     </div>
                   </div>

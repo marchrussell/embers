@@ -88,7 +88,7 @@ export default function SessionDetailModal({
     }
   };
 
-  const { handleShare } = useShareSession(sessionId, session?.is_published);
+  const { handleShare } = useShareSession();
 
   // Function to render safety note with clickable Safety Disclosure link
   const renderSafetyNote = (text: string) => {
@@ -195,7 +195,7 @@ export default function SessionDetailModal({
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleShare();
+                        handleShare(sessionId, session?.is_published);
                       }}
                       className="rounded-full bg-white/5 p-2.5 opacity-70 backdrop-blur-sm transition-all hover:bg-white/10 hover:opacity-100 md:p-3"
                     >

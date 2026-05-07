@@ -18,10 +18,7 @@ const SharedSession = () => {
   const { sessionId } = useParams();
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-  const autoplay = new URLSearchParams(window.location.search).get("autoplay") === "true";
-  const sessionTarget = autoplay
-    ? `/online/session/${sessionId}`
-    : `/online?tab=library&session=${sessionId}`;
+  const sessionTarget = `/online/session/${sessionId}`;
   const [session, setSession] = useState<SessionData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

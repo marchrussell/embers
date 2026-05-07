@@ -12,8 +12,8 @@ import OnlineHeader from "@/components/OnlineHeader";
 import { SessionCardSkeleton } from "@/components/skeletons/SessionCardSkeleton";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavourites } from "@/hooks/useFavourites";
+import { useShareSession } from "@/hooks/useShareSession";
 import { supabase } from "@/integrations/supabase/client";
-import { copyLink } from "@/lib/copyLink";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 
 const Favourites = () => {
@@ -56,10 +56,7 @@ const Favourites = () => {
     removeFavourite(sessionId);
   };
 
-  const handleShare = (session: any) => {
-    const shareUrl = `${window.location.origin}/shared-session/${session.id}`;
-    copyLink(shareUrl, "Session link copied to clipboard");
-  };
+  const { handleShare } = useShareSession();
 
   const handleSessionClick = (sessionId: string, locked: boolean) => {
     if (locked && !hasSubscription) {
@@ -180,7 +177,7 @@ const Favourites = () => {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleShare(session);
+                          handleShare(session.id, true);
                         }}
                         className="p-1.5 transition-all md:p-2"
                       >
