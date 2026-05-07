@@ -37,9 +37,7 @@ const ClassPlayer = () => {
     enabled: !!id,
   });
 
-  const optimizedVideoUrl = classData?.video_url
-    ? getOptimizedVideoUrl(classData.video_url)
-    : null;
+  const optimizedVideoUrl = classData?.video_url ? getOptimizedVideoUrl(classData.video_url) : null;
 
   // Preload video metadata before the user starts so playback begins quickly
   useEffect(() => {
