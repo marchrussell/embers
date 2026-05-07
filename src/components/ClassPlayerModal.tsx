@@ -80,8 +80,8 @@ export const ClassPlayerModal = ({
 
   const { videoRef, currentTime, duration, isPlaying, setIsPlaying, seek, isVideo } =
     useMediaPlayer({
-      audioUrl: open && hasStarted && !optimizedVideoUrl ? classData?.audio_url : null,
-      videoUrl: open && hasStarted ? optimizedVideoUrl : null,
+      audioUrl: open && !optimizedVideoUrl ? classData?.audio_url : null,
+      videoUrl: open ? optimizedVideoUrl : null,
       onComplete: () => markSessionComplete(),
     });
 
