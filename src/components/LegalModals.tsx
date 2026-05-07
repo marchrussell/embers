@@ -307,7 +307,7 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => (
     open={open}
     onOpenChange={onOpenChange}
     title="Privacy Policy"
-    subtitle="Last Updated: December 2025"
+    subtitle="Last Updated: May 2026"
   >
     <p>
       Studio Hom ("Studio Hom", "we", "us", or "our") is committed to protecting your personal
@@ -521,7 +521,7 @@ export const RefundModal = ({ open, onOpenChange }: LegalModalProps) => (
     open={open}
     onOpenChange={onOpenChange}
     title="Refund Policy"
-    subtitle="Last Updated: December 2025"
+    subtitle="Last Updated: May 2026"
   >
     <p>
       Thank you for choosing to learn and practise with Studio Hom ("Studio Hom", "we", "us" or
