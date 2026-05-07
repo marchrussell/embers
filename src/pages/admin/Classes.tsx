@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { BookOpen, Pencil, Plus, Star, Trash2, Zap } from "lucide-react";
+import { BookOpen, Loader2, Pencil, Plus, Star, Trash2, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
@@ -668,9 +668,17 @@ const AdminClasses = () => {
                 onChange={handleVideoUpload}
                 disabled={uploadingVideo}
               />
-              <p className="text-xs text-muted-foreground">
-                Upload video file (max 2GB, .mp4/.mov/.webm). Either audio or video is required.
-              </p>
+              {uploadingVideo && (
+                <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                  Uploading video...
+                </p>
+              )}
+              {!uploadingVideo && (
+                <p className="text-xs text-muted-foreground">
+                  Upload video file (max 2GB, .mp4/.mov/.webm). Either audio or video is required.
+                </p>
+              )}
             </div>
           </div>
           <div>
