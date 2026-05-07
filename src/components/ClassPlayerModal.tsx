@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Heart, Pause, Play, Share2, X } from "lucide-react";
+import { Heart, Pause, Play, Share, Share2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -404,7 +404,7 @@ export const ClassPlayerModal = ({
         }}
       >
         <DialogContent
-          className="max-h-[calc(90dvh-3rem)] w-[98%] max-w-6xl scroll-smooth overscroll-contain overflow-hidden rounded-xl border border-white/30 bg-black/75 p-0 backdrop-blur-xl md:h-auto md:w-[95%]"
+          className="max-h-[calc(90dvh-3rem)] w-[98%] max-w-6xl overflow-hidden overscroll-contain scroll-smooth rounded-xl border border-white/30 bg-black/75 p-0 backdrop-blur-xl md:h-auto md:w-[95%]"
           hideClose
         >
           <DialogTitle className="sr-only">{classData?.title || "Audio Player"}</DialogTitle>
@@ -468,7 +468,7 @@ export const ClassPlayerModal = ({
                       }}
                       className="rounded-lg p-3 transition-all hover:bg-[#E6DBC7]/10"
                     >
-                      <Share2 className="h-5 w-5 text-[#E6DBC7]" strokeWidth={1.5} />
+                      <Share className="h-5 w-5 text-[#E6DBC7]" strokeWidth={1.5} />
                     </button>
                   </div>
                   <Button
