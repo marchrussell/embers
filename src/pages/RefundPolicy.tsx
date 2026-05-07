@@ -30,7 +30,7 @@ const RefundPolicy = memo(() => {
               style={{ fontSize: "clamp(0.9rem, 1vw, 1rem)", lineHeight: 1.7 }}
             >
               <p>
-                Thank you for choosing to learn and practise with Studio Hom Ltd ("we", "us" or
+                Thank you for choosing to learn and practise with Studio HŌM Ltd ("we", "us" or
                 "our"). This Refund Policy outlines your rights and our responsibilities regarding
                 purchases of digital courses, memberships, workshops, and live events.
               </p>
@@ -112,7 +112,7 @@ const RefundPolicy = memo(() => {
                   <li>If no alternative dates exist, the ticket remains non-refundable.</li>
                 </ul>
 
-                <h3 className="mt-6 font-medium text-[#E6DBC7]">2.2 Cancellations by Studio Hom</h3>
+                <h3 className="mt-6 font-medium text-[#E6DBC7]">2.2 Cancellations by Studio HŌM</h3>
                 <p>If we cancel or reschedule an event:</p>
                 <ul className="list-disc space-y-1 pl-6 text-[#E6DBC7]/80">
                   <li>You may choose between:</li>
@@ -129,7 +129,7 @@ const RefundPolicy = memo(() => {
               {/* Section 3 */}
               <section className="space-y-4">
                 <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                  3. Memberships (Studio Hom)
+                  3. Memberships (Studio HŌM)
                 </h2>
                 <p>Covered under the Terms of Use, but summarised here for clarity:</p>
                 <ul className="list-disc space-y-1 pl-6 text-[#E6DBC7]/80">

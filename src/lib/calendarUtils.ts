@@ -87,7 +87,7 @@ export const generateICalContent = (event: CalendarEvent, uid: string): string =
     "VERSION:2.0",
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
-    "PRODID:-//Studio Hom//Studio//EN",
+    "PRODID:-//Studio HŌM//Studio//EN",
     "BEGIN:VEVENT",
     `UID:${uid}`,
     `DTSTAMP:${formatICalDate(new Date())}`,

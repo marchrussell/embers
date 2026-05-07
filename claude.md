@@ -1,6 +1,6 @@
-# Studio Hom
+# Studio HŌM
 
-A React + TypeScript + Vite web app for Studio Hom — a breathwork platform offering online experiences, access to guided sessions and live sessions.
+A React + TypeScript + Vite web app for Studio HŌM — a breathwork platform offering online experiences, access to guided sessions and live sessions.
 
 ## Stack
 

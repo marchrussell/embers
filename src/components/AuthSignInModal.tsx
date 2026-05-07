@@ -5,13 +5,13 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 
+import { ButtonLoadingSpinner } from "@/components/skeletons/ButtonLoadingSpinner";
 import { Dialog, DialogPortal } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ModalCloseButton } from "@/components/ui/modal-close-button";
-import { ButtonLoadingSpinner } from "@/components/skeletons/ButtonLoadingSpinner";
-import { useSignIn } from "@/hooks/auth/useSignIn";
 import { usePasswordReset } from "@/hooks/auth/usePasswordReset";
+import { useSignIn } from "@/hooks/auth/useSignIn";
 
 type FooterVariant = "trial" | "courses" | "signup" | "none";
 
@@ -147,7 +147,7 @@ export const AuthSignInModal = ({
         <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md transition-opacity duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
         <DialogPrimitive.Content className="fixed left-[50%] top-[50%] z-50 w-[92%] max-w-[440px] translate-x-[-50%] translate-y-[-50%] overflow-hidden rounded-[24px] border border-white/15 bg-black/65 backdrop-blur-xl duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95">
           <div className="sr-only" role="heading" aria-level={2}>
-            Sign In to Studio Hom
+            Sign In to Studio HŌM
           </div>
           <div className="sr-only">Sign in to access your account</div>
 

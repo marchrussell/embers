@@ -296,11 +296,11 @@ serve(async (req) => {
 
               const icalDetails: ICalEventDetails = {
                 title: eventTitle,
-                description: `Join Studio Hom for ${eventTitle}.\n\nBooking confirmed for ${quantity} ${parseInt(quantity) === 1 ? 'person' : 'people'}.\n\nLocation: ${location}`,
+                description: `Join Studio HŌM for ${eventTitle}.\n\nBooking confirmed for ${quantity} ${parseInt(quantity) === 1 ? 'person' : 'people'}.\n\nLocation: ${location}`,
                 location,
                 startDate,
                 endDate,
-                organizerName: 'Studio Hom',
+                organizerName: 'Studio HŌM',
                 organizerEmail: 'support@studiohom.co',
               };
 
@@ -317,7 +317,7 @@ serve(async (req) => {
               });
 
               await resend.emails.send({
-                from: "Studio Hom <march@studiohom.co>",
+                from: "Studio HŌM <march@studiohom.co>",
                 to: [attendeeEmail],
                 subject: `Booking Confirmed: ${eventTitle}`,
                 html: emailHtml,
@@ -344,7 +344,7 @@ serve(async (req) => {
               });
 
               await resend.emails.send({
-                from: "Studio Hom <march@studiohom.co>",
+                from: "Studio HŌM <march@studiohom.co>",
                 to: ["support@studiohom.co"],
                 subject: `New Booking: ${eventTitle} — ${attendeeName}`,
                 html: adminEmailHtml,

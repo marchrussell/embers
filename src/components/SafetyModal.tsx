@@ -120,13 +120,13 @@ export const SafetyModal = ({ open, onOpenChange }: SafetyModalProps) => (
     {/* Legal Disclaimer */}
     <div className="space-y-4 text-sm text-[#E6DBC7]/60">
       <p>
-        Studio Hom. assumes no responsibility for injuries suffered while practicing these
-        techniques and Studio Hom. shall not be held liable for any damages, circumstances,
+        Studio HŌM. assumes no responsibility for injuries suffered while practicing these
+        techniques and Studio HŌM. shall not be held liable for any damages, circumstances,
         conditions or injuries that may occur, directly or indirectly, from engaging in any
-        activities or ideas presented in any Application made by Studio Hom.
+        activities or ideas presented in any Application made by Studio HŌM.
       </p>
       <p>
-        By continuing to access and use Studio Hom, you agree that you have read and understood the
+        By continuing to access and use Studio HŌM, you agree that you have read and understood the
         above Safety Disclosure and accept all responsibility for your physical and mental health
         and any resultant injury or mishap that may affect your well-being or health in any way.
       </p>

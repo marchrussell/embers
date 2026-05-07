@@ -4,7 +4,7 @@ export const TermsMicrocopy = memo(() => {
   return (
     <div className="bg-black px-6 py-12 text-center">
       <div className="mx-auto max-w-lg space-y-3">
-        <p className="text-xs text-[#E6DBC7]/50 md:text-sm">© Studio Hom</p>
+        <p className="text-xs text-[#E6DBC7]/50 md:text-sm">© Studio HŌM</p>
         <p className="text-xs leading-relaxed text-[#E6DBC7]/40">
           All content is educational only and not a substitute for medical or psychological care.
         </p>

@@ -63,7 +63,7 @@ export const WeeklyResetCard = ({
     const endDate = new Date(startDate.getTime() + 30 * 60000);
 
     return {
-      title: "Weekly Session on Studio Hom",
+      title: "Weekly Session on Studio HŌM",
       description:
         "A grounding, guided session to help you soften, settle, and reset\n\nSession with March Russell",
       location: "Online",
