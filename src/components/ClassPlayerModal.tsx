@@ -44,6 +44,7 @@ export const ClassPlayerModal = ({
   const [duration, setDuration] = useState(0);
   const [showSafetyDisclosure, setShowSafetyDisclosure] = useState(false);
   const [showCompletionModal, setShowCompletionModal] = useState(false);
+  const [mediaError, setMediaError] = useState<string | null>(null);
   const [userProfile, setUserProfile] = useState<any>(null);
   const [userStats, setUserStats] = useState<any>({});
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -96,6 +97,7 @@ export const ClassPlayerModal = ({
       setHasStarted(false);
       setIsPlaying(false);
       setCurrentTime(0);
+      setMediaError(null);
     }
     return () => {
       if (audioRef.current) {
@@ -150,6 +152,10 @@ export const ClassPlayerModal = ({
           hasShownCompletion.current = true;
           markSessionComplete();
         }
+      });
+      audio.addEventListener("error", () => {
+        setIsPlaying(false);
+        setMediaError("We couldn't load this session's audio. Please try again later.");
       });
       audioRef.current = audio;
     }
@@ -474,36 +480,44 @@ export const ClassPlayerModal = ({
 
                 {/* Main Content - Play/Pause Button in Center */}
                 <div className="relative z-10 flex flex-1 items-center justify-center py-8">
-                  <Button
-                    onClick={handlePlayPause}
-                    variant="outline"
-                    size="lg"
-                    className="h-28 w-28 rounded-full border-2 border-[#E6DBC7] bg-[#E6DBC7]/5 p-0 text-[#E6DBC7] backdrop-blur-xl transition-colors duration-300 hover:bg-[#E6DBC7]/10"
-                  >
-                    {isPlaying ? (
-                      <Pause className="h-10 w-10" strokeWidth={1.5} fill="none" />
-                    ) : (
-                      <Play className="ml-1 h-10 w-10" strokeWidth={1.5} fill="none" />
-                    )}
-                  </Button>
+                  {mediaError ? (
+                    <p className="px-6 text-center text-sm font-light text-[#E6DBC7]/70">
+                      {mediaError}
+                    </p>
+                  ) : (
+                    <Button
+                      onClick={handlePlayPause}
+                      variant="outline"
+                      size="lg"
+                      className="h-28 w-28 rounded-full border-2 border-[#E6DBC7] bg-[#E6DBC7]/5 p-0 text-[#E6DBC7] backdrop-blur-xl transition-colors duration-300 hover:bg-[#E6DBC7]/10"
+                    >
+                      {isPlaying ? (
+                        <Pause className="h-10 w-10" strokeWidth={1.5} fill="none" />
+                      ) : (
+                        <Play className="ml-1 h-10 w-10" strokeWidth={1.5} fill="none" />
+                      )}
+                    </Button>
+                  )}
                 </div>
 
                 {/* Progress Bar - Bottom */}
-                <div className="relative z-10 px-4 pb-6">
-                  <div className="space-y-2">
-                    <Slider
-                      value={[currentTime]}
-                      max={duration}
-                      step={1}
-                      onValueChange={handleSliderChange}
-                      className="cursor-pointer touch-none"
-                    />
-                    <div className="flex justify-between text-xs font-light text-[#E6DBC7]/70">
-                      <span>{formatTime(currentTime)}</span>
-                      <span>{formatTime(duration)}</span>
+                {!mediaError && (
+                  <div className="relative z-10 px-4 pb-6">
+                    <div className="space-y-2">
+                      <Slider
+                        value={[currentTime]}
+                        max={duration}
+                        step={1}
+                        onValueChange={handleSliderChange}
+                        className="cursor-pointer touch-none"
+                      />
+                      <div className="flex justify-between text-xs font-light text-[#E6DBC7]/70">
+                        <span>{formatTime(currentTime)}</span>
+                        <span>{formatTime(duration)}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
 
               {/* Desktop Layout - Horizontal rectangle */}
@@ -583,42 +597,50 @@ export const ClassPlayerModal = ({
 
                   {/* Middle section - Play button */}
                   <div className="flex flex-1 items-center justify-center py-12">
-                    <Button
-                      onClick={handlePlayPause}
-                      variant="outline"
-                      size="lg"
-                      className="h-32 w-32 rounded-full border-2 border-[#E6DBC7] bg-[#E6DBC7]/5 p-0 text-[#E6DBC7] backdrop-blur-xl transition-colors duration-300 hover:bg-[#E6DBC7]/10 lg:h-40 lg:w-40"
-                    >
-                      {isPlaying ? (
-                        <Pause
-                          className="h-12 w-12 lg:h-16 lg:w-16"
-                          strokeWidth={1.5}
-                          fill="none"
-                        />
-                      ) : (
-                        <Play
-                          className="ml-1 h-12 w-12 lg:h-16 lg:w-16"
-                          strokeWidth={1.5}
-                          fill="none"
-                        />
-                      )}
-                    </Button>
+                    {mediaError ? (
+                      <p className="text-center text-sm font-light text-[#E6DBC7]/70">
+                        {mediaError}
+                      </p>
+                    ) : (
+                      <Button
+                        onClick={handlePlayPause}
+                        variant="outline"
+                        size="lg"
+                        className="h-32 w-32 rounded-full border-2 border-[#E6DBC7] bg-[#E6DBC7]/5 p-0 text-[#E6DBC7] backdrop-blur-xl transition-colors duration-300 hover:bg-[#E6DBC7]/10 lg:h-40 lg:w-40"
+                      >
+                        {isPlaying ? (
+                          <Pause
+                            className="h-12 w-12 lg:h-16 lg:w-16"
+                            strokeWidth={1.5}
+                            fill="none"
+                          />
+                        ) : (
+                          <Play
+                            className="ml-1 h-12 w-12 lg:h-16 lg:w-16"
+                            strokeWidth={1.5}
+                            fill="none"
+                          />
+                        )}
+                      </Button>
+                    )}
                   </div>
 
                   {/* Bottom section - Progress bar */}
-                  <div className="space-y-3">
-                    <Slider
-                      value={[currentTime]}
-                      max={duration}
-                      step={1}
-                      onValueChange={handleSliderChange}
-                      className="cursor-pointer"
-                    />
-                    <div className="flex justify-between text-sm text-[#E6DBC7]/60">
-                      <span>{formatTime(currentTime)}</span>
-                      <span>{formatTime(duration)}</span>
+                  {!mediaError && (
+                    <div className="space-y-3">
+                      <Slider
+                        value={[currentTime]}
+                        max={duration}
+                        step={1}
+                        onValueChange={handleSliderChange}
+                        className="cursor-pointer"
+                      />
+                      <div className="flex justify-between text-sm text-[#E6DBC7]/60">
+                        <span>{formatTime(currentTime)}</span>
+                        <span>{formatTime(duration)}</span>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
             </>
