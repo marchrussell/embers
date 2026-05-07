@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Pause, Play, SkipBack, SkipForward } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { OptimizedImage } from "@/components/OptimizedImage";
@@ -14,22 +14,19 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { GlowButton } from "@/components/ui/glow-button";
 import { Slider } from "@/components/ui/slider";
 import { useAuth } from "@/contexts/AuthContext";
+import { useMediaPlayer } from "@/hooks/useMediaPlayer";
 import { supabase } from "@/integrations/supabase/client";
+import { getOptimizedVideoUrl, preloadVideoMetadata } from "@/lib/mediaOptimization";
 import { IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 
 const ClassPlayer = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user, hasAcceptedSafetyDisclosure, checkSubscription, refreshOnboardingStatus } =
-    useAuth();
-  const [isPlaying, setIsPlaying] = useState(false);
+  const { user, hasAcceptedSafetyDisclosure, refreshOnboardingStatus } = useAuth();
   const [hasStarted, setHasStarted] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [showSessionSafetyDisclosure, setShowSessionSafetyDisclosure] = useState(false);
-  const [showGlobalSafetyModal, setShowGlobalSafetyModal] = useState(false);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const { data: classData, isLoading: loading } = useQuery({
     queryKey: ["class", id],
@@ -40,49 +37,30 @@ const ClassPlayer = () => {
     enabled: !!id,
   });
 
-  const duration = (classData?.duration_minutes || 3) * 60;
+  const optimizedVideoUrl = classData?.video_url
+    ? getOptimizedVideoUrl(classData.video_url)
+    : null;
 
-  // Sync modal state with acceptance status
+  // Preload video metadata before the user starts so playback begins quickly
   useEffect(() => {
-    setShowGlobalSafetyModal(!hasAcceptedSafetyDisclosure);
-  }, [hasAcceptedSafetyDisclosure]);
+    if (optimizedVideoUrl) preloadVideoMetadata(optimizedVideoUrl);
+  }, [optimizedVideoUrl]);
 
-  // Initialize safety disclosure from class data
-  useEffect(() => {
-    if (classData) {
-      setShowSessionSafetyDisclosure(classData.show_safety_reminder || false);
-    }
-  }, [classData]);
+  const { videoRef, currentTime, duration, isPlaying, setIsPlaying, seek, isVideo } =
+    useMediaPlayer({
+      audioUrl: hasStarted && !optimizedVideoUrl ? classData?.audio_url : null,
+      videoUrl: hasStarted ? optimizedVideoUrl : null,
+    });
 
-  // Playback timer
-  useEffect(() => {
-    if (isPlaying && hasStarted) {
-      intervalRef.current = setInterval(() => {
-        setCurrentTime((prev) => {
-          if (prev >= duration) {
-            setIsPlaying(false);
-            return prev;
-          }
-          return prev + 1;
-        });
-      }, 1000);
-    }
-
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [isPlaying, hasStarted, duration]);
+  // Derive modal visibility directly from props/data — no effects needed
+  const showGlobalSafetyModal = !hasAcceptedSafetyDisclosure;
+  const sessionNeedsSafetyDisclosure = !!classData?.show_safety_reminder;
 
   const handleGlobalSafetyAccept = async () => {
-    setShowGlobalSafetyModal(false);
-    // Refresh onboarding status to pick up the safety acceptance
     await refreshOnboardingStatus();
   };
 
   const handleStart = () => {
-    setShowSessionSafetyDisclosure(false);
     setHasStarted(true);
     setIsPlaying(true);
   };
@@ -92,15 +70,15 @@ const ClassPlayer = () => {
   };
 
   const handleRewind = () => {
-    setCurrentTime((prev) => Math.max(0, prev - 10));
+    seek(currentTime - 10);
   };
 
   const handleForward = () => {
-    setCurrentTime((prev) => Math.min(duration, prev + 10));
+    seek(currentTime + 10);
   };
 
   const handleSliderChange = (value: number[]) => {
-    setCurrentTime(value[0]);
+    seek(value[0]);
   };
 
   const formatTime = (seconds: number) => {
@@ -125,8 +103,13 @@ const ClassPlayer = () => {
       )}
 
       {/* Session-specific Safety Reminder */}
-      {classData?.show_safety_reminder && (
-        <Dialog open={showSessionSafetyDisclosure} onOpenChange={setShowSessionSafetyDisclosure}>
+      {sessionNeedsSafetyDisclosure && (
+        <Dialog
+          open={!hasStarted}
+          onOpenChange={(open) => {
+            if (!open) navigate(-1);
+          }}
+        >
           <DialogContent className="max-w-2xl rounded-xl border border-white/30 bg-black/30 backdrop-blur-xl">
             <DialogHeader>
               <DialogTitle>Safety Reminder</DialogTitle>
@@ -135,18 +118,18 @@ const ClassPlayer = () => {
                 session.
               </DialogDescription>
             </DialogHeader>
-            <div className="space-y-4">
+            <div className="space-y-6">
               {classData?.safety_note && (
                 <div className="rounded-lg bg-muted/50 p-4">
                   <p className="whitespace-pre-wrap text-sm">{classData.safety_note}</p>
                 </div>
               )}
-              <Button
+              <GlowButton
                 onClick={handleStart}
-                className="w-full bg-white text-black hover:bg-white/90"
+                // className="w-full bg-white text-black hover:bg-white/90"
               >
                 I Understand, Begin Class
-              </Button>
+              </GlowButton>
             </div>
           </DialogContent>
         </Dialog>
@@ -174,18 +157,17 @@ const ClassPlayer = () => {
           <div className="p-6">
             <Button
               variant="ghost"
-              onClick={() => navigate("/online")}
+              onClick={() => navigate(-1)}
               className="text-base text-white hover:bg-white/10 md:text-lg"
             >
               <ArrowLeft className="mr-2 h-5 w-5" />
-              Back
             </Button>
           </div>
 
           {/* Main Content */}
-          <div className="flex flex-1 items-center justify-center px-4 md:px-6 lg:px-8">
-            {!hasStarted && !(classData?.show_safety_reminder && showSessionSafetyDisclosure) ? (
-              <div className="mx-auto grid w-full max-w-4xl grid-cols-1 items-center gap-8 md:grid-cols-2">
+          <div className="flex flex-1 items-center justify-center px-8">
+            {!hasStarted && !sessionNeedsSafetyDisclosure ? (
+              <div className="mx-auto grid w-full max-w-4xl grid-cols-1 items-center gap-16 md:grid-cols-2">
                 {/* Session Image Card */}
                 <div className="relative aspect-square overflow-hidden rounded-2xl border border-white/20 shadow-2xl">
                   <OptimizedImage
@@ -208,7 +190,7 @@ const ClassPlayer = () => {
                     <p className="text-base">
                       Duration: {classData?.duration_minutes || 3} minutes
                     </p>
-                    <p className="text-sm">Teacher: March Russell</p>
+                    <p className="text-sm">Teacher: {classData?.teacher_name || "March Russell"}</p>
                   </div>
                   <Button
                     onClick={handleStart}
@@ -222,15 +204,24 @@ const ClassPlayer = () => {
               </div>
             ) : (
               <div className="mx-auto w-full max-w-4xl">
-                <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2">
-                  {/* Session Image Card */}
+                <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-16">
+                  {/* Session Media Card */}
                   <div className="relative aspect-square overflow-hidden rounded-2xl border border-white/20 shadow-2xl">
-                    <OptimizedImage
-                      src={classData?.image_url}
-                      alt={classData?.title}
-                      className="h-full w-full object-cover"
-                      optimizationOptions={IMAGE_PRESETS.hero}
-                    />
+                    {isVideo ? (
+                      <video
+                        ref={videoRef}
+                        src={optimizedVideoUrl ?? undefined}
+                        className="h-full w-full object-cover"
+                        playsInline
+                      />
+                    ) : (
+                      <OptimizedImage
+                        src={classData?.image_url}
+                        alt={classData?.title}
+                        className="h-full w-full object-cover"
+                        optimizationOptions={IMAGE_PRESETS.hero}
+                      />
+                    )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                   </div>
 
@@ -240,7 +231,9 @@ const ClassPlayer = () => {
                       <h2 className="font-editorial text-3xl text-white md:text-4xl">
                         {classData?.title}
                       </h2>
-                      <p className="text-sm text-white/60">Guided by March Russell</p>
+                      <p className="text-sm text-white/60">
+                        Guided by {classData?.teacher_name || "March Russell"}
+                      </p>
                     </div>
 
                     {/* Progress Bar */}
@@ -289,13 +282,6 @@ const ClassPlayer = () => {
                       >
                         <SkipForward className="h-6 w-6" />
                       </Button>
-                    </div>
-
-                    {/* Breathing Instruction Area */}
-                    <div className="py-8 text-center md:text-left">
-                      <p className="text-2xl font-light text-white/90">
-                        {isPlaying ? "Follow your breath..." : "Paused"}
-                      </p>
                     </div>
                   </div>
                 </div>
