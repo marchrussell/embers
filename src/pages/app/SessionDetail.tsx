@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, Heart, Play, Share } from "lucide-react";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
 
 import { ArcCardsModal } from "@/components/ArcCardsModal";
 import { ClassPlayerModal } from "@/components/ClassPlayerModal";
@@ -18,8 +17,8 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavourites } from "@/hooks/useFavourites";
+import { useShareSession } from "@/hooks/useShareSession";
 import { supabase } from "@/integrations/supabase/client";
-import { copyLink } from "@/lib/copyLink";
 import { IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 interface SessionDetailModalProps {
   sessionId: string | null;
@@ -89,13 +88,7 @@ export default function SessionDetailModal({
     }
   };
 
-  const handleShare = () => {
-    if (!session?.is_published) {
-      toast.error("This session cannot be shared");
-      return;
-    }
-    copyLink(`${window.location.origin}/shared-session/${sessionId}`, "Link copied to clipboard");
-  };
+  const { handleShare } = useShareSession(sessionId, session?.is_published);
 
   // Function to render safety note with clickable Safety Disclosure link
   const renderSafetyNote = (text: string) => {

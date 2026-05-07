@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Heart, Pause, Play, Share, Share2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { toast } from "sonner";
 
 import { OptimizedImage } from "@/components/OptimizedImage";
 import { SessionCompletionModal } from "@/components/SessionCompletionModal";
@@ -18,8 +17,8 @@ import { Slider } from "@/components/ui/slider";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavourites } from "@/hooks/useFavourites";
 import { useMarkSessionComplete } from "@/hooks/useMarkSessionComplete";
+import { useShareSession } from "@/hooks/useShareSession";
 import { supabase } from "@/integrations/supabase/client";
-import { copyLink } from "@/lib/copyLink";
 import { analytics } from "@/lib/posthog";
 
 interface ClassPlayerModalProps {
@@ -79,6 +78,7 @@ export const ClassPlayerModal = ({
 
   const classData = classQueryData?.session ?? null;
   const classCategories = classQueryData?.sessionCategories ?? [];
+  const { handleShare } = useShareSession(classId, classData?.is_published, true);
 
   // Reset playback state when modal opens
   useEffect(() => {
@@ -340,14 +340,6 @@ export const ClassPlayerModal = ({
     if (classId) {
       toggleFavourite(classId);
     }
-  };
-
-  const handleShare = () => {
-    if (!classData?.is_published) {
-      toast.error("This session cannot be shared");
-      return;
-    }
-    copyLink(`${window.location.origin}/shared-session/${classId}`, "Link copied to clipboard");
   };
 
   console.log("[ClassPlayerModal] render:", {

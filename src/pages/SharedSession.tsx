@@ -16,8 +16,12 @@ interface SessionData {
 
 const SharedSession = () => {
   const { sessionId } = useParams();
-  const { user, hasSubscription, isAdmin, isTestUser, loading: authLoading } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const autoplay = new URLSearchParams(window.location.search).get("autoplay") === "true";
+  const sessionTarget = autoplay
+    ? `/online/session/${sessionId}`
+    : `/online?tab=library&session=${sessionId}`;
   const [session, setSession] = useState<SessionData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -66,29 +70,9 @@ const SharedSession = () => {
     if (authLoading || loading || !session) return;
 
     if (user) {
-      // Check if user has access to this session
-      const hasAccess = !session.requires_subscription || hasSubscription || isAdmin || isTestUser;
-
-      if (hasAccess) {
-        // User has access - redirect to session
-        navigate(`/app/session/${sessionId}`, { replace: true });
-      } else {
-        // User doesn't have subscription access - redirect to session page
-        // (SessionDetail will handle showing the subscription modal)
-        navigate(`/app/session/${sessionId}`, { replace: true });
-      }
+      navigate(sessionTarget, { replace: true });
     }
-  }, [
-    user,
-    hasSubscription,
-    isAdmin,
-    isTestUser,
-    authLoading,
-    loading,
-    session,
-    sessionId,
-    navigate,
-  ]);
+  }, [user, authLoading, loading, session, sessionId, navigate, sessionTarget]);
 
   // Show loading state
   if (loading || authLoading) {
@@ -148,17 +132,13 @@ const SharedSession = () => {
 
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Button
-                onClick={() =>
-                  navigate("/auth", { state: { redirectTo: `/app/session/${sessionId}` } })
-                }
+                onClick={() => navigate("/auth", { state: { redirectTo: sessionTarget } })}
                 className="rounded-full border-2 border-white bg-white/5 px-12 py-6 text-lg text-white backdrop-blur-md transition-all hover:bg-white/10"
               >
                 Sign Up to Access <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
               <Button
-                onClick={() =>
-                  navigate("/auth", { state: { redirectTo: `/app/session/${sessionId}` } })
-                }
+                onClick={() => navigate("/auth", { state: { redirectTo: sessionTarget } })}
                 variant="ghost"
                 className="text-base text-[#E6DBC7] hover:text-[#E6DBC7]/80"
               >

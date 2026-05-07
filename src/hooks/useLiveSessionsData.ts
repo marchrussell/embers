@@ -35,16 +35,15 @@ export function useLiveSessionsData(): LiveSessionCardData[] {
         SESSION_TYPE_IMAGES[config.session_type] ??
         experienceImages.guestSession;
       const durationMinutes = config.duration ? parseInt(config.duration) || 60 : 60;
-      console.log("Live Session Config:", config);
-      console.log(
-        "DB session:",
-        dbSession,
-        "Date object:",
-        nextDateObj,
-        "Formatted next date:",
-        nextDate
-      );
-      console.log("Subtitle parts:", subtitleParts, "Final subtitle:", subtitle);
+      // console.log("Live Session Config:", config);
+      // console.log(
+      //   "DB session:",
+      //   dbSession,
+      //   "Date object:",
+      //   nextDateObj,
+      //   "Formatted next date:",
+      //   nextDate
+      // );
 
       if (config.session_type === "guest-session" && dbSession) {
         console.log("Enriching next Guest Teacher:", dbSession);

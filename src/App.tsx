@@ -171,6 +171,14 @@ function AppContent() {
               }
             />
             <Route
+              path="/online/session/:id"
+              element={
+                <ProtectedRoute>
+                  <ClassPlayer />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/online/profile"
               element={
                 <ProtectedRoute>
