@@ -1,14 +1,17 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+import { z } from "zod";
 
 import { Dialog, DialogPortal } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ModalCloseButton } from "@/components/ui/modal-close-button";
-import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
+import { ButtonLoadingSpinner } from "@/components/skeletons/ButtonLoadingSpinner";
+import { useSignIn } from "@/hooks/auth/useSignIn";
+import { usePasswordReset } from "@/hooks/auth/usePasswordReset";
 
 type FooterVariant = "trial" | "courses" | "signup" | "none";
 
@@ -25,6 +28,18 @@ interface AuthSignInModalProps {
   onOpenSubscription?: () => void;
 }
 
+const signInSchema = z.object({
+  email: z.string().email("Please enter a valid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+const resetSchema = z.object({
+  email: z.string().email("Please enter a valid email"),
+});
+
+type SignInValues = z.infer<typeof signInSchema>;
+type ResetValues = z.infer<typeof resetSchema>;
+
 export const AuthSignInModal = ({
   open,
   onClose,
@@ -33,66 +48,45 @@ export const AuthSignInModal = ({
   footerVariant = "trial",
   onOpenSubscription,
 }: AuthSignInModalProps) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
   const [showForgotPasswordForm, setShowForgotPasswordForm] = useState(false);
-  const [resetEmail, setResetEmail] = useState("");
-  const [resetLoading, setResetLoading] = useState(false);
-  const { signIn } = useAuth();
   const navigate = useNavigate();
 
-  const handleSignIn = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+  const signIn = useSignIn();
+  const passwordReset = usePasswordReset();
 
-    try {
-      await signIn(email, password);
-      toast.success("Welcome back!");
-      onClose();
-      onSuccess?.();
-    } catch (error: any) {
-      console.error("Sign in error:", error);
-      const errorMessage = error.message || "Failed to sign in";
+  const signInForm = useForm<SignInValues>({
+    resolver: zodResolver(signInSchema),
+  });
 
-      if (errorMessage.includes("Invalid login credentials")) {
-        toast.error("Invalid email or password");
-      } else if (errorMessage.includes("Email not confirmed")) {
-        toast.error("Please check your email to confirm your account");
-      } else {
-        toast.error(errorMessage);
+  const resetForm = useForm<ResetValues>({
+    resolver: zodResolver(resetSchema),
+  });
+
+  const handleSignIn = signInForm.handleSubmit((data) => {
+    signIn.mutate(
+      { email: data.email, password: data.password },
+      {
+        onSuccess: () => {
+          onClose();
+          onSuccess?.();
+        },
       }
-    } finally {
-      setLoading(false);
-    }
-  };
+    );
+  });
 
-  const handleForgotPassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setResetLoading(true);
-
-    try {
-      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
-        redirectTo: `${import.meta.env.VITE_SITE_URL || window.location.origin}/password-reset?type=recovery`,
-      });
-
-      if (error) throw error;
-
-      toast.success("Password reset email sent! Check your inbox.");
-      setShowForgotPasswordForm(false);
-      setResetEmail("");
-    } catch (error: any) {
-      toast.error(error.message || "Failed to send reset email");
-    } finally {
-      setResetLoading(false);
-    }
-  };
+  const handleForgotPassword = resetForm.handleSubmit((data) => {
+    passwordReset.mutate(data.email, {
+      onSuccess: () => {
+        setShowForgotPasswordForm(false);
+        resetForm.reset();
+      },
+    });
+  });
 
   const handleClose = () => {
     setShowForgotPasswordForm(false);
-    setResetEmail("");
-    setEmail("");
-    setPassword("");
+    signInForm.reset();
+    resetForm.reset();
     onClose();
   };
 
@@ -153,7 +147,7 @@ export const AuthSignInModal = ({
         <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md transition-opacity duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
         <DialogPrimitive.Content className="fixed left-[50%] top-[50%] z-50 w-[92%] max-w-[440px] translate-x-[-50%] translate-y-[-50%] overflow-hidden rounded-[24px] border border-white/15 bg-black/65 backdrop-blur-xl duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95">
           <div className="sr-only" role="heading" aria-level={2}>
-            Sign In to MARCH
+            Sign In to Studio Hom
           </div>
           <div className="sr-only">Sign in to access your account</div>
 
@@ -163,12 +157,6 @@ export const AuthSignInModal = ({
           <div className="p-8 md:p-10">
             {/* Logo */}
             <div className="mb-8 text-center">
-              {/* <img
-                src={marchLogoModal}
-                alt="MARCH"
-                className="mx-auto mb-6 h-20 object-contain"
-                style={{ filter: "brightness(0) invert(1)" }}
-              /> */}
               <h2 className="font-editorial text-[clamp(1.5rem,2vw,1.75rem)] font-light text-white">
                 {showForgotPasswordForm ? "Reset Password" : "Welcome back"}
               </h2>
@@ -184,20 +172,27 @@ export const AuthSignInModal = ({
                   <Input
                     id="reset-email"
                     type="email"
-                    value={resetEmail}
-                    onChange={(e) => setResetEmail(e.target.value)}
-                    required
+                    {...resetForm.register("email")}
                     placeholder="your@email.com"
                     className="h-12 rounded-xl border-white/15 bg-white text-[15px] text-black placeholder:text-black/40 focus:border-white/30 focus:ring-0 focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
                   />
+                  {resetForm.formState.errors.email && (
+                    <p className="text-[13px] text-red-400">
+                      {resetForm.formState.errors.email.message}
+                    </p>
+                  )}
                 </div>
 
                 <button
                   type="submit"
-                  className="mt-2 h-12 w-full rounded-full bg-white text-[15px] font-medium tracking-wide text-black transition-all hover:bg-white/90 disabled:opacity-50"
-                  disabled={resetLoading}
+                  className="mt-2 flex h-12 w-full items-center justify-center rounded-full bg-white text-[15px] font-medium tracking-wide text-black transition-all hover:bg-white/90 disabled:opacity-50"
+                  disabled={passwordReset.isPending}
                 >
-                  {resetLoading ? "Sending..." : "Send Reset Link"}
+                  {passwordReset.isPending ? (
+                    <ButtonLoadingSpinner size="md" className="text-black" />
+                  ) : (
+                    "Send Reset Link"
+                  )}
                 </button>
 
                 <button
@@ -218,11 +213,14 @@ export const AuthSignInModal = ({
                   <Input
                     id="signin-email"
                     type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
+                    {...signInForm.register("email")}
                     className="h-12 rounded-xl border-white/15 bg-white text-[15px] text-black placeholder:text-black/40 focus:border-white/30 focus:ring-0 focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
                   />
+                  {signInForm.formState.errors.email && (
+                    <p className="text-[13px] text-red-400">
+                      {signInForm.formState.errors.email.message}
+                    </p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="signin-password" className="text-[14px] font-light text-white/80">
@@ -231,12 +229,14 @@ export const AuthSignInModal = ({
                   <Input
                     id="signin-password"
                     type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    minLength={6}
+                    {...signInForm.register("password")}
                     className="h-12 rounded-xl border-white/15 bg-white text-[15px] text-black placeholder:text-black/40 focus:border-white/30 focus:ring-0 focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
                   />
+                  {signInForm.formState.errors.password && (
+                    <p className="text-[13px] text-red-400">
+                      {signInForm.formState.errors.password.message}
+                    </p>
+                  )}
                 </div>
 
                 {/* Forgot Password Link */}
@@ -254,10 +254,14 @@ export const AuthSignInModal = ({
 
                 <button
                   type="submit"
-                  className="h-12 w-full rounded-full bg-white text-[15px] font-medium tracking-wide text-black transition-all hover:bg-white/90 disabled:opacity-50"
-                  disabled={loading}
+                  className="flex h-12 w-full items-center justify-center rounded-full bg-white text-[15px] font-medium tracking-wide text-black transition-all hover:bg-white/90 disabled:opacity-50"
+                  disabled={signIn.isPending}
                 >
-                  {loading ? "Signing in..." : "Sign In"}
+                  {signIn.isPending ? (
+                    <ButtonLoadingSpinner size="md" className="text-black" />
+                  ) : (
+                    "Sign In"
+                  )}
                 </button>
               </form>
             )}

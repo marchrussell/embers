@@ -127,7 +127,7 @@ export default function SessionDetailModal({
         }}
       >
         <DialogContent
-          className="max-h-[calc(90dvh-3rem)] w-[95%] max-w-5xl scroll-smooth overscroll-contain overflow-y-auto rounded-xl border border-white/[0.08] bg-black/95 p-0 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-2xl md:max-h-[90dvh] md:w-[90%]"
+          className="max-h-[calc(90dvh-3rem)] w-[95%] max-w-5xl overflow-y-auto overscroll-contain scroll-smooth rounded-xl border border-white/[0.08] bg-black/95 p-0 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-2xl md:max-h-[90dvh] md:w-[90%]"
           onCloseAutoFocus={() => {}}
         >
           <DialogTitle className="sr-only">{session?.title || "Session Details"}</DialogTitle>
@@ -272,73 +272,83 @@ export default function SessionDetailModal({
                   </TabsList>
 
                   <div className="mt-8 grid">
-                  <TabsContent forceMount value="description" className="[grid-area:1/1] flex flex-col justify-between [&[hidden]]:block data-[state=inactive]:invisible data-[state=inactive]:pointer-events-none">
-                    {/* Description */}
-                    <p className="font-light leading-[1.7] text-white/80">{session.description}</p>
+                    <TabsContent
+                      forceMount
+                      value="description"
+                      className="flex flex-col justify-between [grid-area:1/1] data-[state=inactive]:pointer-events-none data-[state=inactive]:invisible [&[hidden]]:block"
+                    >
+                      {/* Description */}
+                      <p className="font-light leading-[1.7] text-white/80">
+                        {session.description}
+                      </p>
 
-                    {/* Safety Card */}
-                    <div className="group relative mt-8 overflow-hidden">
-                      <div className="flex items-center gap-3 text-sm md:items-start text-white">
-                        <div className="min-w-0 flex-1">
-                          <h4 className="flex items-baseline gap-4 font-light tracking-wide">
-                            <span className="flex-shrink-0 text-base md:text-xl">⚠</span>
-                            Safety Reminder
-                          </h4>
+                      {/* Safety Card */}
+                      <div className="group relative mt-8 overflow-hidden">
+                        <div className="flex items-center gap-3 text-sm text-white md:items-start">
+                          <div className="min-w-0 flex-1">
+                            <h4 className="flex items-baseline gap-4 font-light tracking-wide">
+                              <span className="flex-shrink-0 text-base md:text-xl">⚠</span>
+                              Safety Reminder
+                            </h4>
 
-                          <div className="mt-4 space-y-4 md:border-t border-white/[0.08] pt-4">
-                            {/* Practice safely */}
-                            <p className="font-light leading-relaxed text-white/70 md:text-sm">
-                              Practice in a safe, comfortable space - never in water, while
-                              driving, or operating machinery. Consult your doctor if you have
-                              health conditions or concerns and do not practice breath holds or
-                              fast-paced breathing if pregnant, or if you have epilepsy, serious
-                              mental health conditions, or significant medical issues. Always
-                              listen to your body and move at your own pace.
-                            </p>
+                            <div className="mt-4 space-y-4 border-white/[0.08] pt-4 md:border-t">
+                              {/* Practice safely */}
+                              <p className="font-light leading-relaxed text-white/70 md:text-sm">
+                                Practice in a safe, comfortable space - never in water, while
+                                driving, or operating machinery. Consult your doctor if you have
+                                health conditions or concerns and do not practice breath holds or
+                                fast-paced breathing if pregnant, or if you have epilepsy, serious
+                                mental health conditions, or significant medical issues. Always
+                                listen to your body and move at your own pace.
+                              </p>
 
-                            {/* Full disclosure link */}
-                            <button
-                              onClick={() => setShowFullSafetyDisclosure(true)}
-                              className="flex items-center gap-1.5 font-medium text-white/90 underline underline-offset-2 transition-colors hover:text-white md:mt-2 md:text-sm"
-                            >
-                              Read full Safety Information
-                              <ArrowRight
-                                className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
-                                strokeWidth={2}
-                              />
-                            </button>
+                              {/* Full disclosure link */}
+                              <button
+                                onClick={() => setShowFullSafetyDisclosure(true)}
+                                className="flex items-center gap-1.5 font-medium text-white/90 underline underline-offset-2 transition-colors hover:text-white md:mt-2 md:text-sm"
+                              >
+                                Read full Safety Information
+                                <ArrowRight
+                                  className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
+                                  strokeWidth={2}
+                                />
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </TabsContent>
+                    </TabsContent>
 
-                  <TabsContent forceMount value="explore" className="[grid-area:1/1] [&[hidden]]:block data-[state=inactive]:invisible data-[state=inactive]:pointer-events-none">
-                    <h3 className="text-md mb-7 font-editorial font-light leading-[1.2] text-white">
-                      If you're wanting more support
-                    </h3>
-
-                    <div className="space-y-4 font-light leading-[1.7] text-white/80">
-                      <p>Some people find daily practices are enough.</p>
-                      <p>
-                        Others need guided support to shift deeper patterns of stress, shutdown, or
-                        disconnection.
-                      </p>
-                      <p>That's why The Rise ARC Method exists.</p>
-                      <p>
-                        A 4-month guided process for those ready to go deeper — to rebuild
-                        stability, autonomy, emotional presence, and connection.
-                      </p>
-                    </div>
-
-                    <button
-                      onClick={() => setShowArcCardsModal(true)}
-                      className="mt-8 inline-flex items-center gap-3 font-medium text-white transition-colors hover:text-white/80"
+                    <TabsContent
+                      forceMount
+                      value="explore"
+                      className="[grid-area:1/1] data-[state=inactive]:pointer-events-none data-[state=inactive]:invisible [&[hidden]]:block"
                     >
-                      Learn about the ARC Method
-                      <ArrowRight className="h-5 w-5" strokeWidth={1.5} />
-                    </button>
-                  </TabsContent>
+                      <h3 className="text-md mb-7 font-editorial font-light leading-[1.2] text-white">
+                        If you're wanting more support
+                      </h3>
+
+                      <div className="space-y-4 font-light leading-[1.7] text-white/80">
+                        <p>Some people find daily practices are enough.</p>
+                        <p>
+                          Others need guided support to shift deeper patterns of stress, shutdown,
+                          or disconnection.
+                        </p>
+                        <p>That's why The Rise ARC Method exists.</p>
+                        <p>
+                          A 4-month guided process for those ready to go deeper — to rebuild
+                          stability, autonomy, emotional presence, and connection.
+                        </p>
+                      </div>
+
+                      <button
+                        onClick={() => setShowArcCardsModal(true)}
+                        className="mt-8 inline-flex items-center gap-3 font-medium text-white transition-colors hover:text-white/80"
+                      >
+                        Learn about the ARC Method
+                        <ArrowRight className="h-5 w-5" strokeWidth={1.5} />
+                      </button>
+                    </TabsContent>
                   </div>
                 </Tabs>
               </div>
