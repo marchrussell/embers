@@ -48,10 +48,10 @@ const Index = () => {
         {/* Hero Section with Optimized Background */}
         <section className="relative flex h-[100dvh] flex-col items-center justify-center overflow-hidden">
           <img
-            src={getCloudImageUrl(CLOUD_IMAGES.threeWaysMushroom, { width: 1920, quality: 85 }, 'site-images')}
+            src={getCloudImageUrl(CLOUD_IMAGES.threeWaysMushroom, { width: 1920, quality: 85 })}
             alt="Home Page Image"
             aria-hidden="true"
-            className="absolute inset-0 h-full w-full object-contain"
+            className="absolute inset-0 h-full w-full object-cover"
             // style={{ objectPosition: "30% 40%" }}
             fetchPriority="high"
           />
