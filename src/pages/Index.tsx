@@ -23,13 +23,9 @@ const mentalResetImg = getCloudImageUrl(
   "program-images"
 );
 
-const firstScreenImg = getCloudImageUrl(
-  CLOUD_IMAGES.threeWaysMushroom,
-  {
-    width: 1920,
-    quality: 85,
-  },
-);
+const SUPABASE_STORAGE_URL =
+  import.meta.env.VITE_SUPABASE_STORAGE_URL || import.meta.env.VITE_SUPABASE_URL;
+const firstScreenImg = `${SUPABASE_STORAGE_URL}/storage/v1/object/public/site-images/${CLOUD_IMAGES.threeWaysMushroom}`;
 
 const Index = () => {
   const location = useLocation();
@@ -244,6 +240,18 @@ const Index = () => {
             </SplitCard>
           </FadeUp>
           <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent to-black md:h-20" />
+          {/* View All Courses CTA */}
+          <FadeUp delay={200}>
+            <div className="mt-12 text-center">
+              <Link
+                to="/online?tab=courses"
+                className="group inline-flex min-h-[44px] items-center gap-2 text-[13px] font-light tracking-wide text-white/80 transition-colors duration-300 hover:text-white"
+              >
+                View All Courses
+                <ArrowRight className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-1" />
+              </Link>
+            </div>
+          </FadeUp>
         </section>
 
         {/* ========== EXPERIENCES ========== */}
