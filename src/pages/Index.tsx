@@ -52,7 +52,7 @@ const Index = () => {
             alt="Home Page Image"
             aria-hidden="true"
             className="absolute inset-0 h-full w-full object-cover"
-            style={{ objectPosition: "30% 40%" }}
+            // style={{ objectPosition: "30% 40%" }}
             fetchPriority="high"
           />
 
