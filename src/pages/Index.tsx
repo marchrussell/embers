@@ -30,6 +30,7 @@ const firstScreenImg = `${SUPABASE_STORAGE_URL}/storage/v1/object/public/site-im
 const Index = () => {
   const location = useLocation();
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+  const [heroLoaded, setHeroLoaded] = useState(false);
   const liveSessionsData = useLiveSessionsData();
 
   useEffect(() => {
@@ -55,8 +56,8 @@ const Index = () => {
             src={firstScreenImg}
             alt="Home Page Image"
             aria-hidden="true"
-            className="absolute inset-0 h-full w-full object-cover"
-            // style={{ objectPosition: "30% 40%" }}
+            onLoad={() => setHeroLoaded(true)}
+            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${heroLoaded ? "opacity-100" : "opacity-0"}`}
             fetchPriority="high"
           />
 
