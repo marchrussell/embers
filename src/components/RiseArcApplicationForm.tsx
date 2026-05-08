@@ -113,7 +113,7 @@ const SelectionOption = ({
         selected ? "border-2 border-white bg-white" : "border-2 border-white/40 bg-transparent"
       )}
     >
-      {selected && <Check className="h-4 w-4 text-black" strokeWidth={3} />}
+      {selected && <Check className="h-5 w-5 text-black" strokeWidth={3} />}
     </div>
     <span
       className={cn(
@@ -600,7 +600,7 @@ export const RiseArcApplicationForm = ({ open, onOpenChange }: RiseArcApplicatio
                   onClick={handleBack}
                   className="flex items-center gap-2 text-[15px] font-normal text-white/60 transition-colors hover:text-white"
                 >
-                  <ArrowLeft className="h-4 w-4" />
+                  <ArrowLeft className="h-5 w-5" />
                   Back
                 </button>
               ) : (
@@ -617,7 +617,7 @@ export const RiseArcApplicationForm = ({ open, onOpenChange }: RiseArcApplicatio
                 )}
               >
                 <span>Continue</span>
-                <ArrowRight className="h-4 w-4" />
+                <ArrowRight className="h-5 w-5" />
               </Button>
             </div>
           )}
