@@ -1,11 +1,10 @@
 /**
  * Stripe Price IDs & Payment Links - Central reference for all products
- * Updated: March 2026
+ * Updated: May 2026
  *
  * Studio HŌM (Subscriptions)
- * - Annual: price_1TA9Tr2N5TUgC2sKTHGanZgb
- * - Monthly: price_1TA9Tr2N5TUgC2sKtnlCgeGj
- *todo - update prices
+ * - Annual: price_1TUkLXGBlPMRpwZ6lcwXJ6b9
+ * - Monthly: price_1TUkIjGBlPMRpwZ6r3dSRw8Y
  */
 
 export const isTestMode = import.meta.env.VITE_STRIPE_MODE === "test";
@@ -18,8 +17,8 @@ export const TEST_SUBSCRIPTION_PRICES = {
 
 // Live mode price IDs
 export const LIVE_SUBSCRIPTION_PRICES = {
-  ANNUAL: "price_1TA9Tr2N5TUgC2sKTHGanZgb",
-  MONTHLY: "price_1TA9Tr2N5TUgC2sKtnlCgeGj",
+  ANNUAL: "price_1TUkLXGBlPMRpwZ6lcwXJ6b9",
+  MONTHLY: "price_1TUkIjGBlPMRpwZ6r3dSRw8Y",
 } as const;
 
 export const SUBSCRIPTION_PRICES = isTestMode ? TEST_SUBSCRIPTION_PRICES : LIVE_SUBSCRIPTION_PRICES;
@@ -27,7 +26,7 @@ export const SUBSCRIPTION_PRICES = isTestMode ? TEST_SUBSCRIPTION_PRICES : LIVE_
 export const RISE_ARC_PRICES = "";
 
 export const SUBSCRIPTION_DISPLAY_PRICES = {
-  monthly: { unitAmountFormatted: "£25" },
+  monthly: { unitAmountFormatted: "£20" },
   annual: { unitAmountFormatted: "£180", monthlyEquivalent: "£15" },
 } as const;
 

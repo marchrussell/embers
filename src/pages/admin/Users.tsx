@@ -13,6 +13,7 @@ import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { AdminLayout, AdminStatsCard } from "@/components/admin";
+import { LIVE_SUBSCRIPTION_PRICES, TEST_SUBSCRIPTION_PRICES } from "@/lib/stripePrices";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -115,10 +116,14 @@ const AdminUsers = () => {
       // Helper to determine subscription type from price_id
       const getSubscriptionType = (priceId: string | null): "monthly" | "annual" | null => {
         if (!priceId) return null;
-        // Annual price ID
-        if (priceId === "price_1SaMMWGBlPMRpwZ64lDmN0cr") return "annual";
-        // Monthly price ID
-        if (priceId === "price_1SaMRuGBlPMRpwZ6M3bbM1H8") return "monthly";
+        if (
+          priceId === LIVE_SUBSCRIPTION_PRICES.ANNUAL ||
+          priceId === TEST_SUBSCRIPTION_PRICES.ANNUAL
+        ) return "annual";
+        if (
+          priceId === LIVE_SUBSCRIPTION_PRICES.MONTHLY ||
+          priceId === TEST_SUBSCRIPTION_PRICES.MONTHLY
+        ) return "monthly";
         return null;
       };
 
@@ -196,11 +201,17 @@ const AdminUsers = () => {
 
         // Count monthly vs annual
         const monthlySubscribers =
-          activeSubs?.filter((s) => s.stripe_price_id === "price_1SaMRuGBlPMRpwZ6M3bbM1H8")
-            .length || 0;
+          activeSubs?.filter(
+            (s) =>
+              s.stripe_price_id === LIVE_SUBSCRIPTION_PRICES.MONTHLY ||
+              s.stripe_price_id === TEST_SUBSCRIPTION_PRICES.MONTHLY
+          ).length || 0;
         const annualSubscribers =
-          activeSubs?.filter((s) => s.stripe_price_id === "price_1SaMMWGBlPMRpwZ64lDmN0cr")
-            .length || 0;
+          activeSubs?.filter(
+            (s) =>
+              s.stripe_price_id === LIVE_SUBSCRIPTION_PRICES.ANNUAL ||
+              s.stripe_price_id === TEST_SUBSCRIPTION_PRICES.ANNUAL
+          ).length || 0;
 
         // Get all user progress data
         const { data: allProgress } = await supabase

@@ -21,8 +21,8 @@ const PRICE_IDS = {
   // Live mode
   live: {
     studioHom: {
-      annual: 'price_1TA9Tr2N5TUgC2sKTHGanZgb',
-      monthly: 'price_1TA9Tr2N5TUgC2sKtnlCgeGj',
+      annual: 'price_1TUkLXGBlPMRpwZ6lcwXJ6b9',
+      monthly: 'price_1TUkIjGBlPMRpwZ6r3dSRw8Y',
     },
   },
 };

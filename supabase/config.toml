@@ -38,3 +38,12 @@ verify_jwt = false
 
 [functions.daily-fetch-recording]
 verify_jwt = false
+
+[functions.customer-portal]
+verify_jwt = false
+
+[functions.check-subscription]
+verify_jwt = false
+
+[functions.cancel-user-subscription]
+verify_jwt = false
