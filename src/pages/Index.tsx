@@ -23,6 +23,14 @@ const mentalResetImg = getCloudImageUrl(
   "program-images"
 );
 
+const firstScreenImg = getCloudImageUrl(
+  CLOUD_IMAGES.threeWaysMushroom,
+  {
+    width: 1920,
+    quality: 85,
+  },
+);
+
 const Index = () => {
   const location = useLocation();
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
@@ -48,7 +56,7 @@ const Index = () => {
         {/* Hero Section with Optimized Background */}
         <section className="relative flex h-[100dvh] flex-col items-center justify-center overflow-hidden">
           <img
-            src={getCloudImageUrl(CLOUD_IMAGES.threeWaysMushroom, { width: 1920, quality: 85 })}
+            src={firstScreenImg}
             alt="Home Page Image"
             aria-hidden="true"
             className="absolute inset-0 h-full w-full object-cover"
