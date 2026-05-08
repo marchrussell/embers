@@ -12,7 +12,7 @@ const categoryCalm = getCloudImageUrl(
   { width: 600, quality: 80 },
   "category-images"
 );
-const reviewsBg = getCloudImageUrl(CLOUD_IMAGES.exploreTestimonials, { width: 600, quality: 80 });
+const reviewsBg = getCloudImageUrl(CLOUD_IMAGES.unwindReset, { width: 600, quality: 80 });
 
 const session1 = getCloudImageUrl(CLOUD_IMAGES.nsdr, { width: 600, quality: 80 }, "class-images");
 const session2 = getCloudImageUrl(
