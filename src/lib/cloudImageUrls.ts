@@ -76,6 +76,7 @@ export const CLOUD_IMAGES = {
   exploreAudioPlayer: "home/explore-studio-audio-player.webp",
   exploreTestimonials: "home/explore-studio-testimonials.webp",
   nervousSystemReset: "home/nervous-system-reset.webp",
+  restoringNaturalBreathing: "home/restoring-natural-breathing.webp",
 
   // Experiences images
   breathPresence: "experiences/breath-presence-heart-connection-in-person.webp",
