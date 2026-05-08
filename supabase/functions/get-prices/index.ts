@@ -13,14 +13,14 @@ const corsHeaders = {
 const PRICE_IDS = {
   // Test mode
   test: {
-    studioHom: {
+    hom: {
       annual: 'price_1TAr6X2M0UKIRm2M8me1ayrP',
       monthly: 'price_1TAr6p2M0UKIRm2MPQzZQp0b',
     },
   },
   // Live mode
   live: {
-    studioHom: {
+    hom: {
       annual: 'price_1TUkLXGBlPMRpwZ6lcwXJ6b9',
       monthly: 'price_1TUkIjGBlPMRpwZ6r3dSRw8Y',
     },
@@ -61,7 +61,7 @@ serve(async (req) => {
     });
 
     // Parse request body for optional filtering
-    let category = 'studioHom'; // Default to subscription prices
+    let category = 'hom'; // Default to subscription prices
     try {
       const body = await req.json();
       if (body.category) {

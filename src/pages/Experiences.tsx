@@ -392,7 +392,7 @@ const ExperiencesContent = () => {
               </h2>
             </FadeUp>
 
-            {/* The Studio HŌM Card - Horizontal Layout */}
+            {/* The HŌM Card - Horizontal Layout */}
             <FadeUp delay={100}>
               <div
                 className="group relative flex cursor-pointer flex-col overflow-hidden rounded-3xl border border-[#E6DBC7]/20 bg-black shadow-glow-strong transition-colors duration-500 md:flex-row"
@@ -403,7 +403,7 @@ const ExperiencesContent = () => {
                 <div className="relative h-[240px] shrink-0 overflow-hidden md:h-auto md:w-[45%]">
                   <img
                     src={moreWaysToPracticeImg}
-                    alt="Studio HŌM"
+                    alt="HŌM"
                     className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]"
                   />
                   {/* Gradient overlay for seamless blend */}
@@ -429,7 +429,7 @@ const ExperiencesContent = () => {
                     Monthly Membership
                   </p>
                   <h3 className="mb-5 font-editorial text-[clamp(1.8rem,2.5vw,2.4rem)] font-light leading-[1.1] text-[#E6DBC7]">
-                    Studio HŌM
+                    HŌM
                   </h3>
                   <p className="mb-10 max-w-[440px] text-[15px] leading-[1.65] text-[#E6DBC7]/75 md:text-[16px]">
                     A monthly membership for short daily resets, guided practices, courses and live

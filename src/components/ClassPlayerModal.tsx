@@ -83,9 +83,7 @@ export const ClassPlayerModal = ({
   const { handleShare } = useShareSession();
 
   const isVideoClass = !!classData?.video_url;
-  const optimizedVideoUrl = classData?.video_url
-    ? getOptimizedVideoUrl(classData.video_url)
-    : null;
+  const optimizedVideoUrl = classData?.video_url ? getOptimizedVideoUrl(classData.video_url) : null;
 
   const getMedia = (): HTMLAudioElement | HTMLVideoElement | null =>
     isVideoClass ? videoRef.current : audioRef.current;

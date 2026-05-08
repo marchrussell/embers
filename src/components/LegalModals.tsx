@@ -13,15 +13,14 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => (
     subtitle="Last Updated: May 2026"
   >
     <p>
-      Thank you for choosing Studio HŌM ("Studio HŌM", "we", "us", or "our"), registered in England
-      and Wales.
+      Thank you for choosing HŌM ("HŌM", "we", "us", or "our"), registered in England and Wales.
     </p>
 
     <p>
       These Terms of Use ("Terms") govern your access to and use of our digital products and
       services, including our website https://www.studiohom.co/, our mobile and web applications
-      (the "App"), Studio HŌM membership, digital courses, live events, and all related content,
-      materials, and features (collectively, the "Services").
+      (the "App"), HŌM membership, digital courses, live events, and all related content, materials,
+      and features (collectively, the "Services").
     </p>
 
     <p>
@@ -31,11 +30,11 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => (
 
     {/* Section 1 */}
     <section className="space-y-4">
-      <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">1. About Studio HŌM</h2>
+      <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">1. About HŌM</h2>
       <p>
-        Studio HŌM provides breathwork education, nervous system training, and wellbeing content
-        designed for informational and educational purposes only. Our Services do not provide
-        medical, psychological, or therapeutic advice.
+        HŌM provides breathwork education, nervous system training, and wellbeing content designed
+        for informational and educational purposes only. Our Services do not provide medical,
+        psychological, or therapeutic advice.
       </p>
       <p>
         Always consult a qualified healthcare professional before beginning any new wellness,
@@ -47,9 +46,8 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => (
     <section className="space-y-4">
       <h3 className="text-lg font-medium text-[#E6DBC7]">1.1 Membership and Accounts</h3>
       <p>
-        To access certain features, including Studio HŌM and digital courses, you must create an
-        account by providing accurate and complete information. By creating an account, you agree
-        to:
+        To access certain features, including HŌM and digital courses, you must create an account by
+        providing accurate and complete information. By creating an account, you agree to:
       </p>
       <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
         <li>Keep your login credentials secure and confidential</li>
@@ -66,7 +64,7 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => (
     <section className="space-y-4">
       <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">2. Paid Services</h2>
       <p>
-        Studio HŌM membership, digital courses, and ticketed events are purchased through Stripe at
+        HŌM membership, digital courses, and ticketed events are purchased through Stripe at
         https://www.studiohom.co/.
       </p>
     </section>
@@ -74,9 +72,9 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => (
     {/* Section 2.1 */}
     <section className="space-y-4">
       <h3 className="text-lg font-medium text-[#E6DBC7]">
-        2.1 Studio HŌM Membership (Subscription Service)
+        2.1 HŌM Membership (Subscription Service)
       </h3>
-      <p>Studio HŌM is offered as a monthly or annual subscription.</p>
+      <p>HŌM is offered as a monthly or annual subscription.</p>
 
       <h4 className="font-medium text-[#E6DBC7]/90">Subscription Terms</h4>
       <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
@@ -91,8 +89,8 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => (
       <h4 className="mt-4 font-medium text-[#E6DBC7]/90">Cooling-Off Period</h4>
       <p>
         Under UK consumer law, you have a 14-day cooling-off period for subscription purchases. You
-        acknowledge that by accessing Studio HŌM content immediately, you waive the right to
-        withdraw during this period.
+        acknowledge that by accessing HŌM content immediately, you waive the right to withdraw
+        during this period.
       </p>
 
       <h4 className="mt-4 font-medium text-[#E6DBC7]/90">Refunds</h4>
@@ -239,8 +237,8 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => (
         9. Limitation of Liability
       </h2>
       <p>
-        To the fullest extent permitted by law: Studio HŌM is not liable for indirect, incidental,
-        or consequential damages. We make no guarantees of specific outcomes or results from any
+        To the fullest extent permitted by law: HŌM is not liable for indirect, incidental, or
+        consequential damages. We make no guarantees of specific outcomes or results from any
         practice or course. Total liability shall not exceed the amount paid by you in the preceding
         12 months.
       </p>
@@ -253,8 +251,8 @@ export const TermsModal = ({ open, onOpenChange }: LegalModalProps) => (
     <section className="space-y-4">
       <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">10. Indemnity</h2>
       <p>
-        You agree to indemnify and hold harmless Studio HŌM from claims arising from your misuse of
-        the Services, violation of these Terms, or unlawful or harmful conduct.
+        You agree to indemnify and hold harmless HŌM from claims arising from your misuse of the
+        Services, violation of these Terms, or unlawful or harmful conduct.
       </p>
     </section>
 
@@ -310,14 +308,14 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => (
     subtitle="Last Updated: May 2026"
   >
     <p>
-      Studio HŌM ("Studio HŌM", "we", "us", or "our") is committed to protecting your personal
-      information and respecting your privacy rights. This Privacy Policy explains how we collect,
-      use, store, and safeguard your personal data when you:
+      HŌM ("HŌM", "we", "us", or "our") is committed to protecting your personal information and
+      respecting your privacy rights. This Privacy Policy explains how we collect, use, store, and
+      safeguard your personal data when you:
     </p>
 
     <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
       <li>Visit or use our website (www.studiohom.co)</li>
-      <li>Use our mobile or web applications (the "App"), including Studio HŌM</li>
+      <li>Use our mobile or web applications (the "App"), including HŌM</li>
       <li>Purchase or access digital courses, toolkits, or pre-sale products</li>
       <li>Attend our events or workshops</li>
       <li>Make payments through Stripe</li>
@@ -338,7 +336,7 @@ export const PrivacyModal = ({ open, onOpenChange }: LegalModalProps) => (
       <p>This Policy applies to all information collected through:</p>
       <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
         <li>The website</li>
-        <li>Studio HŌM membership</li>
+        <li>HŌM membership</li>
         <li>
           Digital products (e.g., Anxiety Reset, Emotional Regulation Toolkit, Sleep & NSDR Pack)
         </li>
@@ -524,9 +522,9 @@ export const RefundModal = ({ open, onOpenChange }: LegalModalProps) => (
     subtitle="Last Updated: May 2026"
   >
     <p>
-      Thank you for choosing to learn and practise with Studio HŌM ("Studio HŌM", "we", "us" or
-      "our"). This Refund Policy outlines your rights and our responsibilities regarding purchases
-      of digital courses, memberships, workshops, and live events.
+      Thank you for choosing to learn and practise with HŌM ("HŌM", "we", "us" or "our"). This
+      Refund Policy outlines your rights and our responsibilities regarding purchases of digital
+      courses, memberships, workshops, and live events.
     </p>
 
     <p>
@@ -603,7 +601,7 @@ export const RefundModal = ({ open, onOpenChange }: LegalModalProps) => (
         <li>If no alternative dates exist, the ticket remains non-refundable.</li>
       </ul>
 
-      <h3 className="mt-6 font-medium text-[#E6DBC7]">2.2 Cancellations by Studio HŌM</h3>
+      <h3 className="mt-6 font-medium text-[#E6DBC7]">2.2 Cancellations by HŌM</h3>
       <p>If we cancel or reschedule an event, you may choose between:</p>
       <ul className="list-disc space-y-1 pl-6 text-[#E6DBC7]/80">
         <li>A full refund, or</li>
@@ -616,9 +614,7 @@ export const RefundModal = ({ open, onOpenChange }: LegalModalProps) => (
 
     {/* Section 3 */}
     <section className="space-y-4">
-      <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-        3. Memberships (Studio HŌM)
-      </h2>
+      <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">3. Memberships (HŌM)</h2>
       <p>Covered under the Terms of Use, but summarised here for clarity:</p>
       <ul className="list-disc space-y-1 pl-6 text-[#E6DBC7]/80">
         <li>

@@ -80,6 +80,7 @@ export const getOutlookCalendarUrl = (event: CalendarEvent): string => {
 
 /**
  * Generates iCal file content for the event
+ * todo - check this
  */
 export const generateICalContent = (event: CalendarEvent, uid: string): string => {
   const lines = [
@@ -87,7 +88,7 @@ export const generateICalContent = (event: CalendarEvent, uid: string): string =
     "VERSION:2.0",
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
-    "PRODID:-//Studio HŌM//Studio//EN",
+    "PRODID:-//HŌM//EN",
     "BEGIN:VEVENT",
     `UID:${uid}`,
     `DTSTAMP:${formatICalDate(new Date())}`,

@@ -2,7 +2,7 @@
  * Stripe Price IDs & Payment Links - Central reference for all products
  * Updated: May 2026
  *
- * Studio HŌM (Subscriptions)
+ * HŌM (Subscriptions)
  * - Annual: price_1TUkLXGBlPMRpwZ6lcwXJ6b9
  * - Monthly: price_1TUkIjGBlPMRpwZ6r3dSRw8Y
  */
@@ -31,7 +31,7 @@ export const SUBSCRIPTION_DISPLAY_PRICES = {
 } as const;
 
 export const SUBSCRIPTION_BENEFITS = [
-  "Unlimited access to the full Studio HŌM practice library",
+  "Unlimited access to the full HŌM practice library",
   "Breathwork, meditation, and nervous system regulation",
   "Short daily resets and deeper guided sessions",
   "Weekly live sessions and guest workshops",

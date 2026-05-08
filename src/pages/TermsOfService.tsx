@@ -25,8 +25,7 @@ const TermsOfService = () => {
             style={{ fontSize: "clamp(0.9rem, 1vw, 1rem)", lineHeight: 1.7 }}
           >
             <p>
-              Thank you for choosing Studio HŌM ("we", "us", or "our"), registered in England and
-              Wales.
+              Thank you for choosing HŌM ("we", "us", or "our"), registered in England and Wales.
             </p>
 
             <p>
@@ -35,8 +34,8 @@ const TermsOfService = () => {
               <a href="https://www.studiohom.co" className="underline hover:text-[#E6DBC7]">
                 www.studiohom.co
               </a>
-              , our mobile and web applications (the "App"), Studio HŌM membership, digital courses,
-              live events, and all related content, materials, and features (collectively, the
+              , our mobile and web applications (the "App"), HŌM membership, digital courses, live
+              events, and all related content, materials, and features (collectively, the
               "Services").
             </p>
 
@@ -47,13 +46,11 @@ const TermsOfService = () => {
 
             {/* Section 1 */}
             <section className="space-y-4">
-              <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">
-                1. About Studio HŌM
-              </h2>
+              <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">1. About HŌM</h2>
               <p>
-                Studio HŌM provides breathwork education, nervous system training, and wellbeing
-                content designed for informational and educational purposes only. Our Services do
-                not provide medical, psychological, or therapeutic advice.
+                HŌM provides breathwork education, nervous system training, and wellbeing content
+                designed for informational and educational purposes only. Our Services do not
+                provide medical, psychological, or therapeutic advice.
               </p>
               <p>
                 Always consult a qualified healthcare professional before beginning any new
@@ -66,9 +63,9 @@ const TermsOfService = () => {
             <section className="space-y-4">
               <h3 className="text-lg font-medium text-[#E6DBC7]">1.1 Membership and Accounts</h3>
               <p>
-                To access certain features, including Studio HŌM and digital courses, you must
-                create an account by providing accurate and complete information. By creating an
-                account, you agree to:
+                To access certain features, including HŌM and digital courses, you must create an
+                account by providing accurate and complete information. By creating an account, you
+                agree to:
               </p>
               <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
                 <li>Keep your login credentials secure and confidential</li>
@@ -93,8 +90,7 @@ const TermsOfService = () => {
                 2. Paid Services
               </h2>
               <p>
-                Studio HŌM membership, digital courses, and ticketed events are purchased through
-                Stripe at{" "}
+                HŌM membership, digital courses, and ticketed events are purchased through Stripe at{" "}
                 <a href="https://www.studiohom.co" className="underline hover:text-[#E6DBC7]">
                   www.studiohom.co
                 </a>
@@ -105,9 +101,9 @@ const TermsOfService = () => {
             {/* Section 2.1 */}
             <section className="space-y-4">
               <h3 className="text-lg font-medium text-[#E6DBC7]">
-                2.1 Studio HŌM Membership (Subscription Service)
+                2.1 HŌM Membership (Subscription Service)
               </h3>
-              <p>Studio HŌM is offered as a monthly or annual subscription.</p>
+              <p>HŌM is offered as a monthly or annual subscription.</p>
 
               <h4 className="font-medium text-[#E6DBC7]/90">Subscription Terms</h4>
               <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
@@ -126,8 +122,8 @@ const TermsOfService = () => {
               <h4 className="mt-4 font-medium text-[#E6DBC7]/90">Cooling-Off Period</h4>
               <p>
                 Under UK consumer law, you have a 14-day cooling-off period for subscription
-                purchases. You acknowledge that by accessing Studio HŌM content immediately, you
-                waive the right to withdraw during this period.
+                purchases. You acknowledge that by accessing HŌM content immediately, you waive the
+                right to withdraw during this period.
               </p>
 
               <h4 className="mt-4 font-medium text-[#E6DBC7]/90">Refunds</h4>
@@ -266,8 +262,8 @@ const TermsOfService = () => {
               </h2>
               <p>
                 All content, materials, video/audio sessions, trademarks, and software are owned by
-                Studio HŌM. You receive a personal, non-transferable, non-commercial licence to use
-                the Services.
+                HŌM. You receive a personal, non-transferable, non-commercial licence to use the
+                Services.
               </p>
               <p>
                 You may not copy, modify, resell, distribute, or create derivative works without our
@@ -295,9 +291,7 @@ const TermsOfService = () => {
               </h2>
               <p>To the fullest extent permitted by law:</p>
               <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
-                <li>
-                  Studio HŌM is not liable for indirect, incidental, or consequential damages.
-                </li>
+                <li>HŌM is not liable for indirect, incidental, or consequential damages.</li>
                 <li>
                   We make no guarantees of specific outcomes or results from any practice or course.
                 </li>
@@ -315,7 +309,7 @@ const TermsOfService = () => {
             {/* Section 10 */}
             <section className="space-y-4">
               <h2 className="font-editorial text-xl font-medium text-[#E6DBC7]">10. Indemnity</h2>
-              <p>You agree to indemnify and hold harmless Studio HŌM from claims arising from:</p>
+              <p>You agree to indemnify and hold harmless HŌM from claims arising from:</p>
               <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
                 <li>Your misuse of the Services</li>
                 <li>Violation of these Terms</li>

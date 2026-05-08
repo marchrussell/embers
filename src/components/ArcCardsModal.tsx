@@ -120,7 +120,7 @@ export function ArcCardsModal({ open, onOpenChange }: ArcCardsModalProps) {
   };
 
   const handleOneOnOneClick = () => {
-    window.open('https://www.marchrussell.com/explore', '_blank')
+    window.open("https://www.marchrussell.com/explore", "_blank");
   };
 
   return (

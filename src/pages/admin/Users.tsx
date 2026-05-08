@@ -119,11 +119,13 @@ const AdminUsers = () => {
         if (
           priceId === LIVE_SUBSCRIPTION_PRICES.ANNUAL ||
           priceId === TEST_SUBSCRIPTION_PRICES.ANNUAL
-        ) return "annual";
+        )
+          return "annual";
         if (
           priceId === LIVE_SUBSCRIPTION_PRICES.MONTHLY ||
           priceId === TEST_SUBSCRIPTION_PRICES.MONTHLY
-        ) return "monthly";
+        )
+          return "monthly";
         return null;
       };
 

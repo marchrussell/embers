@@ -25,8 +25,8 @@ const PrivacyPolicy = () => {
             style={{ fontSize: "clamp(0.9rem, 1vw, 1rem)", lineHeight: 1.7 }}
           >
             <p>
-              Studio HŌM ("we", "us", or "our") is committed to protecting your personal information
-              and respecting your privacy rights. This Privacy Policy explains how we collect, use,
+              HŌM ("we", "us", or "our") is committed to protecting your personal information and
+              respecting your privacy rights. This Privacy Policy explains how we collect, use,
               store, and safeguard your personal data when you:
             </p>
 
@@ -38,7 +38,7 @@ const PrivacyPolicy = () => {
                 </a>
                 )
               </li>
-              <li>Use our mobile or web applications (the "App"), including Studio HŌM</li>
+              <li>Use our mobile or web applications (the "App"), including HŌM</li>
               <li>Purchase or access digital courses, toolkits, or pre-sale products</li>
               <li>Attend our events or workshops</li>
               <li>Make payments through Stripe</li>
@@ -64,7 +64,7 @@ const PrivacyPolicy = () => {
               <p>This Policy applies to all information collected through:</p>
               <ul className="list-disc space-y-2 pl-6 text-[#E6DBC7]/80">
                 <li>The website</li>
-                <li>Studio HŌM membership</li>
+                <li>HŌM membership</li>
                 <li>
                   Digital products (e.g., Anxiety Reset, Emotional Regulation Toolkit, Sleep & NSDR
                   Pack)
