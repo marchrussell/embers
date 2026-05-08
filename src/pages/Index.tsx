@@ -117,7 +117,7 @@ const Index = () => {
                   {/* to add gradient  */}
                   <Link to="/online" className="group inline-flex items-baseline">
                     <span
-                      className="ml-4 inline-block font-editorial transition-transform duration-300 group-hover:translate-x-2"
+                      className="ml-6 inline-block font-editorial transition-transform duration-300 group-hover:translate-x-2"
                       style={{ fontSize: "clamp(2.4rem, 3.5vw, 3.5rem)", fontWeight: 300 }}
                     >
                       →
