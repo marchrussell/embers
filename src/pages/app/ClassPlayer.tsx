@@ -42,9 +42,7 @@ const ClassPlayer = () => {
   });
 
   const isVideo = !!classData?.video_url;
-  const optimizedVideoUrl = classData?.video_url
-    ? getOptimizedVideoUrl(classData.video_url)
-    : null;
+  const optimizedVideoUrl = classData?.video_url ? getOptimizedVideoUrl(classData.video_url) : null;
 
   const getMedia = (): HTMLAudioElement | HTMLVideoElement | null =>
     isVideo ? videoRef.current : audioRef.current;
@@ -265,9 +263,7 @@ const ClassPlayer = () => {
                     <p className="text-base">
                       Duration: {classData?.duration_minutes || 3} minutes
                     </p>
-                    <p className="text-sm">
-                      Teacher: {classData?.teacher_name || "March Russell"}
-                    </p>
+                    <p className="text-sm">Teacher: {classData?.teacher_name || "March Russell"}</p>
                   </div>
                   <Button
                     onClick={handleStart}
