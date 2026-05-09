@@ -1,6 +1,10 @@
 import { lazy } from "react";
 
 // Lazy load all modal components to reduce initial bundle size
+export const AuthSignInModal = lazy(() =>
+  import("@/components/AuthSignInModal").then((m) => ({ default: m.AuthSignInModal }))
+);
+
 export const SubscriptionModal = lazy(() =>
   import("@/components/SubscriptionModal").then((module) => ({ default: module.SubscriptionModal }))
 );

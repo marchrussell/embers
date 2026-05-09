@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { toast } from "sonner";
 
 import { useAuth } from "@/contexts/AuthContext";
@@ -18,7 +18,7 @@ export function useFavourites(): UseFavouritesReturn {
   const queryClient = useQueryClient();
   const queryKey = ["favourites", user?.id];
 
-  const { data: favouriteIds = [], isLoading: loading } = useQuery<string[]>({
+  const { data: rawFavouriteIds, isLoading: loading } = useQuery<string[]>({
     queryKey,
     queryFn: async () => {
       const { data, error } = await supabase
@@ -31,6 +31,8 @@ export function useFavourites(): UseFavouritesReturn {
     },
     enabled: !!user?.id,
   });
+
+  const favouriteIds = useMemo(() => rawFavouriteIds ?? [], [rawFavouriteIds]);
 
   const toggleMutation = useMutation({
     mutationFn: async ({ sessionId, add }: { sessionId: string; add: boolean }) => {

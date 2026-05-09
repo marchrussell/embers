@@ -5,7 +5,7 @@ import { ReactElement, Suspense, useEffect, useMemo, useRef, useState } from "re
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { ArcCardsModal } from "@/components/ArcCardsModal";
-import { SubscriptionModal } from "@/components/modals/LazyModals";
+import { AuthSignInModal, SubscriptionModal } from "@/components/modals/LazyModals";
 import { NavBar } from "@/components/NavBar";
 import {
   LibraryEmbeddedSkeleton,
@@ -45,6 +45,12 @@ const LibraryContent = ({
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+
+  const handleSubscriptionRequired = () => {
+    if (!user) setShowAuthModal(true);
+    else setShowSubscriptionModal(true);
+  };
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(() => {
     return new URLSearchParams(window.location.search).get("session");
   });
@@ -81,7 +87,7 @@ const LibraryContent = ({
   const activeCategory = useMemo(() => {
     const categoryParam = searchParams.get("category");
     if (categoryParam && categoriesWithSessions.length > 0) {
-      return categoriesWithSessions.find((cat) => cat.name === categoryParam) ?? null;
+      return categoriesWithSessions.find((cat) => cat.name.trim() === categoryParam.trim()) ?? null;
     }
     return null;
   }, [searchParams, categoriesWithSessions]);
@@ -113,10 +119,6 @@ const LibraryContent = ({
     }
   }, [activeCategory]);
 
-  // const handleLibraryBack = () => {
-  //   navigate(isEmbedded ? "/online?tab=library" : "/library", { replace: true });
-  // };
-
   const handleSessionClick = (sessionId: string) => {
     if (!sessionId) return;
     setSelectedSessionId(sessionId);
@@ -130,9 +132,8 @@ const LibraryContent = ({
         category={activeCategory}
         isEmbedded={isEmbedded}
         hasSubscription={hasSubscription}
-        // onBack={handleLibraryBack}
         onSessionClick={handleSessionClick}
-        onSubscriptionRequired={() => setShowSubscriptionModal(true)}
+        onSubscriptionRequired={handleSubscriptionRequired}
       />
     );
   } else {
@@ -153,7 +154,7 @@ const LibraryContent = ({
           )
         }
         onSessionClick={handleSessionClick}
-        onSubscriptionRequired={() => setShowSubscriptionModal(true)}
+        onSubscriptionRequired={handleSubscriptionRequired}
         onArcCardsOpen={() => setShowArcCardsModal(true)}
       />
     );
@@ -172,6 +173,15 @@ const LibraryContent = ({
         <SubscriptionModal
           open={showSubscriptionModal}
           onClose={() => setShowSubscriptionModal(false)}
+        />
+        <AuthSignInModal
+          open={showAuthModal}
+          onClose={() => setShowAuthModal(false)}
+          footerVariant="trial"
+          onOpenSubscription={() => {
+            setShowAuthModal(false);
+            setShowSubscriptionModal(true);
+          }}
         />
       </Suspense>
       <ArcCardsModal open={showArcCardsModal} onOpenChange={setShowArcCardsModal} />

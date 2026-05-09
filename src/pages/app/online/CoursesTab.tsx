@@ -3,7 +3,7 @@ import { Suspense, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { FadeUp } from "@/components/FadeUp";
-import { SubscriptionModal } from "@/components/modals/LazyModals";
+import { AuthSignInModal, SubscriptionModal } from "@/components/modals/LazyModals";
 import OnlineTabLayout from "@/components/OnlineTabLayout";
 import { GlowButton } from "@/components/ui/glow-button";
 import SplitCard from "@/components/ui/split-card";
@@ -31,9 +31,15 @@ interface ClassItem {
 // --- Course Detail View ---
 
 const CourseDetailContent = ({ slug }: { slug: string }) => {
-  const { hasSubscription, isAdmin, isTestUser } = useAuth();
+  const { hasSubscription, isAdmin, isTestUser, user } = useAuth();
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+
+  const handleSubscriptionRequired = () => {
+    if (!user) setShowAuthModal(true);
+    else setShowSubscriptionModal(true);
+  };
 
   const { data } = useSuspenseQuery({
     queryKey: ["course", slug],
@@ -90,12 +96,21 @@ const CourseDetailContent = ({ slug }: { slug: string }) => {
           analytics.courseStarted(course.id, course.title);
           setSelectedSessionId(id);
         }}
-        onSubscriptionRequired={() => setShowSubscriptionModal(true)}
+        onSubscriptionRequired={handleSubscriptionRequired}
       />
       <Suspense fallback={null}>
         <SubscriptionModal
           open={showSubscriptionModal}
           onClose={() => setShowSubscriptionModal(false)}
+        />
+        <AuthSignInModal
+          open={showAuthModal}
+          onClose={() => setShowAuthModal(false)}
+          footerVariant="trial"
+          onOpenSubscription={() => {
+            setShowAuthModal(false);
+            setShowSubscriptionModal(true);
+          }}
         />
       </Suspense>
       <SessionDetailModal

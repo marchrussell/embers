@@ -253,7 +253,7 @@ const LibraryMainView = memo(
               </div>
 
               {/* Feedback Section */}
-              <div className="mt-1">
+              <div className="mt-10">
                 <FeedbackSection />
               </div>
 

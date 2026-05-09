@@ -88,7 +88,7 @@ export const PhoneMockups = () => {
           <div className={phoneFrameStyles}>
             {/* Hero */}
             <div className="relative h-48 overflow-hidden">
-              <img src={categoryCalm} alt="Calm" className="h-full w-full object-cover" />
+              <img src={categoryCalm} alt="Calm" className="h-full w-full object-bottom" />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
               <div className="absolute bottom-4 left-6">
                 <h3 className="font-editorial text-[26px] text-white">Calm & Restore</h3>
