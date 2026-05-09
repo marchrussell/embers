@@ -64,7 +64,7 @@ export const OptimizedImage = ({
     alt,
     loading: priority ? ("eager" as const) : ("lazy" as const),
     decoding: priority ? ("sync" as const) : ("async" as const),
-    ...({ fetchpriority: priority ? "high" : "low" } as any),
+    ...({ fetchPriority: priority ? "high" : "low" } as any),
     onLoad: handleLoad,
     onError: handleError,
     ...props,

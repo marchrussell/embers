@@ -20,7 +20,7 @@ export const preloadImage = (src: string, priority: "high" | "low" = "high") => 
   link.as = "image";
   link.href = src;
   if (priority === "high") {
-    link.setAttribute("fetchpriority", "high");
+    link.setAttribute("fetchPriority", "high");
   }
   document.head.appendChild(link);
 };

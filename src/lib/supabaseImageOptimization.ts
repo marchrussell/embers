@@ -115,7 +115,7 @@ export const preloadCriticalImage = (publicUrl: string, options: ImageTransformO
   link.rel = "preload";
   link.as = "image";
   link.href = optimizedUrl;
-  link.setAttribute("fetchpriority", "high");
+  link.setAttribute("fetchPriority", "high");
 
   // Add to head
   document.head.appendChild(link);
