@@ -179,11 +179,11 @@ const SessionsListLayout = memo(
                     return (
                       <div key={section.id}>
                         <div className="mb-5 mt-10">
-                          <p className="text-xs font-bold uppercase tracking-widest text-[#E6DBC7]/60">
+                          <p className="font-editorial text-xl font-light text-[#E6DBC7] sm:text-2xl md:text-3xl">
                             {section.title}
                           </p>
                           {section.description && (
-                            <p className="mt-1 text-sm font-light text-[#E6DBC7]/50">
+                            <p className="mt-2 text-sm font-light text-[#E6DBC7]/50 sm:mb-10 md:mb-12 md:text-base">
                               {section.description}
                             </p>
                           )}
