@@ -154,7 +154,7 @@ export const AuthSignInModal = ({
           {/* Close button */}
           <ModalCloseButton onClose={handleClose} size="md" position="default" />
 
-          <div className="p-8 md:p-10">
+          <div className="p-10">
             {/* Logo */}
             <div className="mb-8 text-center">
               <h2 className="font-editorial text-[clamp(1.5rem,2vw,1.75rem)] font-light text-white">
