@@ -10,6 +10,7 @@ export interface LibrarySession {
   technique?: string;
   intensity?: string;
   order_index?: number | null;
+  section_id?: string | null;
 }
 
 export interface FavouriteSession {

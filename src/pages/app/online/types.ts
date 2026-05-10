@@ -1,3 +1,10 @@
+export interface CourseSection {
+  id: string;
+  title: string;
+  description: string | null;
+  order_index: number;
+}
+
 export interface Course {
   id: string;
   title: string;

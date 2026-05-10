@@ -7,12 +7,19 @@ import SessionPlayCard from "@/pages/app/online/components/SessionPlayCard";
 
 import { LibrarySession } from "./types";
 
+interface SessionSection {
+  id: string;
+  title: string;
+  description: string | null;
+}
+
 interface SessionsListLayoutProps {
   image: string | null;
   title: string;
   description: string | null;
   countLabel: string;
   sessions: LibrarySession[];
+  sections?: SessionSection[];
   isEmbedded?: boolean;
   hasSubscription: boolean;
   onBack?: () => void;
@@ -21,6 +28,63 @@ interface SessionsListLayoutProps {
   sessionDescriptionFallback?: (session: LibrarySession) => string;
 }
 
+interface SessionRowProps {
+  session: LibrarySession;
+  index: number;
+  hasSubscription: boolean;
+  onSessionClick: (id: string) => void;
+  onSubscriptionRequired: () => void;
+  sessionDescriptionFallback?: (session: LibrarySession) => string;
+}
+
+const SessionRow = memo(
+  ({
+    session,
+    index,
+    hasSubscription,
+    onSessionClick,
+    onSubscriptionRequired,
+    sessionDescriptionFallback,
+  }: SessionRowProps) => {
+    const isNew = session.created_at
+      ? Math.floor((Date.now() - new Date(session.created_at).getTime()) / (1000 * 60 * 60 * 24)) <=
+        7
+      : false;
+    const fallback =
+      sessionDescriptionFallback?.(session) ?? `A ${session.duration} minute practice.`;
+
+    return (
+      <FadeUp delay={index * 50}>
+        <SessionPlayCard
+          sessionId={session.id}
+          title={session.title}
+          description={session.description || fallback}
+          meta={[
+            session.teacher,
+            session.duration != null && `${session.duration} min`,
+            session.intensity,
+            session.technique,
+          ]
+            .filter(Boolean)
+            .join(" • ")}
+          imageUrl={session.image}
+          locked={session.locked}
+          isNew={isNew}
+          onClick={() => {
+            if (session.locked && !hasSubscription) {
+              onSubscriptionRequired();
+            } else {
+              onSessionClick(session.id);
+            }
+          }}
+        />
+      </FadeUp>
+    );
+  }
+);
+
+SessionRow.displayName = "SessionRow";
+
 const SessionsListLayout = memo(
   ({
     image,
@@ -28,6 +92,7 @@ const SessionsListLayout = memo(
     description,
     countLabel,
     sessions,
+    sections,
     isEmbedded = false,
     hasSubscription,
     onBack,
@@ -35,8 +100,6 @@ const SessionsListLayout = memo(
     onSubscriptionRequired,
     sessionDescriptionFallback,
   }: SessionsListLayoutProps) => {
-    const now = Date.now();
-
     const sortedSessions = [...sessions].sort((a: LibrarySession, b: LibrarySession) => {
       if (a.locked !== b.locked) return a.locked ? 1 : -1;
       return (a.order_index ?? Infinity) - (b.order_index ?? Infinity);
@@ -87,46 +150,78 @@ const SessionsListLayout = memo(
 
         {/* Sessions List */}
         <div className="pb-24 pt-16">
-          <div className="grid gap-5 md:gap-6">
-            {sortedSessions.map((session: LibrarySession, index) => {
-              const isNew = session.created_at
-                ? Math.floor(
-                    (now - new Date(session.created_at).getTime()) / (1000 * 60 * 60 * 24)
-                  ) <= 7
-                : false;
-
-              const fallback =
-                sessionDescriptionFallback?.(session) ?? `A ${session.duration} minute practice.`;
-
+          {sections && sections.length > 0 ? (
+            (() => {
+              const unsectioned = sortedSessions.filter((s) => !s.section_id);
+              let globalIndex = 0;
               return (
-                <FadeUp key={session.id} delay={index * 50}>
-                  <SessionPlayCard
-                    sessionId={session.id}
-                    title={session.title}
-                    description={session.description || fallback}
-                    meta={[
-                      session.teacher,
-                      session.duration != null && `${session.duration} min`,
-                      session.intensity,
-                      session.technique,
-                    ]
-                      .filter(Boolean)
-                      .join(" • ")}
-                    imageUrl={session.image}
-                    locked={session.locked}
-                    isNew={isNew}
-                    onClick={() => {
-                      if (session.locked && !hasSubscription) {
-                        onSubscriptionRequired();
-                      } else {
-                        onSessionClick(session.id);
-                      }
-                    }}
-                  />
-                </FadeUp>
+                <>
+                  {unsectioned.length > 0 && (
+                    <div className="grid gap-5 md:gap-6">
+                      {unsectioned.map((session) => (
+                        <SessionRow
+                          key={session.id}
+                          session={session}
+                          index={globalIndex++}
+                          hasSubscription={hasSubscription}
+                          onSessionClick={onSessionClick}
+                          onSubscriptionRequired={onSubscriptionRequired}
+                          sessionDescriptionFallback={sessionDescriptionFallback}
+                        />
+                      ))}
+                    </div>
+                  )}
+                  {sections.map((section) => {
+                    const sectionSessions = sortedSessions.filter(
+                      (s) => s.section_id === section.id
+                    );
+                    if (sectionSessions.length === 0) return null;
+                    return (
+                      <div key={section.id}>
+                        <div className="mb-5 mt-10">
+                          <p className="text-xs font-bold uppercase tracking-widest text-[#E6DBC7]/60">
+                            {section.title}
+                          </p>
+                          {section.description && (
+                            <p className="mt-1 text-sm font-light text-[#E6DBC7]/50">
+                              {section.description}
+                            </p>
+                          )}
+                        </div>
+                        <div className="grid gap-5 md:gap-6">
+                          {sectionSessions.map((session) => (
+                            <SessionRow
+                              key={session.id}
+                              session={session}
+                              index={globalIndex++}
+                              hasSubscription={hasSubscription}
+                              onSessionClick={onSessionClick}
+                              onSubscriptionRequired={onSubscriptionRequired}
+                              sessionDescriptionFallback={sessionDescriptionFallback}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </>
               );
-            })}
-          </div>
+            })()
+          ) : (
+            <div className="grid gap-5 md:gap-6">
+              {sortedSessions.map((session, index) => (
+                <SessionRow
+                  key={session.id}
+                  session={session}
+                  index={index}
+                  hasSubscription={hasSubscription}
+                  onSessionClick={onSessionClick}
+                  onSubscriptionRequired={onSubscriptionRequired}
+                  sessionDescriptionFallback={sessionDescriptionFallback}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     );

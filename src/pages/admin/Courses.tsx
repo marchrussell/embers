@@ -36,6 +36,14 @@ interface Program {
   duration_days: number | null;
 }
 
+interface SectionFormItem {
+  localId: string;
+  dbId?: string;
+  title: string;
+  description: string;
+  classIds: string[];
+}
+
 interface Class {
   id: string;
   title: string;
@@ -51,6 +59,7 @@ const AdminPrograms = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingCourse, setEditingCourse] = useState<Program | null>(null);
   const [selectedClasses, setSelectedClasses] = useState<string[]>([]);
+  const [sections, setSections] = useState<SectionFormItem[]>([]);
   const [uploading, setUploading] = useState(false);
   const [classSearchQuery, setClassSearchQuery] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
@@ -198,6 +207,7 @@ const AdminPrograms = () => {
         });
       } else {
         await updateCourseClasses(editingCourse.id);
+        await updateCourseSections(editingCourse.id);
         toast({ title: "Program updated successfully" });
         queryClient.invalidateQueries({ queryKey: ["admin-programs"] });
         resetForm();
@@ -212,7 +222,10 @@ const AdminPrograms = () => {
           variant: "destructive",
         });
       } else {
-        if (data) await updateCourseClasses(data.id);
+        if (data) {
+          await updateCourseClasses(data.id);
+          await updateCourseSections(data.id);
+        }
         toast({ title: "Program created successfully" });
         queryClient.invalidateQueries({ queryKey: ["admin-programs"] });
         resetForm();
@@ -228,6 +241,74 @@ const AdminPrograms = () => {
         .from("classes")
         .update({ program_id: programId, order_index: i })
         .eq("id", selectedClasses[i]);
+    }
+  };
+
+  const updateCourseSections = async (programId: string) => {
+    const existingDbIds = sections.filter((s) => s.dbId).map((s) => s.dbId as string);
+
+    // Remove sections that were deleted
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const db = supabase as any;
+    const { data: existing } = await db
+      .from("program_sections")
+      .select("id")
+      .eq("program_id", programId);
+    const toDelete = (existing ?? [])
+      .map((r: { id: string }) => r.id)
+      .filter((id: string) => !existingDbIds.includes(id));
+    if (toDelete.length > 0) {
+      await db.from("program_sections").delete().in("id", toDelete);
+    }
+
+    // Upsert each section and assign classes
+    for (let i = 0; i < sections.length; i++) {
+      const section = sections[i];
+      let sectionId = section.dbId;
+
+      if (sectionId) {
+        await db
+          .from("program_sections")
+          .update({
+            title: section.title,
+            description: section.description || null,
+            order_index: i,
+          })
+          .eq("id", sectionId);
+      } else {
+        const { data: inserted } = await db
+          .from("program_sections")
+          .insert({
+            program_id: programId,
+            title: section.title,
+            description: section.description || null,
+            order_index: i,
+          })
+          .select("id")
+          .single();
+        sectionId = inserted?.id;
+      }
+
+      if (sectionId) {
+        // Assign classes to this section
+        for (const classId of section.classIds) {
+          await supabase
+            .from("classes")
+            .update({ program_section_id: sectionId } as any)
+            .eq("id", classId);
+        }
+      }
+    }
+
+    // Clear section assignment for classes not in any section
+    const allSectionedClassIds = sections.flatMap((s) => s.classIds);
+    for (const classId of selectedClasses) {
+      if (!allSectionedClassIds.includes(classId)) {
+        await supabase
+          .from("classes")
+          .update({ program_section_id: null } as any)
+          .eq("id", classId);
+      }
     }
   };
 
@@ -261,13 +342,38 @@ const AdminPrograms = () => {
       duration_days: course.duration_days?.toString() || "",
     });
 
-    const { data } = await supabase
-      .from("classes")
-      .select("id")
-      .eq("program_id", course.id)
-      .order("order_index");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const db = supabase as any;
+    const [{ data: classDataRaw }, { data: sectionData }] = await Promise.all([
+      db
+        .from("classes")
+        .select("id, program_section_id")
+        .eq("program_id", course.id)
+        .order("order_index"),
+      db
+        .from("program_sections")
+        .select("id, title, description, order_index")
+        .eq("program_id", course.id)
+        .order("order_index"),
+    ]);
+    const classData = (classDataRaw ?? []) as { id: string; program_section_id: string | null }[];
 
-    setSelectedClasses(data?.map((c) => c.id) || []);
+    setSelectedClasses(classData.map((c) => c.id));
+
+    const loadedSections: SectionFormItem[] = (sectionData ?? []).map(
+      (s: { id: string; title: string; description: string | null; order_index: number }) => ({
+        localId: s.id,
+        dbId: s.id,
+        title: s.title,
+        description: s.description || "",
+        classIds: (classData ?? [])
+          .filter(
+            (c: { id: string; program_section_id: string | null }) => c.program_section_id === s.id
+          )
+          .map((c: { id: string }) => c.id),
+      })
+    );
+    setSections(loadedSections);
     setIsDialogOpen(true);
   };
 
@@ -300,9 +406,39 @@ const AdminPrograms = () => {
       duration_days: "",
     });
     setSelectedClasses([]);
+    setSections([]);
     setClassSearchQuery("");
     setEditingCourse(null);
     setIsDialogOpen(false);
+  };
+
+  const addSection = () => {
+    setSections((prev) => [
+      ...prev,
+      { localId: crypto.randomUUID(), title: "", description: "", classIds: [] },
+    ]);
+  };
+
+  const updateSection = (localId: string, patch: Partial<SectionFormItem>) => {
+    setSections((prev) => prev.map((s) => (s.localId === localId ? { ...s, ...patch } : s)));
+  };
+
+  const removeSection = (localId: string) => {
+    setSections((prev) => prev.filter((s) => s.localId !== localId));
+  };
+
+  const toggleSectionClass = (localId: string, classId: string) => {
+    setSections((prev) =>
+      prev.map((s) => {
+        if (s.localId !== localId) return s;
+        return {
+          ...s,
+          classIds: s.classIds.includes(classId)
+            ? s.classIds.filter((id) => id !== classId)
+            : [...s.classIds, classId],
+        };
+      })
+    );
   };
 
   const toggleClass = (classId: string) => {
@@ -542,6 +678,93 @@ const AdminPrograms = () => {
                   </div>
                 ))}
             </div>
+          </div>
+
+          {/* Course Sections */}
+          <div className="space-y-6 rounded-lg border border-white/20 p-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <Label className="text-white/80">Course Sections ({sections.length})</Label>
+                <p className="mt-1 text-sm text-white/50">
+                  Group classes under subtitles shown in the course detail view
+                </p>
+              </div>
+              <Button type="button" variant="outline" onClick={addSection}>
+                <Plus className="mr-1 h-5 w-5" /> Add Section
+              </Button>
+            </div>
+
+            {sections.map((section, idx) => (
+              <div
+                key={section.localId}
+                className="space-y-6 rounded-md border border-white/10 bg-white/5 p-6"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-white/40">Section {idx + 1}</span>
+                  <button
+                    type="button"
+                    onClick={() => removeSection(section.localId)}
+                    className="text-red-400 hover:text-red-300"
+                    aria-label="Remove section"
+                  >
+                    ×
+                  </button>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-white/70">Title *</Label>
+                  <Input
+                    value={section.title}
+                    onChange={(e) => updateSection(section.localId, { title: e.target.value })}
+                    className="border-white/20 bg-white/5 text-white"
+                    placeholder="e.g. Stabilise / Regulate / Restore"
+                    required={false}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-white/70">Description</Label>
+                  <Textarea
+                    value={section.description}
+                    onChange={(e) =>
+                      updateSection(section.localId, { description: e.target.value })
+                    }
+                    rows={2}
+                    className="border-white/20 bg-white/5 text-white placeholder:text-white/40"
+                    placeholder="Optional description shown below the subtitle"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-white/70">
+                    Classes in this section ({section.classIds.length})
+                  </Label>
+                  <div className="max-h-48 space-y-1 overflow-y-auto">
+                    {selectedClasses.map((classId) => {
+                      const classItem = classes.find((c) => c.id === classId);
+                      if (!classItem) return null;
+                      return (
+                        <div
+                          key={classId}
+                          className="flex items-center gap-2 rounded p-2 hover:bg-white/5"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={section.classIds.includes(classId)}
+                            onChange={() => toggleSectionClass(section.localId, classId)}
+                            className="h-5 w-5"
+                          />
+                          <span className="flex-1 text-sm text-white">{classItem.title}</span>
+                          <span className="text-xs text-white/40">
+                            {classItem.duration_minutes ? `${classItem.duration_minutes}min` : ""}
+                          </span>
+                        </div>
+                      );
+                    })}
+                    {selectedClasses.length === 0 && (
+                      <p className="text-xs text-white/40">Add classes to the course above first</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
 
           <div className="flex items-center space-x-2">

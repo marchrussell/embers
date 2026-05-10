@@ -15,7 +15,7 @@ import SessionsListLayout from "../library/SessionsListLayout";
 import { LibrarySession } from "../library/types";
 import SessionDetailModal from "../SessionDetail";
 import { useCourses } from "./hooks/useCourses";
-import { Course } from "./types";
+import { Course, CourseSection } from "./types";
 
 interface ClassItem {
   id: string;
@@ -26,6 +26,7 @@ interface ClassItem {
   order_index: number | null;
   image_url: string | null;
   teacher_name: string | null;
+  program_section_id: string | null;
 }
 
 // --- Course Detail View ---
@@ -52,23 +53,33 @@ const CourseDetailContent = ({ slug }: { slug: string }) => {
         .single();
       if (programError) throw programError;
 
-      const { data: classesData, error: classesError } = await supabase
-        .from("classes")
-        .select(
-          "id, title, description, short_description, duration_minutes, order_index, image_url, teacher_name"
-        )
-        .eq("program_id", programData.id)
-        .order("order_index");
-      if (classesError) throw classesError;
+      const [classesResult, sectionsResult] = await Promise.all([
+        supabase
+          .from("classes")
+          .select(
+            "id, title, description, short_description, duration_minutes, order_index, image_url, teacher_name, program_section_id"
+          )
+          .eq("program_id", programData.id)
+          .order("order_index"),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (supabase as any)
+          .from("program_sections")
+          .select("id, title, description, order_index")
+          .eq("program_id", programData.id)
+          .order("order_index"),
+      ]);
+      if (classesResult.error) throw classesResult.error;
+      if (sectionsResult.error) throw sectionsResult.error;
 
       return {
         course: programData as unknown as Course,
-        lessons: (classesData ?? []) as ClassItem[],
+        lessons: (classesResult.data ?? []) as unknown as ClassItem[],
+        sections: (sectionsResult.data ?? []) as CourseSection[],
       };
     },
   });
 
-  const { course, lessons } = data;
+  const { course, lessons, sections } = data;
   const isLocked = !hasSubscription && !isAdmin && !isTestUser;
 
   const sessions: LibrarySession[] = lessons.map((lesson) => ({
@@ -80,6 +91,7 @@ const CourseDetailContent = ({ slug }: { slug: string }) => {
     image: lesson.image_url || course.image_url,
     locked: isLocked,
     order_index: lesson.order_index,
+    section_id: lesson.program_section_id,
   }));
 
   return (
@@ -90,6 +102,7 @@ const CourseDetailContent = ({ slug }: { slug: string }) => {
         description={course.short_description || course.description}
         countLabel={`${lessons.length} Classes`}
         sessions={sessions}
+        sections={sections}
         isEmbedded
         hasSubscription={hasSubscription}
         onSessionClick={(id) => {
