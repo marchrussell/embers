@@ -207,7 +207,12 @@ const AdminPrograms = () => {
         });
       } else {
         await updateCourseClasses(editingCourse.id);
-        await updateCourseSections(editingCourse.id);
+        try {
+          await updateCourseSections(editingCourse.id);
+        } catch (e) {
+          toast({ title: "Error saving sections", description: (e as Error).message, variant: "destructive" });
+          return;
+        }
         toast({ title: "Program updated successfully" });
         queryClient.invalidateQueries({ queryKey: ["admin-programs"] });
         resetForm();
@@ -224,7 +229,12 @@ const AdminPrograms = () => {
       } else {
         if (data) {
           await updateCourseClasses(data.id);
-          await updateCourseSections(data.id);
+          try {
+            await updateCourseSections(data.id);
+          } catch (e) {
+            toast({ title: "Error saving sections", description: (e as Error).message, variant: "destructive" });
+            return;
+          }
         }
         toast({ title: "Program created successfully" });
         queryClient.invalidateQueries({ queryKey: ["admin-programs"] });
@@ -245,38 +255,39 @@ const AdminPrograms = () => {
   };
 
   const updateCourseSections = async (programId: string) => {
-    const existingDbIds = sections.filter((s) => s.dbId).map((s) => s.dbId as string);
-
-    // Remove sections that were deleted
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const db = supabase as any;
-    const { data: existing } = await db
+
+    const { data: existing, error: fetchError } = await db
       .from("program_sections")
       .select("id")
       .eq("program_id", programId);
+    if (fetchError) throw fetchError;
+
+    const existingDbIds = sections.filter((s) => s.dbId).map((s) => s.dbId as string);
     const toDelete = (existing ?? [])
       .map((r: { id: string }) => r.id)
       .filter((id: string) => !existingDbIds.includes(id));
     if (toDelete.length > 0) {
-      await db.from("program_sections").delete().in("id", toDelete);
+      const { error: deleteError } = await db
+        .from("program_sections")
+        .delete()
+        .in("id", toDelete);
+      if (deleteError) throw deleteError;
     }
 
-    // Upsert each section and assign classes
     for (let i = 0; i < sections.length; i++) {
       const section = sections[i];
       let sectionId = section.dbId;
 
       if (sectionId) {
-        await db
+        const { error: updateError } = await db
           .from("program_sections")
-          .update({
-            title: section.title,
-            description: section.description || null,
-            order_index: i,
-          })
+          .update({ title: section.title, description: section.description || null, order_index: i })
           .eq("id", sectionId);
+        if (updateError) throw updateError;
       } else {
-        const { data: inserted } = await db
+        const { data: inserted, error: insertError } = await db
           .from("program_sections")
           .insert({
             program_id: programId,
@@ -286,28 +297,29 @@ const AdminPrograms = () => {
           })
           .select("id")
           .single();
+        if (insertError) throw insertError;
         sectionId = inserted?.id;
       }
 
       if (sectionId) {
-        // Assign classes to this section
         for (const classId of section.classIds) {
-          await supabase
+          const { error: assignError } = await supabase
             .from("classes")
             .update({ program_section_id: sectionId } as any)
             .eq("id", classId);
+          if (assignError) throw assignError;
         }
       }
     }
 
-    // Clear section assignment for classes not in any section
     const allSectionedClassIds = sections.flatMap((s) => s.classIds);
     for (const classId of selectedClasses) {
       if (!allSectionedClassIds.includes(classId)) {
-        await supabase
+        const { error: clearError } = await supabase
           .from("classes")
           .update({ program_section_id: null } as any)
           .eq("id", classId);
+        if (clearError) throw clearError;
       }
     }
   };
