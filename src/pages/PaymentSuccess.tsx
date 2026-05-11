@@ -18,43 +18,31 @@ import { analytics } from "@/lib/posthog";
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { user, signUp, checkSubscription } = useAuth();
+  const { user, signUp, hasCompletedOnboarding, hasAcceptedSafetyDisclosure, loading: authLoading } = useAuth();
   const [loading, setLoading] = useState(false);
   const [marketingConsent, setMarketingConsent] = useState(false);
 
-  // Form state
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [surname, setSurname] = useState("");
 
   const sessionId = searchParams.get("session_id");
 
-  // Handle the no-session case: redirect logged-in users or show error
   useEffect(() => {
-    if (sessionId) return;
-
+    if (sessionId || authLoading) return;
     if (user) {
-      const redirect = async () => {
-        await checkSubscription();
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("has_completed_onboarding, has_accepted_safety_disclosure")
-          .eq("id", user.id)
-          .single();
-
-        if (profile?.has_completed_onboarding && profile?.has_accepted_safety_disclosure) {
-          toast.success("Welcome back! Your subscription is active.");
-          navigate("/online");
-        } else {
-          navigate("/onboarding");
-        }
-      };
-      redirect();
+      if (hasCompletedOnboarding && hasAcceptedSafetyDisclosure) {
+        toast.success("Welcome back! Your subscription is active.");
+        navigate("/online");
+      } else {
+        navigate("/onboarding");
+      }
     } else {
       toast.error("No payment session found");
-      setTimeout(() => navigate("/"), 2000);
+      const timer = setTimeout(() => navigate("/"), 2000);
+      return () => clearTimeout(timer);
     }
-  }, [sessionId, user, navigate, checkSubscription]);
+  }, [sessionId, user, authLoading, hasCompletedOnboarding, hasAcceptedSafetyDisclosure, navigate]);
 
   const {
     data: verificationData,
@@ -113,6 +101,8 @@ const PaymentSuccess = () => {
       setLoading(false);
     }
   };
+
+  if (!sessionId) return null;
 
   if (verifying) {
     return <PaymentVerificationSkeleton sessionId={sessionId || undefined} />;
