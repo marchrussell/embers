@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 
+import { ButtonLoadingSpinner } from "@/components/skeletons";
 import { PaymentVerificationSkeleton } from "@/components/skeletons/PaymentVerificationSkeleton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -226,7 +227,7 @@ const PaymentSuccess = () => {
               >
                 {loading ? (
                   <span className="flex items-center justify-center gap-2">
-                    <div className="h-4 w-4 animate-spin-slow rounded-full border-b-2 border-t-2 border-black"></div>
+                    <ButtonLoadingSpinner size="md" className="text-black" />
                     Setting up your account...
                   </span>
                 ) : (
