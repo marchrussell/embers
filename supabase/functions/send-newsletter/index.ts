@@ -131,7 +131,7 @@ serve(async (req) => {
       const sendPromises = batch.map(async (recipient) => {
         try {
           const { error } = await resend.emails.send({
-            from: "March <onboarding@resend.dev>",
+            from: "HŌM <march@studiohom.co>",
             to: [recipient.email],
             subject: subject,
             html: htmlContent,

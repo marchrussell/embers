@@ -1,3 +1,5 @@
+import { captureMessage } from "./sentry.ts";
+
 const LOOPS_API_KEY = Deno.env.get("LOOPS_API_KEY");
 const LOOPS_BASE_URL = "https://app.loops.so/api/v1";
 
@@ -19,7 +21,7 @@ export async function upsertLoopsContact(
   properties: LoopsContactProperties
 ): Promise<void> {
   if (!LOOPS_API_KEY) {
-    console.warn("[LOOPS] LOOPS_API_KEY not set, skipping contact upsert");
+    captureMessage("LOOPS_API_KEY not set — contact upsert skipped", "error");
     return;
   }
 
@@ -35,6 +37,7 @@ export async function upsertLoopsContact(
   if (!response.ok) {
     const error = await response.text();
     console.error("[LOOPS] Failed to upsert contact", { email, error });
+    captureMessage("Loops contact upsert failed", "error", { email, error });
   } else {
     console.log("[LOOPS] Contact upserted", { email });
   }
@@ -46,7 +49,7 @@ export async function fireLoopsEvent(
   properties?: Record<string, string | boolean | number>
 ): Promise<void> {
   if (!LOOPS_API_KEY) {
-    console.warn("[LOOPS] LOOPS_API_KEY not set, skipping event", { eventName });
+    captureMessage("LOOPS_API_KEY not set — event skipped", "error", { eventName });
     return;
   }
 
@@ -62,6 +65,7 @@ export async function fireLoopsEvent(
   if (!response.ok) {
     const error = await response.text();
     console.error("[LOOPS] Failed to fire event", { email, eventName, error });
+    captureMessage("Loops event failed", "error", { email, eventName, error });
   } else {
     console.log("[LOOPS] Event fired", { email, eventName });
   }

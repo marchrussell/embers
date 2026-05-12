@@ -3,6 +3,7 @@ import { Resend } from "https://esm.sh/resend@4.0.0";
 import { z } from "https://esm.sh/zod@3.25.76";
 
 import { newsletterWelcomeEmail } from "../_shared/email-templates.ts";
+import { captureException } from "../_shared/sentry.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 
@@ -125,12 +126,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
   } catch (error: any) {
     console.error("❌ Error in send-contact-email function:", error);
-    console.error("Error details:", {
-      message: error.message,
-      name: error.name,
-      stack: error.stack,
-    });
-
+    await captureException(error, { function: "send-contact-email" });
     return new Response(
       JSON.stringify({
         error: error.message || "Failed to send email. Please try again or contact support directly.",

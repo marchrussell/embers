@@ -159,7 +159,7 @@ const handler = async (req: Request): Promise<Response> => {
     `;
 
     const emailResponse = await resend.emails.send({
-      from: "Breath Aligned Sessions <onboarding@resend.dev>",
+      from: "HŌM <march@studiohom.co>",
       to: [email],
       subject: `You're Invited to ${programName}`,
       html: emailHtml,
