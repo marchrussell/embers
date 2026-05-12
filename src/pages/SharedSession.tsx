@@ -1,5 +1,6 @@
+import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { NavBar } from "@/components/NavBar";
@@ -19,72 +20,37 @@ const SharedSession = () => {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const sessionTarget = `/online/session/${sessionId}`;
-  const [session, setSession] = useState<SessionData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  // Fetch and validate session
+  const {
+    data: session,
+    isLoading,
+    isError,
+    error,
+  } = useQuery<SessionData>({
+    queryKey: ["session", sessionId],
+    queryFn: async () => {
+      const { data, error: fetchError } = await supabase
+        .from("classes")
+        .select("id, title, is_published, requires_subscription")
+        .eq("id", sessionId!)
+        .single();
+
+      if (fetchError || !data) throw new Error("This session could not be found");
+      if (!data.is_published) throw new Error("This session is no longer available");
+      return data;
+    },
+    enabled: !!sessionId,
+  });
+
   useEffect(() => {
-    const validateSession = async () => {
-      if (!sessionId) {
-        setError("No session specified");
-        setLoading(false);
-        return;
-      }
+    if (authLoading || isLoading || !session) return;
+    if (user) navigate(sessionTarget, { replace: true });
+  }, [user, authLoading, isLoading, session, navigate, sessionTarget]);
 
-      try {
-        const { data, error: fetchError } = await supabase
-          .from("classes")
-          .select("id, title, is_published, requires_subscription")
-          .eq("id", sessionId)
-          .single();
-
-        if (fetchError || !data) {
-          setError("This session could not be found");
-          setLoading(false);
-          return;
-        }
-
-        if (!data.is_published) {
-          setError("This session is no longer available");
-          setLoading(false);
-          return;
-        }
-
-        setSession(data);
-        setLoading(false);
-      } catch (err) {
-        setError("Something went wrong");
-        setLoading(false);
-      }
-    };
-
-    validateSession();
-  }, [sessionId]);
-
-  // Handle redirect for logged-in users once auth and session are loaded
-  useEffect(() => {
-    if (authLoading || loading || !session) return;
-
-    if (user) {
-      navigate(sessionTarget, { replace: true });
-    }
-  }, [user, authLoading, loading, session, sessionId, navigate, sessionTarget]);
-
-  // Show loading state
-  if (loading || authLoading) {
-    return (
-      <>
-        <NavBar />
-        <div className="flex min-h-screen items-center justify-center bg-background">
-          <Loader2 className="h-8 w-8 animate-spin text-white/60" />
-        </div>
-      </>
-    );
-  }
-
-  // Show error state
-  if (error) {
+  if (!sessionId || isError) {
+    const message = !sessionId
+      ? "No session specified"
+      : ((error as Error)?.message ?? "Something went wrong");
     return (
       <>
         <NavBar />
@@ -93,10 +59,9 @@ const SharedSession = () => {
             <div className="space-y-4">
               <h1 className="mb-6 text-5xl font-normal text-white">Session Not Found</h1>
               <p className="text-lg leading-relaxed text-white/80">
-                {error}. The link may have expired or the session may have been removed.
+                {message}. The link may have expired or the session may have been removed.
               </p>
             </div>
-
             <Button
               onClick={() => navigate("/")}
               className="rounded-full border-2 border-white bg-white/5 px-12 py-6 text-lg text-white backdrop-blur-md transition-all hover:bg-white/10"
@@ -109,7 +74,17 @@ const SharedSession = () => {
     );
   }
 
-  // Guest user - show sign up prompt with session title
+  if (isLoading || authLoading) {
+    return (
+      <>
+        <NavBar />
+        <div className="flex min-h-screen items-center justify-center bg-background">
+          <Loader2 className="h-8 w-8 animate-spin text-white/60" />
+        </div>
+      </>
+    );
+  }
+
   if (!user && session) {
     return (
       <>

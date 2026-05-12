@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Heart, Pause, Play, Share, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
@@ -36,6 +36,7 @@ export const ClassPlayerModal = ({
   skipSafetyModal = false,
 }: ClassPlayerModalProps) => {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
   const { isFavourite, toggleFavourite } = useFavourites();
   const markSessionCompleteMutation = useMarkSessionComplete();
   const [isPlaying, setIsPlaying] = useState(false);
@@ -45,8 +46,6 @@ export const ClassPlayerModal = ({
   const [showSafetyDisclosure, setShowSafetyDisclosure] = useState(false);
   const [showCompletionModal, setShowCompletionModal] = useState(false);
   const [mediaError, setMediaError] = useState<string | null>(null);
-  const [userProfile, setUserProfile] = useState<any>(null);
-  const [userStats, setUserStats] = useState<any>({});
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const hasShownCompletion = useRef(false);
@@ -76,6 +75,45 @@ export const ClassPlayerModal = ({
       return { session: data, sessionCategories };
     },
     enabled: !!classId && open,
+  });
+
+  const { data: userProfile } = useQuery({
+    queryKey: ["profile", user?.id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user!.id)
+        .maybeSingle();
+      return data;
+    },
+    enabled: !!user?.id,
+  });
+
+  const { data: userStats } = useQuery({
+    queryKey: ["profile-stats", user?.id],
+    queryFn: async () => {
+      const { data: progressData } = await supabase
+        .from("user_progress")
+        .select("*")
+        .eq("user_id", user!.id)
+        .eq("completed", true);
+
+      const totalSessions = progressData?.length || 0;
+      const sessionIds = progressData?.map((p) => p.class_id) || [];
+
+      if (sessionIds.length > 0) {
+        const { data: classesData } = await supabase
+          .from("classes")
+          .select("duration_minutes")
+          .in("id", sessionIds);
+        const totalMinutes =
+          classesData?.reduce((sum, c) => sum + (c.duration_minutes || 0), 0) || 0;
+        return { totalSessions, totalMinutes, currentStreak: 1 };
+      }
+      return { totalSessions: 0, totalMinutes: 0, currentStreak: 0 };
+    },
+    enabled: !!user?.id,
   });
 
   const classData = classQueryData?.session ?? null;
@@ -119,8 +157,6 @@ export const ClassPlayerModal = ({
       setHasStarted(true);
       setIsPlaying(true);
     }
-
-    if (user?.id) fetchUserStatsAndProfile();
 
     if (classData.audio_url && !audioRef.current) {
       const audio = new Audio();
@@ -219,6 +255,7 @@ export const ClassPlayerModal = ({
     if (hasStarted && classData && classId) {
       analytics.sessionStarted(classId, classData.title);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional: fire once when session starts; classId/classData are stable by that point
   }, [hasStarted]);
 
   const handleStart = async () => {
@@ -272,51 +309,6 @@ export const ClassPlayerModal = ({
     onClose();
   };
 
-  const fetchUserStatsAndProfile = async () => {
-    if (!user?.id) return;
-
-    try {
-      const { data: profileData } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user.id)
-        .maybeSingle();
-
-      if (profileData) {
-        setUserProfile(profileData);
-      }
-
-      const { data: progressData } = await supabase
-        .from("user_progress")
-        .select("*")
-        .eq("user_id", user.id)
-        .eq("completed", true);
-
-      const totalSessions = progressData?.length || 0;
-
-      const sessionIds = progressData?.map((p) => p.class_id) || [];
-      if (sessionIds.length > 0) {
-        const { data: classesData } = await supabase
-          .from("classes")
-          .select("duration_minutes")
-          .in("id", sessionIds);
-
-        const totalMinutes =
-          classesData?.reduce((sum, c) => sum + (c.duration_minutes || 0), 0) || 0;
-
-        setUserStats({
-          totalSessions,
-          totalMinutes,
-          currentStreak: 1,
-        });
-      } else {
-        setUserStats({ totalSessions: 0, totalMinutes: 0, currentStreak: 0 });
-      }
-    } catch (error) {
-      console.error("📊 Error fetching user stats:", error);
-    }
-  };
-
   const markSessionComplete = () => {
     if (!classId) return;
     markSessionCompleteMutation.mutate(classId, {
@@ -326,7 +318,7 @@ export const ClassPlayerModal = ({
           classData?.title ?? "",
           classData?.duration_minutes ?? 0
         );
-        await fetchUserStatsAndProfile();
+        await queryClient.invalidateQueries({ queryKey: ["profile-stats", user?.id] });
         setShowCompletionModal(true);
       },
     });
@@ -662,7 +654,7 @@ export const ClassPlayerModal = ({
         sessionId={classId || undefined}
         sessionTitle={classData?.title}
         userId={user?.id}
-        userStats={userStats}
+        userStats={userStats ?? {}}
       />
     </>
   );

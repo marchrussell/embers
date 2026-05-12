@@ -77,7 +77,7 @@ const ClassPlayer = () => {
       audio.pause();
       audioRef.current = null;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional: audio setup on source change only; re-running on isVideo would re-create listeners unnecessarily
   }, [hasStarted, classData?.audio_url]);
 
   // Attach video events once the video element is in the DOM
@@ -103,7 +103,7 @@ const ClassPlayer = () => {
       video.removeEventListener("timeupdate", onTimeUpdate);
       video.removeEventListener("ended", onEnded);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional: video listener setup on source change only
   }, [classData?.video_url, hasStarted]);
 
   // Play/pause sync

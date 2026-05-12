@@ -21,10 +21,6 @@ export const NewsletterModal = lazy(() =>
   import("@/components/NewsletterModal").then((module) => ({ default: module.NewsletterModal }))
 );
 
-export const ExitIntentPopup = lazy(() =>
-  import("@/components/ExitIntentPopup").then((module) => ({ default: module.ExitIntentPopup }))
-);
-
 export const ClassPlayerModal = lazy(() =>
   import("@/components/ClassPlayerModal").then((module) => ({ default: module.ClassPlayerModal }))
 );

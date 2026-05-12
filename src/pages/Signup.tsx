@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -7,54 +8,46 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/compone
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
 
 const Signup = () => {
   const [searchParams] = useSearchParams();
   const inviteToken = searchParams.get("invite");
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
-  const [validatingInvite, setValidatingInvite] = useState(true);
-  const [inviteData, setInviteData] = useState<any>(null);
   const navigate = useNavigate();
 
+  const {
+    data: inviteData,
+    isLoading: validatingInvite,
+    isError,
+  } = useQuery({
+    queryKey: ["invite", inviteToken],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("mentorship_invitations")
+        .select("*")
+        .eq("invite_token", inviteToken!)
+        .eq("used", false)
+        .gt("expires_at", new Date().toISOString())
+        .maybeSingle();
+
+      if (error || !data) throw new Error("This invitation link is invalid or has expired");
+      return data;
+    },
+    enabled: !!inviteToken,
+    retry: false,
+  });
+
   useEffect(() => {
-    const validateInvite = async () => {
-      if (!inviteToken) {
-        toast.error("Invalid invitation link");
-        navigate("/");
-        return;
-      }
+    if (!inviteToken || isError) {
+      toast.error(!inviteToken ? "Invalid invitation link" : "This invitation link is invalid or has expired");
+      navigate("/");
+    }
+  }, [inviteToken, isError, navigate]);
 
-      try {
-        const { data, error } = await supabase
-          .from("mentorship_invitations")
-          .select("*")
-          .eq("invite_token", inviteToken)
-          .eq("used", false)
-          .gt("expires_at", new Date().toISOString())
-          .maybeSingle();
-
-        if (error || !data) {
-          toast.error("This invitation link is invalid or has expired");
-          navigate("/");
-          return;
-        }
-
-        setInviteData(data);
-        setEmail(data.email);
-      } catch (error) {
-        console.error("Error validating invite:", error);
-        toast.error("Error validating invitation");
-        navigate("/");
-      } finally {
-        setValidatingInvite(false);
-      }
-    };
-
-    validateInvite();
-  }, [inviteToken, navigate]);
+  const email = inviteData?.email ?? "";
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,14 +56,13 @@ const Signup = () => {
     setLoading(true);
 
     try {
-      // Create user account with mentorship program type in metadata
       const { data: authData, error: signupError } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: {
             full_name: fullName,
-            mentorship_program_type: inviteData.program_type, // Trigger will auto-assign role
+            mentorship_program_type: inviteData.program_type,
           },
           emailRedirectTo: `${window.location.origin}/app/library`,
         },
@@ -79,7 +71,6 @@ const Signup = () => {
       if (signupError) throw signupError;
       if (!authData.user) throw new Error("Failed to create user");
 
-      // Mark invitation as used
       const { error: inviteError } = await supabase
         .from("mentorship_invitations")
         .update({
@@ -92,7 +83,6 @@ const Signup = () => {
 
       toast.success("Account created successfully! Redirecting to complete setup...");
 
-      // Redirect to onboarding to complete safety disclosure
       setTimeout(() => {
         navigate("/onboarding");
       }, 1500);

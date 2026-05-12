@@ -136,14 +136,11 @@ const ExperiencesContent = () => {
   // Scroll to event if hash is in URL
   useEffect(() => {
     const hash = window.location.hash.slice(1);
-    if (hash) {
-      setTimeout(() => {
-        const element = document.getElementById(hash);
-        if (element) {
-          element.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
-      }, 300);
-    }
+    if (!hash) return;
+    const timer = setTimeout(() => {
+      document.getElementById(hash)?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 300);
+    return () => clearTimeout(timer);
   }, []);
 
   // Generate calendar event details from event data
