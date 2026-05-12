@@ -196,21 +196,7 @@ const PaymentSuccess = () => {
                 className="border-white/20 bg-white/10 text-white placeholder:text-white/50"
               />
             </div>
-{/* 
-            <div className="flex items-center space-x-3 pt-2">
-              <Checkbox
-                id="marketing"
-                checked={marketingConsent}
-                onCheckedChange={(checked) => setMarketingConsent(checked as boolean)}
-                className="h-5 w-5 border-white"
-              />
-              <label
-                htmlFor="marketing"
-                className="cursor-pointer text-sm leading-tight text-white/80"
-              >
-                I'd like to receive updates, tips, and exclusive offers via email
-              </label>
-            </div> */}
+
 
             <div className="pt-4">
               <Button
