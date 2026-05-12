@@ -1,33 +1,15 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 
-interface PaymentVerificationSkeletonProps {
-  sessionId?: string;
-  error?: string;
-}
-
-export const PaymentVerificationSkeleton = ({
-  sessionId,
-  error,
-}: PaymentVerificationSkeletonProps) => {
+export const PaymentVerificationSkeleton = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-black">
-      <Card className="w-full max-w-md border-2 border-white bg-black shadow-[0_0_20px_rgba(255,255,255,0.5)]">
+    <div className="flex min-h-screen items-center justify-center bg-black p-4">
+      <Card className="w-full max-w-md rounded-2xl border border-white/10 bg-[#1A1A1A] backdrop-blur-md">
         <CardContent className="flex flex-col items-center justify-center py-12">
-          {/* Pulsing circle instead of spinner */}
-          <div className="relative mb-6">
-            <Skeleton className="h-16 w-16 rounded-full bg-white/20" />
-            <div className="absolute inset-0 h-16 w-16 animate-ping rounded-full bg-white/10" />
+          <div className="relative mb-6 h-16 w-16">
+            <div className="absolute inset-0 animate-ping rounded-full bg-[#E6DBC7]/20" />
+            <div className="h-16 w-16 rounded-full border border-[#E6DBC7]/30" />
           </div>
-
-          {/* Text skeleton */}
-          <Skeleton className="mb-4 h-6 w-48 bg-white/15" />
-          <Skeleton className="h-4 w-32 bg-white/10" />
-
-          {error && <p className="mt-4 text-sm text-red-400">{error}</p>}
-          {sessionId && (
-            <p className="mt-4 text-xs font-light text-white/50">Session: {sessionId.slice(-8)}</p>
-          )}
+          <p className="text-base font-light text-[#E6DBC7]/70">Verifying payment…</p>
         </CardContent>
       </Card>
     </div>
