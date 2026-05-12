@@ -109,7 +109,7 @@ const PaymentSuccess = () => {
   if (!sessionId) return null;
 
   if (verifying) {
-    return <PaymentVerificationSkeleton sessionId={sessionId || undefined} />;
+    return <PaymentVerificationSkeleton />;
   }
 
   if (isError || !paymentVerified) {
