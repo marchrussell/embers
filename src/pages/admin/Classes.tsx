@@ -679,6 +679,14 @@ const AdminClasses = () => {
                   Upload video file (max 2GB, .mp4/.mov/.webm). Either audio or video is required.
                 </p>
               )}
+              <Input
+                id="video_url"
+                type="url"
+                value={formData.video_url ?? ""}
+                onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
+                placeholder="Or paste video URL directly"
+                className="border-white/20 bg-white/5 text-white placeholder:text-white/40"
+              />
             </div>
           </div>
           <div>
