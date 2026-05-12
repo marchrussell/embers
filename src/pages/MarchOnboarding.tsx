@@ -84,7 +84,7 @@ export default function MarchOnboarding() {
       welcomeShown.current = true;
       showWelcomeMessage();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- navigate is stable; showWelcomeMessage runs at most once (welcomeShown ref guard)
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- navigate is stable; showWelcomeMessage runs at most once (welcomeShown ref guard)
   }, [onboardingStatus]);
 
   const addMessage = (

@@ -42,7 +42,9 @@ const Signup = () => {
 
   useEffect(() => {
     if (!inviteToken || isError) {
-      toast.error(!inviteToken ? "Invalid invitation link" : "This invitation link is invalid or has expired");
+      toast.error(
+        !inviteToken ? "Invalid invitation link" : "This invitation link is invalid or has expired"
+      );
       navigate("/");
     }
   }, [inviteToken, isError, navigate]);

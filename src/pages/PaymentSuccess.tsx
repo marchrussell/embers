@@ -18,7 +18,13 @@ import { analytics } from "@/lib/posthog";
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { user, signUp, hasCompletedOnboarding, hasAcceptedSafetyDisclosure, loading: authLoading } = useAuth();
+  const {
+    user,
+    signUp,
+    hasCompletedOnboarding,
+    hasAcceptedSafetyDisclosure,
+    loading: authLoading,
+  } = useAuth();
   const [loading, setLoading] = useState(false);
   const [marketingConsent, setMarketingConsent] = useState(false);
 

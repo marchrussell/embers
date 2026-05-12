@@ -210,7 +210,11 @@ const AdminPrograms = () => {
         try {
           await updateCourseSections(editingCourse.id);
         } catch (e) {
-          toast({ title: "Error saving sections", description: (e as Error).message, variant: "destructive" });
+          toast({
+            title: "Error saving sections",
+            description: (e as Error).message,
+            variant: "destructive",
+          });
           return;
         }
         toast({ title: "Program updated successfully" });
@@ -232,7 +236,11 @@ const AdminPrograms = () => {
           try {
             await updateCourseSections(data.id);
           } catch (e) {
-            toast({ title: "Error saving sections", description: (e as Error).message, variant: "destructive" });
+            toast({
+              title: "Error saving sections",
+              description: (e as Error).message,
+              variant: "destructive",
+            });
             return;
           }
         }
@@ -269,10 +277,7 @@ const AdminPrograms = () => {
       .map((r: { id: string }) => r.id)
       .filter((id: string) => !existingDbIds.includes(id));
     if (toDelete.length > 0) {
-      const { error: deleteError } = await db
-        .from("program_sections")
-        .delete()
-        .in("id", toDelete);
+      const { error: deleteError } = await db.from("program_sections").delete().in("id", toDelete);
       if (deleteError) throw deleteError;
     }
 
@@ -283,7 +288,11 @@ const AdminPrograms = () => {
       if (sectionId) {
         const { error: updateError } = await db
           .from("program_sections")
-          .update({ title: section.title, description: section.description || null, order_index: i })
+          .update({
+            title: section.title,
+            description: section.description || null,
+            order_index: i,
+          })
           .eq("id", sectionId);
         if (updateError) throw updateError;
       } else {

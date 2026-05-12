@@ -80,11 +80,7 @@ export const ClassPlayerModal = ({
   const { data: userProfile } = useQuery({
     queryKey: ["profile", user?.id],
     queryFn: async () => {
-      const { data } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user!.id)
-        .maybeSingle();
+      const { data } = await supabase.from("profiles").select("*").eq("id", user!.id).maybeSingle();
       return data;
     },
     enabled: !!user?.id,
@@ -255,7 +251,7 @@ export const ClassPlayerModal = ({
     if (hasStarted && classData && classId) {
       analytics.sessionStarted(classId, classData.title);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional: fire once when session starts; classId/classData are stable by that point
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional: fire once when session starts; classId/classData are stable by that point
   }, [hasStarted]);
 
   const handleStart = async () => {
