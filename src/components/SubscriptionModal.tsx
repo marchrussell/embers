@@ -78,24 +78,25 @@ export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => 
 
           <div className="flex flex-col lg:flex-row">
             {/* Left side - Branding & Benefits */}
-            <div className="flex flex-col justify-center bg-black/50 p-12 md:p-16 lg:w-1/2 lg:p-20">
+            <div className="flex flex-col justify-center bg-black/50 px-12 pb-6 pt-12 md:p-16 lg:w-1/2 lg:p-20">
               <div className="mx-auto w-full max-w-lg">
-                <div className="mb-8 space-y-5 text-center sm:mb-10">
-                  <p className="text-base font-light italic leading-loose tracking-wide text-white/70 sm:text-lg">
+                <div className="flex items-center justify-center gap-4">
+                  <div className="h-px w-10 bg-white/25" />
+                  <p className="text-md font-bold uppercase tracking-[0.3em] text-white/70 md:text-xl">
+                    Join HŌM
+                  </p>
+                  <div className="h-px w-10 bg-white/25" />
+                </div>
+
+                <div className="my-6 space-y-5 text-center md:mb-12 md:mt-8">
+                  <p className="text-sm font-light italic tracking-wide text-white/70">
                     Where your nervous system rests.
                     <br />
                     And your senses awaken.
                   </p>
-                  <div className="flex items-center justify-center gap-4">
-                    <div className="h-px w-10 bg-white/25" />
-                    <span className="font-bold uppercase tracking-[0.3em] text-white/50 sm:text-xs">
-                      Join HŌM
-                    </span>
-                    <div className="h-px w-10 bg-white/25" />
-                  </div>
                 </div>
 
-                <div className="space-y-4 sm:space-y-5">
+                <div className="space-y-4">
                   {SUBSCRIPTION_BENEFITS.map((benefit) => (
                     <div key={benefit} className="flex items-start gap-3">
                       <Check
@@ -112,7 +113,7 @@ export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => 
             </div>
 
             {/* Right side - Pricing Plans */}
-            <div className="flex flex-col justify-center bg-black/50 p-12 md:p-16 lg:w-1/2 lg:p-20">
+            <div className="flex flex-col justify-center bg-black/50 px-8 pb-10 pt-4 md:p-16 lg:w-1/2 lg:p-20">
               <div className="mx-auto w-full max-w-lg">
                 <div className="space-y-6">
                   {/* Annual Plan */}
