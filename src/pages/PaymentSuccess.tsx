@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { ButtonLoadingSpinner } from "@/components/skeletons";
 import { PaymentVerificationSkeleton } from "@/components/skeletons/PaymentVerificationSkeleton";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
@@ -114,12 +114,12 @@ const PaymentSuccess = () => {
 
   if (isError || !paymentVerified) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-black">
-        <Card className="w-full max-w-md rounded-[28px] border border-white/20 bg-black/75 backdrop-blur-xl">
+      <div className="flex min-h-screen items-center justify-center bg-[#1A1A1A]">
+        <Card className="w-full max-w-md rounded-2xl border border-white/10 bg-black/30 backdrop-blur-md">
           <CardContent className="flex flex-col items-center justify-center py-12">
-            <p className="text-xl font-light text-white">Payment verification failed</p>
+            <p className="text-xl font-light text-[#E6DBC7]">Payment verification failed</p>
             {isError && sessionId && (
-              <p className="mt-3 px-4 text-center text-sm font-light text-white/60">
+              <p className="mt-3 px-4 text-center text-sm font-light text-[#E6DBC7]/60">
                 Your payment was successful — please contact support@studiohom.co with session ID:{" "}
                 {sessionId.slice(-8)}
               </p>
@@ -132,17 +132,22 @@ const PaymentSuccess = () => {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-black p-4">
-      <Card className="w-full max-w-md rounded-[28px] border border-white/20 bg-black/75 backdrop-blur-xl">
-        <CardHeader className="px-8 pb-2 pt-10 text-center">
-          <CardTitle className="mb-3 text-2xl text-white">You're all set!</CardTitle>
-          <CardDescription className="text-white/70">
+      <Card className="w-full max-w-md rounded-2xl border border-white/10 bg-[#1A1A1A] backdrop-blur-md md:max-w-lg">
+        <div className="px-8 pb-6 pt-10 text-center">
+          <h1
+            className="mb-3 font-editorial tracking-[0.01em] text-[#E6DBC7]"
+            style={{ fontSize: "clamp(1.8rem, 2.2vw, 2.4rem)", lineHeight: 1.15, fontWeight: 400 }}
+          >
+            You're all set!
+          </h1>
+          <p className="text-base text-[#E6DBC7]/70" style={{ lineHeight: 1.7 }}>
             Set your password to complete your account
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="px-8 pb-10 pt-8">
-          <form onSubmit={handleSignUp} className="space-y-7">
+          </p>
+        </div>
+        <CardContent className="px-10 pb-10 pt-8 md:px-14">
+          <form onSubmit={handleSignUp} className="space-y-6 md:space-y-9">
             <div className="space-y-2">
-              <Label htmlFor="firstname" className="text-white">
+              <Label htmlFor="firstname" className="text-[#E6DBC7]">
                 First Name
               </Label>
               <Input
@@ -152,11 +157,11 @@ const PaymentSuccess = () => {
                 onChange={(e) => setFirstName(e.target.value)}
                 required
                 placeholder="John"
-                className="border-white/20 bg-white/10 text-white placeholder:text-white/50"
+                className="border-white/20 bg-white/5 text-[#E6DBC7] placeholder:text-[#E6DBC7]/50"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="surname" className="text-white">
+              <Label htmlFor="surname" className="text-[#E6DBC7]">
                 Surname
               </Label>
               <Input
@@ -166,11 +171,11 @@ const PaymentSuccess = () => {
                 onChange={(e) => setSurname(e.target.value)}
                 required
                 placeholder="Doe"
-                className="border-white/20 bg-white/10 text-white placeholder:text-white/50"
+                className="border-white/20 bg-white/5 text-[#E6DBC7] placeholder:text-[#E6DBC7]/50"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-white">
+              <Label htmlFor="email" className="text-[#E6DBC7]">
                 Email
               </Label>
               <Input
@@ -178,11 +183,11 @@ const PaymentSuccess = () => {
                 type="email"
                 value={email}
                 readOnly
-                className="cursor-not-allowed border-white/20 bg-white/5 text-white/70"
+                className="cursor-not-allowed border-white/20 bg-white/5 text-[#E6DBC7]/70"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-white">
+              <Label htmlFor="password" className="text-[#E6DBC7]">
                 Create Password
               </Label>
               <Input
@@ -193,10 +198,9 @@ const PaymentSuccess = () => {
                 required
                 minLength={6}
                 placeholder="At least 6 characters"
-                className="border-white/20 bg-white/10 text-white placeholder:text-white/50"
+                className="border-white/20 bg-white/5 text-[#E6DBC7] placeholder:text-[#E6DBC7]/50"
               />
             </div>
-
 
             <div className="pt-4">
               <Button
