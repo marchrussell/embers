@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { CheckCircle2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -8,7 +7,6 @@ import { ButtonLoadingSpinner } from "@/components/skeletons";
 import { PaymentVerificationSkeleton } from "@/components/skeletons/PaymentVerificationSkeleton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
@@ -136,7 +134,6 @@ const PaymentSuccess = () => {
     <div className="flex min-h-screen items-center justify-center bg-black p-4">
       <Card className="w-full max-w-md rounded-[28px] border border-white/20 bg-black/75 backdrop-blur-xl">
         <CardHeader className="px-8 pb-2 pt-10 text-center">
-          <CheckCircle2 className="h-18 w-18 mx-auto mb-6 text-white" />
           <CardTitle className="mb-3 text-2xl text-white">You're all set!</CardTitle>
           <CardDescription className="text-white/70">
             Set your password to complete your account
@@ -199,7 +196,7 @@ const PaymentSuccess = () => {
                 className="border-white/20 bg-white/10 text-white placeholder:text-white/50"
               />
             </div>
-
+{/* 
             <div className="flex items-center space-x-3 pt-2">
               <Checkbox
                 id="marketing"
@@ -213,7 +210,7 @@ const PaymentSuccess = () => {
               >
                 I'd like to receive updates, tips, and exclusive offers via email
               </label>
-            </div>
+            </div> */}
 
             <div className="pt-4">
               <Button

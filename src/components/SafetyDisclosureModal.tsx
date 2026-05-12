@@ -1,4 +1,4 @@
-import { AlertTriangle, Wind } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -93,10 +93,6 @@ export const SafetyDisclosureModal = ({ isOpen, onAccept, userId }: SafetyDisclo
         <ModalCloseButton onClose={() => {}} size="md" className="pointer-events-none opacity-0" />
         <div className="px-6 pb-10 pt-12 md:px-10 md:pt-16 lg:px-12">
           {/* Header */}
-          <div className="mb-6 flex items-center justify-center">
-            <Wind className="h-12 w-12 text-[#E6DBC7]" />
-          </div>
-
           <h1
             className="mb-4 text-center font-editorial tracking-[0.01em] text-[#E6DBC7]"
             style={{

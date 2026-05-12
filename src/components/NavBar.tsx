@@ -15,7 +15,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
   const { user, isAdmin } = useAuth();
   const location = useLocation();
 
-  const isOnlineRoute = location.pathname.startsWith("/online");
+  // const isOnlineRoute = location.pathname.startsWith("/online");
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -326,29 +326,27 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                 </Link>
               )}
 
-              {isOnlineRoute && (
-                <div className="mt-8 border-t border-[#E6DBC7]/20 pt-10 md:pt-12">
-                  {user ? (
-                    <Link
-                      to="/online/profile"
-                      onClick={handleCloseMobileMenu}
-                      className="font-editorial text-3xl font-light tracking-wide text-white/90 transition-colors hover:text-white md:text-4xl"
-                    >
-                      {formattedDisplayName}
-                    </Link>
-                  ) : (
-                    <Button
-                      onClick={() => {
-                        setMobileMenuOpen(false);
-                        setShowSignInModal(true);
-                      }}
-                      className="rounded-full border-2 border-[#E6DBC7] bg-transparent px-10 py-5 text-lg font-light tracking-wide text-[#E6DBC7] transition-all hover:bg-[#E6DBC7]/10 md:py-6 md:text-xl"
-                    >
-                      Sign In
-                    </Button>
-                  )}
-                </div>
-              )}
+              <div className="mt-8 border-t border-[#E6DBC7]/20 pt-10 md:pt-12">
+                {user ? (
+                  <Link
+                    to="/online/profile"
+                    onClick={handleCloseMobileMenu}
+                    className="font-editorial text-3xl font-light tracking-wide text-white/90 transition-colors hover:text-white md:text-4xl"
+                  >
+                    {formattedDisplayName}
+                  </Link>
+                ) : (
+                  <Button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setShowSignInModal(true);
+                    }}
+                    className="rounded-full border-2 border-[#E6DBC7] bg-transparent px-10 py-5 text-lg font-light tracking-wide text-[#E6DBC7] transition-all hover:bg-[#E6DBC7]/10 md:py-6 md:text-xl"
+                  >
+                    Sign In
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         </>

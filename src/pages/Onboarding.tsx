@@ -1,4 +1,3 @@
-import { Wind } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -92,7 +91,6 @@ const Onboarding = () => {
     <div className="flex min-h-screen items-center justify-center bg-background p-4 sm:p-5">
       <Card className="max-h-[95vh] w-full max-w-4xl overflow-y-auto border-[#E6DBC7]/20 bg-background/40 backdrop-blur-xl">
         <CardHeader className="px-5 pt-8 text-center sm:px-6 sm:pt-10 md:pt-12">
-          <Wind className="mx-auto mb-4 h-12 w-12 text-[#E6DBC7] sm:mb-5 sm:h-14 sm:w-14 md:mb-6 md:h-16 md:w-16" />
           <CardTitle className="mb-3 font-editorial text-3xl font-light text-[#E6DBC7] sm:text-4xl md:mb-3 md:text-4xl lg:text-5xl">
             Safety First
           </CardTitle>
