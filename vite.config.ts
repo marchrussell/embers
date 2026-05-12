@@ -69,6 +69,10 @@ export default defineConfig({
             return 'vendor-analytics'
           }
 
+          if (id.includes('node_modules/@sentry/')) {
+            return 'vendor-sentry'
+          }
+
           if (id.includes('node_modules/date-fns/')) {
             return 'vendor-date'
           }
