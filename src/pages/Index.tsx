@@ -228,7 +228,7 @@ const Index = () => {
                 onClick={() => {
                   window.open("/online?tab=courses&course=mental-reset", "_blank");
                 }}
-                className="mt-auto inline-flex w-fit items-center justify-center rounded-full border border-white bg-transparent text-white transition-all hover:bg-white/10"
+                className="mt-auto inline-flex w-fit items-center justify-center rounded-full border border-white bg-transparent text-white transition-all hover:bg-white/10 lg:self-end"
                 style={{
                   fontSize: "clamp(0.85rem, 0.9vw, 0.95rem)",
                   fontWeight: 400,
