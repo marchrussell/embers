@@ -33,6 +33,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
+import { useStorageListing } from "@/hooks/useStorageListing";
 import { useStorageUpload } from "@/hooks/useStorageUpload";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -87,6 +88,7 @@ const AdminClasses = () => {
   const { upload: uploadImage, uploading: uploadingImage } = useStorageUpload("class-images");
   const { upload: uploadAudio, uploading: uploadingAudio } = useStorageUpload("class-audio");
   const { upload: uploadVideo, uploading: uploadingVideo } = useStorageUpload("class-video");
+  const { data: storageVideoFiles } = useStorageListing("class-video");
   const [formData, setFormData] = useState({
     title: "",
     teacher_name: "",
@@ -678,6 +680,31 @@ const AdminClasses = () => {
                 <p className="text-xs text-muted-foreground">
                   Upload video file (max 2GB, .mp4/.mov/.webm). Either audio or video is required.
                 </p>
+              )}
+              {storageVideoFiles && storageVideoFiles.length > 0 && (
+                <div className="space-y-1">
+                  <p className="text-xs text-muted-foreground">Or select from existing uploads:</p>
+                  <Select
+                    value=""
+                    onValueChange={(filePath) => {
+                      const { data } = supabase.storage
+                        .from("class-video")
+                        .getPublicUrl(filePath);
+                      setFormData({ ...formData, video_url: data.publicUrl });
+                    }}
+                  >
+                    <SelectTrigger className="border-white/20 bg-white/5 text-white">
+                      <SelectValue placeholder="Pick a file from storage…" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {storageVideoFiles.map((file) => (
+                        <SelectItem key={file.name} value={file.name}>
+                          {file.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               )}
               <Input
                 id="video_url"
