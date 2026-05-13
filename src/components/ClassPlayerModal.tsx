@@ -234,7 +234,7 @@ export const ClassPlayerModal = ({
       video.removeEventListener("ended", onEnded);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [classData?.video_url]);
+  }, [classData?.video_url, hasStarted]);
 
   useEffect(() => {
     const media = getMedia();
@@ -521,7 +521,11 @@ export const ClassPlayerModal = ({
                 </div>
 
                 {/* Right side - Controls and Info */}
-                <div className="relative flex flex-col bg-background/60 p-8 backdrop-blur-xl lg:p-12">
+                <div
+                  className={`relative flex flex-col p-8 lg:p-12 ${
+                    isVideoClass ? "" : "bg-background/60 backdrop-blur-xl"
+                  }`}
+                >
                   {/* Close button - top right */}
                   <div className="absolute right-6 top-6">
                     <Button
@@ -534,25 +538,56 @@ export const ClassPlayerModal = ({
                     </Button>
                   </div>
 
-                  {/* Top section - Title and actions */}
-                  <div className="space-y-4">
-                    <div>
-                      <h2 className="mb-3 pr-12 font-editorial text-4xl leading-tight text-[#E6DBC7] lg:text-5xl">
-                        {classData?.title}
-                      </h2>
-                      <p className="text-lg font-light text-[#E6DBC7]/70">
-                        {classData?.teacher_name || "March Russell"} •{" "}
-                        {classData?.duration_minutes || 0} min
-                      </p>
-                      {classCategories.length > 0 && (
-                        <p className="mt-3 text-base font-light uppercase tracking-[0.15em] text-[#EC9037]">
-                          {classCategories.map((c: any) => c.name).join(" · ")}
+                  {/* Top section - Title and actions (audio only) */}
+                  {!isVideoClass ? (
+                    <div className="space-y-4">
+                      <div>
+                        <h2 className="mb-3 pr-12 font-editorial text-4xl leading-tight text-[#E6DBC7] lg:text-5xl">
+                          {classData?.title}
+                        </h2>
+                        <p className="text-lg font-light text-[#E6DBC7]/70">
+                          {classData?.teacher_name || "March Russell"} •{" "}
+                          {classData?.duration_minutes || 0} min
                         </p>
-                      )}
-                    </div>
+                        {classCategories.length > 0 && (
+                          <p className="mt-3 text-base font-light uppercase tracking-[0.15em] text-[#EC9037]">
+                            {classCategories.map((c: any) => c.name).join(" · ")}
+                          </p>
+                        )}
+                      </div>
 
-                    {/* Action buttons */}
-                    <div className="flex items-center gap-3">
+                      {/* Action buttons */}
+                      <div className="flex items-center gap-3">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleFavourite();
+                          }}
+                          className="rounded-lg border border-[#E6DBC7]/20 p-2.5 transition-all hover:bg-[#E6DBC7]/10"
+                        >
+                          <Heart
+                            className={`h-5 w-5 ${
+                              classId && isFavourite(classId)
+                                ? "fill-[#E6DBC7] text-[#E6DBC7]"
+                                : "text-[#E6DBC7]"
+                            }`}
+                            strokeWidth={1.5}
+                          />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleShare(classId, classData?.is_published);
+                          }}
+                          className="rounded-lg border border-[#E6DBC7]/20 p-2.5 transition-all hover:bg-[#E6DBC7]/10"
+                        >
+                          <Share className="h-5 w-5 text-[#E6DBC7]" strokeWidth={1.5} />
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    /* Video: action buttons only, no title/info */
+                    <div className="flex items-center gap-3 pr-12">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -579,7 +614,7 @@ export const ClassPlayerModal = ({
                         <Share className="h-5 w-5 text-[#E6DBC7]" strokeWidth={1.5} />
                       </button>
                     </div>
-                  </div>
+                  )}
 
                   {/* Middle section - Play button */}
                   <div className="flex flex-1 items-center justify-center py-12">
