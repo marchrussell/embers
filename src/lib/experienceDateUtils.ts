@@ -113,6 +113,22 @@ export function getNextExperienceDate(recurrence: RecurrenceRule, time: string):
           return candidate;
         }
       }
+    } else if (recurrence.type === "nthDay") {
+      const { day } = recurrence;
+
+      const candidate = new Date(effectiveNow.getFullYear(), effectiveNow.getMonth(), day);
+      candidate.setHours(hours, minutes, 0, 0);
+      if (candidate > effectiveNow) return candidate;
+
+      let nextMonth = effectiveNow.getMonth() + 1;
+      let nextYear = effectiveNow.getFullYear();
+      if (nextMonth > 11) {
+        nextMonth = 0;
+        nextYear++;
+      }
+      const nextCandidate = new Date(nextYear, nextMonth, day);
+      nextCandidate.setHours(hours, minutes, 0, 0);
+      return nextCandidate;
     }
 
     return null;
