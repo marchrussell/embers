@@ -246,7 +246,7 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
                 id="accept"
                 checked={hasAccepted}
                 onCheckedChange={(checked) => setHasAccepted(checked === true)}
-                className="mt-0.5 border-white/40 p-2 data-[state=checked]:bg-green-500 data-[state=checked]:text-black"
+                className="mt-0.5 border-white/40 p-2 data-[state=checked]:bg-white data-[state=checked]:text-black"
               />
               <label
                 htmlFor="accept"
