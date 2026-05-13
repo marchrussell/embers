@@ -88,7 +88,7 @@ const AdminClasses = () => {
   const { upload: uploadImage, uploading: uploadingImage } = useStorageUpload("class-images");
   const { upload: uploadAudio, uploading: uploadingAudio } = useStorageUpload("class-audio");
   const { upload: uploadVideo, uploading: uploadingVideo } = useStorageUpload("class-video");
-  const { data: storageVideoFiles } = useStorageListing("class-video");
+  const { data: storageVideoFiles } = useStorageListing("class-video", !!isAdmin);
   const [formData, setFormData] = useState({
     title: "",
     teacher_name: "",
