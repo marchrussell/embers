@@ -1,4 +1,5 @@
 const SENTRY_DSN = Deno.env.get("SENTRY_DSN");
+const SENTRY_ENVIRONMENT = Deno.env.get("SENTRY_ENVIRONMENT") ?? "production";
 
 function parseDsn(dsn: string): { key: string; host: string; projectId: string } | null {
   try {
@@ -27,6 +28,7 @@ async function sendToSentry(payload: Record<string, unknown>): Promise<void> {
     body: JSON.stringify({
       event_id: crypto.randomUUID().replace(/-/g, ""),
       timestamp: new Date().toISOString(),
+      environment: SENTRY_ENVIRONMENT,
       ...payload,
     }),
   }).catch(() => {});
