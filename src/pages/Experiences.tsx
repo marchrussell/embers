@@ -224,12 +224,23 @@ const ExperiencesContent = () => {
             </FadeUp>
           </div>
           <div className="mx-auto max-w-[1600px] space-y-9 md:space-y-10 lg:space-y-12">
-            {experiences
-              .filter((event) => {
+            {(() => {
+              const visible = experiences.filter((event) => {
                 const nextDate = getNextExperienceDate(event.recurrence, event.time);
                 return nextDate !== null;
-              })
-              .map((event, index) => {
+              });
+
+              if (visible.length === 0) {
+                return (
+                  <FadeUp>
+                    <p className="font-unica text-[15px] font-light text-[#E6DBC7]/50">
+                      No upcoming experiences scheduled yet
+                    </p>
+                  </FadeUp>
+                );
+              }
+
+              return visible.map((event, index) => {
                 const nextDate = getNextExperienceDate(event.recurrence, event.time);
                 const formattedDate = formatExperienceDate(nextDate, event.time);
                 const isOnline = event.format === "Online";
@@ -370,7 +381,8 @@ const ExperiencesContent = () => {
                     </SplitCard>
                   </FadeUp>
                 );
-              })}
+              });
+            })()}
           </div>
 
           {/* Divider */}
