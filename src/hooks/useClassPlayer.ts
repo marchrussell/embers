@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useAuth } from "@/contexts/AuthContext";
 import { useMarkSessionComplete } from "@/hooks/useMarkSessionComplete";
@@ -34,8 +34,14 @@ export const useClassPlayer = ({
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [videoMounted, setVideoMounted] = useState(false);
   const hasShownCompletion = useRef(false);
   const controlsTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const videoCallbackRef = useCallback((el: HTMLVideoElement | null) => {
+    videoRef.current = el;
+    setVideoMounted(!!el);
+  }, []);
 
   const { data: classQueryData, isLoading: loading } = useQuery({
     queryKey: ["session-detail", classId],
@@ -157,9 +163,9 @@ export const useClassPlayer = ({
   }, [classData?.id, open]);
 
   // Attach video events once the video element is in the DOM and classData is set
-  useLayoutEffect(() => {
+  useEffect(() => {
     const video = videoRef.current;
-    if (!video || !classData?.video_url) return;
+    if (!video || !videoMounted || !classData?.video_url) return;
 
     video.preload = "metadata";
 
@@ -191,6 +197,9 @@ export const useClassPlayer = ({
     video.addEventListener("timeupdate", onTimeUpdate);
     video.addEventListener("ended", onEnded);
 
+    // autoPlay may have already fired before this effect ran
+    if (!video.paused) setIsPlaying(true);
+
     return () => {
       video.removeEventListener("loadedmetadata", onLoadedMetadata);
       video.removeEventListener("play", onPlay);
@@ -199,7 +208,7 @@ export const useClassPlayer = ({
       video.removeEventListener("ended", onEnded);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [classData?.video_url, hasStarted]);
+  }, [videoMounted, classData?.video_url]);
 
   useEffect(() => {
     const media = getMedia();
@@ -312,7 +321,7 @@ export const useClassPlayer = ({
     showSafetyDisclosure,
     showCompletionModal,
     setShowCompletionModal,
-    videoRef,
+    videoRef: videoCallbackRef,
     handleStart,
     handlePlayPause,
     handleSliderChange,
