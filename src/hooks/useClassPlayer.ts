@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { useAuth } from "@/contexts/AuthContext";
 import { useMarkSessionComplete } from "@/hooks/useMarkSessionComplete";
@@ -157,7 +157,7 @@ export const useClassPlayer = ({
   }, [classData?.id, open]);
 
   // Attach video events once the video element is in the DOM and classData is set
-  useEffect(() => {
+  useLayoutEffect(() => {
     const video = videoRef.current;
     if (!video || !classData?.video_url) return;
 
