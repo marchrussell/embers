@@ -450,7 +450,9 @@ export const ClassPlayerModal = ({
                 )}
 
                 {/* Top bar with favorite/share on left, close on right */}
-                <div className={`relative z-10 flex items-start justify-between p-3 ${controlsClass}`}>
+                <div
+                  className={`relative z-10 flex items-start justify-between p-3 ${controlsClass}`}
+                >
                   <div className="flex items-center gap-1.5">
                     <button
                       onClick={(e) => {
@@ -507,7 +509,9 @@ export const ClassPlayerModal = ({
                 )}
 
                 {/* Main Content - Play/Pause Button in Center */}
-                <div className={`relative z-10 flex flex-1 items-center justify-center py-8 ${playBtnClass}`}>
+                <div
+                  className={`relative z-10 flex flex-1 items-center justify-center py-8 ${playBtnClass}`}
+                >
                   {mediaError ? (
                     <p className="px-6 text-center text-sm font-light text-[#E6DBC7]/70">
                       {mediaError}

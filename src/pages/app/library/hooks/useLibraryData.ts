@@ -45,7 +45,8 @@ export const useLibraryData = ({
             acc[classItem.category_id].push({
               id: classItem.id,
               title: classItem.title,
-              description: classItem.description || classItem.short_description,
+              description: classItem.description,
+              shortDescription: classItem.short_description,
               duration: classItem.duration_minutes,
               teacher: classItem.teacher_name,
               image: classItem.image_url,

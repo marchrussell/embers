@@ -687,9 +687,7 @@ const AdminClasses = () => {
                   <Select
                     value=""
                     onValueChange={(filePath) => {
-                      const { data } = supabase.storage
-                        .from("class-video")
-                        .getPublicUrl(filePath);
+                      const { data } = supabase.storage.from("class-video").getPublicUrl(filePath);
                       setFormData({ ...formData, video_url: data.publicUrl });
                     }}
                   >

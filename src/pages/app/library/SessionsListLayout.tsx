@@ -58,7 +58,7 @@ const SessionRow = memo(
         <SessionPlayCard
           sessionId={session.id}
           title={session.title}
-          description={session.description || fallback}
+          description={session.shortDescription || fallback}
           meta={[
             session.teacher,
             session.duration != null && `${session.duration} min`,

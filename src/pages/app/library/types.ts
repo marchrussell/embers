@@ -2,6 +2,7 @@ export interface LibrarySession {
   id: string;
   title: string;
   description?: string;
+  shortDescription?: string;
   duration: number;
   teacher: string;
   image: string | null;
