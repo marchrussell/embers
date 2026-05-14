@@ -163,10 +163,9 @@ export const useClassPlayer = ({
 
     video.preload = "metadata";
 
-    const onLoadedMetadata = () => {
-      setDuration(video.duration);
-      if (video.readyState >= 1) setIsPlaying(!video.paused);
-    };
+    const onLoadedMetadata = () => setDuration(video.duration);
+    const onPlay = () => setIsPlaying(true);
+    const onPause = () => setIsPlaying(false);
     const onTimeUpdate = () => {
       setCurrentTime(video.currentTime);
       if (
@@ -187,11 +186,15 @@ export const useClassPlayer = ({
     };
 
     video.addEventListener("loadedmetadata", onLoadedMetadata);
+    video.addEventListener("play", onPlay);
+    video.addEventListener("pause", onPause);
     video.addEventListener("timeupdate", onTimeUpdate);
     video.addEventListener("ended", onEnded);
 
     return () => {
       video.removeEventListener("loadedmetadata", onLoadedMetadata);
+      video.removeEventListener("play", onPlay);
+      video.removeEventListener("pause", onPause);
       video.removeEventListener("timeupdate", onTimeUpdate);
       video.removeEventListener("ended", onEnded);
     };
