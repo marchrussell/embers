@@ -49,6 +49,8 @@ export const ClassPlayerModal = ({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const hasShownCompletion = useRef(false);
+  const [showControls, setShowControls] = useState(true);
+  const controlsTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { data: classQueryData, isLoading: loading } = useQuery({
     queryKey: ["session-detail", classId],
@@ -202,7 +204,7 @@ export const ClassPlayerModal = ({
     const onLoadedMetadata = () => {
       setDuration(video.duration);
       if (!classData.show_safety_reminder || skipSafetyModal) {
-        video.play().catch(() => {});
+        video.play().catch(() => setIsPlaying(false));
       }
     };
     const onTimeUpdate = () => {
@@ -240,7 +242,7 @@ export const ClassPlayerModal = ({
     const media = getMedia();
     if (media) {
       if (isPlaying && hasStarted) {
-        media.play().catch(() => {});
+        media.play().catch(() => { if (isVideoClass) setIsPlaying(false); });
       } else {
         media.pause();
       }
@@ -253,6 +255,28 @@ export const ClassPlayerModal = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional: fire once when session starts; classId/classData are stable by that point
   }, [hasStarted]);
+
+  // Auto-hide controls while playing a video; always show when paused
+  useEffect(() => {
+    if (!isVideoClass) return;
+    if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
+    if (isPlaying) {
+      controlsTimerRef.current = setTimeout(() => setShowControls(false), 3000);
+    } else {
+      setShowControls(true);
+    }
+    return () => {
+      if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
+    };
+  }, [isPlaying, isVideoClass]);
+
+  const resetControlsTimer = () => {
+    if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
+    setShowControls(true);
+    if (isPlaying && isVideoClass) {
+      controlsTimerRef.current = setTimeout(() => setShowControls(false), 3000);
+    }
+  };
 
   const handleStart = async () => {
     if (user?.id && showSafetyDisclosure) {
@@ -328,6 +352,13 @@ export const ClassPlayerModal = ({
 
   if (!open) return null;
 
+  const controlsClass = isVideoClass
+    ? `transition-opacity duration-300 ${showControls ? "opacity-100" : "opacity-0 pointer-events-none"}`
+    : "";
+  const playBtnClass = isVideoClass
+    ? `transition-opacity duration-300 ${showControls || !isPlaying ? "opacity-100" : "opacity-0 pointer-events-none"}`
+    : "";
+
   return (
     <>
       {/* Safety Disclosure Dialog */}
@@ -386,11 +417,17 @@ export const ClassPlayerModal = ({
                   src={optimizedVideoUrl ?? undefined}
                   className="absolute inset-0 z-0 h-full w-full object-cover"
                   playsInline
+                  autoPlay
                 />
               )}
 
               {/* Mobile Layout - Vertical with background image/video */}
-              <div className="relative flex h-[95vh] flex-col md:hidden">
+              <div
+                className="relative flex h-[95vh] flex-col md:hidden"
+                onMouseMove={() => isVideoClass && resetControlsTimer()}
+                onTouchStart={() => isVideoClass && resetControlsTimer()}
+                onMouseLeave={() => isVideoClass && isPlaying && setShowControls(false)}
+              >
                 {/* Background Image (audio only) */}
                 {!isVideoClass && classData?.image_url && (
                   <>
@@ -410,7 +447,7 @@ export const ClassPlayerModal = ({
                 )}
 
                 {/* Top bar with favorite/share on left, close on right */}
-                <div className="relative z-10 flex items-start justify-between p-3">
+                <div className={`relative z-10 flex items-start justify-between p-3 ${controlsClass}`}>
                   <div className="flex items-center gap-1.5">
                     <button
                       onClick={(e) => {
@@ -465,7 +502,7 @@ export const ClassPlayerModal = ({
                 </div>
 
                 {/* Main Content - Play/Pause Button in Center */}
-                <div className="relative z-10 flex flex-1 items-center justify-center py-8">
+                <div className={`relative z-10 flex flex-1 items-center justify-center py-8 ${playBtnClass}`}>
                   {mediaError ? (
                     <p className="px-6 text-center text-sm font-light text-[#E6DBC7]/70">
                       {mediaError}
@@ -488,7 +525,7 @@ export const ClassPlayerModal = ({
 
                 {/* Progress Bar - Bottom */}
                 {!mediaError && (
-                  <div className="relative z-10 px-4 pb-6">
+                  <div className={`relative z-10 px-4 pb-6 ${controlsClass}`}>
                     <div className="space-y-2">
                       <Slider
                         value={[currentTime]}
@@ -507,7 +544,11 @@ export const ClassPlayerModal = ({
               </div>
 
               {/* Desktop Layout - Horizontal rectangle */}
-              <div className="hidden md:grid md:h-[600px] md:grid-cols-2 md:gap-0">
+              <div
+                className="hidden md:grid md:h-[600px] md:grid-cols-2 md:gap-0"
+                onMouseMove={() => isVideoClass && resetControlsTimer()}
+                onMouseLeave={() => isVideoClass && isPlaying && setShowControls(false)}
+              >
                 {/* Left side - Image (audio) or transparent over shared video */}
                 <div className="relative overflow-hidden">
                   {!isVideoClass && classData?.image_url && (
@@ -527,7 +568,7 @@ export const ClassPlayerModal = ({
                   }`}
                 >
                   {/* Close button - top right */}
-                  <div className="absolute right-6 top-6">
+                  <div className={`absolute right-6 top-6 ${controlsClass}`}>
                     <Button
                       variant="ghost"
                       size="icon"
@@ -587,7 +628,7 @@ export const ClassPlayerModal = ({
                     </div>
                   ) : (
                     /* Video: action buttons only, no title/info */
-                    <div className="flex items-center gap-3 pr-12">
+                    <div className={`flex items-center gap-3 pr-12 ${controlsClass}`}>
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -617,7 +658,7 @@ export const ClassPlayerModal = ({
                   )}
 
                   {/* Middle section - Play button */}
-                  <div className="flex flex-1 items-center justify-center py-12">
+                  <div className={`flex flex-1 items-center justify-center py-12 ${playBtnClass}`}>
                     {mediaError ? (
                       <p className="text-center text-sm font-light text-[#E6DBC7]/70">
                         {mediaError}
@@ -648,7 +689,7 @@ export const ClassPlayerModal = ({
 
                   {/* Bottom section - Progress bar */}
                   {!mediaError && (
-                    <div className="space-y-3">
+                    <div className={`space-y-3 ${controlsClass}`}>
                       <Slider
                         value={[currentTime]}
                         max={duration}
