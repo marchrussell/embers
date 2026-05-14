@@ -446,7 +446,7 @@ export const ClassPlayerModal = ({
                   </>
                 )}
                 {isVideoClass && (
-                  <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-background/60 via-transparent to-background/80" />
+                  <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-black/30 via-transparent to-black/50" />
                 )}
 
                 {/* Top bar with favorite/share on left, close on right */}
@@ -488,21 +488,23 @@ export const ClassPlayerModal = ({
                   </Button>
                 </div>
 
-                {/* Title and Info */}
-                <div className="relative z-10 px-6 pt-2">
-                  <h2 className="mb-2 font-editorial text-3xl leading-tight text-[#E6DBC7]">
-                    {classData?.title}
-                  </h2>
-                  <p className="text-base font-light text-[#E6DBC7]/70">
-                    {classData?.teacher_name || "March Russell"} •{" "}
-                    {classData?.duration_minutes || 0} min
-                  </p>
-                  {classCategories.length > 0 && (
-                    <p className="mt-2 text-sm font-light uppercase tracking-[0.15em] text-[#EC9037]">
-                      {classCategories.map((c: any) => c.name).join(" · ")}
+                {/* Title and Info (audio only on mobile) */}
+                {!isVideoClass && (
+                  <div className="relative z-10 px-6 pt-2">
+                    <h2 className="mb-2 font-editorial text-3xl leading-tight text-[#E6DBC7]">
+                      {classData?.title}
+                    </h2>
+                    <p className="text-base font-light text-[#E6DBC7]/70">
+                      {classData?.teacher_name || "March Russell"} •{" "}
+                      {classData?.duration_minutes || 0} min
                     </p>
-                  )}
-                </div>
+                    {classCategories.length > 0 && (
+                      <p className="mt-2 text-sm font-light uppercase tracking-[0.15em] text-[#EC9037]">
+                        {classCategories.map((c: any) => c.name).join(" · ")}
+                      </p>
+                    )}
+                  </div>
+                )}
 
                 {/* Main Content - Play/Pause Button in Center */}
                 <div className={`relative z-10 flex flex-1 items-center justify-center py-8 ${playBtnClass}`}>
@@ -561,7 +563,9 @@ export const ClassPlayerModal = ({
                       className="h-full w-full object-cover"
                     />
                   )}
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent to-background/20" />
+                  {!isVideoClass && (
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent to-background/20" />
+                  )}
                 </div>
 
                 {/* Right side - Controls and Info */}
@@ -631,7 +635,7 @@ export const ClassPlayerModal = ({
                     </div>
                   ) : (
                     /* Video: action buttons only, no title/info */
-                    <div className={`flex items-center gap-3 pr-12 ${controlsClass}`}>
+                    <div className={`flex items-center justify-end gap-3 pr-14 ${controlsClass}`}>
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
