@@ -85,7 +85,8 @@ const CourseDetailContent = ({ slug }: { slug: string }) => {
   const sessions: LibrarySession[] = lessons.map((lesson) => ({
     id: lesson.id,
     title: lesson.title,
-    description: lesson.short_description || lesson.description || undefined,
+    description: lesson.description || undefined,
+    shortDescription: lesson.short_description || undefined,
     duration: lesson.duration_minutes || 10,
     teacher: lesson.teacher_name || course.teacher_name || "",
     image: lesson.image_url || course.image_url,
