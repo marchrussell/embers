@@ -153,7 +153,7 @@ export const ClassPlayerModal = ({
     setShowSafetyDisclosure(shouldShowSafety);
     if (!shouldShowSafety) {
       setHasStarted(true);
-      setIsPlaying(true);
+      if (!isVideoClass) setIsPlaying(true); // audio only; video starts paused
     }
 
     if (classData.audio_url && !audioRef.current) {
@@ -203,9 +203,8 @@ export const ClassPlayerModal = ({
 
     const onLoadedMetadata = () => {
       setDuration(video.duration);
-      if (!classData.show_safety_reminder || skipSafetyModal) {
-        video.play().catch(() => setIsPlaying(false));
-      }
+      // Sync play state in case autoPlay attribute started the video
+      if (video.readyState >= 1) setIsPlaying(!video.paused);
     };
     const onTimeUpdate = () => {
       setCurrentTime(video.currentTime);
@@ -240,12 +239,8 @@ export const ClassPlayerModal = ({
 
   useEffect(() => {
     const media = getMedia();
-    if (media) {
-      if (isPlaying && hasStarted) {
-        media.play().catch(() => { if (isVideoClass) setIsPlaying(false); });
-      } else {
-        media.pause();
-      }
+    if (media && !isPlaying) {
+      media.pause();
     }
   }, [isPlaying, hasStarted, isVideoClass]);
 
@@ -300,7 +295,15 @@ export const ClassPlayerModal = ({
   };
 
   const handlePlayPause = () => {
-    setIsPlaying(!isPlaying);
+    const media = getMedia();
+    if (!media) return;
+    if (isPlaying) {
+      media.pause();
+      setIsPlaying(false);
+    } else {
+      media.play().catch(() => setIsPlaying(false));
+      setIsPlaying(true);
+    }
   };
 
   const handleSliderChange = (value: number[]) => {
