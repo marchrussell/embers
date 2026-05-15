@@ -353,17 +353,17 @@ export default function SessionDetailModal({
       {/* Safety Reminder Modal */}
       {session?.safety_note && (
         <Dialog open={showSafetyModal} onOpenChange={setShowSafetyModal}>
-          <DialogContent className="flex max-h-[calc(90dvh-3rem)] w-[92vw] max-w-lg flex-col overflow-y-auto overscroll-contain scroll-smooth rounded-xl border border-white/30 bg-black/75 p-6 backdrop-blur-xl md:max-h-[90dvh] md:max-w-2xl md:p-8">
-            <DialogHeader>
-              <DialogTitle className="font-editorial text-3xl text-white">
+          <DialogContent className="flex max-h-[calc(90dvh-3rem)] w-[92vw] max-w-lg flex-col overflow-y-auto overscroll-contain scroll-smooth rounded-xl border border-white/30 bg-black/75 p-6 backdrop-blur-xl md:max-h-[90dvh] md:max-w-2xl md:p-10 lg:p-12">
+            <DialogHeader className="space-y-2">
+              <DialogTitle className="font-editorial text-3xl text-white md:text-4xl">
                 Safety Reminder
               </DialogTitle>
-              <DialogDescription className="text-base text-white/70">
+              <DialogDescription className="text-sm text-white/70 md:text-base">
                 Please read this important safety information before starting this breathwork
                 session.
               </DialogDescription>
             </DialogHeader>
-            <div className="mt-6 flex flex-col gap-6">
+            <div className="mt-6 flex flex-col gap-6 md:mt-8">
               {session?.safety_note && (
                 <div className="rounded-lg border border-white/10 bg-white/5 p-5">
                   <p className="whitespace-pre-wrap text-base leading-relaxed text-white/90">
