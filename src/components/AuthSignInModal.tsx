@@ -45,7 +45,7 @@ export const AuthSignInModal = ({
   onClose,
   onSuccess,
   showForgotPassword = true,
-  footerVariant = "trial",
+  footerVariant = "signup",
   onOpenSubscription,
 }: AuthSignInModalProps) => {
   const [showForgotPasswordForm, setShowForgotPasswordForm] = useState(false);
