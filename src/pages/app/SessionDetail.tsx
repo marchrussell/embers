@@ -353,7 +353,7 @@ export default function SessionDetailModal({
       {/* Safety Reminder Modal */}
       {session?.safety_note && (
         <Dialog open={showSafetyModal} onOpenChange={setShowSafetyModal}>
-          <DialogContent className="flex max-h-[calc(90dvh-3rem)] w-[92vw] max-w-lg flex-col overflow-y-auto overscroll-contain scroll-smooth rounded-xl border border-white/30 bg-black/75 p-6 backdrop-blur-xl md:max-h-[90dvh] md:max-w-2xl md:p-10 lg:p-12">
+          <DialogContent className="flex max-h-[calc(90dvh-3rem)] w-[92vw] max-w-lg flex-col overflow-y-auto overscroll-contain scroll-smooth rounded-xl border border-white/30 bg-black/75 p-6 backdrop-blur-xl md:max-h-[90dvh] md:max-w-3xl md:p-10 lg:p-12">
             <DialogHeader className="space-y-2">
               <DialogTitle className="font-editorial text-3xl text-[#E6DBC7] md:text-4xl">
                 Safety Reminder
