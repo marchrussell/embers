@@ -215,7 +215,7 @@ export default function SessionDetailModal({
                         if (isLocked) {
                           onShowSubscription?.();
                           onClose();
-                        } else if (session.show_safety_reminder || session.safety_note) {
+                        } else if (session.safety_note) {
                           // Show safety popup if the class has a custom note or the reminder is toggled on
                           setShowSafetyModal(true);
                         } else {
@@ -351,9 +351,9 @@ export default function SessionDetailModal({
       </Dialog>
 
       {/* Safety Reminder Modal */}
-      {(session?.show_safety_reminder || session?.safety_note) && (
+      {session?.safety_note && (
         <Dialog open={showSafetyModal} onOpenChange={setShowSafetyModal}>
-          <DialogContent className="bg-black/30 backdrop-blur-xl">
+          <DialogContent className="max-w-lg bg-black/30 backdrop-blur-xl md:max-w-2xl">
             <DialogHeader>
               <DialogTitle className="font-editorial text-3xl text-white">
                 Safety Reminder

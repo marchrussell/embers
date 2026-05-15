@@ -103,7 +103,6 @@ const AdminClasses = () => {
     is_published: false,
     requires_subscription: false,
     safety_note: "",
-    show_safety_reminder: false,
     intensity: "",
     start_here_position: "none" as "none" | "1" | "2",
     is_quick_reset: false,
@@ -286,7 +285,6 @@ const AdminClasses = () => {
       is_published: formData.is_published,
       requires_subscription: formData.requires_subscription,
       safety_note: formData.safety_note || null,
-      show_safety_reminder: formData.show_safety_reminder,
       intensity: formData.intensity || null,
       technique: formData.technique || null,
       start_here_position: newStartHerePosition,
@@ -403,7 +401,6 @@ const AdminClasses = () => {
       is_published: classItem.is_published,
       requires_subscription: classItem.requires_subscription,
       safety_note: classItem.safety_note || "",
-      show_safety_reminder: classItem.show_safety_reminder || false,
       intensity: classItem.intensity || "",
       start_here_position: (classItem.start_here_position?.toString() || "none") as
         | "none"
@@ -510,7 +507,6 @@ const AdminClasses = () => {
       is_published: false,
       requires_subscription: false,
       safety_note: "",
-      show_safety_reminder: false,
       intensity: "",
       start_here_position: "none",
       is_quick_reset: false,
@@ -859,21 +855,8 @@ const AdminClasses = () => {
                 className="placeholder:text-gray-400"
               />
               <p className="mt-1 text-xs text-muted-foreground">
-                This safety note will appear in a popup when users start this session (if enabled
-                below)
+                If set, a safety popup will appear when users start this session.
               </p>
-            </div>
-            <div className="flex items-center space-x-2 pt-6">
-              <Switch
-                id="show_safety_reminder"
-                checked={formData.show_safety_reminder}
-                onCheckedChange={(checked) =>
-                  setFormData({ ...formData, show_safety_reminder: checked })
-                }
-              />
-              <Label htmlFor="show_safety_reminder" className="mb-0">
-                Show Safety Reminder Popup for this session
-              </Label>
             </div>
           </div>
 
