@@ -353,7 +353,7 @@ export default function SessionDetailModal({
       {/* Safety Reminder Modal */}
       {session?.safety_note && (
         <Dialog open={showSafetyModal} onOpenChange={setShowSafetyModal}>
-          <DialogContent className="max-w-lg bg-black/30 backdrop-blur-xl md:max-w-2xl">
+          <DialogContent className="flex max-h-[calc(90dvh-3rem)] w-[92vw] max-w-lg flex-col overflow-y-auto overscroll-contain scroll-smooth rounded-xl border border-white/30 bg-black/75 p-6 backdrop-blur-xl md:max-h-[90dvh] md:max-w-2xl md:p-8">
             <DialogHeader>
               <DialogTitle className="font-editorial text-3xl text-white">
                 Safety Reminder
@@ -363,9 +363,9 @@ export default function SessionDetailModal({
                 session.
               </DialogDescription>
             </DialogHeader>
-            <div className="space-y-6">
+            <div className="mt-6 flex flex-col gap-6">
               {session?.safety_note && (
-                <div className="rounded-lg border border-white/10 bg-white/5 p-6">
+                <div className="rounded-lg border border-white/10 bg-white/5 p-5">
                   <p className="whitespace-pre-wrap text-base leading-relaxed text-white/90">
                     {renderSafetyNote(session.safety_note)}
                   </p>
