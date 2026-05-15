@@ -263,6 +263,13 @@ const AdminPrograms = () => {
   };
 
   const updateCourseSections = async (programId: string) => {
+    const { error: clearAllError } = await supabase
+      .from("classes")
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .update({ program_section_id: null } as any)
+      .eq("program_id", programId);
+    if (clearAllError) throw clearAllError;
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const db = supabase as any;
 
@@ -321,16 +328,6 @@ const AdminPrograms = () => {
       }
     }
 
-    const allSectionedClassIds = sections.flatMap((s) => s.classIds);
-    for (const classId of selectedClasses) {
-      if (!allSectionedClassIds.includes(classId)) {
-        const { error: clearError } = await supabase
-          .from("classes")
-          .update({ program_section_id: null } as any)
-          .eq("id", classId);
-        if (clearError) throw clearError;
-      }
-    }
   };
 
   const handleDelete = async (id: string) => {
@@ -365,7 +362,7 @@ const AdminPrograms = () => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const db = supabase as any;
-    const [{ data: classDataRaw }, { data: sectionData }] = await Promise.all([
+    const [classResult, sectionResult] = await Promise.all([
       db
         .from("classes")
         .select("id, program_section_id")
@@ -377,7 +374,26 @@ const AdminPrograms = () => {
         .eq("program_id", course.id)
         .order("order_index"),
     ]);
-    const classData = (classDataRaw ?? []) as { id: string; program_section_id: string | null }[];
+
+    if (classResult.error) {
+      toast({
+        title: "Error loading course classes",
+        description: classResult.error.message,
+        variant: "destructive",
+      });
+      return;
+    }
+    if (sectionResult.error) {
+      toast({
+        title: "Error loading course sections",
+        description: sectionResult.error.message,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const classData = (classResult.data ?? []) as { id: string; program_section_id: string | null }[];
+    const sectionData = sectionResult.data;
 
     setSelectedClasses(classData.map((c) => c.id));
 
@@ -387,11 +403,9 @@ const AdminPrograms = () => {
         dbId: s.id,
         title: s.title,
         description: s.description || "",
-        classIds: (classData ?? [])
-          .filter(
-            (c: { id: string; program_section_id: string | null }) => c.program_section_id === s.id
-          )
-          .map((c: { id: string }) => c.id),
+        classIds: classData
+          .filter((c) => c.program_section_id === s.id)
+          .map((c) => c.id),
       })
     );
     setSections(loadedSections);
