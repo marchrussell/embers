@@ -886,7 +886,7 @@ const AdminPrograms = () => {
               <CardContent className="p-6">
                 <div className="flex flex-col gap-6 md:flex-row">
                   {course.image_url && (
-                    <div className="h-32 w-full flex-shrink-0 overflow-hidden rounded-lg md:w-48">
+                    <div className="flex-shrink-0 overflow-hidden rounded-lg md:w-48">
                       <img
                         src={course.image_url}
                         alt={course.title}
