@@ -666,7 +666,7 @@ const AdminPrograms = () => {
                             : "bg-white/5"
                         }`}
                       >
-                        <GripVertical className="h-4 w-4 flex-shrink-0 text-white/40" />
+                        <GripVertical className="h-5 w-5 flex-shrink-0 text-white/40" />
                         <span className="w-6 text-xs text-white/50">{index + 1}.</span>
                         <span className="flex-1 text-sm text-white">{classItem?.title}</span>
                       </div>
