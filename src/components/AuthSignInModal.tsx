@@ -90,15 +90,6 @@ export const AuthSignInModal = ({
     onClose();
   };
 
-  const handleStartTrial = () => {
-    handleClose();
-    if (onOpenSubscription) {
-      onOpenSubscription();
-    } else {
-      navigate("/", { state: { openSubscription: true } });
-    }
-  };
-
   const handleSignUp = () => {
     handleClose();
     if (onOpenSubscription) {

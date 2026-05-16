@@ -92,7 +92,7 @@ const Online = () => {
         <AuthSignInModal
           open={showAuthModal}
           onClose={() => setShowAuthModal(false)}
-          footerVariant="trial"
+          footerVariant="signup"
           onOpenSubscription={() => {
             setShowAuthModal(false);
             setShowSubscriptionModal(true);
