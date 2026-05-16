@@ -6,7 +6,6 @@ import { FadeUp } from "@/components/FadeUp";
 import { Footer } from "@/components/Footer";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { NavBar } from "@/components/NavBar";
-import OnlineFooter from "@/components/OnlineFooter";
 import OnlineHeader from "@/components/OnlineHeader";
 import { WeeklyResetCard } from "@/components/WeeklyResetCard";
 import { supabase } from "@/integrations/supabase/client";
@@ -158,8 +157,6 @@ const StartHere = () => {
             </p>
           </div>
         </FadeUp>
-
-        <OnlineFooter />
       </div>
 
       <div className="hidden md:block">

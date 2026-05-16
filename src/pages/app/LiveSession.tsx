@@ -6,7 +6,6 @@ import { useParams } from "react-router-dom";
 import { FadeUp } from "@/components/FadeUp";
 import { Footer } from "@/components/Footer";
 import { NavBar } from "@/components/NavBar";
-import OnlineFooter from "@/components/OnlineFooter";
 import OnlineHeader from "@/components/OnlineHeader";
 import { LiveSessionSkeleton } from "@/components/skeletons/LiveSessionSkeleton";
 import { Button } from "@/components/ui/button";
@@ -390,7 +389,6 @@ const LiveSessionContent = ({ sessionId }: LiveSessionContentProps) => {
             )}
           </div>
         </FadeUp>
-        <OnlineFooter />
       </div>
       <div className="hidden md:block">
         <Footer />

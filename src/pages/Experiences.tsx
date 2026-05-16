@@ -10,7 +10,6 @@ import { Footer } from "@/components/Footer";
 import { NavBar } from "@/components/NavBar";
 import { ExperiencesSkeleton } from "@/components/skeletons";
 import { SubscriptionModal } from "@/components/SubscriptionModal";
-import { TermsMicrocopy } from "@/components/TermsMicrocopy";
 import { GlowButton } from "@/components/ui/glow-button";
 import { IconButton } from "@/components/ui/icon-button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -486,7 +485,6 @@ const Experiences = () => (
         <ExperiencesContent />
       </ErrorBoundary>
     </Suspense>
-    <TermsMicrocopy />
     <Footer />
   </div>
 );

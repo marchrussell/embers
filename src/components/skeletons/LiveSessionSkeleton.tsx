@@ -1,10 +1,9 @@
 import { Calendar, Clock } from "lucide-react";
 
+import { Footer } from "@/components/Footer";
 import { NavBar } from "@/components/NavBar";
-import OnlineFooter from "@/components/OnlineFooter";
 import OnlineHeader from "@/components/OnlineHeader";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Footer } from "@/components/Footer";
 
 export const LiveSessionSkeleton = () => {
   return (
@@ -90,8 +89,6 @@ export const LiveSessionSkeleton = () => {
             </div>
           </div>
         </div>
-
-        <OnlineFooter />
       </div>
       <div className="hidden md:block">
         <Footer />

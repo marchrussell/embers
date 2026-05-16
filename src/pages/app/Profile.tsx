@@ -7,7 +7,6 @@ import { toast } from "sonner";
 
 import { FadeUp } from "@/components/FadeUp";
 import { PrivacyModal, TermsModal } from "@/components/LegalModals";
-import OnlineFooter from "@/components/OnlineFooter";
 import {
   ChangeEmailDialog,
   ChangePasswordDialog,
@@ -381,8 +380,6 @@ const ProfileContent = ({ userId, user, signOut }: ProfileContentProps) => {
           <div className="mt-4 text-center text-xs font-light text-[#E6DBC7]/60 md:mt-6 md:text-base">
             Logged in as {user.email}
           </div>
-
-          <OnlineFooter />
         </div>
 
         {/* Shared Dialogs */}

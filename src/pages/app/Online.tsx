@@ -3,7 +3,6 @@ import { Suspense, useState } from "react";
 import { Footer } from "@/components/Footer";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { NavBar } from "@/components/NavBar";
-import OnlineFooter from "@/components/OnlineFooter";
 import OnlineHeader from "@/components/OnlineHeader";
 import { SafetyDisclosureModal } from "@/components/SafetyDisclosureModal";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
@@ -76,8 +75,6 @@ const Online = () => {
             />
           </TabsContent>
         </Tabs>
-
-        <OnlineFooter />
       </div>
       <div className="hidden md:block">
         <Footer />

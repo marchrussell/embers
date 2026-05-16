@@ -3,11 +3,10 @@ import { Heart, Play, Share2 } from "lucide-react";
 import { Suspense, useState } from "react";
 
 import favouritesHeroImage from "@/assets/favourites-hero.jpg";
-import { FadeUp } from "@/components/FadeUp";
 import { ClassPlayerModal } from "@/components/ClassPlayerModal";
+import { FadeUp } from "@/components/FadeUp";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { NavBar } from "@/components/NavBar";
-import OnlineFooter from "@/components/OnlineFooter";
 import OnlineHeader from "@/components/OnlineHeader";
 import { SessionCardSkeleton } from "@/components/skeletons/SessionCardSkeleton";
 import { useAuth } from "@/contexts/AuthContext";
@@ -204,7 +203,6 @@ const Favourites = () => {
             </div>
           )}
         </div>
-        <OnlineFooter />
       </div>
     </>
   );

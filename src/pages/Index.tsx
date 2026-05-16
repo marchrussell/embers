@@ -7,7 +7,6 @@ import { Footer } from "@/components/Footer";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { NavBar } from "@/components/NavBar";
 import { PhoneMockups } from "@/components/PhoneMockups";
-import { TermsMicrocopy } from "@/components/TermsMicrocopy";
 import { GlowButton } from "@/components/ui/glow-button";
 import { Pill } from "@/components/ui/pill";
 import SplitCard from "@/components/ui/split-card";
@@ -347,7 +346,6 @@ const Index = () => {
         </section>
       </main>
 
-      <TermsMicrocopy />
       <Footer />
     </div>
   );
