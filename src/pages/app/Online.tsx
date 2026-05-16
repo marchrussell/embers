@@ -1,7 +1,7 @@
 import { Suspense, useState } from "react";
 
 import { Footer } from "@/components/Footer";
-import { AuthSignInModal, SubscriptionModal } from "@/components/modals/LazyModals";
+import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { NavBar } from "@/components/NavBar";
 import OnlineFooter from "@/components/OnlineFooter";
 import OnlineHeader from "@/components/OnlineHeader";
@@ -29,12 +29,10 @@ const Online = () => {
   } = useAuth();
   const { activeTab, handleTabChange } = useOnlineTab();
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
-  const [showAuthModal, setShowAuthModal] = useState(false);
   const showSafetyModal = !loading && !hasAcceptedSafetyDisclosure;
 
   const handleSubscriptionRequired = () => {
-    if (!user) setShowAuthModal(true);
-    else setShowSubscriptionModal(true);
+    setShowSubscriptionModal(true);
   };
 
   const handleSafetyAccept = () => {
@@ -88,14 +86,6 @@ const Online = () => {
         <SubscriptionModal
           open={showSubscriptionModal}
           onClose={() => setShowSubscriptionModal(false)}
-        />
-        <AuthSignInModal
-          open={showAuthModal}
-          onClose={() => setShowAuthModal(false)}
-          onOpenSubscription={() => {
-            setShowAuthModal(false);
-            setShowSubscriptionModal(true);
-          }}
         />
       </Suspense>
       {user && (

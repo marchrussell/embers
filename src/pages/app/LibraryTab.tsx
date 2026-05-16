@@ -5,7 +5,7 @@ import { ReactElement, Suspense, useEffect, useMemo, useRef, useState } from "re
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { ArcCardsModal } from "@/components/ArcCardsModal";
-import { AuthSignInModal, SubscriptionModal } from "@/components/modals/LazyModals";
+import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { NavBar } from "@/components/NavBar";
 import {
   LibraryEmbeddedSkeleton,
@@ -45,11 +45,9 @@ const LibraryContent = ({
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
-  const [showAuthModal, setShowAuthModal] = useState(false);
 
   const handleSubscriptionRequired = () => {
-    if (!user) setShowAuthModal(true);
-    else setShowSubscriptionModal(true);
+    setShowSubscriptionModal(true);
   };
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(() => {
     return new URLSearchParams(window.location.search).get("session");
@@ -168,14 +166,6 @@ const LibraryContent = ({
         <SubscriptionModal
           open={showSubscriptionModal}
           onClose={() => setShowSubscriptionModal(false)}
-        />
-        <AuthSignInModal
-          open={showAuthModal}
-          onClose={() => setShowAuthModal(false)}
-          onOpenSubscription={() => {
-            setShowAuthModal(false);
-            setShowSubscriptionModal(true);
-          }}
         />
       </Suspense>
       <ArcCardsModal open={showArcCardsModal} onOpenChange={setShowArcCardsModal} />
