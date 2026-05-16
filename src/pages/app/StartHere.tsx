@@ -62,7 +62,7 @@ const StartHere = () => {
       <OnlineHeader />
 
       {/* Hero Section - positioned to start where tab content begins */}
-      <div className="relative z-10 mt-[160px] h-[280px] sm:mt-[320px] sm:h-[380px] md:mt-[380px] md:h-[420px]">
+      <div className="relative z-10 mt-[80px] h-[280px] sm:mt-[320px] sm:h-[380px] md:mt-[300px] md:h-[420px]">
         <img
           src={startHereButterfly}
           alt=""
@@ -71,11 +71,14 @@ const StartHere = () => {
         />
         <div className="absolute inset-0 bg-black/30" />
         <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
+      </div>
 
+      {/* Main Content */}
+      <div className="px-6 pb-16 pt-10 sm:pb-20 sm:pt-14 md:px-10 md:pb-24 md:pt-16 lg:px-12">
         <FadeUp>
-          <div className="relative flex h-full items-end px-6 pb-16 md:px-10 lg:px-12">
-            <div className="w-full">
-              <p className="mb-2 text-xs font-light uppercase tracking-[0.15em] text-[#D4A574] sm:mb-3 sm:text-sm">
+          <div className="relative flex h-full items-end">
+            <div className="space-y-2">
+              <p className="text-xs font-light uppercase tracking-[0.15em] text-[#D4A574] sm:mb-3 sm:text-sm">
                 Your First Two Weeks
               </p>
               <h1 className="font-editorial text-3xl text-[#E6DBC7] sm:text-4xl md:text-5xl lg:text-6xl">
@@ -84,13 +87,10 @@ const StartHere = () => {
             </div>
           </div>
         </FadeUp>
-      </div>
 
-      {/* Main Content */}
-      <div className="px-6 pb-16 pt-10 sm:pb-20 sm:pt-14 md:px-10 md:pb-24 md:pt-16 lg:px-12">
-        {/* Subtitle - moved below hero */}
+        {/* Subtitle */}
         <FadeUp>
-          <p className="mb-8 font-editorial text-lg italic leading-relaxed text-[#E6DBC7]/80 sm:mb-16 sm:text-xl md:text-2xl">
+          <p className="mb-8 mt-12 font-editorial text-lg italic leading-relaxed text-[#E6DBC7]/80 sm:mb-16 sm:text-xl md:text-2xl">
             No pressure. No expectations. Just a gentle way to arrive.
           </p>
           <div className="mb-10 max-w-3xl text-sm font-light leading-relaxed text-white sm:mb-20 sm:text-base md:mb-28 md:text-lg">
