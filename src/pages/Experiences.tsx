@@ -232,7 +232,7 @@ const ExperiencesContent = () => {
               if (visible.length === 0) {
                 return (
                   <FadeUp>
-                    <p className="font-unica text-[15px] font-light text-[#E6DBC7]/50">
+                    <p className="font-unica text-[15px] font-light text-[#1A1A1A]/40">
                       No upcoming experiences scheduled yet
                     </p>
                   </FadeUp>
