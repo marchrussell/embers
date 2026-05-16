@@ -1,6 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { Suspense, useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { FadeUp } from "@/components/FadeUp";
 import { Footer } from "@/components/Footer";
@@ -29,6 +29,7 @@ const firstScreenImg = `${SUPABASE_STORAGE_URL}/storage/v1/object/public/site-im
 
 const Index = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [heroLoaded, setHeroLoaded] = useState(false);
   const liveSessionsData = useLiveSessionsData();
@@ -226,7 +227,7 @@ const Index = () => {
               </p>
               <GlowButton
                 onClick={() => {
-                  window.open("/online?tab=courses&course=mental-reset", "_blank");
+                  navigate("/online?tab=courses&course=mental-reset");
                 }}
                 className="mt-auto inline-flex w-fit items-center justify-center rounded-full border border-white bg-transparent text-white transition-all hover:bg-white/10 lg:self-end"
                 style={{
