@@ -3,7 +3,7 @@
  * Updated: May 2026
  *
  * HŌM (Subscriptions)
- * - Annual: price_1TUkLXGBlPMRpwZ6lcwXJ6b9
+ * - Annual: price_1TXM0yGBlPMRpwZ6GFmKvfyI
  * - Monthly: price_1TUkIjGBlPMRpwZ6r3dSRw8Y
  */
 
@@ -17,7 +17,7 @@ export const TEST_SUBSCRIPTION_PRICES = {
 
 // Live mode price IDs
 export const LIVE_SUBSCRIPTION_PRICES = {
-  ANNUAL: "price_1TUkLXGBlPMRpwZ6lcwXJ6b9",
+  ANNUAL: "price_1TXM0yGBlPMRpwZ6GFmKvfyI",
   MONTHLY: "price_1TUkIjGBlPMRpwZ6r3dSRw8Y",
 } as const;
 
@@ -26,8 +26,8 @@ export const SUBSCRIPTION_PRICES = isTestMode ? TEST_SUBSCRIPTION_PRICES : LIVE_
 export const RISE_ARC_PRICES = "";
 
 export const SUBSCRIPTION_DISPLAY_PRICES = {
-  monthly: { unitAmountFormatted: "£20" },
-  annual: { unitAmountFormatted: "£180", monthlyEquivalent: "£15" },
+  monthly: { unitAmountFormatted: "£18" },
+  annual: { unitAmountFormatted: "£149", monthlyEquivalent: "£12.42" },
 } as const;
 
 export const SUBSCRIPTION_BENEFITS = [
