@@ -92,11 +92,6 @@ const LibraryContent = ({
     return null;
   }, [searchParams, categoriesWithSessions]);
 
-  // Scroll to top when page loads
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   // Check for scroll intent from URL params
   useEffect(() => {
     const scrollTo = searchParams.get("scrollTo");
