@@ -52,7 +52,6 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
         onClose={() => setShowSignInModal(false)}
         //onSuccess={() => navigate(location)}
         onOpenSubscription={handleOpenSubscription}
-        footerVariant="signup"
       />
       <Suspense fallback={null}>
         <SubscriptionModal

@@ -13,8 +13,6 @@ import { ModalCloseButton } from "@/components/ui/modal-close-button";
 import { usePasswordReset } from "@/hooks/auth/usePasswordReset";
 import { useSignIn } from "@/hooks/auth/useSignIn";
 
-type FooterVariant = "trial" | "courses" | "signup" | "none";
-
 interface AuthSignInModalProps {
   open: boolean;
   onClose: () => void;
@@ -22,9 +20,7 @@ interface AuthSignInModalProps {
   onSuccess?: () => void;
   /** Whether to show forgot password link. Defaults to true. */
   showForgotPassword?: boolean;
-  /** Footer variant to display. Defaults to "trial". */
-  footerVariant?: FooterVariant;
-  /** Callback to open subscription modal (used with footerVariant="trial") */
+  /** Callback to open subscription modal */
   onOpenSubscription?: () => void;
 }
 
@@ -45,7 +41,6 @@ export const AuthSignInModal = ({
   onClose,
   onSuccess,
   showForgotPassword = true,
-  footerVariant = "signup",
   onOpenSubscription,
 }: AuthSignInModalProps) => {
   const [showForgotPasswordForm, setShowForgotPasswordForm] = useState(false);
@@ -99,39 +94,6 @@ export const AuthSignInModal = ({
     }
   };
 
-  const renderFooter = () => {
-    if (showForgotPasswordForm) return null;
-
-    switch (footerVariant) {
-      case "signup":
-        return (
-          <div className="mt-8 border-t border-white/10 pt-6 text-center">
-            <p className="text-[14px] font-light text-white/60">
-              Don't have an account?{" "}
-              <button onClick={handleSignUp} className="text-white underline hover:text-white/80">
-                Sign up now
-              </button>
-            </p>
-          </div>
-        );
-
-      case "courses":
-        return (
-          <div className="mt-8 border-t border-white/10 pt-6 text-center">
-            <p className="text-[13px] font-light leading-relaxed text-white/45">
-              This area is for purchased courses only.
-              <br />
-              To access courses, please purchase one first.
-            </p>
-          </div>
-        );
-
-      case "none":
-      default:
-        return null;
-    }
-  };
-
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogPortal>
@@ -142,11 +104,9 @@ export const AuthSignInModal = ({
           </div>
           <div className="sr-only">Sign in to access your account</div>
 
-          {/* Close button */}
           <ModalCloseButton onClose={handleClose} size="md" position="default" />
 
           <div className="p-10">
-            {/* Logo */}
             <div className="mb-8 text-center">
               <h2 className="font-editorial text-[clamp(1.5rem,2vw,1.75rem)] font-light text-white">
                 {showForgotPasswordForm ? "Reset Password" : "Welcome back"}
@@ -154,7 +114,6 @@ export const AuthSignInModal = ({
             </div>
 
             {showForgotPasswordForm ? (
-              /* Forgot Password Form */
               <form onSubmit={handleForgotPassword} className="space-y-5">
                 <div className="space-y-2">
                   <Label htmlFor="reset-email" className="text-[14px] font-light text-white/80">
@@ -195,7 +154,6 @@ export const AuthSignInModal = ({
                 </button>
               </form>
             ) : (
-              /* Sign In Form */
               <form onSubmit={handleSignIn} className="space-y-5">
                 <div className="space-y-2">
                   <Label htmlFor="signin-email" className="text-[14px] font-light text-white/80">
@@ -230,7 +188,6 @@ export const AuthSignInModal = ({
                   )}
                 </div>
 
-                {/* Forgot Password Link */}
                 {showForgotPassword && (
                   <div className="text-right">
                     <button
@@ -257,7 +214,19 @@ export const AuthSignInModal = ({
               </form>
             )}
 
-            {renderFooter()}
+            {!showForgotPasswordForm && (
+              <div className="mt-8 border-t border-white/10 pt-6 text-center">
+                <p className="text-[14px] font-light text-white/60">
+                  Don't have an account?{" "}
+                  <button
+                    onClick={handleSignUp}
+                    className="text-white underline hover:text-white/80"
+                  >
+                    Sign up now
+                  </button>
+                </p>
+              </div>
+            )}
           </div>
         </DialogPrimitive.Content>
       </DialogPortal>

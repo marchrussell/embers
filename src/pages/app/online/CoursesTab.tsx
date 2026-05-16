@@ -120,7 +120,6 @@ const CourseDetailContent = ({ slug }: { slug: string }) => {
         <AuthSignInModal
           open={showAuthModal}
           onClose={() => setShowAuthModal(false)}
-          footerVariant="trial"
           onOpenSubscription={() => {
             setShowAuthModal(false);
             setShowSubscriptionModal(true);

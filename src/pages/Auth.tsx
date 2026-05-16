@@ -20,7 +20,6 @@ const Auth = () => {
         open={true}
         onClose={() => navigate("/")}
         onSuccess={() => navigate("/online")}
-        footerVariant="signup"
         onOpenSubscription={() => setShowSubscriptionModal(true)}
       />
     </>
