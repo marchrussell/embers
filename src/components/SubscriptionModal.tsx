@@ -40,7 +40,7 @@ export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => 
 
     try {
       const { data, error } = await supabase.functions.invoke("create-checkout", {
-        body: { priceId },
+        body: { priceId, includeTrial: plan === "annual" },
       });
 
       if (error) throw error;
@@ -172,9 +172,7 @@ export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => 
                       </span>
                       <span className="ml-1 text-sm text-white/60">/month</span>
                     </div>
-                    <p className="mb-6 text-sm font-light text-white/50">
-                      7-day free trial, then {monthlyPrice}/month
-                    </p>
+                    <p className="mb-6 text-sm font-light text-white/50">{monthlyPrice}/month</p>
 
                     <GlowButton
                       variant="white"
@@ -185,7 +183,7 @@ export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => 
                       {loadingPlan === "monthly" ? (
                         <ButtonLoadingSpinner size="lg" />
                       ) : (
-                        "Start your 7-day free trial"
+                        "Subscribe monthly"
                       )}
                     </GlowButton>
                   </div>
@@ -193,8 +191,8 @@ export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => 
 
                 <div className="mt-10">
                   <p className="text-center text-xs font-light leading-relaxed text-white/40 sm:text-sm">
-                    You will be automatically charged after your 7-day free trial ends unless you
-                    cancel before then. Cancel anytime during the trial at no charge.
+                    Annual plan includes a 7-day free trial. You will be automatically charged after
+                    the trial ends unless you cancel before then. Cancel anytime at no charge.
                   </p>
                 </div>
               </div>

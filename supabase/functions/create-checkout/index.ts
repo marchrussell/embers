@@ -12,6 +12,7 @@ const corsHeaders = {
 const createCheckoutSchema = z.object({
   priceId: z.string().startsWith("price_", "Invalid price ID format"),
   mode: z.enum(["payment", "subscription"]).default("subscription"),
+  includeTrial: z.boolean().optional().default(false),
 });
 
 const logStep = (step: string, details?: any) => {
@@ -38,7 +39,7 @@ serve(async (req) => {
       );
     }
 
-    const { priceId, mode } = parseResult.data;
+    const { priceId, mode, includeTrial } = parseResult.data;
     logStep("Request body parsed", { priceId, mode });
 
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
@@ -72,7 +73,7 @@ serve(async (req) => {
       cancel_url: `${origin}/`,
     };
 
-    if (checkoutMode === 'subscription') {
+    if (checkoutMode === 'subscription' && includeTrial) {
       sessionParams.subscription_data = { trial_period_days: 7 };
     }
     

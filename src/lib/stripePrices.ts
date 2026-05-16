@@ -35,5 +35,5 @@ export const SUBSCRIPTION_BENEFITS = [
   "Breathwork, meditation, and nervous system regulation",
   "Short daily resets and deeper guided sessions",
   "Weekly live sessions and guest workshops",
-  "7-day free trial — cancel anytime",
+  "7-day free trial with annual — cancel anytime",
 ] as const;
