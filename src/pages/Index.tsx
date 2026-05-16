@@ -199,7 +199,7 @@ const Index = () => {
               contentClassName="bg-black/95 p-6 md:p-8 lg:bg-transparent lg:px-10 lg:py-10 lg:pl-6"
             >
               <h3
-                className="mb-5 font-editorial text-white sm:mb-6"
+                className="mb-5 font-editorial font-light text-[#E6DBC7] sm:mb-6"
                 style={{
                   fontSize: "clamp(1.8rem, 2.2vw, 2.4rem)",
                   lineHeight: 1.15,
@@ -208,21 +208,10 @@ const Index = () => {
               >
                 Mental Reset
               </h3>
-              <p
-                className="mb-5 font-light uppercase tracking-[0.1em] text-[#EC9037] sm:mb-6"
-                style={{
-                  fontSize: "clamp(0.7rem, 0.8vw, 0.85rem)",
-                }}
-              >
+              <p className="mb-5 text-[11px] font-medium uppercase tracking-[0.14em] text-[#D4A574]/80 sm:mb-6">
                 10-Day Course
               </p>
-              <p
-                className="mb-5 text-white/90 sm:mb-6"
-                style={{
-                  fontSize: "clamp(0.85rem, 0.92vw, 0.95rem)",
-                  lineHeight: 1.65,
-                }}
-              >
+              <p className="mb-5 font-editorial text-[14px] italic leading-[1.5] text-[#E6DBC7]/65 sm:mb-6 lg:text-[15px]">
                 A guided reset to clear mental noise, reduce overstimulation, and restore clarity.
               </p>
               <GlowButton

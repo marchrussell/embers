@@ -327,7 +327,6 @@ const AdminPrograms = () => {
         }
       }
     }
-
   };
 
   const handleDelete = async (id: string) => {
@@ -392,7 +391,10 @@ const AdminPrograms = () => {
       return;
     }
 
-    const classData = (classResult.data ?? []) as { id: string; program_section_id: string | null }[];
+    const classData = (classResult.data ?? []) as {
+      id: string;
+      program_section_id: string | null;
+    }[];
     const sectionData = sectionResult.data;
 
     setSelectedClasses(classData.map((c) => c.id));
@@ -403,9 +405,7 @@ const AdminPrograms = () => {
         dbId: s.id,
         title: s.title,
         description: s.description || "",
-        classIds: classData
-          .filter((c) => c.program_section_id === s.id)
-          .map((c) => c.id),
+        classIds: classData.filter((c) => c.program_section_id === s.id).map((c) => c.id),
       })
     );
     setSections(loadedSections);
