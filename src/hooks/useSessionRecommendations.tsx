@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/react";
 import { useQuery } from "@tanstack/react-query";
 
 import { useAuth } from "@/contexts/AuthContext";
@@ -143,6 +144,7 @@ export const useSessionRecommendations = () => {
       return sorted.slice(0, 5); // Return top 5
     } catch (error) {
       console.error("Error getting recommendations:", error);
+      Sentry.captureException(error);
       return [];
     }
   };
@@ -245,6 +247,7 @@ export const useSessionRecommendations = () => {
       return sorted.slice(0, 3);
     } catch (error) {
       console.error("Error getting alternative recommendations:", error);
+      Sentry.captureException(error);
       return [];
     }
   };

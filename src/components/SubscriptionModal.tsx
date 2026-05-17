@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Check, X } from "lucide-react";
 import { useState } from "react";
@@ -56,6 +57,7 @@ export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => 
       }
     } catch (error: any) {
       console.error("[SubscriptionModal] Checkout failed:", error);
+      Sentry.captureException(error);
       toast.error(error.message || "Failed to create checkout. Please try again.");
       setLoadingPlan(null);
     }

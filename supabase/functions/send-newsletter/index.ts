@@ -4,6 +4,7 @@ import { Resend } from "https://esm.sh/resend@2.0.0";
 import { z } from "https://esm.sh/zod@3.25.76";
 
 import { newsletterEmail } from "../_shared/email-templates.ts";
+import { captureException } from "../_shared/sentry.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -175,6 +176,7 @@ serve(async (req) => {
     );
   } catch (error: any) {
     console.error("Error in send-newsletter function:", error);
+    await captureException(error, { function: "send-newsletter" });
     return new Response(
       JSON.stringify({ 
         error: error.message,

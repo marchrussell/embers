@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { X } from "lucide-react";
 import { useState } from "react";
@@ -96,6 +97,7 @@ export const ContactFormModal = ({ open, onOpenChange }: ContactFormModalProps) 
       onOpenChange(false);
     } catch (error) {
       console.error("Error sending message:", error);
+      Sentry.captureException(error);
       toast({
         title: "Error sending message",
         description: "Please try again later or contact us directly.",

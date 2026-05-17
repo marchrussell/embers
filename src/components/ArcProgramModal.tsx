@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/react";
 import { Check } from "lucide-react";
 import { useState } from "react";
 
@@ -116,6 +117,7 @@ export function ArcProgramModal({
         }
       } catch (error) {
         console.error("Checkout error:", error);
+        Sentry.captureException(error);
       } finally {
         setLoading(false);
       }

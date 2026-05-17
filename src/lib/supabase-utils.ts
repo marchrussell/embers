@@ -1,3 +1,5 @@
+import * as Sentry from "@sentry/react";
+
 interface RetryConfig {
   maxRetries?: number;
   retryDelay?: number;
@@ -57,6 +59,9 @@ export async function withRetry<T>(
       // Don't retry on certain errors
       if (isNonRetryableError(result.error)) {
         console.error("❌ Non-retryable error:", result.error);
+        Sentry.captureException(
+          result.error instanceof Error ? result.error : new Error(String(result.error))
+        );
         return result;
       }
 
@@ -84,6 +89,7 @@ export async function withRetry<T>(
   }
 
   console.error(`❌ Query failed after ${maxRetries + 1} attempts`);
+  Sentry.captureException(lastError instanceof Error ? lastError : new Error(String(lastError)));
   return { data: null, error: lastError };
 }
 

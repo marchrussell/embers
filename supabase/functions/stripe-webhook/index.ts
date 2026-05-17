@@ -241,6 +241,7 @@ serve(async (req) => {
             }
           } catch (err) {
             logStep("Error processing subscription checkout", { error: err instanceof Error ? err.message : String(err) });
+            await captureException(err, { function: "stripe-webhook", event: "checkout.session.completed" });
           }
         } else if (session.metadata?.type === 'event_booking' && session.payment_status === 'paid') {
           const {
