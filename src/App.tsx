@@ -12,9 +12,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { usePrefetchRoute } from "@/hooks/usePrefetchRoute";
 
-// Eagerly load Auth and Index (critical for interactivity)
 import Auth from "./pages/Auth";
-import Index from "./pages/Index";
 
 // Signup page (eager load for invite flow)
 const Signup = lazy(() => import("./pages/Signup"));
@@ -110,7 +108,7 @@ function AppContent() {
         <Suspense fallback={<PageSkeleton />}>
           <Routes>
             {/* Public routes */}
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<OnlinePage />} />
             <Route path="/experiences" element={<Experiences />} />
             <Route path="/arc/welcome-call-confirmed" element={<ArcWelcomeCallConfirmed />} />
             <Route path="/auth" element={<Auth />} />

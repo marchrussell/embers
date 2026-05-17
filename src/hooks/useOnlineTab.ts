@@ -1,6 +1,6 @@
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
-const VALID_TABS = ["home", "library", "courses", "live"] as const;
+const VALID_TABS = ["home", "library", "courses", "live", "in-person"] as const;
 export type OnlineTab = (typeof VALID_TABS)[number];
 
 export function useOnlineTab() {
@@ -23,6 +23,10 @@ export function useOnlineTab() {
   const activeTab = getActiveTab();
 
   const handleTabChange = (tab: string) => {
+    if (tab === "in-person") {
+      navigate("/experiences");
+      return;
+    }
     navigate(`/online?tab=${tab}`, { replace: true });
   };
 

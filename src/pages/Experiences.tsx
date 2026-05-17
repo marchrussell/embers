@@ -8,12 +8,15 @@ import { ExperienceBookingModal } from "@/components/ExperienceBookingModal";
 import { FadeUp } from "@/components/FadeUp";
 import { Footer } from "@/components/Footer";
 import { NavBar } from "@/components/NavBar";
+import OnlineHeader from "@/components/OnlineHeader";
+import OnlineTabLayout from "@/components/OnlineTabLayout";
 import { ExperiencesSkeleton } from "@/components/skeletons";
 import { SubscriptionModal } from "@/components/SubscriptionModal";
 import { GlowButton } from "@/components/ui/glow-button";
 import { IconButton } from "@/components/ui/icon-button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import SplitCard from "@/components/ui/split-card";
+import { useOnlineTab } from "@/hooks/useOnlineTab";
 import { supabase } from "@/integrations/supabase/client";
 import {
   CalendarEvent,
@@ -192,36 +195,21 @@ const ExperiencesContent = () => {
 
   return (
     <>
-      <main className="flex-1">
-        {/* Hero Section - Desktop Only */}
-        <section className="hidden px-6 pb-12 pt-48 md:block md:px-10 md:pb-16 md:pt-44 lg:px-12 lg:pb-20 lg:pt-48">
-          <div className="mx-auto max-w-[1600px]">
-            <FadeUp>
-              <h1 className="mb-3 font-editorial text-[clamp(2.4rem,4vw,4rem)] font-light tracking-[-0.02em] text-[#E6DBC7]">
-                Experiences
-              </h1>
-              <p className="font-unica text-[clamp(1rem,1.15vw,1.1rem)] font-light text-white/60">
-                In person live sessions, workshops, and gatherings
-              </p>
-            </FadeUp>
-          </div>
-        </section>
-
-        {/* Mobile Spacer - pushes content below fixed NavBar logo */}
-        <div className="pt-44 md:hidden" />
+      <OnlineTabLayout className="pb-64">
+        <FadeUp>
+          {/* <h2 className="mb-2 font-editorial text-[clamp(2rem,3vw,2.8rem)] font-light tracking-[-0.01em] text-[#E6DBC7]">
+            In-Person Experiences
+          </h2> */}
+          <h2 className="mb-2 text-2xl font-medium tracking-wide text-[#E6DBC7] md:text-3xl">
+            In-Person Experiences
+          </h2>
+          <p className="mb-10 text-base font-light text-[#E6DBC7]/60 md:text-lg">
+            Live sessions, workshops, and gatherings
+          </p>
+        </FadeUp>
 
         {/* Events Grid */}
-        <section className="px-6 pb-40 md:px-10 md:pb-56 lg:px-12 lg:pb-72">
-          <div className="mb-6 max-w-[1600px] md:hidden">
-            <FadeUp>
-              <h1 className="mb-3 font-editorial text-[clamp(2.4rem,4vw,4rem)] font-light tracking-[-0.02em] text-[#E6DBC7]">
-                Experiences
-              </h1>
-              <p className="font-unica text-[clamp(1rem,1.15vw,1.1rem)] font-light text-white/60">
-                In person live sessions, workshops, and gatherings
-              </p>
-            </FadeUp>
-          </div>
+        <div className="pb-40 md:pb-56 lg:pb-72">
           <div className="mx-auto max-w-[1600px] space-y-9 md:space-y-10 lg:space-y-12">
             {(() => {
               const visible = experiences.filter((event) => {
@@ -448,8 +436,8 @@ const ExperiencesContent = () => {
               </div>
             </FadeUp>
           </div>
-        </section>
-      </main>
+        </div>
+      </OnlineTabLayout>
 
       {/* Event Booking Modal */}
       {selectedExperience && (
@@ -477,16 +465,22 @@ const ExperiencesContent = () => {
   );
 };
 
-const Experiences = () => (
-  <div className="flex min-h-screen flex-col bg-black">
-    <NavBar />
-    <Suspense fallback={<ExperiencesSkeleton />}>
-      <ErrorBoundary>
-        <ExperiencesContent />
-      </ErrorBoundary>
-    </Suspense>
-    <Footer />
-  </div>
-);
+const Experiences = () => {
+  const { handleTabChange } = useOnlineTab();
+  return (
+    <div className="flex min-h-screen flex-col bg-black">
+      <NavBar />
+      <OnlineHeader activeTab="in-person" onTabChange={handleTabChange} />
+      <div className="lg:pt-88 px-6 pt-44 md:px-10 md:pt-72 lg:px-12">
+        <Suspense fallback={<ExperiencesSkeleton />}>
+          <ErrorBoundary>
+            <ExperiencesContent />
+          </ErrorBoundary>
+        </Suspense>
+      </div>
+      <Footer />
+    </div>
+  );
+};
 
 export default Experiences;

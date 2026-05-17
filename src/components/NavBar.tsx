@@ -138,7 +138,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
               />
             </Link> */}
 
-            <Link
+            {/* <Link
               to="/"
               className="relative whitespace-nowrap pb-1 uppercase transition-colors hover:opacity-80"
               style={{
@@ -149,10 +149,10 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
               }}
             >
               Home
-            </Link>
+            </Link> */}
 
             {/* Experiences link */}
-            <Link
+            {/* <Link
               to="/experiences"
               className="relative whitespace-nowrap pb-1 uppercase transition-colors hover:opacity-80"
               style={{
@@ -169,7 +169,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                   style={{ backgroundColor: "#D4915A" }}
                 />
               )}
-            </Link>
+            </Link> */}
 
             {/* MARCH logo - center - placeholder until asset is available */}
             {/* <Link to="/">
@@ -183,26 +183,6 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                 }}
               />
             </Link> */}
-
-            {/* Online link */}
-            <Link
-              to="/online"
-              className="relative whitespace-nowrap pb-1 uppercase transition-colors hover:opacity-80"
-              style={{
-                color: location.pathname.startsWith("/online") ? "#D4915A" : "#E6DBC7",
-                fontSize: "0.85rem",
-                letterSpacing: "0.12em",
-                fontWeight: 500,
-              }}
-            >
-              Online
-              {location.pathname.startsWith("/online") && (
-                <span
-                  className="absolute bottom-0 left-0 right-0 h-[2px]"
-                  style={{ backgroundColor: "#D4915A" }}
-                />
-              )}
-            </Link>
 
             {/* Admin link - only visible to admins */}
             {isAdmin && (
@@ -225,6 +205,29 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                 )}
               </Link>
             )}
+
+            {/* Online link */}
+            <Link
+              to="/"
+              className="font-editorial text-xl font-light text-[#E6DBC7] hover:opacity-80 sm:text-2xl md:text-3xl"
+              // className="relative whitespace-nowrap pb-1 uppercase transition-colors hover:opacity-80"
+              style={
+                {
+                  // color: location.pathname.startsWith("/") ? "#D4915A" : "#E6DBC7",
+                  // fontSize: "0.85rem",
+                  // letterSpacing: "0.12em",
+                  // fontWeight: 500,
+                }
+              }
+            >
+              HŌM
+              {/* {location.pathname.startsWith("/") && (
+                <span
+                  className="absolute bottom-0 left-0 right-0 h-[2px]"
+                  style={{ backgroundColor: "#D4915A" }}
+                />
+              )} */}
+            </Link>
 
             {/* Sign In / Profile */}
             <div className="flex shrink-0 items-center">

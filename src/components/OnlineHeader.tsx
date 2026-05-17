@@ -16,7 +16,7 @@ const OnlineHeader = ({
   onTabChange,
   showBackButton = false,
   backButtonLabel = "Back",
-  backButtonPath = "/online",
+  backButtonPath = "/",
 }: OnlineHeaderProps) => {
   const navigate = useNavigate();
   const { activeTab: derivedTab, handleTabChange } = useOnlineTab();
@@ -36,6 +36,7 @@ const OnlineHeader = ({
     { id: "library", label: "Library" },
     { id: "courses", label: "Courses" },
     { id: "live", label: "Live" },
+    { id: "in-person", label: "In-Person" },
   ];
 
   return (
