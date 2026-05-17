@@ -37,7 +37,7 @@ serve(async (req) => {
     if (!stripeKey) throw new Error("STRIPE_SECRET_KEY is not set");
     if (!webhookSecret) throw new Error("STRIPE_WEBHOOK_SECRET is not set");
 
-    const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
+    const stripe = new Stripe(stripeKey, { apiVersion: "2026-04-22.dahlia" });
     const resend = resendKey ? new Resend(resendKey) : null;
 
     // Verify webhook signature
@@ -49,6 +49,7 @@ serve(async (req) => {
 
     try {
       event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
+      logStep("Secret prefix check", { prefix: webhookSecret?.substring(0, 12) });
       logStep("Webhook verified", { type: event.type });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
