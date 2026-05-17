@@ -207,27 +207,21 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
             )}
 
             {/* Online link */}
-            <Link
-              to="/"
-              className="font-editorial text-xl font-light text-[#E6DBC7] hover:opacity-80 sm:text-2xl md:text-3xl"
-              // className="relative whitespace-nowrap pb-1 uppercase transition-colors hover:opacity-80"
-              style={
-                {
-                  // color: location.pathname.startsWith("/") ? "#D4915A" : "#E6DBC7",
-                  // fontSize: "0.85rem",
-                  // letterSpacing: "0.12em",
-                  // fontWeight: 500,
-                }
-              }
-            >
-              HŌM
-              {/* {location.pathname.startsWith("/") && (
-                <span
-                  className="absolute bottom-0 left-0 right-0 h-[2px]"
-                  style={{ backgroundColor: "#D4915A" }}
-                />
-              )} */}
-            </Link>
+            <div className="flex flex-col items-center gap-1.5">
+              <Link
+                to="/"
+                className="font-editorial text-xl font-light text-[#E6DBC7] hover:opacity-80 sm:text-2xl md:text-3xl"
+              >
+                HŌM
+              </Link>
+              <p className="font-editorial text-[13px] font-light text-[#E6DBC7]/70">
+                Somewhere to land. Somewhere to call home.
+              </p>
+              <p className="text-center text-sm font-light leading-[1.6] text-[#E6DBC7]/45">
+                Breathwork, meditation, movement, and sensory practices for nervous system
+                regulation and connection to the body.
+              </p>
+            </div>
 
             {/* Sign In / Profile */}
             <div className="flex shrink-0 items-center">
