@@ -205,6 +205,11 @@ export const Footer = memo(() => {
               </div>
             </form>
 
+            {/* Copyright */}
+            <span className="text-[11px] font-light tracking-[0.04em] text-[#1A1A1A]/50 md:text-[12px]">
+              © HŌM
+            </span>
+
             {/* Legal Links */}
             <div className="flex flex-wrap items-center justify-end gap-x-10">
               <button
