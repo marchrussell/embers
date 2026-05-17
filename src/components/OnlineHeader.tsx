@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Home } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import { useOnlineTab } from "@/hooks/useOnlineTab";
@@ -83,15 +83,19 @@ const OnlineHeader = ({
             <button
               key={tab.id}
               onClick={() => handleTabClick(tab.id)}
-              className={`flex flex-1 flex-col items-center gap-1 py-2 transition-colors duration-200 ${
+              className={`flex flex-col items-center gap-1 py-2 transition-colors duration-200 ${tab.id === "home" ? "w-12" : "flex-1"} ${
                 currentTab === tab.id ? "text-[#E6DBC7]" : "text-[#E6DBC7]/50"
               }`}
             >
-              <span
-                className={`font-light tracking-wide ${currentTab === tab.id ? "font-normal" : ""}`}
-              >
-                {tab.label}
-              </span>
+              {tab.id === "home" ? (
+                <Home className="h-6 w-6" strokeWidth={currentTab === tab.id ? 1.75 : 1.5} />
+              ) : (
+                <span
+                  className={`font-light tracking-wide ${currentTab === tab.id ? "font-normal" : ""}`}
+                >
+                  {tab.label}
+                </span>
+              )}
             </button>
           ))}
         </div>
