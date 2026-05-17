@@ -2,7 +2,7 @@
 // import marchLogo from "@/assets/march-logo.png";
 import { useQuery } from "@tanstack/react-query";
 import { Menu, User, X } from "lucide-react";
-import { memo, Suspense, useCallback, useState } from "react";
+import { memo, Suspense, useCallback, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import { AuthSignInModal } from "@/components/AuthSignInModal";
@@ -39,6 +39,14 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
 
   const handleCloseMobileMenu = useCallback(() => {
     setMobileMenuOpen(false);
+  }, []);
+
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const firstName = profileData?.full_name?.split(" ")[0] ?? null;
@@ -214,13 +222,22 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
               >
                 HŌM
               </Link>
-              <p className="font-editorial text-[13px] font-light text-[#E6DBC7]/70">
-                Somewhere to land. Somewhere to call home.
-              </p>
-              <p className="text-center text-sm font-light leading-[1.6] text-[#E6DBC7]/45">
-                Breathwork, meditation, movement, and sensory practices for nervous system
-                regulation and connection to the body.
-              </p>
+              <div
+                className="flex flex-col items-center gap-1.5 transition-all duration-500"
+                style={{
+                  opacity: scrolled ? 0 : 1,
+                  filter: scrolled ? "blur(4px)" : "blur(0px)",
+                  pointerEvents: scrolled ? "none" : "auto",
+                }}
+              >
+                <p className="font-editorial text-[13px] font-light text-[#E6DBC7]/70">
+                  Somewhere to land. Somewhere to call home.
+                </p>
+                <p className="text-center text-sm font-light leading-[1.6] text-[#E6DBC7]/45">
+                  Breathwork, meditation, movement, and sensory practices for nervous system
+                  regulation and connection to the body.
+                </p>
+              </div>
             </div>
 
             {/* Sign In / Profile */}
