@@ -45,16 +45,26 @@ serve(async (req) => {
     if (!signature) throw new Error("No stripe-signature header");
 
     const body = await req.text();
-    let event: Stripe.Event;
+    let event: Str.Event;
+
+    logStep("Signature verification attempt", {
+      secretPrefix: webhookSecret?.substring(0, 12),
+      signaturePrefix: signature?.substring(0, 20),
+      bodyLength: body.length,
+    });
 
     try {
       event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
-      logStep("Secret prefix check", { prefix: webhookSecret?.substring(0, 12) });
       logStep("Webhook verified", { type: event.type });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
-      logStep("Webhook signature verification failed", { error: errorMessage });
-      return new Response(JSON.stringify({ error: "Webhook signature verification failed" }), {
+      logStep("Webhook signature verification failed", {
+        error: errorMessage,
+        secretPrefix: webhookSecret?.substring(0, 12),
+        signaturePrefix: signature?.substring(0, 20),
+        bodyLength: body.length,
+      });
+      return new Response(JSON.stringify({ error: "Webhook signature verification failed", detail: errorMessage }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 400,
       });
