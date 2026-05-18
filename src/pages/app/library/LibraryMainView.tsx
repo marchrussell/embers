@@ -148,7 +148,7 @@ const LibraryMainView = memo(
 
                 {/* Favourites Section - Only shown for authenticated users */}
                 {user && (
-                  <div className="mb-48 mt-32 pt-10">
+                  <div className="mb-40 mt-32 pt-10">
                     <div className="mb-10 flex items-center justify-between">
                       <Link
                         to="/online/favourites"

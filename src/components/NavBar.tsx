@@ -165,10 +165,10 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
             </div>
 
             {/* Center column - HŌM logo + tagline */}
-            <div className="flex flex-col items-center gap-1.5 justify-self-center">
+            <div className="flex flex-col items-center gap-6 justify-self-center">
               <Link
                 to="/"
-                className="font-editorial text-2xl font-bold text-[#E6DBC7] hover:opacity-80 md:text-5xl"
+                className="text-2xl font-bold text-[#E6DBC7] hover:opacity-80 md:text-6xl"
               >
                 HŌM
               </Link>
@@ -180,14 +180,14 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                   pointerEvents: scrolled ? "none" : "auto",
                 }}
               >
-                <p className="font-editorial text-xl font-light text-[#E6DBC7]/70">
+                <p className="text-2xl font-bold text-[#E6DBC7]/70">
                   Somewhere to land. Somewhere to call home.
                 </p>
               </div>
             </div>
 
             {/* Right column - Sign In / Profile */}
-            <div className="flex shrink-0 flex-col items-center gap-2 justify-self-end">
+            <div className="flex shrink-0 flex-col items-end gap-6 justify-self-end">
               {user ? (
                 <Link
                   to={"/online/profile"}
@@ -206,7 +206,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                 </button>
               )}
               <p
-                className="text-right text-base font-light leading-[1.6] text-[#E6DBC7]/45"
+                className="text-right text-base font-light text-[#C89B5F] md:text-lg"
                 style={{
                   opacity: scrolled ? 0 : 1,
                   filter: scrolled ? "blur(4px)" : "blur(0px)",
@@ -222,6 +222,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
         </div>
       )}
       {/* Mobile & iPad Menu Button with Overlay */}
+      {/* todo - add HOM to left without words */}
       {!standalone && (
         <>
           {/* Menu Toggle Button - Fixed position, always visible */}
