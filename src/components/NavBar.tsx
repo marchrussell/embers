@@ -129,11 +129,11 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
       {!standalone && (
         <div
           className="fixed left-0 right-0 top-0 z-50 hidden px-8 pt-10 transition-all duration-500 md:px-20 md:pt-12 lg:block"
-          style={{
-            backdropFilter: scrolled ? "blur(14px)" : "blur(0px)",
-            WebkitBackdropFilter: scrolled ? "blur(16px)" : "blur(0px)",
-            backgroundColor: scrolled ? "rgba(0,0,0,0.35)" : "transparent",
-          }}
+          // style={{
+          //   backdropFilter: scrolled ? "blur(14px)" : "blur(0px)",
+          //   WebkitBackdropFilter: scrolled ? "blur(16px)" : "blur(0px)",
+          //   backgroundColor: scrolled ? "rgba(0,0,0,0.35)" : "transparent",
+          // }}
         >
           <div
             className="absolute inset-0 bg-gradient-to-b from-black/5 to-transparent"
@@ -180,7 +180,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                   pointerEvents: scrolled ? "none" : "auto",
                 }}
               >
-                <p className="text-2xl font-bold text-[#E6DBC7]/70">
+                <p className="text-xl text-[#E6DBC7]/70">
                   Somewhere to land. Somewhere to call home.
                 </p>
               </div>
@@ -206,7 +206,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                 </button>
               )}
               <p
-                className="text-right text-base font-light text-[#C89B5F] md:text-lg"
+                className="text-right text-sm text-[#C89B5F] md:text-lg"
                 style={{
                   opacity: scrolled ? 0 : 1,
                   filter: scrolled ? "blur(4px)" : "blur(0px)",
