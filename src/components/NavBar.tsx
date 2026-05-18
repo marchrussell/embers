@@ -139,7 +139,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
             className="absolute inset-0 bg-gradient-to-b from-black/5 to-transparent"
             style={{ height: "140px" }}
           />
-          <div className="relative z-10 grid w-full grid-cols-3 items-baseline">
+          <div className="relative z-10 grid w-full grid-cols-3 items-center">
             {/* Left column - admin link */}
             <div className="justify-self-start">
               {isAdmin && (
@@ -172,7 +172,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
               >
                 HŌM
               </Link>
-              <div
+              {/* <div
                 className="flex flex-col items-center gap-1.5 transition-all duration-500"
                 style={{
                   opacity: scrolled ? 0 : 1,
@@ -183,7 +183,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                 <p className="text-xl text-[#E6DBC7]/70">
                   Somewhere to land. Somewhere to call home.
                 </p>
-              </div>
+              </div> */}
             </div>
 
             {/* Right column - Sign In / Profile */}
@@ -205,7 +205,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                   <span>Sign In</span>
                 </button>
               )}
-              <p
+              {/* <p
                 className="text-right text-sm text-[#C89B5F] md:text-lg"
                 style={{
                   opacity: scrolled ? 0 : 1,
@@ -216,7 +216,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                 Breathwork, meditation, movement, <br /> and sensory practices for nervous <br />{" "}
                 system regulation and connection <br />
                 to the body.
-              </p>
+              </p> */}
             </div>
           </div>
         </div>
