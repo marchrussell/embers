@@ -1,27 +1,21 @@
 import { useMemo } from "react";
 
-import { experienceImages } from "@/lib/cloudImageUrls";
 import { formatExperienceDate, getNextDateFromConfig } from "@/lib/experienceDateUtils";
+import { resolveSessionImage } from "@/lib/sessionImageUtils";
 import { LiveSessionCardData } from "@/pages/app/online/types";
 
 import { useLiveSessionConfigs } from "./useLiveSessionConfigs";
 import { useNextLiveSessionDetailsByType } from "./useNextLiveSessionDetailsByType";
-
-const SESSION_TYPE_IMAGES: Record<string, string> = {
-  "weekly-reset": experienceImages.weeklyReset,
-  "monthly-presence": experienceImages.monthlyBreathOnline,
-  "guest-session": experienceImages.guestSession,
-};
 
 export function useLiveSessionsData(): LiveSessionCardData[] {
   const { data: configs = [] } = useLiveSessionConfigs();
   const { data: sessionDetailsByType = {} } = useNextLiveSessionDetailsByType();
 
   return useMemo(() => {
-    return configs.map((config) => {
+    const mapped = configs.map((config) => {
       const dbSession = sessionDetailsByType[config.session_type];
-      const nextDateObj = dbSession ? new Date(dbSession.startTime) : getNextDateFromConfig(config);
-      const nextDate = nextDateObj ? formatExperienceDate(nextDateObj, config.time ?? "") : null;
+      const nextDateRaw = dbSession ? new Date(dbSession.startTime) : getNextDateFromConfig(config);
+      const nextDate = nextDateRaw ? formatExperienceDate(nextDateRaw, config.time ?? "") : null;
 
       const subtitleParts = [
         config.recurrence_label,
@@ -30,20 +24,7 @@ export function useLiveSessionsData(): LiveSessionCardData[] {
       ].filter(Boolean);
       const subtitle = subtitleParts.join(" · ");
 
-      const fallbackImage =
-        config.image_url ??
-        SESSION_TYPE_IMAGES[config.session_type] ??
-        experienceImages.guestSession;
       const durationMinutes = config.duration ? parseInt(config.duration) || 60 : 60;
-      // console.log("Live Session Config:", config);
-      // console.log(
-      //   "DB session:",
-      //   dbSession,
-      //   "Date object:",
-      //   nextDateObj,
-      //   "Formatted next date:",
-      //   nextDate
-      // );
 
       if (config.session_type === "guest-session" && dbSession) {
         console.log("Enriching next Guest Teacher:", dbSession);
@@ -54,9 +35,10 @@ export function useLiveSessionsData(): LiveSessionCardData[] {
           description:
             config.subtitle ||
             "A unique session featuring a guest teacher with fresh perspectives.",
-          image: fallbackImage,
+          image: resolveSessionImage(config, dbSession.photo_url),
           nextDate,
-          isLive: false,
+          nextDateRaw,
+          isLive: false as const,
           time: config.time,
           durationMinutes,
           teacherName: dbSession.name,
@@ -70,13 +52,21 @@ export function useLiveSessionsData(): LiveSessionCardData[] {
         title: config.title,
         subtitle,
         description: config.subtitle ?? "",
-        image: fallbackImage,
+        image: resolveSessionImage(config),
         nextDate,
-        isLive: false,
+        nextDateRaw,
+        isLive: false as const,
         time: config.time,
         durationMinutes,
         recurrenceLabel: config.recurrence_label ?? undefined,
       };
+    });
+
+    return mapped.sort((a, b) => {
+      if (!a.nextDateRaw && !b.nextDateRaw) return 0;
+      if (!a.nextDateRaw) return 1;
+      if (!b.nextDateRaw) return -1;
+      return a.nextDateRaw.getTime() - b.nextDateRaw.getTime();
     });
   }, [configs, sessionDetailsByType]);
 }

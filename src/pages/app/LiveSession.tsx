@@ -12,28 +12,19 @@ import { Button } from "@/components/ui/button";
 import { LiveSessionConfig } from "@/hooks/useLiveSessionConfigs";
 import { LiveSessionEnrichment } from "@/hooks/useNextLiveSessionDetails";
 import { supabase } from "@/integrations/supabase/client";
-import { CLOUD_IMAGES, experienceImages, getCloudImageUrl } from "@/lib/cloudImageUrls";
+import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
 import {
   formatGuestSessionDate,
   getNextDateFromConfig,
   parseUTCDateForDisplay,
 } from "@/lib/experienceDateUtils";
+import { resolveSessionImage } from "@/lib/sessionImageUtils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any;
 
-const guestSessionImg = experienceImages.guestSession;
-const monthlyPresenceImg = experienceImages.monthlyBreathOnline;
-const weeklyResetImg = experienceImages.weeklyReset;
-
 const marchPortrait = getCloudImageUrl(CLOUD_IMAGES.march);
 const liveSessionCountdownBg = getCloudImageUrl(CLOUD_IMAGES.liveSessionCountdownBg);
-
-const SESSION_TYPE_IMAGES: Record<string, string> = {
-  "weekly-reset": weeklyResetImg,
-  "monthly-presence": monthlyPresenceImg,
-  "guest-session": guestSessionImg,
-};
 
 const DEFAULT_WHAT_TO_EXPECT = [
   "A guided, voice-led practice",
@@ -61,9 +52,6 @@ function buildSessionDisplay(
   enrichment: LiveSessionEnrichment | null,
   nextDateObj: Date | null
 ): SessionDisplay {
-  const fallbackImage =
-    config.image_url ?? SESSION_TYPE_IMAGES[config.session_type] ?? guestSessionImg;
-
   const computedNextDate = (() => {
     if (enrichment?.session_date) {
       return formatGuestSessionDate(parseUTCDateForDisplay(enrichment.session_date));
@@ -79,7 +67,7 @@ function buildSessionDisplay(
       title: enrichment.session_title || config.title,
       subtitle: config.recurrence_label ?? "",
       description: enrichment.short_description || config.subtitle,
-      image: enrichment.photo_url || fallbackImage,
+      image: resolveSessionImage(config, enrichment.photo_url),
       nextDate: computedNextDate,
       teacher: enrichment.name ?? "March",
       teacherTitle: enrichment.title ?? undefined,
@@ -94,7 +82,7 @@ function buildSessionDisplay(
     title: config.title,
     subtitle: config.recurrence_label ?? "",
     description: config.subtitle ?? "",
-    image: fallbackImage,
+    image: resolveSessionImage(config),
     nextDate: computedNextDate,
     teacher: config.session_type === "guest-session" ? "Guest Teacher" : "March",
     duration,

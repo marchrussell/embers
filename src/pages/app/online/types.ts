@@ -25,6 +25,7 @@ export interface LiveSessionCardData {
   description: string;
   image: string;
   nextDate: string | null;
+  nextDateRaw: Date | null;
   isLive: boolean;
   time: string | null; // HH:MM 24h, e.g. "19:00"
   durationMinutes: number; // e.g. 30, 90 — defaults to 60
