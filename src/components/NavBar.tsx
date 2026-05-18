@@ -127,98 +127,48 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
 
       {/* Full width navigation layout - desktop - hide entirely in standalone mode */}
       {!standalone && (
-        <div className="fixed left-0 right-0 top-0 z-50 hidden px-8 pt-10 md:px-20 md:pt-12 lg:block">
+        <div
+          className="fixed left-0 right-0 top-0 z-50 hidden px-8 pt-10 transition-all duration-500 md:px-20 md:pt-12 lg:block"
+          style={{
+            backdropFilter: scrolled ? "blur(14px)" : "blur(0px)",
+            WebkitBackdropFilter: scrolled ? "blur(16px)" : "blur(0px)",
+            backgroundColor: scrolled ? "rgba(0,0,0,0.35)" : "transparent",
+          }}
+        >
           <div
             className="absolute inset-0 bg-gradient-to-b from-black/5 to-transparent"
             style={{ height: "140px" }}
           />
-          <div className="relative z-10 flex w-full items-center justify-between">
-            {/* M Logo - far left - placeholder until asset is available */}
-            {/* <Link to="/" className="flex shrink-0 items-center">
-              <img
-                src={mLogo}
-                alt="M"
-                className="h-10 w-auto md:h-12"
-                style={{
-                  filter:
-                    "brightness(0) saturate(100%) invert(93%) sepia(8%) saturate(558%) hue-rotate(350deg) brightness(94%) contrast(91%) drop-shadow(0 0 12px rgba(230, 219, 199, 0.7))",
-                }}
-              />
-            </Link> */}
-
-            {/* <Link
-              to="/"
-              className="relative whitespace-nowrap pb-1 uppercase transition-colors hover:opacity-80"
-              style={{
-                color: location.pathname.startsWith("/") ? "#D4915A" : "#E6DBC7",
-                fontSize: "0.85rem",
-                letterSpacing: "0.12em",
-                fontWeight: 500,
-              }}
-            >
-              Home
-            </Link> */}
-
-            {/* Experiences link */}
-            {/* <Link
-              to="/experiences"
-              className="relative whitespace-nowrap pb-1 uppercase transition-colors hover:opacity-80"
-              style={{
-                color: location.pathname.startsWith("/experiences") ? "#D4915A" : "#E6DBC7",
-                fontSize: "0.85rem",
-                letterSpacing: "0.12em",
-                fontWeight: 500,
-              }}
-            >
-              Experiences
-              {location.pathname.startsWith("/experiences") && (
-                <span
-                  className="absolute bottom-0 left-0 right-0 h-[2px]"
-                  style={{ backgroundColor: "#D4915A" }}
-                />
+          <div className="relative z-10 grid w-full grid-cols-3 items-baseline">
+            {/* Left column - admin link */}
+            <div className="justify-self-start">
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  className="relative whitespace-nowrap pb-1 uppercase transition-colors hover:opacity-80"
+                  style={{
+                    color: location.pathname.startsWith("/admin") ? "#D4915A" : "#E6DBC7",
+                    fontSize: "0.85rem",
+                    letterSpacing: "0.12em",
+                    fontWeight: 500,
+                  }}
+                >
+                  Admin
+                  {location.pathname.startsWith("/admin") && (
+                    <span
+                      className="absolute bottom-0 left-0 right-0 h-[2px]"
+                      style={{ backgroundColor: "#D4915A" }}
+                    />
+                  )}
+                </Link>
               )}
-            </Link> */}
+            </div>
 
-            {/* MARCH logo - center - placeholder until asset is available */}
-            {/* <Link to="/">
-              <img
-                src={marchLogo}
-                alt="March"
-                className="h-8 w-auto md:h-10"
-                style={{
-                  filter:
-                    "brightness(0) saturate(100%) invert(93%) sepia(8%) saturate(558%) hue-rotate(350deg) brightness(94%) contrast(91%) drop-shadow(0 0 12px rgba(230, 219, 199, 0.7))",
-                }}
-              />
-            </Link> */}
-
-            {/* Admin link - only visible to admins */}
-            {isAdmin && (
-              <Link
-                to="/admin"
-                className="relative whitespace-nowrap pb-1 uppercase transition-colors hover:opacity-80"
-                style={{
-                  color: location.pathname.startsWith("/admin") ? "#D4915A" : "#E6DBC7",
-                  fontSize: "0.85rem",
-                  letterSpacing: "0.12em",
-                  fontWeight: 500,
-                }}
-              >
-                Admin
-                {location.pathname.startsWith("/admin") && (
-                  <span
-                    className="absolute bottom-0 left-0 right-0 h-[2px]"
-                    style={{ backgroundColor: "#D4915A" }}
-                  />
-                )}
-              </Link>
-            )}
-
-            {/* Online link */}
-            <div className="flex flex-col items-center gap-1.5">
+            {/* Center column - HŌM logo + tagline */}
+            <div className="flex flex-col items-center gap-1.5 justify-self-center">
               <Link
                 to="/"
-                className="font-editorial text-xl font-light text-[#E6DBC7] hover:opacity-80 sm:text-2xl md:text-3xl"
+                className="font-editorial text-2xl font-bold text-[#E6DBC7] hover:opacity-80 md:text-5xl"
               >
                 HŌM
               </Link>
@@ -230,18 +180,14 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                   pointerEvents: scrolled ? "none" : "auto",
                 }}
               >
-                <p className="font-editorial text-[13px] font-light text-[#E6DBC7]/70">
+                <p className="font-editorial text-xl font-light text-[#E6DBC7]/70">
                   Somewhere to land. Somewhere to call home.
-                </p>
-                <p className="text-center text-sm font-light leading-[1.6] text-[#E6DBC7]/45">
-                  Breathwork, meditation, movement, and sensory practices for nervous system
-                  regulation and connection to the body.
                 </p>
               </div>
             </div>
 
-            {/* Sign In / Profile */}
-            <div className="flex shrink-0 items-center">
+            {/* Right column - Sign In / Profile */}
+            <div className="flex shrink-0 flex-col items-center gap-2 justify-self-end">
               {user ? (
                 <Link
                   to={"/online/profile"}
@@ -259,6 +205,18 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                   <span>Sign In</span>
                 </button>
               )}
+              <p
+                className="text-right text-base font-light leading-[1.6] text-[#E6DBC7]/45"
+                style={{
+                  opacity: scrolled ? 0 : 1,
+                  filter: scrolled ? "blur(4px)" : "blur(0px)",
+                  pointerEvents: scrolled ? "none" : "auto",
+                }}
+              >
+                Breathwork, meditation, movement, <br /> and sensory practices for nervous <br />{" "}
+                system regulation and connection <br />
+                to the body.
+              </p>
             </div>
           </div>
         </div>
