@@ -155,14 +155,14 @@ export const Footer = memo(() => {
 
           {/* Tablet+: Original horizontal layout */}
           <div className="hidden md:flex md:flex-wrap md:items-center md:justify-start md:gap-x-10 lg:gap-x-12">
-            <a
+            {/* <a
               href="https://www.marchrussell.com/explore"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.06em] text-[#1A1A1A] transition-opacity duration-200 hover:opacity-60"
             >
               Explore <ArrowRight className="h-5 w-5" />
-            </a>
+            </a> */}
             <button
               onClick={() => setShowContactModal(true)}
               className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.06em] text-[#1A1A1A] transition-opacity duration-200 hover:opacity-60"

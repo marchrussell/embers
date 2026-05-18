@@ -32,7 +32,7 @@ const CourseCard = memo(
       onClick={onClick}
       className="group relative cursor-pointer overflow-hidden rounded-2xl border border-[#E6DBC7]/15 bg-black/20 shadow-glow backdrop-blur-sm transition-colors duration-500 hover:border-[#E6DBC7]/30"
     >
-      <div className="relative h-48 overflow-hidden">
+      <div className="relative h-56 overflow-hidden">
         <OptimizedImage
           src={image}
           alt={title}

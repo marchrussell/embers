@@ -269,7 +269,7 @@ const LiveSessionContent = ({ sessionId }: LiveSessionContentProps) => {
       </FadeUp>
 
       {/* Main Content */}
-      <div className="px-6 pb-40 md:px-10 lg:px-12">
+      <div className="px-6 pb-44 md:px-10 lg:px-12">
         {/* Facilitator and What to expect */}
         <FadeUp>
           <div className="mx-auto mb-10 mt-32 flex max-w-4xl flex-col overflow-hidden rounded-2xl border border-[#E6DBC7]/20 md:mb-36 md:flex-row">
@@ -303,6 +303,7 @@ const LiveSessionContent = ({ sessionId }: LiveSessionContentProps) => {
         </FadeUp>
 
         {/* Countdown / Status Box */}
+        {/* todo - ensure this fits fully on mobile */}
         <FadeUp delay={100}>
           <div className="max-w-8xl relative mx-auto flex aspect-[16/9] items-center justify-center overflow-hidden rounded-2xl border border-[#E6DBC7]/10">
             <div
