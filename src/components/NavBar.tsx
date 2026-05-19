@@ -130,7 +130,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
             <div className="flex flex-col items-center gap-6 justify-self-center">
               <Link
                 to="/"
-                className="text-2xl font-bold text-[#E6DBC7] hover:opacity-80 md:text-6xl"
+                className={`text-2xl font-bold text-[#E6DBC7] transition-opacity duration-500 md:text-6xl ${scrolled ? "pointer-events-none opacity-0" : "opacity-100 hover:opacity-80"}`}
               >
                 HŌM
               </Link>

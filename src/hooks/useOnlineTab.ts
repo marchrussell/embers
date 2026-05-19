@@ -14,6 +14,7 @@ export function useOnlineTab() {
       return tabParam as OnlineTab;
     }
     const path = location.pathname;
+    if (path.startsWith("/experiences")) return "in-person";
     if (path.includes("/online/live")) return "live";
     if (path.includes("/online/favourites")) return "library";
     if (path.includes("/online/start-here")) return "home";
