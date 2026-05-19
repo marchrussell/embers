@@ -7,7 +7,6 @@ import { ClassPlayerModal } from "@/components/ClassPlayerModal";
 import { FadeUp } from "@/components/FadeUp";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { NavBar } from "@/components/NavBar";
-import OnlineHeader from "@/components/OnlineHeader";
 import { SessionCardSkeleton } from "@/components/skeletons/SessionCardSkeleton";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavourites } from "@/hooks/useFavourites";
@@ -69,7 +68,6 @@ const Favourites = () => {
   return (
     <>
       <NavBar />
-      <OnlineHeader />
       <Suspense fallback={null}>
         <SubscriptionModal
           open={showSubscriptionModal}

@@ -110,7 +110,7 @@ const SessionsListLayout = memo(
         {/* Hero Header */}
         <div
           className={`relative z-10 h-[420px] ${
-            isEmbedded ? "-mx-6 mt-8 md:-mx-10 md:mt-[150px] lg:-mx-12" : "mt-[340px] md:mt-[380px]"
+            isEmbedded ? "-mx-6 md:-mx-10 lg:-mx-12" : "mt-[340px] md:mt-[380px]"
           }`}
         >
           <img

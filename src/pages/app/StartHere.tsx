@@ -6,7 +6,6 @@ import { FadeUp } from "@/components/FadeUp";
 import { Footer } from "@/components/Footer";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { NavBar } from "@/components/NavBar";
-import OnlineHeader from "@/components/OnlineHeader";
 import { WeeklyResetCard } from "@/components/WeeklyResetCard";
 import { supabase } from "@/integrations/supabase/client";
 import { CLOUD_IMAGES, getCloudImageUrl } from "@/lib/cloudImageUrls";
@@ -59,10 +58,9 @@ const StartHere = () => {
   return (
     <div className="min-h-screen bg-background">
       <NavBar />
-      <OnlineHeader />
 
       {/* Hero Section - positioned to start where tab content begins */}
-      <div className="relative z-10 mt-[80px] h-[280px] sm:mt-[320px] sm:h-[380px] md:mt-[300px] md:h-[420px]">
+      <div className="relative z-10 mt-[80px] h-[280px] sm:mt-[180px] md:h-[420px]">
         <img
           src={startHereButterfly}
           alt=""

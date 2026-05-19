@@ -6,7 +6,6 @@ import { useParams } from "react-router-dom";
 import { FadeUp } from "@/components/FadeUp";
 import { Footer } from "@/components/Footer";
 import { NavBar } from "@/components/NavBar";
-import OnlineHeader from "@/components/OnlineHeader";
 import { LiveSessionSkeleton } from "@/components/skeletons/LiveSessionSkeleton";
 import { Button } from "@/components/ui/button";
 import { LiveSessionConfig } from "@/hooks/useLiveSessionConfigs";
@@ -219,7 +218,6 @@ const LiveSessionContent = ({ sessionId }: LiveSessionContentProps) => {
   return (
     <div className="min-h-screen bg-background">
       <NavBar />
-      <OnlineHeader />
 
       {/* Hero Section */}
       <div className="relative z-10 h-[500px] md:mt-[380px]">

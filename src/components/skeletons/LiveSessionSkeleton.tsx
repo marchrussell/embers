@@ -2,14 +2,12 @@ import { Calendar, Clock } from "lucide-react";
 
 import { Footer } from "@/components/Footer";
 import { NavBar } from "@/components/NavBar";
-import OnlineHeader from "@/components/OnlineHeader";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const LiveSessionSkeleton = () => {
   return (
     <div className="min-h-screen bg-background">
       <NavBar />
-      <OnlineHeader />
 
       {/* Hero */}
       <div className="relative z-10 h-[500px] md:mt-[380px]">

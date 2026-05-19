@@ -3,7 +3,6 @@ import { Suspense, useState } from "react";
 import { Footer } from "@/components/Footer";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { NavBar } from "@/components/NavBar";
-import OnlineHeader from "@/components/OnlineHeader";
 import { SafetyDisclosureModal } from "@/components/SafetyDisclosureModal";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
@@ -43,7 +42,6 @@ const Online = () => {
   return (
     <div className="min-h-screen bg-background">
       <NavBar />
-      <OnlineHeader activeTab={activeTab} onTabChange={handleTabChange} />
 
       <div className="lg:pt-88 px-6 pb-40 pt-44 md:px-10 md:pt-72 lg:px-12">
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
@@ -77,9 +75,9 @@ const Online = () => {
           </TabsContent>
         </Tabs>
       </div>
-      <div className="hidden md:block">
-        <Footer />
-      </div>
+
+      <Footer />
+
       <Suspense fallback={null}>
         <SubscriptionModal
           open={showSubscriptionModal}

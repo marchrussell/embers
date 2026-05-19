@@ -3,19 +3,30 @@
 import { useQuery } from "@tanstack/react-query";
 import { Menu, User, X } from "lucide-react";
 import { memo, Suspense, useCallback, useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { AuthSignInModal } from "@/components/AuthSignInModal";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import { useOnlineTab } from "@/hooks/useOnlineTab";
 import { supabase } from "@/integrations/supabase/client";
+
+const ONLINE_TABS = [
+  { id: "home", label: "Home" },
+  { id: "library", label: "All Sessions" },
+  { id: "courses", label: "Courses" },
+  { id: "live", label: "Live" },
+  { id: "in-person", label: "In Person" },
+];
 
 export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) => {
   const { user, isAdmin } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
-  // const isOnlineRoute = location.pathname.startsWith("/online");
+  const { activeTab, handleTabChange } = useOnlineTab();
+
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -53,12 +64,16 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
   const displayName = user ? firstName || user.email?.split("@")[0] : null;
   const formattedDisplayName = displayName?.replace(/^./, (char) => char.toUpperCase()) ?? null;
 
+  const handleMobileTabClick = (path: string) => {
+    navigate(path);
+    handleCloseMobileMenu();
+  };
+
   return (
     <>
       <AuthSignInModal
         open={showSignInModal}
         onClose={() => setShowSignInModal(false)}
-        //onSuccess={() => navigate(location)}
         onOpenSubscription={handleOpenSubscription}
       />
       <Suspense fallback={null}>
@@ -68,73 +83,20 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
         />
       </Suspense>
 
-      {/* Logo - fixed at top left */}
+      {/* Logo / HŌM title - fixed at top left, mobile & iPad only */}
       <div className="fixed left-0 top-0 z-[60] pb-8 pl-6 pt-14 md:pb-10 md:pl-12 md:pt-20 lg:hidden lg:pt-24">
         {standalone ? (
-          <div className="inline-block cursor-default">
-            {/* M Logo with glow - placeholder until asset is available */}
-            {/* <div className="relative inline-block">
-              <div
-                className="h-20 w-20 will-change-transform md:h-24 md:w-24"
-                style={{
-                  WebkitMaskImage: `url(${mLogo})`,
-                  maskImage: `url(${mLogo})`,
-                  WebkitMaskRepeat: "no-repeat",
-                  maskRepeat: "no-repeat",
-                  WebkitMaskSize: "contain",
-                  maskSize: "contain",
-                  WebkitMaskPosition: "center",
-                  maskPosition: "center",
-                  backgroundColor: "#E6DBC7",
-                  animation: "breathe 4s ease-in-out infinite",
-                  transform: "translateZ(0)",
-                  filter:
-                    "drop-shadow(0 0 40px rgba(230, 219, 199, 0.9)) drop-shadow(0 0 90px rgba(230, 219, 199, 0.95))",
-                }}
-                role="img"
-                aria-label="March logo"
-              />
-            </div> */}
-          </div>
+          <span className="text-2xl font-bold text-[#E6DBC7]">HŌM</span>
         ) : (
-          <Link to="/" className="inline-block">
-            {/* M Logo with glow - placeholder until asset is available */}
-            {/* <div className="relative inline-block">
-              <div
-                className="h-20 w-20 will-change-transform md:h-24 md:w-24"
-                style={{
-                  WebkitMaskImage: `url(${mLogo})`,
-                  maskImage: `url(${mLogo})`,
-                  WebkitMaskRepeat: "no-repeat",
-                  maskRepeat: "no-repeat",
-                  WebkitMaskSize: "contain",
-                  maskSize: "contain",
-                  WebkitMaskPosition: "center",
-                  maskPosition: "center",
-                  backgroundColor: "#E6DBC7",
-                  animation: "breathe 4s ease-in-out infinite",
-                  transform: "translateZ(0)",
-                  filter:
-                    "drop-shadow(0 0 40px rgba(230, 219, 199, 0.9)) drop-shadow(0 0 90px rgba(230, 219, 199, 0.95))",
-                }}
-                role="img"
-                aria-label="March logo"
-              />
-            </div> */}
+          <Link to="/" className="text-2xl font-bold text-[#E6DBC7] hover:opacity-80">
+            HŌM
           </Link>
         )}
       </div>
 
       {/* Full width navigation layout - desktop - hide entirely in standalone mode */}
       {!standalone && (
-        <div
-          className="fixed left-0 right-0 top-0 z-50 hidden px-8 pt-10 transition-all duration-500 md:px-20 md:pt-12 lg:block"
-          // style={{
-          //   backdropFilter: scrolled ? "blur(14px)" : "blur(0px)",
-          //   WebkitBackdropFilter: scrolled ? "blur(16px)" : "blur(0px)",
-          //   backgroundColor: scrolled ? "rgba(0,0,0,0.35)" : "transparent",
-          // }}
-        >
+        <div className="fixed left-0 right-0 top-0 z-50 hidden px-8 pt-10 transition-all duration-500 md:px-20 md:pt-12 lg:block">
           <div
             className="absolute inset-0 bg-gradient-to-b from-black/5 to-transparent"
             style={{ height: "140px" }}
@@ -172,18 +134,6 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
               >
                 HŌM
               </Link>
-              {/* <div
-                className="flex flex-col items-center gap-1.5 transition-all duration-500"
-                style={{
-                  opacity: scrolled ? 0 : 1,
-                  filter: scrolled ? "blur(4px)" : "blur(0px)",
-                  pointerEvents: scrolled ? "none" : "auto",
-                }}
-              >
-                <p className="text-xl text-[#E6DBC7]/70">
-                  Somewhere to land. Somewhere to call home.
-                </p>
-              </div> */}
             </div>
 
             {/* Right column - Sign In / Profile */}
@@ -205,24 +155,29 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                   <span>Sign In</span>
                 </button>
               )}
-              {/* <p
-                className="text-right text-sm text-[#C89B5F] md:text-lg"
-                style={{
-                  opacity: scrolled ? 0 : 1,
-                  filter: scrolled ? "blur(4px)" : "blur(0px)",
-                  pointerEvents: scrolled ? "none" : "auto",
-                }}
-              >
-                Breathwork, meditation, movement, <br /> and sensory practices for nervous <br />{" "}
-                system regulation and connection <br />
-                to the body.
-              </p> */}
             </div>
+          </div>
+
+          {/* Desktop tab row - shown on online/experiences routes */}
+          <div className="relative z-10 flex items-center gap-2 pt-6">
+            {ONLINE_TABS.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => handleTabChange(tab.id)}
+                className={`rounded-full px-6 py-2.5 text-base font-light tracking-wide transition-colors duration-200 ${
+                  activeTab === tab.id
+                    ? "bg-[#E6DBC7] text-[#1A1A1A]"
+                    : "bg-transparent text-[#E6DBC7]/70 hover:text-[#E6DBC7]"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
           </div>
         </div>
       )}
+
       {/* Mobile & iPad Menu Button with Overlay */}
-      {/* todo - add HOM to left without words */}
       {!standalone && (
         <>
           {/* Menu Toggle Button - Fixed position, always visible */}
@@ -275,19 +230,41 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
               }`}
             >
               <Link
-                to="/experiences"
-                onClick={handleCloseMobileMenu}
-                className="font-editorial text-4xl font-light tracking-wide text-[#E6DBC7] transition-colors hover:text-white md:text-5xl"
-              >
-                Experiences
-              </Link>
-              <Link
                 to="/online"
                 onClick={handleCloseMobileMenu}
                 className="font-editorial text-4xl font-light tracking-wide text-[#E6DBC7] transition-colors hover:text-white md:text-5xl"
               >
                 Online
               </Link>
+
+              {/* Online sub-links */}
+              <div className="-mt-6 flex flex-col gap-5 pl-6 md:-mt-8">
+                <button
+                  onClick={() => handleMobileTabClick("/online?tab=library")}
+                  className="text-left font-editorial text-3xl font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:text-white md:text-4xl"
+                >
+                  All Sessions
+                </button>
+                <button
+                  onClick={() => handleMobileTabClick("/online?tab=courses")}
+                  className="text-left font-editorial text-3xl font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:text-white md:text-4xl"
+                >
+                  Courses
+                </button>
+                <button
+                  onClick={() => handleMobileTabClick("/online?tab=live")}
+                  className="text-left font-editorial text-3xl font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:text-white md:text-4xl"
+                >
+                  Live
+                </button>
+                <button
+                  onClick={() => handleMobileTabClick("/experiences")}
+                  className="text-left font-editorial text-3xl font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:text-white md:text-4xl"
+                >
+                  In Person
+                </button>
+              </div>
+
               {isAdmin && (
                 <Link
                   to="/admin"

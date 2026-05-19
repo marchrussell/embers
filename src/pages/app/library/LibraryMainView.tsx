@@ -76,7 +76,7 @@ const LibraryMainView = memo(
           </div>
         )}
 
-        <div className={isEmbedded ? "pt-8 md:pt-[150px]" : "px-6 pt-80 md:pt-96 lg:pt-80"}>
+        <div>
           {isLoading ? (
             <div>
               <h2 className="mb-2 text-2xl font-medium tracking-wide text-[#E6DBC7] md:text-3xl">
@@ -260,7 +260,7 @@ const LibraryMainView = memo(
               {/* ARC Mentorship CTA */}
               <FadeUp>
                 <div className="mx-auto max-w-xl px-6 text-center">
-                  <p className="mb-2 mt-10 text-lg font-semibold leading-relaxed md:text-xl">
+                  <p className="mb-2 mt-20 text-lg font-semibold leading-relaxed md:text-xl">
                     Looking for deeper, guided support?
                   </p>
                   <p className="mb-6 font-light leading-relaxed">

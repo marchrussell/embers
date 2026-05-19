@@ -8,7 +8,6 @@ import { ExperienceBookingModal } from "@/components/ExperienceBookingModal";
 import { FadeUp } from "@/components/FadeUp";
 import { Footer } from "@/components/Footer";
 import { NavBar } from "@/components/NavBar";
-import OnlineHeader from "@/components/OnlineHeader";
 import OnlineTabLayout from "@/components/OnlineTabLayout";
 import { ExperiencesSkeleton } from "@/components/skeletons";
 import { SubscriptionModal } from "@/components/SubscriptionModal";
@@ -16,7 +15,6 @@ import { GlowButton } from "@/components/ui/glow-button";
 import { IconButton } from "@/components/ui/icon-button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import SplitCard from "@/components/ui/split-card";
-import { useOnlineTab } from "@/hooks/useOnlineTab";
 import { supabase } from "@/integrations/supabase/client";
 import {
   CalendarEvent,
@@ -466,11 +464,9 @@ const ExperiencesContent = () => {
 };
 
 const Experiences = () => {
-  const { handleTabChange } = useOnlineTab();
   return (
     <div className="flex min-h-screen flex-col bg-black">
       <NavBar />
-      <OnlineHeader activeTab="in-person" onTabChange={handleTabChange} />
       <div className="lg:pt-88 px-6 pt-44 md:px-10 md:pt-72 lg:px-12">
         <Suspense fallback={<ExperiencesSkeleton />}>
           <ErrorBoundary>
