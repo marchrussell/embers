@@ -159,21 +159,21 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
           </div>
 
           {/* Desktop tab row - shown on online/experiences routes */}
-          <div className="relative z-10 flex items-center gap-2 pt-6">
-            {ONLINE_TABS.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => handleTabChange(tab.id)}
-                className={`rounded-full px-6 py-2.5 text-base font-light tracking-wide transition-colors duration-200 ${
-                  activeTab === tab.id
-                    ? "bg-[#E6DBC7] text-[#1A1A1A]"
-                    : "bg-transparent text-[#E6DBC7]/70 hover:text-[#E6DBC7]"
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
+            <div className="relative z-10 flex items-center gap-2 pt-6">
+              {ONLINE_TABS.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => handleTabChange(tab.id)}
+                  className={`rounded-full px-6 py-2.5 text-base font-light tracking-wide transition-colors duration-200 ${
+                    activeTab === tab.id
+                      ? "bg-[#E6DBC7] text-[#1A1A1A]"
+                      : "bg-transparent text-[#E6DBC7]/70 hover:text-[#E6DBC7]"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
         </div>
       )}
 
