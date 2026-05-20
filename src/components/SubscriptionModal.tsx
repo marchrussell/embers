@@ -47,14 +47,8 @@ export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => 
       if (error) throw error;
       if (!data?.url) throw new Error("No checkout URL received from server");
 
-      const newWindow = window.open(data.url, "_blank");
-      if (newWindow) {
-        toast.success("Redirecting to Stripe checkout...", { duration: 3000 });
-        onClose();
-      } else {
-        toast.error("Please allow pop-ups to continue to checkout", { duration: 5000 });
-        setLoadingPlan(null);
-      }
+      window.location.href = data.url;
+      onClose();
     } catch (error: any) {
       console.error("[SubscriptionModal] Checkout failed:", error);
       Sentry.captureException(error);
