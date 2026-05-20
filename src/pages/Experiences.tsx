@@ -208,7 +208,7 @@ const ExperiencesContent = () => {
 
         {/* Events Grid */}
         <div className="pb-40 md:pb-56 lg:pb-72">
-          <div className="mx-auto max-w-[1600px] space-y-9 md:space-y-10 lg:space-y-12">
+          <div className="space-y-9 md:space-y-10 lg:space-y-12">
             {(() => {
               const visible = experiences.filter((event) => {
                 const nextDate = getNextExperienceDate(event.recurrence, event.time);
@@ -371,10 +371,10 @@ const ExperiencesContent = () => {
           </div>
 
           {/* Divider */}
-          <div className="mx-auto my-32 h-[1px] w-full max-w-[1600px] bg-[#E6DBC7] md:my-40 lg:my-48" />
+          <div className="my-32 h-[1px] w-full bg-[#E6DBC7] md:my-40 lg:my-48" />
 
           {/* More Ways to Practice */}
-          <div className="mx-auto max-w-[1600px] space-y-20">
+          <div className="space-y-20">
             <FadeUp>
               <h2
                 className="mb-4 text-left font-editorial text-[#E6DBC7]"
