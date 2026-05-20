@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 import { FadeUp } from "@/components/FadeUp";
 import { FeedbackSection } from "@/components/FeedbackSection";
+import OnlineTabLayout from "@/components/OnlineTabLayout";
 import { OptimizedImage } from "@/components/OptimizedImage";
 import { CategoryCardSkeleton } from "@/components/skeletons/CategoryCardSkeleton";
 import { IconButton } from "@/components/ui/icon-button";
@@ -54,7 +55,7 @@ const LibraryMainView = memo(
     }, [favouriteSessions.length, checkFavouritesScroll]);
 
     return (
-      <div className="min-h-screen bg-background pb-24">
+      <div className="min-h-screen bg-background">
         {/* Sign In / Profile Button - positioned below navbar */}
         {!isEmbedded && (
           <div className="fixed right-8 top-36 z-50 md:right-12 md:top-40 lg:right-16 lg:top-36">
@@ -76,7 +77,7 @@ const LibraryMainView = memo(
           </div>
         )}
 
-        <div>
+        <OnlineTabLayout className="pb-24">
           {isLoading ? (
             <div>
               <h2 className="mb-2 text-2xl font-medium tracking-wide text-[#E6DBC7] md:text-3xl">
@@ -278,7 +279,7 @@ const LibraryMainView = memo(
               </FadeUp>
             </>
           )}
-        </div>
+        </OnlineTabLayout>
       </div>
     );
   }

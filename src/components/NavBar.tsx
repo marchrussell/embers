@@ -88,7 +88,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
         {standalone ? (
           <span className="text-2xl font-bold text-[#E6DBC7]">HŌM</span>
         ) : (
-          <Link to="/" className="text-2xl font-bold text-[#E6DBC7] hover:opacity-80">
+          <Link to="/" className="text-5xl font-bold text-[#E6DBC7] hover:opacity-80">
             HŌM
           </Link>
         )}
@@ -102,12 +102,39 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
             style={{ height: "140px" }}
           />
           <div className="relative z-10 grid w-full grid-cols-3 items-center">
-            {/* Left column - admin link */}
-            <div className="justify-self-start">
+            {/* Left column - tabs */}
+            <div className="flex items-center gap-2 justify-self-start">
+              {ONLINE_TABS.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => handleTabChange(tab.id)}
+                  className={`whitespace-nowrap rounded-full px-6 py-2.5 text-base font-light tracking-wide transition-colors duration-200 ${
+                    activeTab === tab.id
+                      ? "bg-[#E6DBC7] text-[#1A1A1A]"
+                      : "bg-transparent text-[#E6DBC7]/70 hover:text-[#E6DBC7]"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Center column - HŌM logo */}
+            <div className="justify-self-center">
+              <Link
+                to="/"
+                className={`text-6xl font-bold text-[#E6DBC7] transition-opacity duration-500 ${scrolled ? "pointer-events-none opacity-0" : "opacity-100 hover:opacity-80"}`}
+              >
+                HŌM
+              </Link>
+            </div>
+
+            {/* Right column - Admin + Sign In / Profile */}
+            <div className="flex items-center gap-6 justify-self-end">
               {isAdmin && (
                 <Link
                   to="/admin"
-                  className="relative whitespace-nowrap pb-1 uppercase transition-colors hover:opacity-80"
+                  className="relative whitespace-nowrap uppercase transition-colors hover:opacity-80"
                   style={{
                     color: location.pathname.startsWith("/admin") ? "#D4915A" : "#E6DBC7",
                     fontSize: "0.85rem",
@@ -117,27 +144,10 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
                 >
                   Admin
                   {location.pathname.startsWith("/admin") && (
-                    <span
-                      className="absolute bottom-0 left-0 right-0 h-[2px]"
-                      style={{ backgroundColor: "#D4915A" }}
-                    />
+                    <span className="absolute bottom-0 left-0 right-0 h-[2px]" />
                   )}
                 </Link>
               )}
-            </div>
-
-            {/* Center column - HŌM logo + tagline */}
-            <div className="flex flex-col items-center gap-6 justify-self-center">
-              <Link
-                to="/"
-                className={`text-2xl font-bold text-[#E6DBC7] transition-opacity duration-500 md:text-6xl ${scrolled ? "pointer-events-none opacity-0" : "opacity-100 hover:opacity-80"}`}
-              >
-                HŌM
-              </Link>
-            </div>
-
-            {/* Right column - Sign In / Profile */}
-            <div className="flex shrink-0 flex-col items-end gap-6 justify-self-end">
               {user ? (
                 <Link
                   to={"/online/profile"}
@@ -157,23 +167,6 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
               )}
             </div>
           </div>
-
-          {/* Desktop tab row - shown on online/experiences routes */}
-            <div className="relative z-10 flex items-center gap-2 pt-6">
-              {ONLINE_TABS.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => handleTabChange(tab.id)}
-                  className={`rounded-full px-6 py-2.5 text-base font-light tracking-wide transition-colors duration-200 ${
-                    activeTab === tab.id
-                      ? "bg-[#E6DBC7] text-[#1A1A1A]"
-                      : "bg-transparent text-[#E6DBC7]/70 hover:text-[#E6DBC7]"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
         </div>
       )}
 
@@ -230,40 +223,44 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
               }`}
             >
               <Link
-                to="/online"
+                to="/"
                 onClick={handleCloseMobileMenu}
                 className="font-editorial text-4xl font-light tracking-wide text-[#E6DBC7] transition-colors hover:text-white md:text-5xl"
               >
-                Online
+                Home
               </Link>
 
-              {/* Online sub-links */}
-              <div className="-mt-6 flex flex-col gap-5 pl-6 md:-mt-8">
-                <button
-                  onClick={() => handleMobileTabClick("/online?tab=library")}
-                  className="text-left font-editorial text-3xl font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:text-white md:text-4xl"
-                >
-                  All Sessions
-                </button>
-                <button
-                  onClick={() => handleMobileTabClick("/online?tab=courses")}
-                  className="text-left font-editorial text-3xl font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:text-white md:text-4xl"
-                >
-                  Courses
-                </button>
-                <button
-                  onClick={() => handleMobileTabClick("/online?tab=live")}
-                  className="text-left font-editorial text-3xl font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:text-white md:text-4xl"
-                >
-                  Live
-                </button>
-                <button
-                  onClick={() => handleMobileTabClick("/experiences")}
-                  className="text-left font-editorial text-3xl font-light tracking-wide text-[#E6DBC7]/80 transition-colors hover:text-white md:text-4xl"
-                >
-                  In Person
-                </button>
-              </div>
+              <Link
+                to="/online?tab=library"
+                onClick={handleCloseMobileMenu}
+                className="font-editorial text-4xl font-light tracking-wide text-[#E6DBC7] transition-colors hover:text-white md:text-5xl"
+              >
+                All Sessions
+              </Link>
+
+              <Link
+                to="/online?tab=courses"
+                onClick={handleCloseMobileMenu}
+                className="font-editorial text-4xl font-light tracking-wide text-[#E6DBC7] transition-colors hover:text-white md:text-5xl"
+              >
+                Courses
+              </Link>
+
+              <Link
+                to="/online?tab=live"
+                onClick={handleCloseMobileMenu}
+                className="font-editorial text-4xl font-light tracking-wide text-[#E6DBC7] transition-colors hover:text-white md:text-5xl"
+              >
+                Live
+              </Link>
+
+              <Link
+                to="/experiences"
+                onClick={handleCloseMobileMenu}
+                className="font-editorial text-4xl font-light tracking-wide text-[#E6DBC7] transition-colors hover:text-white md:text-5xl"
+              >
+                In Person
+              </Link>
 
               {isAdmin && (
                 <Link
