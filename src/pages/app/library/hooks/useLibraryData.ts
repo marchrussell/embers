@@ -32,7 +32,7 @@ export const useLibraryData = ({
 
       const { data: classesData } = await supabase
         .from("classes")
-        .select("*, requires_subscription, created_at")
+        .select("*, requires_subscription, created_at, class_categories(category_id)")
         .eq("is_published", true)
         .order("order_index");
 
@@ -40,23 +40,34 @@ export const useLibraryData = ({
 
       const classesByCategory: Record<string, LibrarySession[]> = (classesData ?? []).reduce(
         (acc: Record<string, LibrarySession[]>, classItem) => {
-          if (classItem.category_id) {
-            if (!acc[classItem.category_id]) acc[classItem.category_id] = [];
-            acc[classItem.category_id].push({
-              id: classItem.id,
-              title: classItem.title,
-              description: classItem.description,
-              shortDescription: classItem.short_description,
-              duration: classItem.duration_minutes,
-              teacher: classItem.teacher_name,
-              image: classItem.image_url,
-              locked:
-                classItem.requires_subscription && !hasSubscription && !isAdmin && !isTestUser,
-              created_at: classItem.created_at,
-              technique: classItem.technique,
-              intensity: classItem.intensity,
-              order_index: classItem.order_index,
-            });
+          const categoryIds: string[] = (classItem.class_categories ?? [])
+            .map((cc: { category_id: string }) => cc.category_id)
+            .filter(Boolean);
+
+          if (categoryIds.length === 0 && classItem.category_id) {
+            categoryIds.push(classItem.category_id);
+          }
+
+          if (categoryIds.length === 0) return acc;
+
+          const session: LibrarySession = {
+            id: classItem.id,
+            title: classItem.title,
+            description: classItem.description,
+            shortDescription: classItem.short_description,
+            duration: classItem.duration_minutes,
+            teacher: classItem.teacher_name,
+            image: classItem.image_url,
+            locked: classItem.requires_subscription && !hasSubscription && !isAdmin && !isTestUser,
+            created_at: classItem.created_at,
+            technique: classItem.technique,
+            intensity: classItem.intensity,
+            order_index: classItem.order_index,
+          };
+
+          for (const catId of categoryIds) {
+            if (!acc[catId]) acc[catId] = [];
+            acc[catId].push(session);
           }
           return acc;
         },
