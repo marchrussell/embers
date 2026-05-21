@@ -344,7 +344,7 @@ export const ClassPlayerModal = ({
                   {/* Top section - Title and actions (audio only) */}
                   {!isVideoClass ? (
                     <div className="space-y-6">
-                      <div className="space-y-3">
+                      <div>
                         <h2 className="pr-12 font-editorial text-4xl leading-tight text-[#E6DBC7] lg:text-5xl">
                           {classData?.title}
                         </h2>
