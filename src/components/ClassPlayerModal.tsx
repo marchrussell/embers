@@ -348,7 +348,7 @@ export const ClassPlayerModal = ({
                         <h2 className="pr-12 font-editorial text-4xl leading-tight text-[#E6DBC7] lg:text-5xl">
                           {classData?.title}
                         </h2>
-                        <p className="text-lg font-light text-[#E6DBC7]/70">
+                        <p className="mt-4 text-lg font-light text-[#E6DBC7]/70">
                           {classData?.teacher_name || "March Russell"} •{" "}
                           {classData?.duration_minutes || 0} min
                         </p>
