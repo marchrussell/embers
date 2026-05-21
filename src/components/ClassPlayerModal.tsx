@@ -343,9 +343,9 @@ export const ClassPlayerModal = ({
 
                   {/* Top section - Title and actions (audio only) */}
                   {!isVideoClass ? (
-                    <div className="space-y-4">
-                      <div>
-                        <h2 className="mb-3 pr-12 font-editorial text-4xl leading-tight text-[#E6DBC7] lg:text-5xl">
+                    <div className="space-y-6">
+                      <div className="space-y-3">
+                        <h2 className="pr-12 font-editorial text-4xl leading-tight text-[#E6DBC7] lg:text-5xl">
                           {classData?.title}
                         </h2>
                         <p className="text-lg font-light text-[#E6DBC7]/70">
@@ -353,14 +353,14 @@ export const ClassPlayerModal = ({
                           {classData?.duration_minutes || 0} min
                         </p>
                         {classCategories.length > 0 && (
-                          <p className="mt-3 text-base font-light uppercase tracking-[0.15em] text-[#EC9037]">
+                          <p className="text-base font-light uppercase tracking-[0.15em] text-[#EC9037]">
                             {classCategories.map((c: any) => c.name).join(" · ")}
                           </p>
                         )}
                       </div>
 
                       {/* Action buttons */}
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-4">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
