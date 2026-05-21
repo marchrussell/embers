@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Heart, Pause, Play, Share, X } from "lucide-react";
+import { Heart, Pause, Play, Share, SkipBack, SkipForward, X } from "lucide-react";
 
 import { OptimizedImage } from "@/components/OptimizedImage";
 import { SessionCompletionModal } from "@/components/SessionCompletionModal";
@@ -97,6 +97,9 @@ export const ClassPlayerModal = ({
   });
 
   const optimizedVideoUrl = classData?.video_url ? getOptimizedVideoUrl(classData.video_url) : null;
+
+  const handleSkipBack = () => handleSliderChange([Math.max(0, currentTime - 15)]);
+  const handleSkipForward = () => handleSliderChange([Math.min(duration, currentTime + 15)]);
 
   const handleFavourite = () => {
     if (classId) {
@@ -253,13 +256,13 @@ export const ClassPlayerModal = ({
                     </p>
                     {classCategories.length > 0 && (
                       <p className="mt-2 text-sm font-light uppercase tracking-[0.15em] text-[#EC9037]">
-                        {classCategories.map((c: any) => c.name).join(" · ")}
+                        {classCategories.map((c: { name: string }) => c.name).join(" · ")}
                       </p>
                     )}
                   </div>
                 )}
 
-                {/* Main Content - Play/Pause Button in Center */}
+                {/* Main Content - Skip + Play/Pause + Skip */}
                 <div
                   className={`relative z-10 flex flex-1 items-center justify-center py-8 ${playBtnClass}`}
                 >
@@ -268,24 +271,40 @@ export const ClassPlayerModal = ({
                       {mediaError}
                     </p>
                   ) : (
-                    <Button
-                      onClick={handlePlayPause}
-                      variant="outline"
-                      size="lg"
-                      className="h-28 w-28 rounded-full border-2 border-[#E6DBC7] bg-[#E6DBC7]/5 p-0 text-[#E6DBC7] backdrop-blur-xl transition-colors duration-300 hover:bg-[#E6DBC7]/10"
-                    >
-                      {isPlaying ? (
-                        <Pause className="h-10 w-10" strokeWidth={1.5} fill="none" />
-                      ) : (
-                        <Play className="ml-1 h-10 w-10" strokeWidth={1.5} fill="none" />
-                      )}
-                    </Button>
+                    <div className="flex items-center gap-8">
+                      <button
+                        onClick={handleSkipBack}
+                        className="flex flex-col items-center gap-1 text-[#E6DBC7] transition-opacity hover:opacity-70"
+                      >
+                        <SkipBack className="h-7 w-7" strokeWidth={1.5} />
+                        <span className="text-xs font-light">15</span>
+                      </button>
+                      <Button
+                        onClick={handlePlayPause}
+                        variant="outline"
+                        size="lg"
+                        className="h-28 w-28 rounded-full border-2 border-[#E6DBC7] bg-[#E6DBC7]/5 p-0 text-[#E6DBC7] backdrop-blur-xl transition-colors duration-300 hover:bg-[#E6DBC7]/10"
+                      >
+                        {isPlaying ? (
+                          <Pause className="h-10 w-10" strokeWidth={1.5} fill="none" />
+                        ) : (
+                          <Play className="ml-1 h-10 w-10" strokeWidth={1.5} fill="none" />
+                        )}
+                      </Button>
+                      <button
+                        onClick={handleSkipForward}
+                        className="flex flex-col items-center gap-1 text-[#E6DBC7] transition-opacity hover:opacity-70"
+                      >
+                        <SkipForward className="h-7 w-7" strokeWidth={1.5} />
+                        <span className="text-xs font-light">15</span>
+                      </button>
+                    </div>
                   )}
                 </div>
 
-                {/* Progress Bar - Bottom */}
+                {/* Progress Bar - Bottom (always visible) */}
                 {!mediaError && (
-                  <div className={`relative z-10 px-4 pb-6 ${controlsClass}`}>
+                  <div className="relative z-10 px-4 pb-6">
                     <div className="space-y-2">
                       <Slider
                         value={[currentTime]}
@@ -305,62 +324,94 @@ export const ClassPlayerModal = ({
 
               {/* Desktop Layout - Horizontal rectangle */}
               <div
-                className="hidden md:grid md:h-[600px] md:grid-cols-2 md:gap-0"
+                className="hidden md:flex md:h-[600px] md:flex-col"
                 onMouseMove={() => isVideoClass && resetControlsTimer()}
                 onMouseLeave={() => isVideoClass && isPlaying && hideControls()}
               >
-                {/* Left side - Image (audio) or transparent over shared video */}
-                <div className="relative overflow-hidden">
-                  {!isVideoClass && classData?.image_url && (
-                    <img
-                      src={classData.image_url}
-                      alt={classData?.title}
-                      className="h-full w-full object-cover"
-                    />
-                  )}
-                  {!isVideoClass && (
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent to-background/20" />
-                  )}
-                </div>
-
-                {/* Right side - Controls and Info */}
-                <div
-                  className={`relative flex flex-col p-8 lg:p-12 ${
-                    isVideoClass ? "" : "bg-background/60 backdrop-blur-xl"
-                  }`}
-                >
-                  {/* Close button - top right */}
-                  <div className={`absolute right-6 top-6 ${controlsClass}`}>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={handleClose}
-                      className="rounded-lg text-[#E6DBC7] hover:bg-[#E6DBC7]/10"
-                    >
-                      <X className="h-6 w-6" />
-                    </Button>
+                {/* Two columns */}
+                <div className="flex flex-1 overflow-hidden">
+                  {/* Left side - Image (audio) or transparent over shared video */}
+                  <div className="relative w-1/2 overflow-hidden">
+                    {!isVideoClass && classData?.image_url && (
+                      <img
+                        src={classData.image_url}
+                        alt={classData?.title}
+                        className="h-full w-full object-cover"
+                      />
+                    )}
+                    {!isVideoClass && (
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent to-background/20" />
+                    )}
                   </div>
 
-                  {/* Top section - Title and actions (audio only) */}
-                  {!isVideoClass ? (
-                    <div className="space-y-6">
-                      <div>
-                        <h2 className="pr-12 font-editorial text-4xl leading-tight text-[#E6DBC7] lg:text-5xl">
-                          {classData?.title}
-                        </h2>
-                        <p className="mt-4 text-lg font-light text-[#E6DBC7]/70">
-                          {classData?.teacher_name || "March Russell"} •{" "}
-                          {classData?.duration_minutes || 0} min
-                        </p>
-                        {classCategories.length > 0 && (
-                          <p className="text-base font-light uppercase tracking-[0.15em] text-[#EC9037]">
-                            {classCategories.map((c: any) => c.name).join(" · ")}
-                          </p>
-                        )}
-                      </div>
+                  {/* Right side - Controls and Info */}
+                  <div
+                    className={`relative flex w-1/2 flex-col p-8 lg:p-12 ${
+                      isVideoClass ? "" : "bg-background/60 backdrop-blur-xl"
+                    }`}
+                  >
+                    {/* Close button - top right */}
+                    <div className={`absolute right-6 top-6 ${controlsClass}`}>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={handleClose}
+                        className="rounded-lg text-[#E6DBC7] hover:bg-[#E6DBC7]/10"
+                      >
+                        <X className="h-6 w-6" />
+                      </Button>
+                    </div>
 
-                      {/* Action buttons */}
-                      <div className="flex items-center gap-4">
+                    {/* Top section - Title and actions (audio only) */}
+                    {!isVideoClass ? (
+                      <div className="space-y-6">
+                        <div>
+                          <h2 className="pr-12 font-editorial text-4xl leading-tight text-[#E6DBC7] lg:text-5xl">
+                            {classData?.title}
+                          </h2>
+                          <p className="mt-4 text-lg font-light text-[#E6DBC7]/70">
+                            {classData?.teacher_name || "March Russell"} •{" "}
+                            {classData?.duration_minutes || 0} min
+                          </p>
+                          {classCategories.length > 0 && (
+                            <p className="text-base font-light uppercase tracking-[0.15em] text-[#EC9037]">
+                              {classCategories.map((c: { name: string }) => c.name).join(" · ")}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Action buttons */}
+                        <div className="flex items-center gap-4">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleFavourite();
+                            }}
+                            className="rounded-lg border border-[#E6DBC7]/20 p-2.5 transition-all hover:bg-[#E6DBC7]/10"
+                          >
+                            <Heart
+                              className={`h-5 w-5 ${
+                                classId && isFavourite(classId)
+                                  ? "fill-[#E6DBC7] text-[#E6DBC7]"
+                                  : "text-[#E6DBC7]"
+                              }`}
+                              strokeWidth={1.5}
+                            />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleShare(classId, classData?.is_published);
+                            }}
+                            className="rounded-lg border border-[#E6DBC7]/20 p-2.5 transition-all hover:bg-[#E6DBC7]/10"
+                          >
+                            <Share className="h-5 w-5 text-[#E6DBC7]" strokeWidth={1.5} />
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      /* Video: action buttons only, no title/info */
+                      <div className={`flex items-center justify-end gap-3 pr-14 ${controlsClass}`}>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -387,71 +438,60 @@ export const ClassPlayerModal = ({
                           <Share className="h-5 w-5 text-[#E6DBC7]" strokeWidth={1.5} />
                         </button>
                       </div>
-                    </div>
-                  ) : (
-                    /* Video: action buttons only, no title/info */
-                    <div className={`flex items-center justify-end gap-3 pr-14 ${controlsClass}`}>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleFavourite();
-                        }}
-                        className="rounded-lg border border-[#E6DBC7]/20 p-2.5 transition-all hover:bg-[#E6DBC7]/10"
-                      >
-                        <Heart
-                          className={`h-5 w-5 ${
-                            classId && isFavourite(classId)
-                              ? "fill-[#E6DBC7] text-[#E6DBC7]"
-                              : "text-[#E6DBC7]"
-                          }`}
-                          strokeWidth={1.5}
-                        />
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleShare(classId, classData?.is_published);
-                        }}
-                        className="rounded-lg border border-[#E6DBC7]/20 p-2.5 transition-all hover:bg-[#E6DBC7]/10"
-                      >
-                        <Share className="h-5 w-5 text-[#E6DBC7]" strokeWidth={1.5} />
-                      </button>
-                    </div>
-                  )}
-
-                  {/* Middle section - Play button */}
-                  <div className={`flex flex-1 items-center justify-center py-12 ${playBtnClass}`}>
-                    {mediaError ? (
-                      <p className="text-center text-sm font-light text-[#E6DBC7]/70">
-                        {mediaError}
-                      </p>
-                    ) : (
-                      <Button
-                        onClick={handlePlayPause}
-                        variant="outline"
-                        size="lg"
-                        className="h-32 w-32 rounded-full border-2 border-[#E6DBC7] bg-[#E6DBC7]/5 p-0 text-[#E6DBC7] backdrop-blur-xl transition-colors duration-300 hover:bg-[#E6DBC7]/10 lg:h-40 lg:w-40"
-                      >
-                        {isPlaying ? (
-                          <Pause
-                            className="h-12 w-12 lg:h-16 lg:w-16"
-                            strokeWidth={1.5}
-                            fill="none"
-                          />
-                        ) : (
-                          <Play
-                            className="ml-1 h-12 w-12 lg:h-16 lg:w-16"
-                            strokeWidth={1.5}
-                            fill="none"
-                          />
-                        )}
-                      </Button>
                     )}
-                  </div>
 
-                  {/* Bottom section - Progress bar */}
-                  {!mediaError && (
-                    <div className={`space-y-3 ${controlsClass}`}>
+                    {/* Middle section - Skip + Play/Pause + Skip */}
+                    <div className={`flex flex-1 items-center justify-center ${playBtnClass}`}>
+                      {mediaError ? (
+                        <p className="text-center text-sm font-light text-[#E6DBC7]/70">
+                          {mediaError}
+                        </p>
+                      ) : (
+                        <div className="flex items-center gap-10">
+                          <button
+                            onClick={handleSkipBack}
+                            className="flex flex-col items-center gap-1 text-[#E6DBC7] transition-opacity hover:opacity-70"
+                          >
+                            <SkipBack className="h-8 w-8" strokeWidth={1.5} />
+                            <span className="text-xs font-light">15</span>
+                          </button>
+                          <Button
+                            onClick={handlePlayPause}
+                            variant="outline"
+                            size="lg"
+                            className="h-32 w-32 rounded-full border-2 border-[#E6DBC7] bg-[#E6DBC7]/5 p-0 text-[#E6DBC7] backdrop-blur-xl transition-colors duration-300 hover:bg-[#E6DBC7]/10 lg:h-40 lg:w-40"
+                          >
+                            {isPlaying ? (
+                              <Pause
+                                className="h-12 w-12 lg:h-16 lg:w-16"
+                                strokeWidth={1.5}
+                                fill="none"
+                              />
+                            ) : (
+                              <Play
+                                className="ml-1 h-12 w-12 lg:h-16 lg:w-16"
+                                strokeWidth={1.5}
+                                fill="none"
+                              />
+                            )}
+                          </Button>
+                          <button
+                            onClick={handleSkipForward}
+                            className="flex flex-col items-center gap-1 text-[#E6DBC7] transition-opacity hover:opacity-70"
+                          >
+                            <SkipForward className="h-8 w-8" strokeWidth={1.5} />
+                            <span className="text-xs font-light">15</span>
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Full-width progress bar */}
+                {!mediaError && (
+                  <div className={`px-12 pb-8 pt-4 ${controlsClass}`}>
+                    <div className="space-y-3">
                       <Slider
                         value={[currentTime]}
                         max={duration}
@@ -464,8 +504,8 @@ export const ClassPlayerModal = ({
                         <span>{formatTime(duration)}</span>
                       </div>
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             </>
           )}
