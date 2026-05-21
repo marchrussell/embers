@@ -263,9 +263,7 @@ export const ClassPlayerModal = ({
                 )}
 
                 {/* Main Content - Skip + Play/Pause + Skip */}
-                <div
-                  className={`relative z-10 flex flex-1 items-center justify-center py-8 ${playBtnClass}`}
-                >
+                <div className="relative z-10 flex flex-1 items-center justify-center py-8">
                   {mediaError ? (
                     <p className="px-6 text-center text-sm font-light text-[#E6DBC7]/70">
                       {mediaError}
@@ -283,7 +281,7 @@ export const ClassPlayerModal = ({
                         onClick={handlePlayPause}
                         variant="outline"
                         size="lg"
-                        className="h-28 w-28 rounded-full border-2 border-[#E6DBC7] bg-[#E6DBC7]/5 p-0 text-[#E6DBC7] backdrop-blur-xl transition-colors duration-300 hover:bg-[#E6DBC7]/10"
+                        className={`h-28 w-28 rounded-full border-2 border-[#E6DBC7] bg-[#E6DBC7]/5 p-0 text-[#E6DBC7] backdrop-blur-xl transition-colors duration-300 hover:bg-[#E6DBC7]/10 ${playBtnClass}`}
                       >
                         {isPlaying ? (
                           <Pause className="h-10 w-10" strokeWidth={1.5} fill="none" />
@@ -441,7 +439,7 @@ export const ClassPlayerModal = ({
                     )}
 
                     {/* Middle section - Skip + Play/Pause + Skip */}
-                    <div className={`flex flex-1 items-center justify-center ${playBtnClass}`}>
+                    <div className="flex flex-1 items-center justify-center">
                       {mediaError ? (
                         <p className="text-center text-sm font-light text-[#E6DBC7]/70">
                           {mediaError}
@@ -459,7 +457,7 @@ export const ClassPlayerModal = ({
                             onClick={handlePlayPause}
                             variant="outline"
                             size="lg"
-                            className="h-32 w-32 rounded-full border-2 border-[#E6DBC7] bg-[#E6DBC7]/5 p-0 text-[#E6DBC7] backdrop-blur-xl transition-colors duration-300 hover:bg-[#E6DBC7]/10 lg:h-40 lg:w-40"
+                            className={`h-32 w-32 rounded-full border-2 border-[#E6DBC7] bg-[#E6DBC7]/5 p-0 text-[#E6DBC7] backdrop-blur-xl transition-colors duration-300 hover:bg-[#E6DBC7]/10 lg:h-40 lg:w-40 ${playBtnClass}`}
                           >
                             {isPlaying ? (
                               <Pause
