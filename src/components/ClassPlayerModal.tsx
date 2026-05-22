@@ -98,8 +98,8 @@ export const ClassPlayerModal = ({
 
   const optimizedVideoUrl = classData?.video_url ? getOptimizedVideoUrl(classData.video_url) : null;
 
-  const handleSkipBack = () => handleSliderChange([Math.max(0, currentTime - 15)]);
-  const handleSkipForward = () => handleSliderChange([Math.min(duration, currentTime + 15)]);
+  const handleSkipBack = () => handleSliderChange([Math.max(0, currentTime - 10)]);
+  const handleSkipForward = () => handleSliderChange([Math.min(duration, currentTime + 10)]);
 
   const handleFavourite = () => {
     if (classId) {
@@ -275,7 +275,7 @@ export const ClassPlayerModal = ({
                         className="flex flex-col items-center gap-1 text-[#E6DBC7] transition-opacity hover:opacity-70"
                       >
                         <SkipBack className="h-7 w-7" strokeWidth={1.5} />
-                        <span className="text-xs font-light">15</span>
+                        <span className="text-xs font-light">10</span>
                       </button>
                       <Button
                         onClick={handlePlayPause}
@@ -294,7 +294,7 @@ export const ClassPlayerModal = ({
                         className="flex flex-col items-center gap-1 text-[#E6DBC7] transition-opacity hover:opacity-70"
                       >
                         <SkipForward className="h-7 w-7" strokeWidth={1.5} />
-                        <span className="text-xs font-light">15</span>
+                        <span className="text-xs font-light">10</span>
                       </button>
                     </div>
                   )}
