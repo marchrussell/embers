@@ -269,7 +269,7 @@ export const ClassPlayerModal = ({
                       {mediaError}
                     </p>
                   ) : (
-                    <div className="flex items-center gap-8">
+                    <div className={`flex items-center gap-8 ${playBtnClass}`}>
                       <button
                         onClick={handleSkipBack}
                         className="flex flex-col items-center gap-1 text-[#E6DBC7] transition-opacity hover:opacity-70"
@@ -281,7 +281,7 @@ export const ClassPlayerModal = ({
                         onClick={handlePlayPause}
                         variant="outline"
                         size="lg"
-                        className={`h-20 w-20 md:h-28 md:w-28 rounded-full border-2 border-[#E6DBC7] bg-[#E6DBC7]/5 p-0 text-[#E6DBC7] backdrop-blur-xl transition-colors duration-300 hover:bg-[#E6DBC7]/10 ${playBtnClass}`}
+                        className="h-20 w-20 md:h-28 md:w-28 rounded-full border-2 border-[#E6DBC7] bg-[#E6DBC7]/5 p-0 text-[#E6DBC7] backdrop-blur-xl transition-colors duration-300 hover:bg-[#E6DBC7]/10"
                       >
                         {isPlaying ? (
                           <Pause className="h-8 w-8" strokeWidth={1.5} fill="none" />
@@ -438,53 +438,97 @@ export const ClassPlayerModal = ({
                       </div>
                     )}
 
-                    {/* Middle section - Skip + Play/Pause + Skip */}
-                    <div className="flex flex-1 items-center justify-center">
-                      {mediaError ? (
-                        <p className="text-center text-sm font-light text-[#E6DBC7]/70">
-                          {mediaError}
-                        </p>
-                      ) : (
-                        <div className="flex items-center gap-10">
-                          <button
-                            onClick={handleSkipBack}
-                            className="flex flex-col items-center gap-1 text-[#E6DBC7] transition-opacity hover:opacity-70"
-                          >
-                            <SkipBack className="h-8 w-8" strokeWidth={1.5} />
-                            <span className="text-sm font-light">10</span>
-                          </button>
-                          <Button
-                            onClick={handlePlayPause}
-                            variant="outline"
-                            size="lg"
-                            className={`h-32 w-32 rounded-full border-2 border-[#E6DBC7] bg-[#E6DBC7]/5 p-0 text-[#E6DBC7] backdrop-blur-xl transition-colors duration-300 hover:bg-[#E6DBC7]/10 lg:h-40 lg:w-40 ${playBtnClass}`}
-                          >
-                            {isPlaying ? (
-                              <Pause
-                                className="h-12 w-12 lg:h-16 lg:w-16"
-                                strokeWidth={1.5}
-                                fill="none"
-                              />
-                            ) : (
-                              <Play
-                                className="ml-1 h-12 w-12 lg:h-16 lg:w-16"
-                                strokeWidth={1.5}
-                                fill="none"
-                              />
-                            )}
-                          </Button>
-                          <button
-                            onClick={handleSkipForward}
-                            className="flex flex-col items-center gap-1 text-[#E6DBC7] transition-opacity hover:opacity-70"
-                          >
-                            <SkipForward className="h-8 w-8" strokeWidth={1.5} />
-                            <span className="text-sm font-light">10</span>
-                          </button>
-                        </div>
-                      )}
-                    </div>
+                    {/* Middle section — audio only; video controls sit above the progress bar */}
+                    {!isVideoClass && (
+                      <div className="flex flex-1 items-center justify-center">
+                        {mediaError ? (
+                          <p className="text-center text-sm font-light text-[#E6DBC7]/70">
+                            {mediaError}
+                          </p>
+                        ) : (
+                          <div className="flex items-center gap-10">
+                            <button
+                              onClick={handleSkipBack}
+                              className="flex flex-col items-center gap-1 text-[#E6DBC7] transition-opacity hover:opacity-70"
+                            >
+                              <SkipBack className="h-8 w-8" strokeWidth={1.5} />
+                              <span className="text-sm font-light">10</span>
+                            </button>
+                            <Button
+                              onClick={handlePlayPause}
+                              variant="outline"
+                              size="lg"
+                              className="h-32 w-32 rounded-full border-2 border-[#E6DBC7] bg-[#E6DBC7]/5 p-0 text-[#E6DBC7] backdrop-blur-xl transition-colors duration-300 hover:bg-[#E6DBC7]/10 lg:h-40 lg:w-40"
+                            >
+                              {isPlaying ? (
+                                <Pause
+                                  className="h-12 w-12 lg:h-16 lg:w-16"
+                                  strokeWidth={1.5}
+                                  fill="none"
+                                />
+                              ) : (
+                                <Play
+                                  className="ml-1 h-12 w-12 lg:h-16 lg:w-16"
+                                  strokeWidth={1.5}
+                                  fill="none"
+                                />
+                              )}
+                            </Button>
+                            <button
+                              onClick={handleSkipForward}
+                              className="flex flex-col items-center gap-1 text-[#E6DBC7] transition-opacity hover:opacity-70"
+                            >
+                              <SkipForward className="h-8 w-8" strokeWidth={1.5} />
+                              <span className="text-sm font-light">10</span>
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
+
+                {/* Video: full-width centred skip + play/pause row above progress bar */}
+                {isVideoClass && !mediaError && (
+                  <div className={`flex justify-center pb-6 pt-2 ${playBtnClass}`}>
+                    <div className="flex items-center gap-10">
+                      <button
+                        onClick={handleSkipBack}
+                        className="flex flex-col items-center gap-1 text-[#E6DBC7] transition-opacity hover:opacity-70"
+                      >
+                        <SkipBack className="h-8 w-8" strokeWidth={1.5} />
+                        <span className="text-xs font-light">10</span>
+                      </button>
+                      <Button
+                        onClick={handlePlayPause}
+                        variant="outline"
+                        size="lg"
+                        className="h-32 w-32 rounded-full border-2 border-[#E6DBC7] bg-[#E6DBC7]/5 p-0 text-[#E6DBC7] backdrop-blur-xl transition-colors duration-300 hover:bg-[#E6DBC7]/10 lg:h-40 lg:w-40"
+                      >
+                        {isPlaying ? (
+                          <Pause
+                            className="h-12 w-12 lg:h-16 lg:w-16"
+                            strokeWidth={1.5}
+                            fill="none"
+                          />
+                        ) : (
+                          <Play
+                            className="ml-1 h-12 w-12 lg:h-16 lg:w-16"
+                            strokeWidth={1.5}
+                            fill="none"
+                          />
+                        )}
+                      </Button>
+                      <button
+                        onClick={handleSkipForward}
+                        className="flex flex-col items-center gap-1 text-[#E6DBC7] transition-opacity hover:opacity-70"
+                      >
+                        <SkipForward className="h-8 w-8" strokeWidth={1.5} />
+                        <span className="text-xs font-light">10</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 {/* Full-width progress bar */}
                 {!mediaError && (
