@@ -64,7 +64,7 @@ function buildSessionDisplay(
   if (enrichment) {
     return {
       title: enrichment.session_title || config.title,
-      subtitle: config.recurrence_label ?? "",
+      subtitle: enrichment.session_date ? formatGuestSessionDate(parseUTCDateForDisplay(enrichment.session_date)) : config.recurrence_label ?? "",
       description: enrichment.short_description || config.subtitle,
       image: resolveSessionImage(config, enrichment.photo_url),
       nextDate: computedNextDate,
