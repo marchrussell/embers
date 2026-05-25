@@ -274,7 +274,7 @@ export const ClassPlayerModal = ({
                         onClick={handleSkipBack}
                         className="flex flex-col items-center gap-1 text-[#E6DBC7] transition-opacity hover:opacity-70"
                       >
-                        <SkipBack className="h-10 w-10" strokeWidth={1.5} />
+                        <SkipBack className="h-8 w-8" strokeWidth={1.5} />
                         <span className="text-sm font-light">10</span>
                       </button>
                       <Button
@@ -284,16 +284,16 @@ export const ClassPlayerModal = ({
                         className={`h-20 w-20 md:h-28 md:w-28 rounded-full border-2 border-[#E6DBC7] bg-[#E6DBC7]/5 p-0 text-[#E6DBC7] backdrop-blur-xl transition-colors duration-300 hover:bg-[#E6DBC7]/10 ${playBtnClass}`}
                       >
                         {isPlaying ? (
-                          <Pause className="h-10 w-10" strokeWidth={1.5} fill="none" />
+                          <Pause className="h-8 w-8" strokeWidth={1.5} fill="none" />
                         ) : (
-                          <Play className="ml-1 h-10 :w-10" strokeWidth={1.5} fill="none" />
+                          <Play className="ml-1 h-8 w-8" strokeWidth={1.5} fill="none" />
                         )}
                       </Button>
                       <button
                         onClick={handleSkipForward}
                         className="flex flex-col items-center gap-1 text-[#E6DBC7] transition-opacity hover:opacity-70"
                       >
-                        <SkipForward className="h-10 w-10" strokeWidth={1.5} />
+                        <SkipForward className="h-8 w-8" strokeWidth={1.5} />
                         <span className="text-sm font-light">10</span>
                       </button>
                     </div>
