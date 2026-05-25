@@ -270,7 +270,7 @@ const ExperiencesContent = () => {
                           {event.title}
                         </h2>
 
-                        <p className="mb-6 max-w-[340px] text-[14px] italic leading-[1.5] text-[#E6DBC7]/65 lg:text-[15px]">
+                        <p className="mb-6 text-[14px] italic leading-[1.5] text-[#E6DBC7]/65 lg:text-[15px]">
                           {event.subtitle}
                         </p>
 
