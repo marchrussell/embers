@@ -31,9 +31,8 @@ export const SUBSCRIPTION_DISPLAY_PRICES = {
 } as const;
 
 export const SUBSCRIPTION_BENEFITS = [
-  "Unlimited access to the full HŌM practice library",
-  "Breathwork, meditation, and nervous system regulation",
-  "Short daily resets and deeper guided sessions",
+  "Access to the full HŌM library",
+  "Breathwork, meditation, movement, and sensory practices",
+  "Short resets and deeper guided sessions",
   "Weekly live sessions and guest workshops",
-  "7-day free trial with annual — cancel anytime",
 ] as const;

@@ -1,5 +1,5 @@
-import * as Sentry from "@sentry/react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
+import * as Sentry from "@sentry/react";
 import { Check, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -61,7 +61,7 @@ export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => 
     <Dialog open={open} onOpenChange={onClose}>
       <DialogPortal>
         <DialogPrimitive.Overlay className="fixed inset-0 z-[75] bg-black/80 backdrop-blur-md transition-opacity duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-        <DialogPrimitive.Content className="fixed left-[50%] top-8 z-[75] max-h-[calc(100dvh-6rem)] w-[96%] max-w-[1200px] -translate-x-1/2 overflow-y-auto overscroll-contain scroll-smooth rounded-[28px] border border-white/20 bg-black/75 p-0 backdrop-blur-xl duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 md:top-[50%] md:max-h-[88dvh] md:w-[92%] md:-translate-y-1/2">
+        <DialogPrimitive.Content className="fixed inset-0 z-[75] h-dvh w-full overflow-y-auto overscroll-contain scroll-smooth rounded-none border border-white/20 bg-black/75 p-0 backdrop-blur-xl duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 md:inset-auto md:left-[50%] md:top-[50%] md:h-auto md:max-h-[88dvh] md:w-[92%] md:max-w-[1200px] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-[28px]">
           <div className="sr-only" role="heading" aria-level={2}>
             Subscribe to HŌM
           </div>
@@ -74,25 +74,25 @@ export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => 
 
           <div className="flex flex-col lg:flex-row">
             {/* Left side - Branding & Benefits */}
-            <div className="flex flex-col justify-center bg-black/50 px-12 pb-6 pt-12 md:p-16 lg:w-1/2 lg:p-20">
+            <div className="flex flex-col bg-black/10 p-6 pt-20 md:p-16 lg:w-1/2 lg:p-20">
               <div className="mx-auto w-full max-w-lg">
                 <div className="flex items-center justify-center gap-4">
                   <div className="h-px w-10 bg-white/25" />
-                  <p className="text-md font-bold uppercase tracking-[0.3em] text-white/70 md:text-xl">
+                  <p className="text-md font-bold uppercase tracking-[0.3em] text-white/70 md:text-3xl">
                     Join HŌM
                   </p>
                   <div className="h-px w-10 bg-white/25" />
                 </div>
 
                 <div className="my-6 space-y-5 text-center md:mb-12 md:mt-8">
-                  <p className="text-sm font-light italic tracking-wide text-white/70">
+                  <p className="text-sm font-light italic tracking-wide text-white/70 md:text-base">
                     Where your nervous system rests.
                     <br />
                     And your senses awaken.
                   </p>
                 </div>
 
-                <div className="space-y-4">
+                <div className="space-y-5 md:space-y-6">
                   {SUBSCRIPTION_BENEFITS.map((benefit) => (
                     <div key={benefit} className="flex items-start gap-3">
                       <Check
@@ -104,12 +104,15 @@ export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => 
                       </p>
                     </div>
                   ))}
+                  <p className="text-sm font-light italic text-white/70">
+                    Designed for sleep, regulation, and a deeper connection to the body.
+                  </p>
                 </div>
               </div>
             </div>
 
             {/* Right side - Pricing Plans */}
-            <div className="flex flex-col justify-center bg-black/50 px-8 pb-10 pt-4 md:p-16 lg:w-1/2 lg:p-20">
+            <div className="flex flex-col justify-center bg-black/50 p-6 md:p-16 lg:w-1/2 lg:p-20">
               <div className="mx-auto w-full max-w-lg">
                 <div className="space-y-6">
                   {/* Annual Plan */}
@@ -154,7 +157,10 @@ export const SubscriptionModal = ({ open, onClose }: SubscriptionModalProps) => 
                       {loadingPlan === "annual" ? (
                         <ButtonLoadingSpinner size="lg" />
                       ) : (
-                        "Start your 7-day free trial"
+                        <>
+                          <span className="md:hidden">Start free trial</span>
+                          <span className="hidden md:inline">Start your 7-day free trial</span>
+                        </>
                       )}
                     </GlowButton>
                   </div>

@@ -955,7 +955,11 @@ const ManageDatesDialog = ({ config }: ManageDatesDialogProps) => {
             className="gap-2"
             onClick={handleGenerate}
             disabled={generating || config.recurrence_type === "oneOff"}
-            title={config.recurrence_type === "oneOff" ? "One-off experiences: add dates manually below" : undefined}
+            title={
+              config.recurrence_type === "oneOff"
+                ? "One-off experiences: add dates manually below"
+                : undefined
+            }
           >
             {generating ? (
               <Loader2 className="h-6 w-6 animate-spin" />
