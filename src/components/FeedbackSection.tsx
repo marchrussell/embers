@@ -1,4 +1,4 @@
-import { Send, X } from "lucide-react";
+import { Loader2, Send, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -120,11 +120,11 @@ export const FeedbackSection = () => {
                 disabled={isSubmitting || !feedback.trim()}
               >
                 {isSubmitting ? (
-                  <>Sending...</>
+                  <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   <>
                     <Send className="mr-2 h-4 w-4" />
-                    Submit Feedback
+                    Submit
                   </>
                 )}
               </Button>
