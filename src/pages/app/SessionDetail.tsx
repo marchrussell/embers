@@ -279,7 +279,7 @@ export default function SessionDetailModal({
                       <div className="group relative mt-10 md:mt-8 overflow-hidden">
                         <div className="flex items-center gap-3 text-sm text-white md:items-start">
                           <div className="min-w-0 flex-1">
-                            <h4 className="flex items-center gap-4 font-light tracking-wide">
+                            <h4 className="flex items-baseline gap-4 font-light tracking-wide">
                               <AlertTriangle className="flex-shrink-0 h-5 w-5 text-yellow-400" />
                               Safety Reminder
                             </h4>
