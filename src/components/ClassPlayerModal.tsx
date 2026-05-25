@@ -450,7 +450,7 @@ export const ClassPlayerModal = ({
                             onClick={handleSkipBack}
                             className="flex flex-col items-center gap-2 text-[#E6DBC7] transition-opacity hover:opacity-70"
                           >
-                            <SkipBack className="h-12 w-12" strokeWidth={1.5} />
+                            <SkipBack className="h-10 w-10" strokeWidth={1.5} />
                             <span className="text-sm font-light">10</span>
                           </button>
                           <Button
@@ -477,7 +477,7 @@ export const ClassPlayerModal = ({
                             onClick={handleSkipForward}
                             className="flex flex-col items-center gap-2 text-[#E6DBC7] transition-opacity hover:opacity-70"
                           >
-                            <SkipForward className="h-12 w-12" strokeWidth={1.5} />
+                            <SkipForward className="h-10 w-10" strokeWidth={1.5} />
                             <span className="text-sm font-light">10</span>
                           </button>
                         </div>
