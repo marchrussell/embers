@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import { PostSessionFeedbackModal } from "@/components/PostSessionFeedbackModal";
 import { Button } from "@/components/ui/button";
-import { copyLink } from "@/lib/copyLink";
+import { useShareSession } from "@/hooks/useShareSession";
 
 interface SessionCompletionModalProps {
   open: boolean;
@@ -31,6 +31,7 @@ export const SessionCompletionModal = ({
 }: SessionCompletionModalProps) => {
   const navigate = useNavigate();
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const { handleShare: shareSession } = useShareSession();
 
   const handleDone = () => {
     // Show feedback modal if we have session details
@@ -49,8 +50,7 @@ export const SessionCompletionModal = ({
   };
 
   const handleShare = () => {
-    const shareText = `I just completed a breathwork session! 🧘‍♀️\n\n${userStats?.totalSessions || 0} sessions completed\n${userStats?.totalMinutes || 0} minutes practiced`;
-    copyLink(shareText, "Copied to clipboard");
+    shareSession(sessionId ?? null, true);
   };
 
   if (!open) return null;
