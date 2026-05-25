@@ -224,7 +224,7 @@ const LiveSessionContent = ({ sessionId }: LiveSessionContentProps) => {
         <img
           src={session.image}
           alt={session.title}
-          className="absolute inset-0 h-full w-full object-cover object-top"
+          className="absolute inset-0 h-full w-full object-cover object-center"
         />
         <div className="absolute inset-0 bg-black/30" />
         <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
