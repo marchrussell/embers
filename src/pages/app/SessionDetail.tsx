@@ -276,7 +276,7 @@ export default function SessionDetailModal({
                       </p>
 
                       {/* Safety Card */}
-                      <div className="group relative mt-auto overflow-hidden">
+                      <div className="group relative mt-8 overflow-hidden md:mt-10">
                         <div className="flex items-center gap-3 text-sm text-white md:items-start">
                           <div className="min-w-0 flex-1">
                             <h4 className="flex items-baseline gap-4 font-light tracking-wide">
