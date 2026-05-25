@@ -37,19 +37,13 @@ export const Footer = memo(() => {
 
     setIsSubmitting(true);
     try {
-      const { error } = await supabase
-        .from("newsletter_subscribers")
-        .insert({ email, active: true });
+      const { error } = await supabase.functions.invoke("newsletter-subscribe", {
+        body: { email },
+      });
 
-      if (error) {
-        if (error.code === "23505") {
-          toast.success("You're already subscribed!");
-        } else {
-          throw error;
-        }
-      } else {
-        toast.success("Thanks for subscribing!");
-      }
+      if (error) throw error;
+
+      toast.success("Thanks for subscribing!");
       setEmail("");
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
