@@ -112,9 +112,14 @@ const LiveTab = ({
     setOpenCalendarId(null);
   };
 
+  const getSessionPath = (session: LiveSessionCardData) =>
+    session.sessionType === "guest-session"
+      ? `/online/live/${session.sessionType}?liveSessionId=${session.id}`
+      : `/online/live/${session.sessionType}`;
+
   const handleShare = (session: LiveSessionCardData, e: React.MouseEvent) => {
     e.stopPropagation();
-    const shareUrl = `${window.location.origin}/online/live/${session.sessionType}`;
+    const shareUrl = `${window.location.origin}${getSessionPath(session)}`;
     const shareText = `Join ${session.title} - ${session.description}`;
 
     copyLink(shareText + "\n\n" + shareUrl, "Session details copied to clipboard");
@@ -137,7 +142,7 @@ const LiveTab = ({
             <LiveSessionCard
               sessionKey={session.id}
               data={session}
-              onClick={() => handleCardClick(`/online/live/${session.sessionType}`)}
+              onClick={() => handleCardClick(getSessionPath(session))}
               onShare={(e) => handleShare(session, e)}
               onDownloadICal={(e) => {
                 e.stopPropagation();

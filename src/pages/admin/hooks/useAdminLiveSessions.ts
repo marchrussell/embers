@@ -273,6 +273,7 @@ export const useSaveSessionMutation = () => {
     onSuccess: ({ isNew }) => {
       toast.success(isNew ? "Session created" : "Session updated");
       queryClient.invalidateQueries({ queryKey: ["admin-live-sessions"] });
+      queryClient.invalidateQueries({ queryKey: ["next-session-details-by-type"] });
     },
     onError: (err) => {
       const msg =

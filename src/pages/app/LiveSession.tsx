@@ -1,7 +1,7 @@
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { Calendar, Clock, Video } from "lucide-react";
 import { Suspense, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 
 import { FadeUp } from "@/components/FadeUp";
 import { Footer } from "@/components/Footer";
@@ -64,7 +64,9 @@ function buildSessionDisplay(
   if (enrichment) {
     return {
       title: enrichment.session_title || config.title,
-      subtitle: enrichment.session_date ? formatGuestSessionDate(parseUTCDateForDisplay(enrichment.session_date)) : config.recurrence_label ?? "",
+      subtitle: enrichment.session_date
+        ? formatGuestSessionDate(parseUTCDateForDisplay(enrichment.session_date))
+        : (config.recurrence_label ?? ""),
       description: enrichment.short_description || config.subtitle,
       image: resolveSessionImage(config, enrichment.photo_url),
       nextDate: computedNextDate,
@@ -94,6 +96,8 @@ interface LiveSessionContentProps {
 }
 
 const LiveSessionContent = ({ sessionId }: LiveSessionContentProps) => {
+  const [searchParams] = useSearchParams();
+  const liveSessionId = searchParams.get("liveSessionId");
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   const { data: configs } = useSuspenseQuery<LiveSessionConfig[]>({
@@ -111,36 +115,47 @@ const LiveSessionContent = ({ sessionId }: LiveSessionContentProps) => {
     gcTime: 30 * 60 * 1000,
   });
 
-  const { data: enrichment } = useSuspenseQuery<LiveSessionEnrichment | null>({
-    queryKey: ["next-session-details", sessionId],
+  type SessionRow = {
+    id: string;
+    start_time: string;
+    session_type: string;
+    live_session_details: LiveSessionEnrichment | LiveSessionEnrichment[] | null;
+  };
+
+  const { data: sessionRow } = useSuspenseQuery<SessionRow | null>({
+    queryKey: ["next-session-details", sessionId, liveSessionId ?? ""],
     queryFn: async () => {
-      const now = new Date().toISOString();
-      const { data, error } = (await db
+      let query = db
         .from("live_sessions")
-        .select("id, start_time, session_type, live_session_details!linked_session_id(*)")
-        .eq("session_type", sessionId)
-        .gte("start_time", now)
-        .order("start_time", { ascending: true })
-        .limit(1)
-        .maybeSingle()) as {
-        data: {
-          id: string;
-          start_time: string;
-          session_type: string;
-          live_session_details: LiveSessionEnrichment | LiveSessionEnrichment[] | null;
-        } | null;
+        .select("id, start_time, session_type, live_session_details!linked_session_id(*)");
+
+      if (liveSessionId) {
+        query = query.eq("id", liveSessionId);
+      } else {
+        const now = new Date().toISOString();
+        query = query
+          .eq("session_type", sessionId)
+          .gte("start_time", now)
+          .order("start_time", { ascending: true })
+          .limit(1);
+      }
+
+      const { data, error } = (await query.maybeSingle()) as {
+        data: SessionRow | null;
         error: unknown;
       };
       if (error) throw error;
-      if (!data) return null;
-      const details = Array.isArray(data.live_session_details)
-        ? (data.live_session_details[0] ?? null)
-        : data.live_session_details;
-      return details;
+      return data;
     },
     staleTime: 10 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
   });
+
+  const enrichment = sessionRow
+    ? Array.isArray(sessionRow.live_session_details)
+      ? (sessionRow.live_session_details[0] ?? null)
+      : sessionRow.live_session_details
+    : null;
 
   // Poll for a currently-live session of this type so we can link the Join button
   const { data: liveSession } = useQuery({
@@ -171,7 +186,9 @@ const LiveSessionContent = ({ sessionId }: LiveSessionContentProps) => {
     const calculateCountdown = () => {
       let targetDate: Date | null = null;
 
-      if (enrichment?.session_date) {
+      if (sessionRow?.start_time) {
+        targetDate = new Date(sessionRow.start_time);
+      } else if (enrichment?.session_date) {
         targetDate = new Date(enrichment.session_date);
       } else {
         targetDate = getNextDateFromConfig(config);
@@ -200,7 +217,7 @@ const LiveSessionContent = ({ sessionId }: LiveSessionContentProps) => {
     calculateCountdown();
     const interval = setInterval(calculateCountdown, 1000);
     return () => clearInterval(interval);
-  }, [config, enrichment]);
+  }, [config, enrichment, sessionRow]);
 
   if (!session) {
     return (

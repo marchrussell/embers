@@ -244,7 +244,13 @@ const HomeTab = ({
                   image={session.image}
                   badge={session.isLive ? "Live Now" : undefined}
                   locked={!hasSubscription && !isAdmin && !isTestUser}
-                  onClick={() => handleLiveCardClick(`/online/live/${session.sessionType}`)}
+                  onClick={() => {
+                    const dest =
+                      session.sessionType === "guest-session"
+                        ? `/online/live/${session.sessionType}?liveSessionId=${session.id}`
+                        : `/online/live/${session.sessionType}`;
+                    handleLiveCardClick(dest);
+                  }}
                 />
               </FadeUp>
             );
