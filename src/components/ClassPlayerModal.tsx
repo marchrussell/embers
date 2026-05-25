@@ -269,7 +269,7 @@ export const ClassPlayerModal = ({
                       {mediaError}
                     </p>
                   ) : (
-                    <div className="flex items-center gap-10">
+                    <div className="flex items-center gap-8">
                       <button
                         onClick={handleSkipBack}
                         className="flex flex-col items-center gap-2 text-[#E6DBC7] transition-opacity hover:opacity-70"
