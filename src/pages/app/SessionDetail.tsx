@@ -264,11 +264,11 @@ export default function SessionDetailModal({
                     </TabsTrigger>
                   </TabsList>
 
-                  <div className="mt-8 grid">
+                  <div className="mt-8 grid flex-1">
                     <TabsContent
                       forceMount
                       value="description"
-                      className="flex flex-col justify-between [grid-area:1/1] data-[state=inactive]:pointer-events-none data-[state=inactive]:invisible [&[hidden]]:block"
+                      className="flex flex-1 flex-col justify-between [grid-area:1/1] data-[state=inactive]:pointer-events-none data-[state=inactive]:invisible [&[hidden]]:block"
                     >
                       {/* Description */}
                       <p className="font-light leading-[1.7] text-white/80">
@@ -276,7 +276,7 @@ export default function SessionDetailModal({
                       </p>
 
                       {/* Safety Card */}
-                      <div className="group relative mt-10 md:mt-8 overflow-hidden">
+                      <div className="group relative overflow-hidden">
                         <div className="flex items-center gap-3 text-sm text-white md:items-start">
                           <div className="min-w-0 flex-1">
                             <h4 className="flex items-baseline gap-4 font-light tracking-wide">
