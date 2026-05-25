@@ -224,13 +224,13 @@ const LiveSessionContent = ({ sessionId }: LiveSessionContentProps) => {
         <img
           src={session.image}
           alt={session.title}
-          className="absolute inset-0 h-full w-full object-cover object-bottom"
+          className="absolute inset-0 h-full w-full object-cover object-top"
         />
         <div className="absolute inset-0 bg-black/30" />
         <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
 
         <FadeUp className="h-full">
-          <div className="relative flex h-full items-end justify-center px-6 pb-14 md:px-10 lg:px-12">
+          <div className="relative flex h-full items-end justify-center px-6 pb-6 md:px-10 lg:px-12">
             <div className="text-center">
               <p className="mb-3 text-sm font-light uppercase tracking-[0.15em] text-[#D4A574]">
                 {session.subtitle}
@@ -245,7 +245,7 @@ const LiveSessionContent = ({ sessionId }: LiveSessionContentProps) => {
 
       {/* Meta info */}
       <FadeUp delay={100}>
-        <div className="flex items-center justify-center gap-8 px-6 pb-6 pt-10 text-base text-[#E6DBC7]/60">
+        <div className="flex items-center justify-center gap-8 px-6 pb-6 text-base text-[#E6DBC7]/60">
           <span className="flex items-center gap-3">
             <Clock className="h-5 w-5" />
             {session.duration}

@@ -57,12 +57,12 @@ export const SessionCompletionModal = ({
 
   return (
     <>
-      <div className="animate-in fade-in-0 fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-xl duration-300">
+      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-xl duration-300 animate-in fade-in-0">
         {/* Ambient gradient overlay */}
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/[0.03] via-transparent to-white/[0.02]" />
         <div className="absolute left-1/2 top-0 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
-        <div className="animate-in slide-in-from-bottom-8 relative mx-auto w-full max-w-lg space-y-8 p-8 duration-300 md:space-y-10 md:p-12">
+        <div className="relative mx-auto w-full max-w-lg space-y-8 p-8 duration-300 animate-in slide-in-from-bottom-8 md:space-y-10 md:p-12">
           {/* Title */}
           <div className="space-y-3 text-center">
             <h2 className="font-['PP_Editorial_Old'] text-3xl text-white md:text-4xl">

@@ -281,7 +281,7 @@ export const ClassPlayerModal = ({
                         onClick={handlePlayPause}
                         variant="outline"
                         size="lg"
-                        className="h-20 w-20 md:h-28 md:w-28 rounded-full border-2 border-[#E6DBC7] bg-[#E6DBC7]/5 p-0 text-[#E6DBC7] backdrop-blur-xl transition-colors duration-300 hover:bg-[#E6DBC7]/10"
+                        className="h-20 w-20 rounded-full border-2 border-[#E6DBC7] bg-[#E6DBC7]/5 p-0 text-[#E6DBC7] backdrop-blur-xl transition-colors duration-300 hover:bg-[#E6DBC7]/10 md:h-28 md:w-28"
                       >
                         {isPlaying ? (
                           <Pause className="h-8 w-8" strokeWidth={1.5} fill="none" />
