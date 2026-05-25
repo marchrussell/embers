@@ -280,13 +280,13 @@ export default function SessionDetailModal({
                         <div className="flex items-center gap-3 text-sm text-white md:items-start">
                           <div className="min-w-0 flex-1">
                             <h4 className="flex items-baseline gap-4 font-light tracking-wide">
-                              <AlertTriangle className="flex-shrink-0 h-5 w-5 text-yellow-400" />
+                              <AlertTriangle className="h-5 w-5 flex-shrink-0 text-yellow-400" />
                               Safety Reminder
                             </h4>
 
                             <div className="mt-4 space-y-4 border-white/[0.08] pt-4 md:border-t">
                               {/* Practice safely */}
-                              <p className="italic font-light leading-relaxed text-white/70 md:text-sm">
+                              <p className="font-light italic leading-relaxed text-white/70 md:text-sm">
                                 Practice in a safe, comfortable space - never in water, while
                                 driving, or operating machinery. Consult your doctor if you have
                                 health conditions or concerns and do not practice breath holds or

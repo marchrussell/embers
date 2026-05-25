@@ -62,7 +62,7 @@ interface ExperienceConfig {
   experience_type: string;
   title: string;
   subtitle: string | null;
-  recurrence_type: "nthWeekday" | "weekly" | "nthDay" | null;
+  recurrence_type: "nthWeekday" | "weekly" | "nthDay" | "oneOff" | null;
   weekday: number | null;
   nth: number | null;
   weekdays: number[] | null;
@@ -198,6 +198,22 @@ function generateDateRange(config: ExperienceConfig, from: Date, to: Date): stri
   return dates;
 }
 
+function recurrencePreview(form: ExperienceFormState): string | null {
+  if (form.recurrence_type === "nthWeekday" && form.nth != null && form.weekday != null) {
+    return `Every ${NTH_LABELS[form.nth]} ${WEEKDAY_LABELS[form.weekday]} of the month`;
+  }
+  if (form.recurrence_type === "nthDay" && form.nth_day != null) {
+    const n = form.nth_day;
+    const suffix = n === 1 ? "st" : n === 2 ? "nd" : n === 3 ? "rd" : "th";
+    return `Every ${n}${suffix} of the month`;
+  }
+  if (form.recurrence_type === "weekly" && form.weekdays?.length) {
+    return `Every ${form.weekdays.map((d) => WEEKDAY_LABELS[d]).join(", ")}`;
+  }
+  if (form.recurrence_type === "oneOff") return "Single event — add date(s) manually";
+  return null;
+}
+
 // ────────────────────────────────────────────────────────
 // Shared form fields
 // ────────────────────────────────────────────────────────
@@ -293,7 +309,7 @@ const ExperienceFormFields = ({ form, setForm, mode }: ExperienceFormFieldsProps
             onValueChange={(v) =>
               setForm((p) => ({
                 ...p,
-                recurrence_type: v as "nthWeekday" | "weekly" | "nthDay",
+                recurrence_type: v as "nthWeekday" | "weekly" | "nthDay" | "oneOff",
               }))
             }
           >
@@ -304,8 +320,12 @@ const ExperienceFormFields = ({ form, setForm, mode }: ExperienceFormFieldsProps
               <SelectItem value="nthWeekday">Nth Weekday of month</SelectItem>
               <SelectItem value="weekly">Weekly</SelectItem>
               <SelectItem value="nthDay">Nth Day of month</SelectItem>
+              <SelectItem value="oneOff">One-Off (single date)</SelectItem>
             </SelectContent>
           </Select>
+          {recurrencePreview(form) && (
+            <p className="text-xs italic text-foreground/50">{recurrencePreview(form)}</p>
+          )}
         </div>
 
         {form.recurrence_type === "nthWeekday" && (
@@ -857,7 +877,8 @@ const ManageDatesDialog = ({ config }: ManageDatesDialogProps) => {
             variant="outline"
             className="gap-2"
             onClick={handleGenerate}
-            disabled={generating}
+            disabled={generating || config.recurrence_type === "oneOff"}
+            title={config.recurrence_type === "oneOff" ? "One-off experiences: add dates manually below" : undefined}
           >
             {generating ? (
               <Loader2 className="h-6 w-6 animate-spin" />

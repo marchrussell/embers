@@ -156,11 +156,10 @@ const ExperiencesContent = () => {
     const endDate = new Date(startDate.getTime() + duration * 60000);
 
     const location = event.format === "Online" ? "Online" : event.venue || "TBA";
-    const linkLabel = event.eventType === "free" ? "Join" : "Book";
 
     return {
       title: event.title,
-      description: `${event.subtitle}\n\nClass taught by March Russell\n\n${linkLabel}: ${event.ctaLink}`,
+      description: `${event.subtitle}\n\n`,
       location,
       startDate,
       endDate,
