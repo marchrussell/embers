@@ -9,6 +9,7 @@ const db = supabase as any;
 
 export interface LiveSessionWithDetails extends LiveSessionEnrichment {
   startTime: string; // live_sessions.start_time (ISO)
+  sessionId: string; // live_sessions.id
 }
 
 type RawSessionRow = {
@@ -19,12 +20,13 @@ type RawSessionRow = {
 };
 
 /**
- * Fetches the next upcoming live_sessions row (with enrichment) for every
- * session_type in a single query, returning a map keyed by session_type.
+ * Fetches all upcoming live_sessions rows (with enrichment) in a single query,
+ * returning a map keyed by session_type. For guest-session this yields multiple
+ * entries (one per scheduled session); other types typically have one.
  * Use this on pages that need dates for multiple session types at once.
  */
 export function useNextLiveSessionDetailsByType() {
-  return useQuery<Record<string, LiveSessionWithDetails>>({
+  return useQuery<Record<string, LiveSessionWithDetails[]>>({
     queryKey: ["next-session-details-by-type"],
     queryFn: async () => {
       const now = new Date().toISOString();
@@ -40,14 +42,14 @@ export function useNextLiveSessionDetailsByType() {
       if (error) throw error;
       if (!data) return {};
 
-      const map: Record<string, LiveSessionWithDetails> = {};
+      const map: Record<string, LiveSessionWithDetails[]> = {};
       for (const row of data) {
-        if (map[row.session_type]) continue;
         const details = Array.isArray(row.live_session_details)
           ? (row.live_session_details[0] ?? null)
           : row.live_session_details;
         if (details) {
-          map[row.session_type] = { ...details, startTime: row.start_time };
+          if (!map[row.session_type]) map[row.session_type] = [];
+          map[row.session_type].push({ ...details, startTime: row.start_time, sessionId: row.id });
         }
       }
 

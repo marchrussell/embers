@@ -133,9 +133,9 @@ const LiveTab = ({
 
       <div className="space-y-9 md:space-y-10 lg:space-y-12">
         {liveSessionsData.map((session, index) => (
-          <FadeUp key={session.sessionType} delay={index * 80}>
+          <FadeUp key={session.id} delay={index * 80}>
             <LiveSessionCard
-              sessionKey={session.sessionType}
+              sessionKey={session.id}
               data={session}
               onClick={() => handleCardClick(`/online/live/${session.sessionType}`)}
               onShare={(e) => handleShare(session, e)}
@@ -151,8 +151,8 @@ const LiveTab = ({
                 e.stopPropagation();
                 handleOutlookCalendar(session);
               }}
-              isCalendarOpen={openCalendarId === session.sessionType}
-              onCalendarOpenChange={(open) => setOpenCalendarId(open ? session.sessionType : null)}
+              isCalendarOpen={openCalendarId === session.id}
+              onCalendarOpenChange={(open) => setOpenCalendarId(open ? session.id : null)}
             />
           </FadeUp>
         ))}

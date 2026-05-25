@@ -19,6 +19,7 @@ export interface Course {
 }
 
 export interface LiveSessionCardData {
+  id: string;
   sessionType: string;
   title: string;
   subtitle: string;

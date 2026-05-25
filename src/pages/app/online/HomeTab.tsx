@@ -235,7 +235,7 @@ const HomeTab = ({
               .filter(Boolean)
               .join(" · ");
             return (
-              <FadeUp key={session.sessionType} delay={index * 80}>
+              <FadeUp key={session.id} delay={index * 80}>
                 <CourseCard
                   title={session.title}
                   subtitle={courseSubtitle || session.subtitle}
