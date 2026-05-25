@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Calendar, CalendarDays, Loader2, MapPin, Plus, RefreshCw } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Calendar, CalendarDays, ImageIcon, Loader2, MapPin, Plus, RefreshCw } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import {
@@ -50,6 +50,7 @@ import {
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/contexts/AuthContext";
+import { useStorageUpload } from "@/hooks/useStorageUpload";
 import { supabase } from "@/integrations/supabase/client";
 
 import { NTH_LABELS, WEEKDAY_LABELS } from "./adminScheduleUtils";
@@ -213,6 +214,86 @@ function recurrencePreview(form: ExperienceFormState): string | null {
   if (form.recurrence_type === "oneOff") return "Single event — add date(s) manually";
   return null;
 }
+
+// ────────────────────────────────────────────────────────
+// Image upload field
+// ────────────────────────────────────────────────────────
+
+const ExperienceImageUpload = ({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (url: string) => void;
+}) => {
+  const { upload, uploading } = useStorageUpload("site-images");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please upload an image file");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be smaller than 5 MB");
+      return;
+    }
+    try {
+      const ext = file.name.split(".").pop();
+      const path = `experiences/${Math.random().toString(36).substring(2)}-${Date.now()}.${ext}`;
+      const url = await upload(file, path);
+      if (url) onChange(url);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to upload image");
+    }
+  };
+
+  return (
+    <div className="space-y-2">
+      <Label>Image</Label>
+      {value ? (
+        <div className="relative h-36 w-full overflow-hidden rounded-lg border border-border">
+          <img src={value} alt="Preview" className="h-full w-full object-cover" />
+        </div>
+      ) : (
+        <div className="flex h-36 w-full items-center justify-center rounded-lg border border-dashed border-border">
+          <ImageIcon className="h-6 w-6 text-muted-foreground" />
+        </div>
+      )}
+      <div className="flex gap-2">
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleFile}
+          disabled={uploading}
+          className="hidden"
+        />
+        <Button
+          type="button"
+          variant="outline"
+          disabled={uploading}
+          onClick={() => inputRef.current?.click()}
+        >
+          {uploading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {uploading ? "Uploading…" : "Upload Image"}
+        </Button>
+        {value && (
+          <Button type="button" variant="ghost" size="sm" onClick={() => onChange("")}>
+            Remove
+          </Button>
+        )}
+      </div>
+      <Input
+        placeholder="Or paste an image URL"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      />
+    </div>
+  );
+};
 
 // ────────────────────────────────────────────────────────
 // Shared form fields
@@ -473,14 +554,10 @@ const ExperienceFormFields = ({ form, setForm, mode }: ExperienceFormFieldsProps
         </p>
       </div>
 
-      <div className="space-y-2">
-        <Label>Image URL</Label>
-        <Input
-          placeholder="https://..."
-          value={form.image_url ?? ""}
-          onChange={(e) => setForm((p) => ({ ...p, image_url: e.target.value }))}
-        />
-      </div>
+      <ExperienceImageUpload
+        value={form.image_url ?? ""}
+        onChange={(url) => setForm((p) => ({ ...p, image_url: url }))}
+      />
 
       <div className="flex items-center gap-3">
         <Switch

@@ -228,7 +228,7 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
               onClick={() => setStep(2)}
               disabled={!attendeeName || !attendeeEmail || !selectedDate}
             >
-              Continue to Safety Disclosure
+              Book
             </Button>
           </div>
         )}
@@ -270,13 +270,7 @@ export function ExperienceBookingModal({ event, open, onClose }: Props) {
                 disabled={!hasAccepted || isPending}
                 className="flex-1 rounded-full border-white/40 bg-transparent py-6 text-base font-medium text-white hover:bg-white/10 disabled:opacity-50"
               >
-                {isPending ? (
-                  <ButtonLoadingSpinner />
-                ) : isFreeEvent ? (
-                  "Confirm Booking"
-                ) : (
-                  `Pay £${totalPrice.toFixed(2)}`
-                )}
+                {isPending ? <ButtonLoadingSpinner /> : isFreeEvent ? "Confirm Booking" : "Book"}
               </Button>
             </div>
           </div>

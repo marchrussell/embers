@@ -283,7 +283,7 @@ const ExperiencesContent = () => {
                         </div>
 
                         <p className="mb-5 text-[11px] tracking-wide text-[#E6DBC7]/40">
-                          Occurs: {event.recurrenceLabel}
+                          Location: {event.recurrenceLabel}
                           {event.venue && (
                             <span className="mt-0.5 block text-[#E6DBC7]/35">{event.venue}</span>
                           )}
