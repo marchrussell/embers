@@ -116,19 +116,20 @@ serve(async (req) => {
         const subPromise = stripe.subscriptions.retrieve(
           typeof session.subscription === "string" ? session.subscription : session.subscription.id
         );
-        const subTimeout = new Promise((_, reject) => 
+        const subTimeout = new Promise((_, reject) =>
           setTimeout(() => reject(new Error("Subscription retrieval timeout")), 10000)
         );
-        
+
         const subscription = await Promise.race([subPromise, subTimeout]) as any;
         subscriptionStatus = subscription.status;
         hasActiveSubscription = subscription.status === "active" || subscription.status === "trialing";
-        logStep("Subscription status checked", { 
+        logStep("Subscription status checked", {
           status: subscriptionStatus,
-          hasActive: hasActiveSubscription 
+          hasActive: hasActiveSubscription
         });
       } catch (subError) {
         logStep("Error checking subscription", { error: subError });
+        await captureException(subError, { function: "verify-payment-session", step: "subscription-retrieval" });
       }
     }
 
@@ -155,35 +156,44 @@ serve(async (req) => {
     });
 
     // CRITICAL: Save subscription data to database IMMEDIATELY
-    // This makes users appear in admin dashboard right after payment, before account creation
-    if (hasActiveSubscription && session.subscription) {
+    // This makes users appear in admin dashboard right after payment, before account creation.
+    // Gate on `verified` (not hasActiveSubscription) so a subscription-retrieval timeout
+    // doesn't silently skip writing the row — leaving no recovery path for the user.
+    if (verified && session.subscription) {
       try {
         const customerId = typeof session.customer === 'string' ? session.customer : session.customer.id;
-        
-        // Fetch full subscription details
-        const subscription = await stripe.subscriptions.retrieve(
-          typeof session.subscription === "string" ? session.subscription : session.subscription.id
-        );
-        logStep("Fetched subscription details", { subscriptionId: subscription.id });
+        const subscriptionId = typeof session.subscription === "string" ? session.subscription : session.subscription.id;
 
-        // Save to pending_subscriptions table so admin can see them immediately
-        const upsertData: any = {
+        // Fetch full subscription details to get price/period data.
+        // If this retrieval fails we still write a minimal row so the user isn't lost.
+        let upsertData: any = {
           email: customerEmail,
           stripe_customer_id: customerId,
-          stripe_subscription_id: subscription.id,
-          stripe_price_id: subscription.items.data[0].price.id,
+          stripe_subscription_id: subscriptionId,
           stripe_session_id: sessionId,
-          status: subscription.status,
-          cancel_at_period_end: subscription.cancel_at_period_end || false,
+          status: hasActiveSubscription ? subscriptionStatus : "active",
+          cancel_at_period_end: false,
           updated_at: new Date().toISOString(),
         };
 
-        // Only add dates if they exist
-        if (subscription.current_period_start) {
-          upsertData.current_period_start = new Date(subscription.current_period_start * 1000).toISOString();
-        }
-        if (subscription.current_period_end) {
-          upsertData.current_period_end = new Date(subscription.current_period_end * 1000).toISOString();
+        try {
+          const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+          logStep("Fetched subscription details", { subscriptionId: subscription.id });
+          upsertData = {
+            ...upsertData,
+            stripe_price_id: subscription.items.data[0].price.id,
+            status: subscription.status,
+            cancel_at_period_end: subscription.cancel_at_period_end || false,
+          };
+          if (subscription.current_period_start) {
+            upsertData.current_period_start = new Date(subscription.current_period_start * 1000).toISOString();
+          }
+          if (subscription.current_period_end) {
+            upsertData.current_period_end = new Date(subscription.current_period_end * 1000).toISOString();
+          }
+        } catch (detailError) {
+          logStep("Could not fetch full subscription details, writing minimal row", { error: detailError });
+          await captureException(detailError, { function: "verify-payment-session", step: "subscription-detail-retrieval" });
         }
 
         const { error: pendingError } = await supabaseAdmin
@@ -192,6 +202,7 @@ serve(async (req) => {
 
         if (pendingError) {
           logStep("Failed to save pending subscription", { error: pendingError });
+          await captureException(new Error(pendingError.message), { function: "verify-payment-session", step: "pending-upsert" });
         } else {
           logStep("Successfully saved pending subscription", { email: customerEmail });
           // Loops contact creation and paymentCompleted event are handled by
@@ -199,7 +210,7 @@ serve(async (req) => {
         }
       } catch (saveError) {
         logStep("Error saving subscription data", { error: saveError });
-        // Don't fail the request, just log the error
+        await captureException(saveError, { function: "verify-payment-session", step: "save-subscription-data" });
       }
     }
     

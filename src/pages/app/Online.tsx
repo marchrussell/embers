@@ -3,7 +3,6 @@ import { Suspense, useState } from "react";
 import { Footer } from "@/components/Footer";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
 import { NavBar } from "@/components/NavBar";
-import { SafetyDisclosureModal } from "@/components/SafetyDisclosureModal";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLiveSessionsData } from "@/hooks/useLiveSessionsData";
@@ -20,21 +19,12 @@ const Online = () => {
     hasSubscription,
     isAdmin,
     isTestUser,
-    hasAcceptedSafetyDisclosure,
-    acceptSafetyDisclosure,
-    user,
-    loading,
   } = useAuth();
   const { activeTab, handleTabChange } = useOnlineTab();
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
-  const showSafetyModal = !loading && !hasAcceptedSafetyDisclosure;
 
   const handleSubscriptionRequired = () => {
     setShowSubscriptionModal(true);
-  };
-
-  const handleSafetyAccept = () => {
-    acceptSafetyDisclosure();
   };
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const liveSessionsData = useLiveSessionsData();
@@ -84,14 +74,7 @@ const Online = () => {
           onClose={() => setShowSubscriptionModal(false)}
         />
       </Suspense>
-      {user && (
-        <SafetyDisclosureModal
-          isOpen={showSafetyModal}
-          onAccept={handleSafetyAccept}
-          userId={user.id}
-        />
-      )}
-      <SessionDetailModal
+<SessionDetailModal
         sessionId={selectedSessionId}
         open={!!selectedSessionId}
         onClose={() => setSelectedSessionId(null)}
