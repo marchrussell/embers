@@ -96,6 +96,16 @@ serve(async (req) => {
       
       if (migrateError) {
         logStep("Failed to migrate pending subscription", { error: migrateError.message });
+        await captureException(new Error(migrateError.message), { function: "check-subscription", step: "pending-migration" });
+        // Return subscribed from pending row — Stripe fallback can't be trusted when duplicate customers exist
+        return new Response(JSON.stringify({
+          subscribed: true,
+          product_id: pendingSub.stripe_price_id,
+          subscription_end: pendingSub.current_period_end,
+        }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 200,
+        });
       } else {
         // Delete from pending_subscriptions
         await supabaseAdmin
@@ -130,8 +140,8 @@ serve(async (req) => {
     }
 
     const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
-    const customers = await stripe.customers.list({ email: user.email, limit: 1 });
-    
+    const customers = await stripe.customers.list({ email: user.email, limit: 10 });
+
     if (customers.data.length === 0) {
       logStep("No customer found, updating unsubscribed state");
       return new Response(JSON.stringify({ subscribed: false }), {
@@ -140,8 +150,19 @@ serve(async (req) => {
       });
     }
 
-    const customerId = customers.data[0].id;
-    logStep("Found Stripe customer", { customerId });
+    // When duplicate Stripe customers exist for the same email, find the one with an active subscription.
+    let customerId = customers.data[0].id;
+    for (const customer of customers.data) {
+      const [activeSubs, trialingSubs] = await Promise.all([
+        stripe.subscriptions.list({ customer: customer.id, status: "active", limit: 1 }),
+        stripe.subscriptions.list({ customer: customer.id, status: "trialing", limit: 1 }),
+      ]);
+      if (activeSubs.data.length > 0 || trialingSubs.data.length > 0) {
+        customerId = customer.id;
+        break;
+      }
+    }
+    logStep("Found Stripe customer", { customerId, totalCustomers: customers.data.length });
 
     // Check for active, trialing, and past_due subscriptions
     const activeSubscriptions = await stripe.subscriptions.list({
@@ -222,6 +243,7 @@ serve(async (req) => {
       
       if (upsertError) {
         logStep("Failed to persist subscription to database", { error: upsertError.message });
+        await captureException(new Error(upsertError.message), { function: "check-subscription", step: "stripe-upsert" });
       } else {
         logStep("Successfully persisted subscription to database");
       }
