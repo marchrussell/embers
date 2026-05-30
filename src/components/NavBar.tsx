@@ -1,20 +1,19 @@
 // import mLogo from "@/assets/m-logo.png";
 // import marchLogo from "@/assets/march-logo.png";
 import { useQuery } from "@tanstack/react-query";
-import { Menu, User, X } from "lucide-react";
+import { User } from "lucide-react";
 import { memo, Suspense, useCallback, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { AuthSignInModal } from "@/components/AuthSignInModal";
 import { SubscriptionModal } from "@/components/modals/LazyModals";
-import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useOnlineTab } from "@/hooks/useOnlineTab";
 import { supabase } from "@/integrations/supabase/client";
 
 const ONLINE_TABS = [
   { id: "home", label: "Home" },
-  { id: "library", label: "All Sessions" },
+  { id: "library", label: "Discover" },
   { id: "courses", label: "Courses" },
   { id: "live", label: "Live" },
   { id: "in-person", label: "In Person" },
@@ -29,7 +28,6 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
 
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const { data: profileData } = useQuery({
     queryKey: ["profile", user?.id],
@@ -48,14 +46,23 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
     setShowSubscriptionModal(true);
   }, []);
 
-  const handleCloseMobileMenu = useCallback(() => {
-    setMobileMenuOpen(false);
-  }, []);
-
   const [scrolled, setScrolled] = useState(false);
+  const [pillsVisible, setPillsVisible] = useState(true);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 40);
+      if (y < 10) {
+        setPillsVisible(true);
+      } else if (y > lastY) {
+        setPillsVisible(false);
+      } else {
+        setPillsVisible(true);
+      }
+      lastY = y;
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -63,11 +70,6 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
   const firstName = profileData?.full_name?.split(" ")[0] ?? null;
   const displayName = user ? firstName || user.email?.split("@")[0] : null;
   const formattedDisplayName = displayName?.replace(/^./, (char) => char.toUpperCase()) ?? null;
-
-  const handleMobileTabClick = (path: string) => {
-    navigate(path);
-    handleCloseMobileMenu();
-  };
 
   return (
     <>
@@ -84,13 +86,58 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
       </Suspense>
 
       {/* Logo / HŌM title - fixed at top left, mobile & iPad only */}
-      <div className="fixed left-0 top-0 z-[60] pb-8 pl-6 pt-14 md:pb-10 md:pl-12 md:pt-20 lg:hidden lg:pt-24">
+      <div className="fixed left-0 top-0 z-[60] pb-2 pl-6 pt-14 md:pb-3 md:pl-12 md:pt-20 lg:hidden">
         {standalone ? (
           <span className="text-2xl font-bold text-[#E6DBC7]">HŌM</span>
         ) : (
           <Link to="/" className="text-5xl font-bold text-[#E6DBC7] hover:opacity-80">
             HŌM
           </Link>
+        )}
+      </div>
+
+      {/* Mobile pill navigation - fixed below HŌM logo */}
+      {!standalone && (
+        <div className={`fixed left-0 right-0 top-[88px] z-[60] transition-transform duration-300 md:top-[108px] lg:hidden ${pillsVisible ? "translate-y-0" : "-translate-y-[140px]"}`}>
+          <div className="flex gap-2 px-6 py-2">
+            {[
+              { id: "library", label: "Discover" },
+              { id: "courses", label: "Courses" },
+              { id: "live", label: "Live" },
+              { id: "in-person", label: "In Person" },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => handleTabChange(tab.id)}
+                className={`flex-1 whitespace-nowrap rounded-full py-2 text-sm font-light tracking-wide transition-colors duration-200 ${
+                  activeTab === tab.id
+                    ? "bg-[#E6DBC7] text-[#1A1A1A]"
+                    : "border border-[#E6DBC7]/25 bg-black/30 text-[#E6DBC7]/70 backdrop-blur-sm"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Profile / Sign In button - top right, mobile & iPad only */}
+      <div className="fixed right-0 top-0 z-[70] pb-8 pr-6 pt-14 md:pb-10 md:pr-12 md:pt-20 lg:hidden">
+        {user ? (
+          <Link
+            to="/online/profile"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-[#E6DBC7]/30 text-[#E6DBC7] transition-colors hover:border-[#E6DBC7]/50 hover:bg-white/[0.03]"
+          >
+            <User className="h-5 w-5" />
+          </Link>
+        ) : (
+          <button
+            onClick={() => setShowSignInModal(true)}
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-[#E6DBC7]/30 text-[#E6DBC7] transition-colors hover:border-[#E6DBC7]/50 hover:bg-white/[0.03]"
+          >
+            <User className="h-5 w-5" />
+          </button>
         )}
       </div>
 
@@ -170,133 +217,6 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
         </div>
       )}
 
-      {/* Mobile & iPad Menu Button with Overlay */}
-      {!standalone && (
-        <>
-          {/* Menu Toggle Button - Fixed position, always visible */}
-          <div className="fixed right-0 top-0 z-[70] pb-8 pr-6 pt-14 md:pb-10 md:pr-12 md:pt-20 lg:hidden lg:pt-24">
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 transition-opacity duration-300 hover:opacity-80"
-              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-            >
-              <div className="relative h-9 w-9 md:h-12 md:w-12">
-                {/* Menu Icon */}
-                <Menu
-                  className={`absolute inset-0 h-9 w-9 transition-[opacity,transform] duration-300 md:h-12 md:w-12 ${
-                    mobileMenuOpen
-                      ? "rotate-90 scale-75 opacity-0"
-                      : "rotate-0 scale-100 opacity-100"
-                  }`}
-                  style={{ color: "#E6DBC7" }}
-                />
-                {/* X Icon */}
-                <X
-                  className={`absolute inset-0 h-9 w-9 transition-[opacity,transform] duration-300 md:h-12 md:w-12 ${
-                    mobileMenuOpen
-                      ? "rotate-0 scale-100 opacity-100"
-                      : "-rotate-90 scale-75 opacity-0"
-                  }`}
-                  style={{ color: "#E6DBC7" }}
-                />
-              </div>
-            </button>
-          </div>
-
-          {/* Overlay Background */}
-          <div
-            className={`fixed inset-0 z-[65] bg-black/85 backdrop-blur-md transition-opacity duration-400 lg:hidden ${
-              mobileMenuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
-            }`}
-            onClick={handleCloseMobileMenu}
-          />
-
-          {/* Menu Content */}
-          <div
-            className={`fixed inset-0 z-[66] transition-opacity duration-400 lg:hidden ${
-              mobileMenuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
-            }`}
-          >
-            <div
-              className={`mt-44 flex flex-col gap-10 px-10 transition-transform duration-400 md:mt-44 md:gap-12 ${
-                mobileMenuOpen ? "translate-y-0" : "-translate-y-8"
-              }`}
-            >
-              <Link
-                to="/"
-                onClick={handleCloseMobileMenu}
-                className="font-editorial text-4xl font-light tracking-wide text-[#E6DBC7] transition-colors hover:text-white md:text-5xl"
-              >
-                Home
-              </Link>
-
-              <Link
-                to="/online?tab=library"
-                onClick={handleCloseMobileMenu}
-                className="font-editorial text-4xl font-light tracking-wide text-[#E6DBC7] transition-colors hover:text-white md:text-5xl"
-              >
-                All Sessions
-              </Link>
-
-              <Link
-                to="/online?tab=courses"
-                onClick={handleCloseMobileMenu}
-                className="font-editorial text-4xl font-light tracking-wide text-[#E6DBC7] transition-colors hover:text-white md:text-5xl"
-              >
-                Courses
-              </Link>
-
-              <Link
-                to="/online?tab=live"
-                onClick={handleCloseMobileMenu}
-                className="font-editorial text-4xl font-light tracking-wide text-[#E6DBC7] transition-colors hover:text-white md:text-5xl"
-              >
-                Live
-              </Link>
-
-              <Link
-                to="/experiences"
-                onClick={handleCloseMobileMenu}
-                className="font-editorial text-4xl font-light tracking-wide text-[#E6DBC7] transition-colors hover:text-white md:text-5xl"
-              >
-                In Person
-              </Link>
-
-              {isAdmin && (
-                <Link
-                  to="/admin"
-                  onClick={handleCloseMobileMenu}
-                  className="font-editorial text-4xl font-light tracking-wide text-[#E6DBC7] transition-colors hover:text-white md:text-5xl"
-                >
-                  Admin
-                </Link>
-              )}
-
-              <div className="mt-8 border-t border-[#E6DBC7]/20 pt-10 md:pt-12">
-                {user ? (
-                  <Link
-                    to="/online/profile"
-                    onClick={handleCloseMobileMenu}
-                    className="font-editorial text-3xl font-light tracking-wide text-white/90 transition-colors hover:text-white md:text-4xl"
-                  >
-                    {formattedDisplayName}
-                  </Link>
-                ) : (
-                  <Button
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      setShowSignInModal(true);
-                    }}
-                    className="rounded-full border-2 border-[#E6DBC7] bg-transparent px-10 py-5 text-lg font-light tracking-wide text-[#E6DBC7] transition-all hover:bg-[#E6DBC7]/10 md:py-6 md:text-xl"
-                  >
-                    Sign In
-                  </Button>
-                )}
-              </div>
-            </div>
-          </div>
-        </>
-      )}
     </>
   );
 });
