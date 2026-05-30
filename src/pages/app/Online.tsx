@@ -15,11 +15,7 @@ import LiveTab from "./online/LiveTab";
 import SessionDetailModal from "./SessionDetail";
 
 const Online = () => {
-  const {
-    hasSubscription,
-    isAdmin,
-    isTestUser,
-  } = useAuth();
+  const { hasSubscription, isAdmin, isTestUser } = useAuth();
   const { activeTab, handleTabChange } = useOnlineTab();
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
 
@@ -74,7 +70,7 @@ const Online = () => {
           onClose={() => setShowSubscriptionModal(false)}
         />
       </Suspense>
-<SessionDetailModal
+      <SessionDetailModal
         sessionId={selectedSessionId}
         open={!!selectedSessionId}
         onClose={() => setSelectedSessionId(null)}

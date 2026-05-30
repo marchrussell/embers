@@ -43,7 +43,7 @@ function DialogContent({
       <DialogPrimitive.Content
         ref={ref}
         className={cn(
-          "fixed left-[50%] top-[50%] z-[75] !m-0 grid max-h-dvh w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 overflow-y-auto rounded-xl border border-white/20 bg-black/30 p-10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-xl duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
+          "dialog-responsive fixed left-[50%] top-[50%] z-[75] !m-0 grid max-h-dvh w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 overflow-y-auto rounded-xl border border-white/20 bg-black/30 p-10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-xl duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
           className
         )}
         {...props}
@@ -51,7 +51,7 @@ function DialogContent({
         {children}
         {!hideClose && (
           <DialogPrimitive.Close className="absolute right-5 top-5 rounded-full bg-white/0 p-2 opacity-80 ring-offset-background transition-all hover:bg-white/[0.07] hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:text-muted-foreground">
-            <X className="z-10 h-8 w-8 text-white md:h-10 md:w-10" />
+            <X className="z-10 h-6 w-6 text-white" />
             <span className="sr-only">Close</span>
           </DialogPrimitive.Close>
         )}
@@ -114,5 +114,6 @@ export {
   DialogOverlay,
   DialogPortal,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 };
+

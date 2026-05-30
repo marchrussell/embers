@@ -146,10 +146,10 @@ export default function SessionDetailModal({
               <div className="font-light text-white/60">Session not found</div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-6 p-6 md:p-10 lg:grid-cols-[55%_45%] lg:gap-8 lg:p-12">
-              {/* Left side - Image with text overlay and action buttons */}
-              <div className="space-y-6">
-                <div className="relative aspect-[4/3] overflow-hidden rounded-xl p-6 md:aspect-square md:rounded-2xl md:p-7">
+            <div className="flex h-full flex-col md:grid md:grid-cols-1 md:gap-6 md:p-10 lg:grid-cols-[55%_45%] lg:gap-8 lg:p-12">
+              {/* Image zone */}
+              <div className="flex-none md:space-y-6">
+                <div className="relative h-[33dvh] overflow-hidden p-5 md:h-auto md:aspect-square md:rounded-2xl md:p-7">
                   <OptimizedImage
                     src={session.image_url}
                     alt={session.title}
@@ -161,7 +161,7 @@ export default function SessionDetailModal({
                   {/* Gradient overlays */}
                   <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-black/60" />
 
-                  {/* Title and info overlay - top left with internal padding */}
+                  {/* Title and info overlay */}
                   <div className="relative z-10">
                     <h2 className="mb-1 font-editorial text-2xl text-white md:mb-2 md:text-3xl">
                       {session.title}
@@ -178,8 +178,8 @@ export default function SessionDetailModal({
                     </div>
                   </div>
 
-                  {/* Action buttons - bottom with improved spacing */}
-                  <div className="absolute bottom-5 left-5 right-5 flex items-center gap-3 md:bottom-7 md:left-7 md:right-7 md:gap-4">
+                  {/* Action buttons inside image — desktop only */}
+                  <div className="absolute bottom-5 left-5 right-5 hidden items-center gap-3 md:flex md:bottom-7 md:left-7 md:right-7 md:gap-4">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -204,8 +204,6 @@ export default function SessionDetailModal({
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        // Featured class is always free for everyone
-                        // Check if locked (requires subscription and user doesn't have access)
                         const isLocked =
                           !isFeaturedClass &&
                           session.requires_subscription &&
@@ -216,7 +214,6 @@ export default function SessionDetailModal({
                           onShowSubscription?.();
                           onClose();
                         } else if (session.safety_note) {
-                          // Show safety popup if the class has a custom note or the reminder is toggled on
                           setShowSafetyModal(true);
                         } else {
                           setShowPlayer(true);
@@ -231,11 +228,10 @@ export default function SessionDetailModal({
                 </div>
               </div>
 
-              {/* Right side - Tabs for Explore, Description, and Safety */}
-              <div className="flex flex-col px-7 text-base md:px-10 lg:px-6 lg:pr-6">
-                {/* Category badges - aligned with content */}
+              {/* Tab content zone — scrollable, fills remaining space on mobile */}
+              <div className="flex flex-1 flex-col overflow-y-auto p-5 text-base md:overflow-visible md:p-0 md:px-10 lg:px-6 lg:pr-6">
                 {sessionCategories.length > 0 && (
-                  <div className="mb-5 flex flex-wrap gap-2">
+                  <div className="mb-6 flex flex-wrap gap-2 md:mb-5">
                     {sessionCategories.map((cat: any) => (
                       <span
                         key={cat.id}
@@ -247,8 +243,7 @@ export default function SessionDetailModal({
                   </div>
                 )}
 
-                {/* Tabs with improved styling */}
-                <Tabs defaultValue="description" className="flex-1">
+                <Tabs defaultValue="description" className="flex flex-1 flex-col">
                   <TabsList className="grid h-11 w-full grid-cols-2 rounded-lg bg-white/5 px-1.5 md:h-12">
                     <TabsTrigger
                       value="description"
@@ -264,29 +259,26 @@ export default function SessionDetailModal({
                     </TabsTrigger>
                   </TabsList>
 
-                  <div className="mt-8 grid">
+                  <div className="mt-6 flex flex-1 flex-col md:mt-8">
                     <TabsContent
                       forceMount
                       value="description"
-                      className="flex flex-col [grid-area:1/1] data-[state=inactive]:pointer-events-none data-[state=inactive]:invisible [&[hidden]]:block"
+                      className="flex flex-1 flex-col data-[state=inactive]:pointer-events-none data-[state=inactive]:hidden"
                     >
-                      {/* Description */}
                       <p className="font-light leading-[1.7] text-white/80">
                         {session.description}
                       </p>
 
-                      {/* Safety Card */}
-                      <div className="group relative mt-8 overflow-hidden md:mt-10">
+                      <div className="group relative mt-auto overflow-hidden pt-8 md:pt-10">
                         <div className="flex items-center gap-3 text-sm text-white md:items-start">
                           <div className="min-w-0 flex-1">
-                            <h4 className="flex items-baseline gap-4 font-light tracking-wide">
+                            <h4 className="flex items-center gap-4 font-light leading-none tracking-wide">
                               <AlertTriangle className="h-5 w-5 flex-shrink-0 text-yellow-400" />
                               Safety Reminder
                             </h4>
 
                             <div className="mt-4 space-y-4 border-white/[0.08] pt-4 md:border-t">
-                              {/* Practice safely */}
-                              <p className="font-light italic leading-relaxed text-white/70 md:text-sm">
+                              <p className="font-light italic leading-relaxed text-white/70">
                                 Practice in a safe, comfortable space - never in water, while
                                 driving, or operating machinery. Consult your doctor if you have
                                 health conditions or concerns and do not practice breath holds or
@@ -295,7 +287,6 @@ export default function SessionDetailModal({
                                 listen to your body and move at your own pace.
                               </p>
 
-                              {/* Full disclosure link */}
                               <button
                                 onClick={() => setShowFullSafetyDisclosure(true)}
                                 className="flex items-center gap-1.5 font-medium text-white/90 underline underline-offset-2 transition-colors hover:text-white md:mt-2 md:text-sm"
@@ -315,7 +306,7 @@ export default function SessionDetailModal({
                     <TabsContent
                       forceMount
                       value="explore"
-                      className="[grid-area:1/1] data-[state=inactive]:pointer-events-none data-[state=inactive]:invisible [&[hidden]]:block"
+                      className="flex flex-1 flex-col data-[state=inactive]:pointer-events-none data-[state=inactive]:hidden"
                     >
                       <h3 className="text-md mb-7 font-editorial font-light leading-[1.2] text-white">
                         If you're wanting more support
@@ -336,7 +327,7 @@ export default function SessionDetailModal({
 
                       <button
                         onClick={() => setShowArcCardsModal(true)}
-                        className="mt-8 inline-flex items-center gap-3 font-medium text-white transition-colors hover:text-white/80"
+                        className="mt-auto inline-flex items-center gap-3 pt-8 font-medium text-white transition-colors hover:text-white/80"
                       >
                         Learn about the ARC Method
                         <ArrowRight className="h-5 w-5" strokeWidth={1.5} />
@@ -344,6 +335,54 @@ export default function SessionDetailModal({
                     </TabsContent>
                   </div>
                 </Tabs>
+              </div>
+
+              {/* Bottom action bar — mobile only */}
+              <div className="flex flex-none items-center gap-3 border-t border-white/10 bg-black/95 p-5 md:hidden">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleFavourite();
+                  }}
+                  className="rounded-full bg-white/5 p-3 opacity-70 backdrop-blur-sm transition-all hover:bg-white/10 hover:opacity-100"
+                >
+                  <Heart
+                    className={`h-5 w-5 ${sessionId && isFavourite(sessionId) ? "fill-white text-white" : "text-white"}`}
+                    strokeWidth={1.5}
+                  />
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleShare(sessionId, session?.is_published);
+                  }}
+                  className="rounded-full bg-white/5 p-3 opacity-70 backdrop-blur-sm transition-all hover:bg-white/10 hover:opacity-100"
+                >
+                  <Share className="h-5 w-5 text-white" strokeWidth={1.5} />
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const isLocked =
+                      !isFeaturedClass &&
+                      session.requires_subscription &&
+                      !hasSubscription &&
+                      !isAdmin &&
+                      !isTestUser;
+                    if (isLocked) {
+                      onShowSubscription?.();
+                      onClose();
+                    } else if (session.safety_note) {
+                      setShowSafetyModal(true);
+                    } else {
+                      setShowPlayer(true);
+                    }
+                  }}
+                  className="flex h-[52px] flex-1 items-center justify-center gap-2.5 rounded-full border-2 border-white px-5 text-[15px] font-medium tracking-wide text-white transition-all hover:bg-white/10"
+                >
+                  <Play className="h-5 w-5" strokeWidth={1.5} fill="none" />
+                  Start Practice
+                </button>
               </div>
             </div>
           )}
