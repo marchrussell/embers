@@ -98,7 +98,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
       {/* Mobile pill navigation - fixed below HŌM logo */}
       {!standalone && (
         <div
-          className={`fixed left-0 right-0 top-[88px] z-[60] transition-transform duration-300 md:top-[108px] lg:hidden ${pillsVisible ? "translate-y-0" : "-translate-y-[140px]"}`}
+          className={`fixed left-0 right-0 top-[90px] z-[60] transition-transform duration-300 md:top-[108px] lg:hidden ${pillsVisible ? "translate-y-0" : "-translate-y-[140px]"}`}
         >
           <div className="flex gap-2 px-6 py-2">
             {[
