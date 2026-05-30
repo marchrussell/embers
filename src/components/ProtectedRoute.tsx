@@ -23,7 +23,10 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
       return;
     }
 
-    if (location.pathname.startsWith("/onboarding") || location.pathname.startsWith("/payment-success")) {
+    if (
+      location.pathname.startsWith("/onboarding") ||
+      location.pathname.startsWith("/payment-success")
+    ) {
       return;
     }
 
@@ -39,7 +42,15 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
       navigate("/onboarding", { replace: true });
       return;
     }
-  }, [user, loading, isAdmin, hasCompletedOnboarding, hasAcceptedSafetyDisclosure, navigate, location.pathname]);
+  }, [
+    user,
+    loading,
+    isAdmin,
+    hasCompletedOnboarding,
+    hasAcceptedSafetyDisclosure,
+    navigate,
+    location.pathname,
+  ]);
 
   // Show skeleton while checking auth status
   if (loading) {
@@ -52,12 +63,22 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   }
 
   // Authenticated but incomplete onboarding — admins bypass
-  if (!isAdmin && !hasCompletedOnboarding && !location.pathname.startsWith("/onboarding") && !location.pathname.startsWith("/payment-success")) {
+  if (
+    !isAdmin &&
+    !hasCompletedOnboarding &&
+    !location.pathname.startsWith("/onboarding") &&
+    !location.pathname.startsWith("/payment-success")
+  ) {
     return null;
   }
 
   // Completed onboarding but safety disclosure not yet accepted — admins bypass
-  if (!isAdmin && hasCompletedOnboarding && !hasAcceptedSafetyDisclosure && !location.pathname.startsWith("/onboarding")) {
+  if (
+    !isAdmin &&
+    hasCompletedOnboarding &&
+    !hasAcceptedSafetyDisclosure &&
+    !location.pathname.startsWith("/onboarding")
+  ) {
     return null;
   }
 

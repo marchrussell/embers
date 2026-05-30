@@ -148,8 +148,8 @@ export default function SessionDetailModal({
           ) : (
             <div className="flex h-full flex-col md:grid md:grid-cols-1 md:gap-6 md:p-10 lg:grid-cols-[55%_45%] lg:gap-8 lg:p-12">
               {/* Image zone */}
-              <div className="flex-none md:space-y-6">
-                <div className="relative h-[33dvh] overflow-hidden p-5 md:h-auto md:aspect-square md:rounded-2xl md:p-7">
+              <div className="flex-none md:h-full md:space-y-6">
+                <div className="relative h-[33dvh] overflow-hidden p-5 md:h-full md:rounded-2xl md:p-7">
                   <OptimizedImage
                     src={session.image_url}
                     alt={session.title}
@@ -179,7 +179,7 @@ export default function SessionDetailModal({
                   </div>
 
                   {/* Action buttons inside image — desktop only */}
-                  <div className="absolute bottom-5 left-5 right-5 hidden items-center gap-3 md:flex md:bottom-7 md:left-7 md:right-7 md:gap-4">
+                  <div className="absolute bottom-5 left-5 right-5 hidden items-center gap-3 md:bottom-7 md:left-7 md:right-7 md:flex md:gap-4">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();

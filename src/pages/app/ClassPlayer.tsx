@@ -19,7 +19,6 @@ import { Slider } from "@/components/ui/slider";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { getOptimizedVideoUrl, preloadVideoMetadata } from "@/lib/mediaOptimization";
-import { IMAGE_PRESETS } from "@/lib/supabaseImageOptimization";
 
 const ClassPlayer = () => {
   const { id } = useParams();
@@ -210,23 +209,23 @@ const ClassPlayer = () => {
         </Dialog>
       )}
 
-      <div className="relative min-h-screen overflow-hidden">
-        {/* Blurred Background */}
+      <div className="relative h-dvh overflow-hidden">
+        {/* Full-screen foreground image (crisp, not blurred) */}
         {classData?.image_url && (
-          <>
-            <OptimizedImage
-              src={classData.image_url}
-              alt=""
-              aria-hidden="true"
-              className="absolute inset-0 h-full w-full object-cover object-center"
-              responsive
-              showSkeleton={false}
-            />
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-3xl" />
-          </>
+          <OptimizedImage
+            src={classData.image_url}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover object-center"
+            responsive
+            showSkeleton={false}
+            priority={true}
+          />
         )}
+        {/* Gradient overlay — heavier at bottom for controls legibility */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/40" />
 
-        <div className="relative z-10 flex min-h-screen flex-col">
+        <div className="relative z-10 flex h-full flex-col">
           {/* Header */}
           <div className="p-6">
             <Button
@@ -238,126 +237,96 @@ const ClassPlayer = () => {
             </Button>
           </div>
 
-          {/* Main Content */}
-          <div className="flex flex-1 items-center justify-center px-8">
+          {/* Controls pinned to bottom */}
+          <div className="mt-auto px-8 pb-10 md:px-16 md:pb-14">
             {!hasStarted && !sessionNeedsSafetyDisclosure ? (
-              /* Pre-play info view */
-              <div className="mx-auto grid w-full max-w-4xl grid-cols-1 items-center gap-16 md:grid-cols-2">
-                <div className="relative aspect-square overflow-hidden rounded-2xl border border-white/20 shadow-2xl">
-                  <OptimizedImage
-                    src={classData?.image_url}
-                    alt={classData?.title}
-                    className="h-full w-full object-cover"
-                    optimizationOptions={IMAGE_PRESETS.hero}
-                    priority={true}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                </div>
-
-                <div className="space-y-6 text-center md:text-left">
+              /* Pre-play info overlay */
+              <div className="mx-auto max-w-2xl space-y-6">
+                <div className="space-y-3">
                   <h1 className="font-editorial text-4xl text-white md:text-5xl">
                     {classData?.title}
                   </h1>
-                  <p className="text-lg leading-relaxed text-white/90">{classData?.description}</p>
-                  <div className="space-y-2 text-white/70">
-                    <p className="text-base">
-                      Duration: {classData?.duration_minutes || 3} minutes
-                    </p>
-                    <p className="text-sm">Teacher: {classData?.teacher_name || "March Russell"}</p>
+                  <p className="text-base leading-relaxed text-white/80">{classData?.description}</p>
+                  <div className="flex gap-4 text-sm text-white/60">
+                    <span>{classData?.duration_minutes || 3} min</span>
+                    <span>{classData?.teacher_name || "March Russell"}</span>
                   </div>
-                  <Button
-                    onClick={handleStart}
-                    size="lg"
-                    className="mt-8 bg-white px-8 py-6 text-lg text-black hover:bg-white/90"
-                  >
-                    <Play className="mr-2 h-5 w-5" strokeWidth={1.5} fill="none" />
-                    Begin Class
-                  </Button>
                 </div>
+                <Button
+                  onClick={handleStart}
+                  size="lg"
+                  className="bg-white px-8 py-6 text-lg text-black hover:bg-white/90"
+                >
+                  <Play className="mr-2 h-5 w-5" strokeWidth={1.5} fill="none" />
+                  Begin Class
+                </Button>
               </div>
             ) : (
-              /* Active player view */
-              <div className="mx-auto w-full max-w-4xl">
-                <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-16">
-                  {/* Media card */}
-                  <div className="relative aspect-square overflow-hidden rounded-2xl border border-white/20 shadow-2xl">
-                    {isVideo ? (
-                      <video
-                        ref={videoRef}
-                        src={optimizedVideoUrl ?? undefined}
-                        className="h-full w-full object-cover"
-                        playsInline
-                      />
+              /* Active player overlay */
+              <div className="mx-auto max-w-2xl space-y-6">
+                {isVideo && (
+                  <video
+                    ref={videoRef}
+                    src={optimizedVideoUrl ?? undefined}
+                    className="absolute inset-0 h-full w-full object-cover"
+                    playsInline
+                  />
+                )}
+                <div className="space-y-1">
+                  <h2 className="font-editorial text-3xl text-white md:text-4xl">
+                    {classData?.title}
+                  </h2>
+                  <p className="text-sm text-white/60">
+                    Guided by {classData?.teacher_name || "March Russell"}
+                  </p>
+                </div>
+
+                {/* Progress Bar */}
+                <div className="space-y-2">
+                  <Slider
+                    value={[currentTime]}
+                    max={duration || 1}
+                    step={1}
+                    onValueChange={handleSliderChange}
+                    className="cursor-pointer"
+                  />
+                  <div className="flex justify-between text-sm text-white/70">
+                    <span>{formatTime(currentTime)}</span>
+                    <span>{formatTime(duration)}</span>
+                  </div>
+                </div>
+
+                {/* Controls */}
+                <div className="flex items-center gap-4">
+                  <Button
+                    onClick={handleRewind}
+                    variant="ghost"
+                    size="lg"
+                    className="h-12 w-12 rounded-full p-0 text-white hover:bg-white/10"
+                  >
+                    <SkipBack className="h-6 w-6" />
+                  </Button>
+
+                  <Button
+                    onClick={handlePlayPause}
+                    size="lg"
+                    className="h-16 w-16 rounded-full bg-white p-0 text-black hover:bg-white/90"
+                  >
+                    {isPlaying ? (
+                      <Pause className="h-8 w-8" strokeWidth={1.5} fill="none" />
                     ) : (
-                      <OptimizedImage
-                        src={classData?.image_url}
-                        alt={classData?.title}
-                        className="h-full w-full object-cover"
-                        optimizationOptions={IMAGE_PRESETS.hero}
-                      />
+                      <Play className="h-8 w-8" strokeWidth={1.5} fill="none" />
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                  </div>
+                  </Button>
 
-                  {/* Player Controls */}
-                  <div className="space-y-8">
-                    <div className="space-y-2 text-center md:text-left">
-                      <h2 className="font-editorial text-3xl text-white md:text-4xl">
-                        {classData?.title}
-                      </h2>
-                      <p className="text-sm text-white/60">
-                        Guided by {classData?.teacher_name || "March Russell"}
-                      </p>
-                    </div>
-
-                    {/* Progress Bar */}
-                    <div className="space-y-2">
-                      <Slider
-                        value={[currentTime]}
-                        max={duration || 1}
-                        step={1}
-                        onValueChange={handleSliderChange}
-                        className="cursor-pointer"
-                      />
-                      <div className="flex justify-between text-sm text-white/70">
-                        <span>{formatTime(currentTime)}</span>
-                        <span>{formatTime(duration)}</span>
-                      </div>
-                    </div>
-
-                    {/* Controls */}
-                    <div className="flex items-center justify-center gap-4 md:justify-start">
-                      <Button
-                        onClick={handleRewind}
-                        variant="ghost"
-                        size="lg"
-                        className="h-12 w-12 rounded-full p-0 text-white hover:bg-white/10"
-                      >
-                        <SkipBack className="h-6 w-6" />
-                      </Button>
-
-                      <Button
-                        onClick={handlePlayPause}
-                        size="lg"
-                        className="h-16 w-16 rounded-full bg-white p-0 text-black hover:bg-white/90"
-                      >
-                        {isPlaying ? (
-                          <Pause className="h-8 w-8" strokeWidth={1.5} fill="none" />
-                        ) : (
-                          <Play className="h-8 w-8" strokeWidth={1.5} fill="none" />
-                        )}
-                      </Button>
-
-                      <Button
-                        onClick={handleForward}
-                        variant="ghost"
-                        size="lg"
-                        className="h-12 w-12 rounded-full p-0 text-white hover:bg-white/10"
-                      >
-                        <SkipForward className="h-6 w-6" />
-                      </Button>
-                    </div>
-                  </div>
+                  <Button
+                    onClick={handleForward}
+                    variant="ghost"
+                    size="lg"
+                    className="h-12 w-12 rounded-full p-0 text-white hover:bg-white/10"
+                  >
+                    <SkipForward className="h-6 w-6" />
+                  </Button>
                 </div>
               </div>
             )}
