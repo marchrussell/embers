@@ -1,4 +1,4 @@
-import { Sparkles, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -48,7 +48,6 @@ export function PostSessionFeedbackModal({
       <DialogContent className="max-w-md border border-white/20 bg-black/30 backdrop-blur-xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 font-editorial text-2xl text-[#E6DBC7]">
-            <Sparkles className="h-6 w-6" />
             How was that session?
           </DialogTitle>
         </DialogHeader>

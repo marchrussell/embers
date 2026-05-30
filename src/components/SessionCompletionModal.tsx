@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { PostSessionFeedbackModal } from "@/components/PostSessionFeedbackModal";
 import { Button } from "@/components/ui/button";
@@ -9,6 +8,7 @@ import { useShareSession } from "@/hooks/useShareSession";
 interface SessionCompletionModalProps {
   open: boolean;
   onClose: () => void;
+  onDone?: () => void;
   userName: string;
   sessionId?: string;
   sessionTitle?: string;
@@ -23,29 +23,30 @@ interface SessionCompletionModalProps {
 export const SessionCompletionModal = ({
   open,
   onClose,
+  onDone,
   userName,
   sessionId,
   sessionTitle,
   userId,
   userStats,
 }: SessionCompletionModalProps) => {
-  const navigate = useNavigate();
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const { handleShare: shareSession } = useShareSession();
 
+  const dismiss = onDone ?? onClose;
+
   const handleDone = () => {
     if (sessionId && sessionTitle && userId) {
-      onClose();
+      dismiss();
       setShowFeedbackModal(true);
     } else {
-      onClose();
-      navigate("/online");
+      dismiss();
     }
   };
 
   const handleCloseFeedback = () => {
     setShowFeedbackModal(false);
-    navigate("/online");
+    dismiss();
   };
 
   const handleShare = () => {

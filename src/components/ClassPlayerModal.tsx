@@ -461,6 +461,7 @@ export const ClassPlayerModal = ({
           setShowCompletionModal(false);
           handleClose();
         }}
+        onDone={() => setShowCompletionModal(false)}
         userName={
           userProfile?.full_name?.split(" ")[0] ||
           userProfile?.first_name ||
