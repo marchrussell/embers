@@ -338,7 +338,9 @@ export const ClassPlayerModal = ({
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/50" />
 
                 {/* Top bar — actions left, close right */}
-                <div className={`relative z-10 flex items-center justify-between p-6 ${controlsClass}`}>
+                <div
+                  className={`relative z-10 flex items-center justify-between p-6 ${controlsClass}`}
+                >
                   <div className="flex items-center gap-2">
                     <button
                       onClick={(e) => {

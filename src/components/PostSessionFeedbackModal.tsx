@@ -45,7 +45,7 @@ export function PostSessionFeedbackModal({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="place-content-center max-w-md border border-white/20 bg-black/30 backdrop-blur-xl">
+      <DialogContent className="max-w-md place-content-center border border-white/20 bg-black/30 backdrop-blur-xl">
         <DialogHeader>
           <DialogTitle className="font-editorial text-2xl text-white">
             How was that session?

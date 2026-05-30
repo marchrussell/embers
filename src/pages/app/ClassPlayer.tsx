@@ -246,7 +246,9 @@ const ClassPlayer = () => {
                   <h1 className="font-editorial text-4xl text-white md:text-5xl">
                     {classData?.title}
                   </h1>
-                  <p className="text-base leading-relaxed text-white/80">{classData?.description}</p>
+                  <p className="text-base leading-relaxed text-white/80">
+                    {classData?.description}
+                  </p>
                   <div className="flex gap-4 text-sm text-white/60">
                     <span>{classData?.duration_minutes || 3} min</span>
                     <span>{classData?.teacher_name || "March Russell"}</span>
