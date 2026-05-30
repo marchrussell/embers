@@ -45,9 +45,9 @@ export function PostSessionFeedbackModal({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-md border border-white/20 bg-black/30 backdrop-blur-xl">
+      <DialogContent className="content-start max-w-md border border-white/20 bg-black/30 backdrop-blur-xl">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 font-editorial text-2xl text-[#E6DBC7]">
+          <DialogTitle className="font-editorial text-2xl text-white">
             How was that session?
           </DialogTitle>
         </DialogHeader>
@@ -120,7 +120,7 @@ export function PostSessionFeedbackModal({
             </Button>
             <Button
               onClick={handleSubmit}
-              className="flex-1 bg-gradient-to-r from-[hsl(var(--warm-amber))] to-[hsl(var(--warm-peach))]"
+              className="flex-1 bg-white text-black hover:bg-white/90"
               disabled={isSubmitting || !rating}
             >
               {isSubmitting ? <ButtonLoadingSpinner /> : "Submit"}

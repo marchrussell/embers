@@ -53,7 +53,7 @@ export function useSubmitSessionFeedback() {
       });
     },
     onSuccess: () => {
-      toast.success("Thank you for your feedback! 💛");
+      toast.success("Thank you for your feedback!");
     },
     onError: () => {
       toast.error("Failed to save feedback");
