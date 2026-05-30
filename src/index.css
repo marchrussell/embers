@@ -360,3 +360,20 @@
     transform: none !important;
   }
 }
+
+/* Mobile-first full-screen dialogs */
+@layer components {
+  .dialog-responsive {
+    @media (max-width: 767px) {
+      inset: 0 !important;
+      width: 100% !important;
+      height: 100dvh !important;
+      max-height: 100dvh !important;
+      max-width: 100% !important;
+      transform: none !important;
+      border-radius: 0 !important;
+      left: 0 !important;
+      top: 0 !important;
+    }
+  }
+}
