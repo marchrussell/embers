@@ -467,8 +467,7 @@ export const ClassPlayerModal = ({
           userProfile?.first_name ||
           user?.user_metadata?.full_name?.split(" ")[0] ||
           user?.user_metadata?.name?.split(" ")[0] ||
-          user?.email?.split("@")[0] ||
-          "there"
+          user?.email?.split("@")[0]
         }
         sessionId={classId || undefined}
         sessionTitle={classData?.title}
