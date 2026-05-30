@@ -57,7 +57,7 @@ export const SessionCompletionModal = ({
     <>
       <Dialog open={open} onOpenChange={onClose}>
         <DialogContent
-          className="content-start border border-white/20 bg-black/30 backdrop-blur-xl"
+          className="place-content-center border border-white/20 bg-black/30 backdrop-blur-xl"
           hideClose
         >
           <DialogHeader>
