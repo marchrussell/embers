@@ -50,8 +50,8 @@ function DialogContent({
       >
         {children}
         {!hideClose && (
-          <DialogPrimitive.Close className="absolute right-5 top-5 rounded-full bg-white/0 p-2 opacity-80 ring-offset-background transition-all hover:bg-white/[0.07] hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:text-muted-foreground">
-            <X className="z-10 h-6 w-6 text-white" />
+          <DialogPrimitive.Close className="absolute right-5 top-5 z-50 rounded-full bg-white/0 p-2 opacity-80 ring-offset-background transition-all hover:bg-white/[0.07] hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:text-muted-foreground">
+            <X className="h-6 w-6 text-white" />
             <span className="sr-only">Close</span>
           </DialogPrimitive.Close>
         )}
