@@ -677,3 +677,450 @@ export const RefundModal = ({ open, onOpenChange }: LegalModalProps) => (
     </section>
   </PolicyModalShell>
 );
+
+export const LegalModal = ({ open, onOpenChange }: LegalModalProps) => (
+  <PolicyModalShell
+    open={open}
+    onOpenChange={onOpenChange}
+    title="Legal Information"
+    subtitle="Last Updated: May 2026"
+  >
+    <div className="space-y-10 text-sm font-light leading-relaxed text-[#E6DBC7]/80">
+      {/* Section A */}
+      <div>
+        <h2 className="mb-6 font-editorial text-xl font-light tracking-wide text-[#E6DBC7]">
+          Section A — Terms of Use
+        </h2>
+
+        <section className="mb-6">
+          <h3 className="mb-3 text-xs font-light uppercase tracking-[0.15em] text-[#E6DBC7]/50">
+            1. About These Terms
+          </h3>
+          <p className="mb-3 text-[#E6DBC7]/80">
+            These Terms of Use ("Terms") govern your access to and use of HŌM ("HŌM," "we," "us,"
+            or "our"), including our website studiohom.co, mobile and web applications (the "App"),
+            membership services, digital courses, events, and all related content and features
+            (collectively, the "Services").
+          </p>
+          <p className="mb-3 text-[#E6DBC7]/80">
+            HŌM is owned and operated by March Collective Ltd, registered in England and Wales.
+          </p>
+          <p className="text-[#E6DBC7]/80">
+            By accessing or using our Services, you agree to these Terms. If you do not agree,
+            please discontinue use immediately.
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h3 className="mb-3 text-xs font-light uppercase tracking-[0.15em] text-[#E6DBC7]/50">
+            2. About HŌM
+          </h3>
+          <p className="mb-3 text-[#E6DBC7]/80">
+            HŌM provides breathwork, meditation, somatic exercises, yoga, movement, and wellness
+            education designed for informational and educational purposes only. Our Services do not
+            provide medical, psychological, or therapeutic advice or treatment.
+          </p>
+          <p className="text-[#E6DBC7]/80">
+            Always consult a qualified healthcare professional before beginning any new wellness,
+            breathwork, or somatic practice. Your use of our Services is entirely at your own risk.
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h3 className="mb-3 text-xs font-light uppercase tracking-[0.15em] text-[#E6DBC7]/50">
+            3. Membership and Accounts
+          </h3>
+          <p className="mb-3 text-[#E6DBC7]/80">
+            To access certain features, you must create an account by providing accurate and
+            complete information. By creating an account, you agree to:
+          </p>
+          <ul className="list-disc space-y-1 pl-6 text-[#E6DBC7]/70">
+            <li>Keep your login credentials secure and confidential</li>
+            <li>Maintain accurate, current information</li>
+            <li>Not create fraudulent or duplicate accounts</li>
+            <li>Not share your account with others</li>
+            <li>Be at least 16 years old (or have parental/guardian consent)</li>
+          </ul>
+          <p className="mt-3 text-[#E6DBC7]/80">
+            You are responsible for all activity under your account.
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h3 className="mb-3 text-xs font-light uppercase tracking-[0.15em] text-[#E6DBC7]/50">
+            4. Paid Services
+          </h3>
+          <p className="mb-3 text-[#E6DBC7]/80">
+            Purchases are processed through Stripe and other secure payment providers at
+            studiohom.co.
+          </p>
+          <p className="mb-2 font-light text-[#E6DBC7]/70">
+            <strong className="text-[#E6DBC7]/90">4.1 HŌM Membership (Subscription)</strong>
+          </p>
+          <ul className="mb-4 list-disc space-y-1 pl-6 text-[#E6DBC7]/70">
+            <li>HŌM is offered as monthly or annual subscription</li>
+            <li>Subscriptions renew automatically unless cancelled</li>
+            <li>
+              You may cancel anytime through account settings or by emailing{" "}
+              <a href="mailto:support@studiohom.co" className="text-[#EC9037] hover:underline">
+                support@studiohom.co
+              </a>
+            </li>
+            <li>Access continues until the end of your current billing period</li>
+          </ul>
+          <p className="mb-2 font-light text-[#E6DBC7]/70">
+            <strong className="text-[#E6DBC7]/90">4.2 Cooling‑Off Period</strong>
+          </p>
+          <p className="mb-4 text-[#E6DBC7]/80">
+            Under UK consumer law, you have a 14‑day cooling‑off period. By accessing content
+            immediately, you waive the right to withdraw during this period.
+          </p>
+          <p className="mb-2 font-light text-[#E6DBC7]/70">
+            <strong className="text-[#E6DBC7]/90">4.3 Refunds</strong>
+          </p>
+          <p className="mb-4 text-[#E6DBC7]/80">
+            Refunds are provided only if the service is faulty, unavailable, or not as described.
+            Refund requests may be made at{" "}
+            <a href="mailto:support@studiohom.co" className="text-[#EC9037] hover:underline">
+              support@studiohom.co
+            </a>
+            .
+          </p>
+          <p className="mb-2 font-light text-[#E6DBC7]/70">
+            <strong className="text-[#E6DBC7]/90">4.4 Price Changes</strong>
+          </p>
+          <p className="text-[#E6DBC7]/80">
+            We may modify pricing with advance notice. You may cancel before new pricing takes
+            effect.
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h3 className="mb-3 text-xs font-light uppercase tracking-[0.15em] text-[#E6DBC7]/50">
+            5. Digital Products and Content
+          </h3>
+          <p className="text-[#E6DBC7]/80">
+            Digital courses, toolkits, and programs are included as part of your HŌM membership or
+            app access. Some content may be released on scheduled dates or unlock as you progress
+            through the platform. All digital content is provided "as is" for educational purposes.
+            Access is tied to your active membership or account status.
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h3 className="mb-3 text-xs font-light uppercase tracking-[0.15em] text-[#E6DBC7]/50">
+            6. Events and Workshops
+          </h3>
+          <ul className="list-disc space-y-1 pl-6 text-[#E6DBC7]/70">
+            <li>Tickets are non‑refundable unless the event is cancelled by us</li>
+            <li>You may request transfer to another date at our discretion</li>
+            <li>
+              By attending, you confirm physical and emotional readiness and take full
+              responsibility for your wellbeing
+            </li>
+          </ul>
+        </section>
+
+        <section className="mb-6">
+          <h3 className="mb-3 text-xs font-light uppercase tracking-[0.15em] text-[#E6DBC7]/50">
+            7. Safety and Contraindications
+          </h3>
+          <p className="mb-3 text-[#E6DBC7]/80">By using our Services, you confirm that you:</p>
+          <ul className="list-disc space-y-1 pl-6 text-[#E6DBC7]/70">
+            <li>
+              Understand that breathwork and movement may produce physical or emotional responses
+            </li>
+            <li>Will practise within your limits and stop if unwell or uncomfortable</li>
+            <li>Have consulted a healthcare professional where appropriate</li>
+            <li>
+              Have read our Safety Information and agree to practise responsibly
+            </li>
+          </ul>
+        </section>
+
+        <section className="mb-6">
+          <h3 className="mb-3 text-xs font-light uppercase tracking-[0.15em] text-[#E6DBC7]/50">
+            8. Intellectual Property
+          </h3>
+          <p className="text-[#E6DBC7]/80">
+            All content, materials, sessions, trademarks, and software are owned by March
+            Collective Ltd. You receive a personal, non‑transferable, non‑commercial licence to
+            use the Services. You may not copy, modify, resell, distribute, or create derivative
+            works without our written consent.
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h3 className="mb-3 text-xs font-light uppercase tracking-[0.15em] text-[#E6DBC7]/50">
+            9. Service Availability
+          </h3>
+          <p className="text-[#E6DBC7]/80">
+            We aim to provide reliable access but cannot guarantee uninterrupted service. Temporary
+            downtime may occur for maintenance or technical issues.
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h3 className="mb-3 text-xs font-light uppercase tracking-[0.15em] text-[#E6DBC7]/50">
+            10. Limitation of Liability
+          </h3>
+          <p className="mb-3 text-[#E6DBC7]/80">
+            To the fullest extent permitted by law:
+          </p>
+          <ul className="list-disc space-y-1 pl-6 text-[#E6DBC7]/70">
+            <li>
+              March Collective Ltd is not liable for indirect, incidental, or consequential damages
+            </li>
+            <li>We make no guarantees of specific outcomes from any practice</li>
+            <li>
+              Total liability shall not exceed the amount you paid in the preceding 12 months
+            </li>
+          </ul>
+          <p className="mt-3 text-[#E6DBC7]/80">
+            Nothing in these Terms excludes liability where unlawful (e.g., negligence resulting
+            in death or injury).
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h3 className="mb-3 text-xs font-light uppercase tracking-[0.15em] text-[#E6DBC7]/50">
+            11. Termination
+          </h3>
+          <p className="text-[#E6DBC7]/80">
+            We may suspend or terminate your account for violations of these Terms. If we
+            discontinue Services, you will receive a pro‑rata refund for unused subscription
+            periods.
+          </p>
+        </section>
+
+        <section>
+          <h3 className="mb-3 text-xs font-light uppercase tracking-[0.15em] text-[#E6DBC7]/50">
+            12. Governing Law
+          </h3>
+          <p className="text-[#E6DBC7]/80">
+            These Terms are governed by the laws of England and Wales. Both parties submit to the
+            jurisdiction of English and Welsh courts.
+          </p>
+        </section>
+      </div>
+
+      {/* Divider */}
+      <div className="border-t border-[#E6DBC7]/10" />
+
+      {/* Section B */}
+      <div>
+        <h2 className="mb-6 font-editorial text-xl font-light tracking-wide text-[#E6DBC7]">
+          Section B — Privacy Policy
+        </h2>
+
+        <section className="mb-6">
+          <h3 className="mb-3 text-xs font-light uppercase tracking-[0.15em] text-[#E6DBC7]/50">
+            1. Who We Are
+          </h3>
+          <p className="text-[#E6DBC7]/80">
+            HŌM is owned and operated by March Collective Ltd, registered in England and Wales.
+            March Collective Ltd is the data controller responsible for personal information
+            described in this Policy.
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h3 className="mb-3 text-xs font-light uppercase tracking-[0.15em] text-[#E6DBC7]/50">
+            2. Information We Collect
+          </h3>
+          <p className="mb-2 text-[#E6DBC7]/70">
+            <strong className="text-[#E6DBC7]/90">a) Information You Provide</strong>
+          </p>
+          <ul className="mb-4 list-disc space-y-1 pl-6 text-[#E6DBC7]/70">
+            <li>Name, email address, password, and contact details</li>
+            <li>Billing and subscription data (processed by Stripe)</li>
+            <li>Support messages and event registration details</li>
+            <li>Optional wellness preferences (favourites, saved sessions, goals)</li>
+          </ul>
+          <p className="mb-2 text-[#E6DBC7]/70">
+            <strong className="text-[#E6DBC7]/90">b) Information Collected Automatically</strong>
+          </p>
+          <ul className="list-disc space-y-1 pl-6 text-[#E6DBC7]/70">
+            <li>IP address, device type, operating system</li>
+            <li>Log data (pages viewed, features used)</li>
+            <li>App usage and performance metrics</li>
+            <li>Cookies and tracking technologies</li>
+          </ul>
+        </section>
+
+        <section className="mb-6">
+          <h3 className="mb-3 text-xs font-light uppercase tracking-[0.15em] text-[#E6DBC7]/50">
+            3. Legal Bases for Processing (UK/EU Users)
+          </h3>
+          <p className="mb-3 text-[#E6DBC7]/80">We process data to:</p>
+          <ul className="list-disc space-y-1 pl-6 text-[#E6DBC7]/70">
+            <li>Perform contracts (memberships and purchases)</li>
+            <li>Comply with legal obligations (tax and accounting)</li>
+            <li>Pursue legitimate interests (platform operation and security)</li>
+            <li>Process with consent (analytics, communications, preferences)</li>
+          </ul>
+        </section>
+
+        <section className="mb-6">
+          <h3 className="mb-3 text-xs font-light uppercase tracking-[0.15em] text-[#E6DBC7]/50">
+            4. Third‑Party Providers
+          </h3>
+          <p className="text-[#E6DBC7]/80">
+            Key providers include Stripe (payments), Vercel (hosting), Supabase (database), and
+            PostHog (analytics). Each operates under data‑processing agreements and acts only on
+            our instruction.
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h3 className="mb-3 text-xs font-light uppercase tracking-[0.15em] text-[#E6DBC7]/50">
+            5. How We Use Your Information
+          </h3>
+          <p className="mb-3 text-[#E6DBC7]/80">We use personal data to:</p>
+          <ul className="list-disc space-y-1 pl-6 text-[#E6DBC7]/70">
+            <li>Provide, personalise, and improve HŌM</li>
+            <li>Manage accounts, subscriptions, and payments</li>
+            <li>Respond to support requests</li>
+            <li>Send service updates</li>
+            <li>Understand usage patterns for safety and performance</li>
+          </ul>
+          <p className="mt-3 text-[#E6DBC7]/80">We do not sell personal information.</p>
+        </section>
+
+        <section className="mb-6">
+          <h3 className="mb-3 text-xs font-light uppercase tracking-[0.15em] text-[#E6DBC7]/50">
+            6. Health & Wellness Information
+          </h3>
+          <p className="text-[#E6DBC7]/80">
+            HŌM does not collect clinical data. Any wellness insights you log are voluntary and
+            processed with consent. Do not upload medical records or diagnostic information.
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h3 className="mb-3 text-xs font-light uppercase tracking-[0.15em] text-[#E6DBC7]/50">
+            7. Data Retention & Deletion
+          </h3>
+          <p className="text-[#E6DBC7]/80">
+            We retain account data while your account is active. You may request deletion by
+            emailing{" "}
+            <a href="mailto:support@studiohom.co" className="text-[#EC9037] hover:underline">
+              support@studiohom.co
+            </a>
+            . Requests are completed within 30 days unless legal retention requirements apply.
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h3 className="mb-3 text-xs font-light uppercase tracking-[0.15em] text-[#E6DBC7]/50">
+            8. Data Security
+          </h3>
+          <p className="text-[#E6DBC7]/80">
+            We apply industry‑standard protections including encryption (HTTPS/TLS), secured
+            servers, and access controls. While no system is completely secure, we maintain
+            reasonable safeguards.
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h3 className="mb-3 text-xs font-light uppercase tracking-[0.15em] text-[#E6DBC7]/50">
+            9. International Data Transfers
+          </h3>
+          <p className="text-[#E6DBC7]/80">
+            Data may be processed outside your region using approved Standard Contractual Clauses,
+            the UK‑US Data Bridge, or equivalent safeguards.
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h3 className="mb-3 text-xs font-light uppercase tracking-[0.15em] text-[#E6DBC7]/50">
+            10. Your Privacy Rights
+          </h3>
+          <p className="mb-3 text-[#E6DBC7]/80">You may:</p>
+          <ul className="list-disc space-y-1 pl-6 text-[#E6DBC7]/70">
+            <li>Access, rectify, or delete personal data</li>
+            <li>Restrict or object to processing</li>
+            <li>Withdraw consent</li>
+            <li>Request data portability</li>
+            <li>
+              Lodge complaints with data‑protection authorities (e.g., UK ICO)
+            </li>
+          </ul>
+          <p className="mt-3 text-[#E6DBC7]/80">
+            Email requests to{" "}
+            <a href="mailto:support@studiohom.co" className="text-[#EC9037] hover:underline">
+              support@studiohom.co
+            </a>
+            .
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h3 className="mb-3 text-xs font-light uppercase tracking-[0.15em] text-[#E6DBC7]/50">
+            11. California/U.S. Residents
+          </h3>
+          <p className="text-[#E6DBC7]/80">
+            Under CCPA/CPRA, you may request access, correction, deletion, and opt‑out of data
+            sales (we do not sell data).
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h3 className="mb-3 text-xs font-light uppercase tracking-[0.15em] text-[#E6DBC7]/50">
+            12. Children & Age Restrictions
+          </h3>
+          <p className="text-[#E6DBC7]/80">
+            HŌM is for individuals aged 16 and over. We do not knowingly collect data from
+            children under 16.
+          </p>
+        </section>
+
+        <section className="mb-6">
+          <h3 className="mb-3 text-xs font-light uppercase tracking-[0.15em] text-[#E6DBC7]/50">
+            13. Changes to This Policy
+          </h3>
+          <p className="text-[#E6DBC7]/80">
+            We may update this Policy periodically, with advance notice for material changes via
+            email or in‑app notification.
+          </p>
+        </section>
+
+        <section>
+          <h3 className="mb-3 text-xs font-light uppercase tracking-[0.15em] text-[#E6DBC7]/50">
+            Contact Information
+          </h3>
+          <p className="mb-2 text-[#E6DBC7]/80">
+            For questions about these Terms, Privacy Policy, or your data:
+          </p>
+          <p className="mb-1 text-[#E6DBC7]/70">
+            📧{" "}
+            <a href="mailto:support@studiohom.co" className="text-[#EC9037] hover:underline">
+              support@studiohom.co
+            </a>
+          </p>
+          <p className="mb-4 text-[#E6DBC7]/70">
+            🌐{" "}
+            <a href="https://studiohom.co" className="text-[#EC9037] hover:underline">
+              studiohom.co
+            </a>
+          </p>
+          <p className="mb-2 text-[#E6DBC7]/70">
+            UK/EU users may contact the UK Information Commissioner's Office{" "}
+            <a href="https://ico.org.uk" className="text-[#EC9037] hover:underline">
+              ico.org.uk
+            </a>
+            .
+          </p>
+          <p className="text-[#E6DBC7]/50">
+            March Collective Ltd, registered in England and Wales. Legal details available upon
+            request at{" "}
+            <a href="mailto:support@studiohom.co" className="text-[#EC9037] hover:underline">
+              support@studiohom.co
+            </a>
+            .
+          </p>
+        </section>
+      </div>
+    </div>
+  </PolicyModalShell>
+);

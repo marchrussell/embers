@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 import { FadeUp } from "@/components/FadeUp";
-import { PrivacyModal, TermsModal } from "@/components/LegalModals";
+import { LegalModal } from "@/components/LegalModals";
 import {
   ChangeEmailDialog,
   ChangePasswordDialog,
@@ -49,8 +49,7 @@ interface ProfileContentProps {
 const ProfileContent = ({ userId, user, signOut }: ProfileContentProps) => {
   const navigate = useNavigate();
   const [showSafetyModal, setShowSafetyModal] = useState(false);
-  const [showTermsModal, setShowTermsModal] = useState(false);
-  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [showLegalModal, setShowLegalModal] = useState(false);
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
   const [showEmailDialog, setShowEmailDialog] = useState(false);
   const [showFeedbackDialog, setShowFeedbackDialog] = useState(false);
@@ -233,8 +232,7 @@ const ProfileContent = ({ userId, user, signOut }: ProfileContentProps) => {
   return (
     <>
       <SafetyInformationModal open={showSafetyModal} onOpenChange={setShowSafetyModal} />
-      <TermsModal open={showTermsModal} onOpenChange={setShowTermsModal} />
-      <PrivacyModal open={showPrivacyModal} onOpenChange={setShowPrivacyModal} />
+      <LegalModal open={showLegalModal} onOpenChange={setShowLegalModal} />
 
       <div className="min-h-screen bg-background pb-24">
         {/* Header with Back Button */}
@@ -356,8 +354,7 @@ const ProfileContent = ({ userId, user, signOut }: ProfileContentProps) => {
                 Data & Privacy
               </h2>
               <div className="space-y-2">
-                <ProfileMenuItem label="Privacy Policy" onClick={() => setShowPrivacyModal(true)} />
-                <ProfileMenuItem label="Terms of Use" onClick={() => setShowTermsModal(true)} />
+                <ProfileMenuItem label="Legal" onClick={() => setShowLegalModal(true)} />
                 <ProfileMenuItem
                   label={isExporting ? "Exporting..." : "Download My Data"}
                   onClick={exportUserData}

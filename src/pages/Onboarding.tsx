@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-import { SafetyInformationContent } from "@/components/SafetyInformationContent";
+import { OnboardingSafetyContent } from "@/components/OnboardingSafetyContent";
 import { ButtonLoadingSpinner } from "@/components/skeletons";
 import { SubscriptionModal } from "@/components/SubscriptionModal";
 import { Button } from "@/components/ui/button";
@@ -100,7 +100,7 @@ const Onboarding = () => {
         </CardHeader>
         <CardContent className="px-5 pb-8 sm:px-6 sm:pb-10 md:px-8 md:pb-12">
           <div className="mb-6 max-h-[50vh] overflow-y-auto border-t border-foreground/10 pr-3 pt-6 text-sm font-light leading-relaxed text-foreground/80 sm:mb-8 sm:max-h-[60vh] sm:pr-4 sm:pt-7 sm:text-base md:pt-8">
-            <SafetyInformationContent />
+            <OnboardingSafetyContent />
           </div>
 
           <div className="mb-6 flex items-start space-x-3 rounded-lg border border-[#E6DBC7]/20 bg-white/5 p-4 sm:mb-8 sm:space-x-4 sm:p-5">
@@ -114,7 +114,7 @@ const Onboarding = () => {
               htmlFor="safety"
               className="cursor-pointer text-sm font-light leading-relaxed text-foreground/90 sm:text-base md:text-base"
             >
-              I have read and accept the safety disclosure
+              I Accept — I have read and understood the safety guidelines and agree to the terms above
             </label>
           </div>
 

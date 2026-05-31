@@ -11,7 +11,7 @@ export const SafetyInformationModal = ({ open, onOpenChange }: SafetyInformation
     open={open}
     onOpenChange={onOpenChange}
     title="Safety Information"
-    subtitle="Please read all of the information below before continuing."
+    subtitle="Please read all of the information below before continuing. By accessing HŌM you confirm that you have read, understood, and accepted these terms."
   >
     <SafetyInformationContent />
   </PolicyModalShell>

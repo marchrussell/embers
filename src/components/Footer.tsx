@@ -4,13 +4,12 @@ import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
 
-import { PrivacyModal, RefundModal, TermsModal } from "./LegalModals";
+import { LegalModal, RefundModal } from "./LegalModals";
 import { ContactFormModal } from "./modals/LazyModals";
 
 export const Footer = memo(() => {
   const [showContactModal, setShowContactModal] = useState(false);
-  const [showTermsModal, setShowTermsModal] = useState(false);
-  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [showLegalModal, setShowLegalModal] = useState(false);
   const [showRefundModal, setShowRefundModal] = useState(false);
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -19,12 +18,8 @@ export const Footer = memo(() => {
     setShowContactModal(open);
   }, []);
 
-  const handleTermsModalChange = useCallback((open: boolean) => {
-    setShowTermsModal(open);
-  }, []);
-
-  const handlePrivacyModalChange = useCallback((open: boolean) => {
-    setShowPrivacyModal(open);
+  const handleLegalModalChange = useCallback((open: boolean) => {
+    setShowLegalModal(open);
   }, []);
 
   const handleRefundModalChange = useCallback((open: boolean) => {
@@ -57,8 +52,7 @@ export const Footer = memo(() => {
       <Suspense fallback={null}>
         <ContactFormModal open={showContactModal} onOpenChange={handleContactModalChange} />
       </Suspense>
-      <TermsModal open={showTermsModal} onOpenChange={handleTermsModalChange} />
-      <PrivacyModal open={showPrivacyModal} onOpenChange={handlePrivacyModalChange} />
+      <LegalModal open={showLegalModal} onOpenChange={handleLegalModalChange} />
       <RefundModal open={showRefundModal} onOpenChange={handleRefundModalChange} />
 
       <footer className="relative flex flex-col bg-[#E6E0D4] pt-6 font-unica md:min-h-[240px] md:pb-10 md:pt-8 lg:min-h-[280px] lg:pb-12 lg:pt-10">
@@ -102,16 +96,10 @@ export const Footer = memo(() => {
                 </span>
                 <div className="flex flex-col gap-3">
                   <button
-                    onClick={() => setShowPrivacyModal(true)}
+                    onClick={() => setShowLegalModal(true)}
                     className="flex min-h-[44px] items-center gap-2 text-[13px] tracking-[0.02em] text-[#1A1A1A] transition-opacity duration-200 md:hover:opacity-60"
                   >
-                    Privacy <ArrowRight className="h-5 w-5" />
-                  </button>
-                  <button
-                    onClick={() => setShowTermsModal(true)}
-                    className="flex min-h-[44px] items-center gap-2 text-[13px] tracking-[0.02em] text-[#1A1A1A] transition-opacity duration-200 md:hover:opacity-60"
-                  >
-                    Terms <ArrowRight className="h-5 w-5" />
+                    Legal <ArrowRight className="h-5 w-5" />
                   </button>
                   <button
                     onClick={() => setShowRefundModal(true)}
@@ -207,16 +195,10 @@ export const Footer = memo(() => {
             {/* Legal Links */}
             <div className="flex flex-wrap items-center justify-end gap-x-10">
               <button
-                onClick={() => setShowPrivacyModal(true)}
+                onClick={() => setShowLegalModal(true)}
                 className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.06em] text-[#1A1A1A] transition-opacity duration-200 hover:opacity-60"
               >
-                Privacy Policy <ArrowRight className="h-5 w-5" />
-              </button>
-              <button
-                onClick={() => setShowTermsModal(true)}
-                className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.06em] text-[#1A1A1A] transition-opacity duration-200 hover:opacity-60"
-              >
-                Terms of Service <ArrowRight className="h-5 w-5" />
+                Legal <ArrowRight className="h-5 w-5" />
               </button>
               <button
                 onClick={() => setShowRefundModal(true)}

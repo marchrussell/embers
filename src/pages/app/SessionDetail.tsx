@@ -279,12 +279,12 @@ export default function SessionDetailModal({
 
                             <div className="mt-4 space-y-4 border-white/[0.08] pt-4 md:border-t">
                               <p className="font-light italic leading-relaxed text-white/70">
-                                Practice in a safe, comfortable space - never in water, while
-                                driving, or operating machinery. Consult your doctor if you have
-                                health conditions or concerns and do not practice breath holds or
-                                fast-paced breathing if pregnant, or if you have epilepsy, serious
-                                mental health conditions, or significant medical issues. Always
-                                listen to your body and move at your own pace.
+                                Practise in a safe, comfortable space - never in water, while
+                                driving, or operating machinery. Consult a doctor if you have
+                                medical conditions or concerns. Avoid breath holds or fast‑paced
+                                breathing if you are pregnant, have epilepsy, serious mental‑health
+                                conditions, or significant medical issues. Always listen to your
+                                body and move at your own pace.
                               </p>
 
                               <button

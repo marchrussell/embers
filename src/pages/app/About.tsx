@@ -3,7 +3,7 @@ import { useState } from "react";
 import { FadeUp } from "@/components/FadeUp";
 import { FeedbackSection } from "@/components/FeedbackSection";
 import { Footer } from "@/components/Footer";
-import { PrivacyModal, TermsModal } from "@/components/LegalModals";
+import { LegalModal } from "@/components/LegalModals";
 import { NavBar } from "@/components/NavBar";
 import { OptimizedImage } from "@/components/OptimizedImage";
 import { SafetyInformationModal } from "@/components/SafetyInformationModal";
@@ -37,8 +37,7 @@ const BioCopy = () => (
 );
 
 const About = () => {
-  const [showTerms, setShowTerms] = useState(false);
-  const [showPrivacy, setShowPrivacy] = useState(false);
+  const [showLegal, setShowLegal] = useState(false);
   const [showSafety, setShowSafety] = useState(false);
 
   return (
@@ -251,8 +250,7 @@ const About = () => {
 
       <Footer />
 
-      <TermsModal open={showTerms} onOpenChange={setShowTerms} />
-      <PrivacyModal open={showPrivacy} onOpenChange={setShowPrivacy} />
+      <LegalModal open={showLegal} onOpenChange={setShowLegal} />
       <SafetyInformationModal open={showSafety} onOpenChange={setShowSafety} />
     </div>
   );
