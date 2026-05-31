@@ -85,7 +85,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
       </Suspense>
 
       {/* Logo / HŌM title - fixed at top left, mobile & iPad only */}
-      <div className="fixed left-0 top-0 z-[60] pb-2 pl-6 pt-14 md:pb-3 md:pl-12 md:pt-20 lg:hidden">
+      <div className="fixed left-0 top-0 z-[60] pb-2 pl-6 pt-14 md:pb-3 md:pl-12 md:pt-20 tablet:hidden">
         {standalone ? (
           <span className="text-2xl font-bold text-[#E6DBC7]">HŌM</span>
         ) : (
@@ -98,7 +98,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
       {/* Mobile pill navigation - fixed below HŌM logo */}
       {!standalone && (
         <div
-          className={`fixed left-0 right-0 top-[90px] z-[60] transition-transform duration-300 md:top-[108px] lg:hidden ${pillsVisible ? "translate-y-0" : "-translate-y-[140px]"}`}
+          className={`fixed left-0 right-0 top-[90px] z-[60] transition-transform duration-300 md:top-[108px] tablet:hidden ${pillsVisible ? "translate-y-0" : "-translate-y-[140px]"}`}
         >
           <div className="flex gap-2 px-6 py-2">
             {[
@@ -124,7 +124,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
       )}
 
       {/* Profile / Sign In button - top right, mobile & iPad only */}
-      <div className="fixed right-0 top-0 z-[70] pb-8 pr-6 pt-14 md:pb-10 md:pr-12 md:pt-20 lg:hidden">
+      <div className="fixed right-0 top-0 z-[70] pb-8 pr-6 pt-14 md:pb-10 md:pr-12 md:pt-20 tablet:hidden">
         {user ? (
           <Link
             to="/online/profile"
@@ -144,7 +144,7 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
 
       {/* Full width navigation layout - desktop - hide entirely in standalone mode */}
       {!standalone && (
-        <div className="fixed left-0 right-0 top-0 z-50 hidden px-8 pt-10 transition-all duration-500 md:px-20 md:pt-12 lg:block">
+        <div className="fixed left-0 right-0 top-0 z-50 hidden px-8 pt-10 transition-all duration-500 md:px-20 md:pt-12 tablet:block">
           <div
             className="absolute inset-0 bg-gradient-to-b from-black/5 to-transparent"
             style={{ height: "140px" }}

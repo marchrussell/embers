@@ -140,7 +140,7 @@ export function ArcCardsModal({ open, onOpenChange }: ArcCardsModalProps) {
           </button>
 
           <div className="px-8 py-[12vh] md:px-14 md:py-[14vh] lg:px-20 lg:py-[16vh]">
-            <div className="grid w-full grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-6">
+            <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
               <ArcCard
                 backgroundImage={arcSelfStudyBg}
                 icon={<Leaf className="h-5 w-5 text-white" />}
