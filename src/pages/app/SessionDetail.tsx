@@ -148,8 +148,8 @@ export default function SessionDetailModal({
           ) : (
             <div className="flex h-full flex-col md:grid md:grid-cols-1 md:gap-6 md:p-10 lg:grid-cols-[55%_45%] lg:gap-8 lg:p-12">
               {/* Image zone */}
-              <div className="flex-none md:h-full md:space-y-6">
-                <div className="relative h-[33dvh] overflow-hidden p-5 md:h-full md:rounded-2xl md:p-7">
+              <div className="flex-none md:space-y-6 lg:h-full">
+                <div className="relative aspect-square overflow-hidden p-5 md:rounded-2xl md:p-7 lg:h-full">
                   <OptimizedImage
                     src={session.image_url}
                     alt={session.title}
@@ -179,7 +179,7 @@ export default function SessionDetailModal({
                   </div>
 
                   {/* Action buttons inside image — desktop only */}
-                  <div className="absolute bottom-5 left-5 right-5 hidden items-center gap-3 md:bottom-7 md:left-7 md:right-7 md:flex md:gap-4">
+                  <div className="absolute bottom-5 left-5 right-5 flex items-center gap-3 md:bottom-7 md:left-7 md:right-7 md:gap-4">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -269,7 +269,7 @@ export default function SessionDetailModal({
                         {session.description}
                       </p>
 
-                      <div className="group relative mt-auto overflow-hidden pt-8 md:pt-10">
+                      <div className="group relative overflow-hidden pt-8 md:mt-auto md:pt-10">
                         <div className="flex items-center gap-3 text-sm text-white md:items-start">
                           <div className="min-w-0 flex-1">
                             <h4 className="flex items-center gap-4 font-light leading-none tracking-wide">
@@ -335,54 +335,6 @@ export default function SessionDetailModal({
                     </TabsContent>
                   </div>
                 </Tabs>
-              </div>
-
-              {/* Bottom action bar — mobile only */}
-              <div className="flex flex-none items-center gap-3 border-t border-white/10 bg-black/95 p-5 md:hidden">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleFavourite();
-                  }}
-                  className="rounded-full bg-white/5 p-3 opacity-70 backdrop-blur-sm transition-all hover:bg-white/10 hover:opacity-100"
-                >
-                  <Heart
-                    className={`h-5 w-5 ${sessionId && isFavourite(sessionId) ? "fill-white text-white" : "text-white"}`}
-                    strokeWidth={1.5}
-                  />
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleShare(sessionId, session?.is_published);
-                  }}
-                  className="rounded-full bg-white/5 p-3 opacity-70 backdrop-blur-sm transition-all hover:bg-white/10 hover:opacity-100"
-                >
-                  <Share className="h-5 w-5 text-white" strokeWidth={1.5} />
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    const isLocked =
-                      !isFeaturedClass &&
-                      session.requires_subscription &&
-                      !hasSubscription &&
-                      !isAdmin &&
-                      !isTestUser;
-                    if (isLocked) {
-                      onShowSubscription?.();
-                      onClose();
-                    } else if (session.safety_note) {
-                      setShowSafetyModal(true);
-                    } else {
-                      setShowPlayer(true);
-                    }
-                  }}
-                  className="flex h-[52px] flex-1 items-center justify-center gap-2.5 rounded-full border-2 border-white px-5 text-[15px] font-medium tracking-wide text-white transition-all hover:bg-white/10"
-                >
-                  <Play className="h-5 w-5" strokeWidth={1.5} fill="none" />
-                  Start Practice
-                </button>
               </div>
             </div>
           )}

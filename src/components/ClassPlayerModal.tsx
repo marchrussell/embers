@@ -159,7 +159,7 @@ export const ClassPlayerModal = ({
         }}
       >
         <DialogContent
-          className="max-h-[calc(90dvh-3rem)] w-[98%] max-w-6xl overflow-hidden overscroll-contain scroll-smooth rounded-xl border border-white/30 bg-black/75 p-0 backdrop-blur-xl md:h-auto md:w-[95%]"
+          className="max-h-[calc(90dvh-3rem)] w-[98%] max-w-6xl overflow-hidden overscroll-contain scroll-smooth rounded-xl border-0 bg-black/75 p-0 backdrop-blur-xl md:h-auto md:w-[95%] md:border md:border-white/30"
           hideClose
         >
           <DialogTitle className="sr-only">{classData?.title || "Audio Player"}</DialogTitle>
@@ -262,62 +262,59 @@ export const ClassPlayerModal = ({
                   </div>
                 )}
 
-                {/* Main Content - Skip + Play/Pause + Skip */}
-                <div className="relative z-10 flex flex-1 items-center justify-center py-8">
+                {/* Spacer */}
+                <div className="flex-1" />
+
+                {/* Controls + Progress Bar pinned to bottom */}
+                <div className="relative z-10 space-y-6 px-10 pb-8">
                   {mediaError ? (
-                    <p className="px-6 text-center text-sm font-light text-[#E6DBC7]/70">
-                      {mediaError}
-                    </p>
+                    <p className="text-center text-sm font-light text-[#E6DBC7]/70">{mediaError}</p>
                   ) : (
-                    <div className={`flex items-center gap-10 ${playBtnClass}`}>
-                      <button
-                        onClick={handleSkipBack}
-                        className="flex flex-col items-center gap-1.5 text-[#E6DBC7] transition-opacity hover:opacity-70"
-                      >
-                        <SkipBack className="h-11 w-11" strokeWidth={1.5} />
-                        <span className="text-sm font-light">10</span>
-                      </button>
-                      <Button
-                        onClick={handlePlayPause}
-                        variant="outline"
-                        size="lg"
-                        className="h-28 w-28 rounded-full border-2 border-[#E6DBC7] bg-[#E6DBC7]/5 p-0 text-[#E6DBC7] backdrop-blur-xl transition-colors duration-300 hover:bg-[#E6DBC7]/10"
-                      >
-                        {isPlaying ? (
-                          <Pause className="h-11 w-11" strokeWidth={1.5} fill="none" />
-                        ) : (
-                          <Play className="ml-1 h-11 w-11" strokeWidth={1.5} fill="none" />
-                        )}
-                      </Button>
-                      <button
-                        onClick={handleSkipForward}
-                        className="flex flex-col items-center gap-1.5 text-[#E6DBC7] transition-opacity hover:opacity-70"
-                      >
-                        <SkipForward className="h-11 w-11" strokeWidth={1.5} />
-                        <span className="text-sm font-light">10</span>
-                      </button>
-                    </div>
+                    <>
+                      <div className={`flex items-center justify-center gap-10 ${playBtnClass}`}>
+                        <button
+                          onClick={handleSkipBack}
+                          className="flex flex-col items-center gap-1.5 text-[#E6DBC7] transition-opacity hover:opacity-70"
+                        >
+                          <SkipBack className="h-11 w-11" strokeWidth={1.5} />
+                          <span className="text-sm font-light">10</span>
+                        </button>
+                        <Button
+                          onClick={handlePlayPause}
+                          variant="outline"
+                          size="lg"
+                          className="h-28 w-28 rounded-full border-2 border-[#E6DBC7] bg-[#E6DBC7]/5 p-0 text-[#E6DBC7] backdrop-blur-xl transition-colors duration-300 hover:bg-[#E6DBC7]/10"
+                        >
+                          {isPlaying ? (
+                            <Pause className="h-11 w-11" strokeWidth={1.5} fill="none" />
+                          ) : (
+                            <Play className="ml-1 h-11 w-11" strokeWidth={1.5} fill="none" />
+                          )}
+                        </Button>
+                        <button
+                          onClick={handleSkipForward}
+                          className="flex flex-col items-center gap-1.5 text-[#E6DBC7] transition-opacity hover:opacity-70"
+                        >
+                          <SkipForward className="h-11 w-11" strokeWidth={1.5} />
+                          <span className="text-sm font-light">10</span>
+                        </button>
+                      </div>
+                      <div className="space-y-2">
+                        <Slider
+                          value={[currentTime]}
+                          max={duration}
+                          step={1}
+                          onValueChange={handleSliderChange}
+                          className="cursor-pointer touch-none"
+                        />
+                        <div className="flex justify-between text-xs font-light text-[#E6DBC7]/70">
+                          <span>{formatTime(currentTime)}</span>
+                          <span>{formatTime(duration)}</span>
+                        </div>
+                      </div>
+                    </>
                   )}
                 </div>
-
-                {/* Progress Bar - Bottom (always visible) */}
-                {!mediaError && (
-                  <div className="relative z-10 px-4 pb-6">
-                    <div className="space-y-2">
-                      <Slider
-                        value={[currentTime]}
-                        max={duration}
-                        step={1}
-                        onValueChange={handleSliderChange}
-                        className="cursor-pointer touch-none"
-                      />
-                      <div className="flex justify-between text-xs font-light text-[#E6DBC7]/70">
-                        <span>{formatTime(currentTime)}</span>
-                        <span>{formatTime(duration)}</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
               </div>
 
               {/* Desktop Layout - Full-screen image with overlaid controls */}
@@ -368,6 +365,7 @@ export const ClassPlayerModal = ({
                       <Share className="h-5 w-5 text-[#E6DBC7]" strokeWidth={1.5} />
                     </button>
                   </div>
+
                   <Button
                     variant="ghost"
                     size="icon"
@@ -381,38 +379,38 @@ export const ClassPlayerModal = ({
                 {/* Controls pinned to bottom */}
                 <div className={`relative z-10 mt-auto space-y-6 px-10 pb-10 ${controlsClass}`}>
                   {/* Title + teacher */}
-                  {!isVideoClass && (
-                    <div>
-                      <h2 className="font-editorial text-4xl leading-tight text-[#E6DBC7] lg:text-5xl">
-                        {classData?.title}
-                      </h2>
-                      <p className="mt-2 text-base font-light text-[#E6DBC7]/70">
-                        {classData?.teacher_name || "March Russell"} •{" "}
-                        {classData?.duration_minutes || 0} min
+                  {/* {!isVideoClass && ( */}
+                  <div>
+                    <h2 className="font-editorial text-4xl leading-tight text-[#E6DBC7] lg:text-5xl">
+                      {classData?.title}
+                    </h2>
+                    <p className="mt-2 text-base font-light text-[#E6DBC7]/70">
+                      {classData?.teacher_name || "March Russell"} •{" "}
+                      {classData?.duration_minutes || 0} min
+                    </p>
+                    {classCategories.length > 0 && (
+                      <p className="text-sm font-light uppercase tracking-[0.15em] text-[#EC9037]">
+                        {classCategories.map((c: { name: string }) => c.name).join(" · ")}
                       </p>
-                      {classCategories.length > 0 && (
-                        <p className="text-sm font-light uppercase tracking-[0.15em] text-[#EC9037]">
-                          {classCategories.map((c: { name: string }) => c.name).join(" · ")}
-                        </p>
-                      )}
-                    </div>
-                  )}
+                    )}
+                  </div>
+                  {/* )} */}
 
                   {/* Skip / Play / Skip */}
                   {!mediaError && (
-                    <div className={`flex items-center gap-8 ${playBtnClass}`}>
+                    <div className={`flex items-baseline justify-center gap-8 ${playBtnClass}`}>
                       <button
                         onClick={handleSkipBack}
                         className="flex flex-col items-center gap-1 text-[#E6DBC7] transition-opacity hover:opacity-70"
                       >
-                        <SkipBack className="h-8 w-8" strokeWidth={1.5} />
+                        <SkipBack className="h-9 w-9" strokeWidth={1.5} />
                         <span className="text-sm font-light">10</span>
                       </button>
                       <Button
                         onClick={handlePlayPause}
                         variant="outline"
-                        size="lg"
-                        className="h-20 w-20 rounded-full border-2 border-[#E6DBC7] bg-[#E6DBC7]/5 p-0 text-[#E6DBC7] backdrop-blur-xl transition-colors duration-300 hover:bg-[#E6DBC7]/10"
+                        // size="lg"
+                        className="h-20 w-20 rounded-full border-2 border-[#E6DBC7] bg-[#E6DBC7]/5 text-[#E6DBC7] backdrop-blur-xl transition-colors duration-300 hover:bg-[#E6DBC7]/10"
                       >
                         {isPlaying ? (
                           <Pause className="h-9 w-9" strokeWidth={1.5} fill="none" />
@@ -424,7 +422,7 @@ export const ClassPlayerModal = ({
                         onClick={handleSkipForward}
                         className="flex flex-col items-center gap-1 text-[#E6DBC7] transition-opacity hover:opacity-70"
                       >
-                        <SkipForward className="h-8 w-8" strokeWidth={1.5} />
+                        <SkipForward className="h-9 w-9" strokeWidth={1.5} />
                         <span className="text-sm font-light">10</span>
                       </button>
                     </div>
