@@ -52,7 +52,7 @@ export function PostSessionFeedbackModal({
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-6 py-4">
+        <div className="space-y-9 py-4">
           {/* Rating */}
           <div>
             <p className="mb-3 text-sm text-muted-foreground">

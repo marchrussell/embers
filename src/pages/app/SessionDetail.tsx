@@ -148,8 +148,8 @@ export default function SessionDetailModal({
           ) : (
             <div className="flex h-full flex-col md:grid md:grid-cols-1 md:gap-6 md:p-10 lg:grid-cols-[55%_45%] lg:gap-8 lg:p-12">
               {/* Image zone */}
-              <div className="flex-none md:space-y-6 lg:h-full">
-                <div className="relative aspect-square overflow-hidden p-5 md:rounded-2xl md:p-7 lg:h-full">
+              <div className="flex-none md:space-y-6 lg:flex lg:flex-col">
+                <div className="relative aspect-square overflow-hidden p-5 md:rounded-2xl md:p-7 lg:aspect-auto lg:flex-1">
                   <OptimizedImage
                     src={session.image_url}
                     alt={session.title}
