@@ -1,0 +1,8 @@
+{
+  "name": "HŌM",
+  "short_name": "HŌM",
+  "display": "standalone",
+  "start_url": "/",
+  "background_color": "#0a0704",
+  "theme_color": "#0a0704"
+}
