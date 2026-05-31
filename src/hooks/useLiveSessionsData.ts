@@ -34,6 +34,7 @@ export function useLiveSessionsData(): LiveSessionCardData[] {
               title: dbSession.session_title ?? config.title,
               subtitle,
               description:
+                dbSession.short_description ||
                 config.subtitle ||
                 "A unique session featuring a guest teacher with fresh perspectives.",
               image: resolveSessionImage(config, dbSession.photo_url),
