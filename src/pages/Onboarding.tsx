@@ -114,7 +114,8 @@ const Onboarding = () => {
               htmlFor="safety"
               className="cursor-pointer text-sm font-light leading-relaxed text-foreground/90 sm:text-base md:text-base"
             >
-              I Accept — I have read and understood the safety guidelines and agree to the terms above
+              I Accept — I have read and understood the safety guidelines and agree to the terms
+              above
             </label>
           </div>
 

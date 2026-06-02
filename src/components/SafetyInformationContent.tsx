@@ -6,10 +6,11 @@ export const SafetyInformationContent = () => (
     {/* Intro */}
     <div>
       <p className="mb-4 text-base font-light leading-relaxed text-[#E6DBC7]/80">
-        You will be guided through practices such as breathwork, meditation, somatic exercises, yoga,
-        movement, and sound. These can influence your nervous, respiratory, cardiovascular, endocrine,
-        and lymphatic systems and may produce strong physiological or emotional responses. By using
-        HŌM, you accept full responsibility for your own physical and mental well‑being.
+        You will be guided through practices such as breathwork, meditation, somatic exercises,
+        yoga, movement, and sound. These can influence your nervous, respiratory, cardiovascular,
+        endocrine, and lymphatic systems and may produce strong physiological or emotional
+        responses. By using HŌM, you accept full responsibility for your own physical and mental
+        well‑being.
       </p>
       <ul className="space-y-2 pl-6 text-base font-light text-[#E6DBC7]/70">
         <li className="list-disc">
@@ -36,8 +37,8 @@ export const SafetyInformationContent = () => (
 
     <DisclosureSection title="Contraindications">
       <p className="mb-4 text-base font-light leading-relaxed text-[#E6DBC7]/80">
-        Do not practice HŌM techniques without medical approval if you have ever experienced or
-        been diagnosed with any of the following:
+        Do not practice HŌM techniques without medical approval if you have ever experienced or been
+        diagnosed with any of the following:
       </p>
       <ul className="space-y-2 pl-5 text-base font-light text-[#E6DBC7]/70">
         <li className="list-disc">Pregnancy (particularly first trimester or high‑risk)</li>
@@ -51,8 +52,8 @@ export const SafetyInformationContent = () => (
           borderline states, active spiritual emergence)
         </li>
         <li className="list-disc">
-          Respiratory conditions (COPD, severe asthma, recent respiratory infection or
-          COVID‑related complications)
+          Respiratory conditions (COPD, severe asthma, recent respiratory infection or COVID‑related
+          complications)
         </li>
         <li className="list-disc">Detached retina, glaucoma, or recent eye surgery</li>
         <li className="list-disc">
@@ -61,9 +62,7 @@ export const SafetyInformationContent = () => (
         <li className="list-disc">Vertigo or spinal disorders</li>
         <li className="list-disc">Kidney disease, diabetes, or sickle‑cell anemia</li>
         <li className="list-disc">Uncontrolled hyperthyroidism or sleep apnea</li>
-        <li className="list-disc">
-          Organ failure or conditions requiring regular medication
-        </li>
+        <li className="list-disc">Organ failure or conditions requiring regular medication</li>
         <li className="list-disc">Family history of aneurysm</li>
       </ul>
     </DisclosureSection>
@@ -81,9 +80,7 @@ export const SafetyInformationContent = () => (
         <li className="list-disc">
           Managing serious mental health conditions (panic disorder, bipolar disorder, psychosis)
         </li>
-        <li className="list-disc">
-          Experiencing chronic respiratory disease or sleep apnea
-        </li>
+        <li className="list-disc">Experiencing chronic respiratory disease or sleep apnea</li>
       </ul>
       <p className="mt-4 font-light leading-relaxed text-[#E6DBC7]/70">
         Tingling or temperature shifts may occur and are usually temporary. If they become
@@ -99,9 +96,7 @@ export const SafetyInformationContent = () => (
         <li className="list-disc">
           Avoid breath holds, rapid‑fire breathing, and abdominal "pumping."
         </li>
-        <li className="list-disc">
-          Avoid deep spinal twists and lying on your belly.
-        </li>
+        <li className="list-disc">Avoid deep spinal twists and lying on your belly.</li>
         <li className="list-disc">
           Practise gentle, rhythmic breathing and supportive movement only.
         </li>
@@ -128,9 +123,7 @@ export const SafetyInformationContent = () => (
         <li className="list-disc">
           Never use HŌM while driving, swimming, or operating machinery.
         </li>
-        <li className="list-disc">
-          Avoid practice immediately after heavy meals (allow 2 hours).
-        </li>
+        <li className="list-disc">Avoid practice immediately after heavy meals (allow 2 hours).</li>
         <li className="list-disc">Keep warm and hydrated after sessions.</li>
         <li className="list-disc">
           When using sound‑based sessions, limit volume to comfortable levels.
@@ -164,9 +157,9 @@ export const SafetyInformationContent = () => (
         <a href="https://studiohom.co" className="text-[#EC9037] hover:underline">
           studiohom.co
         </a>
-        . HŌM is owned and operated by March Collective Ltd, registered in the United Kingdom.
-        March Collective Ltd and its teachers shall not be held liable for any injury, condition,
-        or loss — direct or indirect — arising from use of HŌM's services or content.
+        . HŌM is owned and operated by March Collective Ltd, registered in the United Kingdom. March
+        Collective Ltd and its teachers shall not be held liable for any injury, condition, or loss
+        — direct or indirect — arising from use of HŌM's services or content.
       </p>
       <p className="text-sm font-light text-[#E6DBC7]/50">
         For questions or support, email{" "}

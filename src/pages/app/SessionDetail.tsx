@@ -92,24 +92,28 @@ export default function SessionDetailModal({
 
   // Function to render safety note with clickable Safety Disclosure link
   const renderSafetyNote = (text: string) => {
-    const parts = text.split(/(Safety Disclosure)/g);
-    return parts.map((part, index) => {
-      if (part === "Safety Disclosure") {
-        return (
-          <button
-            key={index}
-            onClick={(e) => {
-              e.preventDefault();
-              setShowFullSafetyDisclosure(true);
-            }}
-            className="font-bold text-white underline transition-colors hover:text-white/80"
-          >
-            {part}
-          </button>
-        );
-      }
-      return <span key={index}>{part}</span>;
-    });
+    const LINK_PHRASES = ["full HŌM Safety Information", "Safety Disclosure"];
+    const regex = new RegExp(
+      `(${LINK_PHRASES.map((p) => p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`,
+      "g"
+    );
+    const parts = text.split(regex);
+    return parts.map((part, index) =>
+      LINK_PHRASES.includes(part) ? (
+        <button
+          key={index}
+          onClick={(e) => {
+            e.preventDefault();
+            setShowFullSafetyDisclosure(true);
+          }}
+          className="font-bold text-white underline transition-colors hover:text-white/80"
+        >
+          {part}
+        </button>
+      ) : (
+        <span key={index}>{part}</span>
+      )
+    );
   };
   return (
     <>

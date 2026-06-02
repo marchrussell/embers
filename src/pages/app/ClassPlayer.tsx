@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Pause, Play, SkipBack, SkipForward } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { OptimizedImage } from "@/components/OptimizedImage";
 import { SafetyDisclosureModal } from "@/components/SafetyDisclosureModal";
@@ -200,7 +200,25 @@ const ClassPlayer = () => {
             <div className="space-y-6">
               {classData?.safety_note && (
                 <div className="rounded-lg bg-muted/50 p-4">
-                  <p className="whitespace-pre-wrap text-sm">{classData.safety_note}</p>
+                  <p className="whitespace-pre-wrap text-sm">
+                    {classData.safety_note
+                      .split(/(full HŌM Safety Information|Safety Disclosure)/g)
+                      .map((part, i) =>
+                        part === "full HŌM Safety Information" || part === "Safety Disclosure" ? (
+                          <Link
+                            key={i}
+                            to="/safety-disclosure"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-bold underline transition-colors hover:opacity-80"
+                          >
+                            {part}
+                          </Link>
+                        ) : (
+                          <span key={i}>{part}</span>
+                        )
+                      )}
+                  </p>
                 </div>
               )}
               <GlowButton onClick={handleStart}>I Understand, Begin Class</GlowButton>

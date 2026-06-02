@@ -697,8 +697,8 @@ export const LegalModal = ({ open, onOpenChange }: LegalModalProps) => (
             1. About These Terms
           </h3>
           <p className="mb-3 text-[#E6DBC7]/80">
-            These Terms of Use ("Terms") govern your access to and use of HŌM ("HŌM," "we," "us,"
-            or "our"), including our website studiohom.co, mobile and web applications (the "App"),
+            These Terms of Use ("Terms") govern your access to and use of HŌM ("HŌM," "we," "us," or
+            "our"), including our website studiohom.co, mobile and web applications (the "App"),
             membership services, digital courses, events, and all related content and features
             (collectively, the "Services").
           </p>
@@ -832,9 +832,7 @@ export const LegalModal = ({ open, onOpenChange }: LegalModalProps) => (
             </li>
             <li>Will practise within your limits and stop if unwell or uncomfortable</li>
             <li>Have consulted a healthcare professional where appropriate</li>
-            <li>
-              Have read our Safety Information and agree to practise responsibly
-            </li>
+            <li>Have read our Safety Information and agree to practise responsibly</li>
           </ul>
         </section>
 
@@ -843,10 +841,10 @@ export const LegalModal = ({ open, onOpenChange }: LegalModalProps) => (
             8. Intellectual Property
           </h3>
           <p className="text-[#E6DBC7]/80">
-            All content, materials, sessions, trademarks, and software are owned by March
-            Collective Ltd. You receive a personal, non‑transferable, non‑commercial licence to
-            use the Services. You may not copy, modify, resell, distribute, or create derivative
-            works without our written consent.
+            All content, materials, sessions, trademarks, and software are owned by March Collective
+            Ltd. You receive a personal, non‑transferable, non‑commercial licence to use the
+            Services. You may not copy, modify, resell, distribute, or create derivative works
+            without our written consent.
           </p>
         </section>
 
@@ -864,21 +862,17 @@ export const LegalModal = ({ open, onOpenChange }: LegalModalProps) => (
           <h3 className="mb-3 text-xs font-light uppercase tracking-[0.15em] text-[#E6DBC7]/50">
             10. Limitation of Liability
           </h3>
-          <p className="mb-3 text-[#E6DBC7]/80">
-            To the fullest extent permitted by law:
-          </p>
+          <p className="mb-3 text-[#E6DBC7]/80">To the fullest extent permitted by law:</p>
           <ul className="list-disc space-y-1 pl-6 text-[#E6DBC7]/70">
             <li>
               March Collective Ltd is not liable for indirect, incidental, or consequential damages
             </li>
             <li>We make no guarantees of specific outcomes from any practice</li>
-            <li>
-              Total liability shall not exceed the amount you paid in the preceding 12 months
-            </li>
+            <li>Total liability shall not exceed the amount you paid in the preceding 12 months</li>
           </ul>
           <p className="mt-3 text-[#E6DBC7]/80">
-            Nothing in these Terms excludes liability where unlawful (e.g., negligence resulting
-            in death or injury).
+            Nothing in these Terms excludes liability where unlawful (e.g., negligence resulting in
+            death or injury).
           </p>
         </section>
 
@@ -967,8 +961,8 @@ export const LegalModal = ({ open, onOpenChange }: LegalModalProps) => (
           </h3>
           <p className="text-[#E6DBC7]/80">
             Key providers include Stripe (payments), Vercel (hosting), Supabase (database), and
-            PostHog (analytics). Each operates under data‑processing agreements and acts only on
-            our instruction.
+            PostHog (analytics). Each operates under data‑processing agreements and acts only on our
+            instruction.
           </p>
         </section>
 
@@ -1042,9 +1036,7 @@ export const LegalModal = ({ open, onOpenChange }: LegalModalProps) => (
             <li>Restrict or object to processing</li>
             <li>Withdraw consent</li>
             <li>Request data portability</li>
-            <li>
-              Lodge complaints with data‑protection authorities (e.g., UK ICO)
-            </li>
+            <li>Lodge complaints with data‑protection authorities (e.g., UK ICO)</li>
           </ul>
           <p className="mt-3 text-[#E6DBC7]/80">
             Email requests to{" "}
@@ -1060,8 +1052,8 @@ export const LegalModal = ({ open, onOpenChange }: LegalModalProps) => (
             11. California/U.S. Residents
           </h3>
           <p className="text-[#E6DBC7]/80">
-            Under CCPA/CPRA, you may request access, correction, deletion, and opt‑out of data
-            sales (we do not sell data).
+            Under CCPA/CPRA, you may request access, correction, deletion, and opt‑out of data sales
+            (we do not sell data).
           </p>
         </section>
 
@@ -1070,8 +1062,8 @@ export const LegalModal = ({ open, onOpenChange }: LegalModalProps) => (
             12. Children & Age Restrictions
           </h3>
           <p className="text-[#E6DBC7]/80">
-            HŌM is for individuals aged 16 and over. We do not knowingly collect data from
-            children under 16.
+            HŌM is for individuals aged 16 and over. We do not knowingly collect data from children
+            under 16.
           </p>
         </section>
 

@@ -62,6 +62,64 @@ interface Class {
   categories?: { id: string; name: string }[];
 }
 
+const SAFETY_NOTE_TEMPLATES = {
+  none: "",
+  intense: `This session uses strong, active breathing patterns that can create powerful physical sensations and emotional responses.
+You may experience tingling, muscle tension, temperature changes, emotional release or temporary lightheadedness — this is normal.
+But it is important that you feel comfortable and don't push yourself into discomfort or beyond your means. You are the expert of your own experience. Always work within your own window of capacity and make sure it feels good for you.
+Do not practice this session if you have:
+- Pregnancy
+- Epilepsy or seizure history
+- Heart conditions, high blood pressure, or pacemaker
+- Severe asthma, glaucoma, or recent surgery
+- Panic disorder or serious mental health conditions
+- Any other serious underlying physical health conditions
+Practice seated or lying down in a safe space.
+If sensations become overwhelming, simply slow down and return to natural breathing.
+For complete safety guidance, please review the full HŌM Safety Information.
+By continuing, you accept responsibility for practicing mindfully.`,
+  conscious_connected: `Before You Begin
+This session uses conscious connected breathing that creates significant shifts in brain chemistry and consciousness.
+This practice deliberately reduces CO₂ and oxygen to certain brain areas, which can create profound altered states and emotional breakthroughs. You may experience intense tingling, emotional release (crying, laughter), visual changes, spiritual insights, or feelings of euphoria — this is normal and part of the process.
+This is deep, transformative work. You are the expert of your own experience. Always work within your own window of capacity and ensure you feel stable and resourced before beginning. And please know that there is the "Ground + Integrate" Session on the previous page if you would like it post session.
+Do not practice this session if you have:
+• Pregnancy • Epilepsy or seizure history • Heart conditions, high blood pressure, or pacemaker • Severe asthma or respiratory illness • Panic disorder or serious mental health conditions • Any other serious underlying physical health conditions
+Additionally, only practice if you: • Feel emotionally stable and grounded today • Are in a safe, private space where you won't be disturbed • Have time for integration after the session
+Practice lying down with support for your head and neck.
+If the experience becomes too intense, slow down your breathing or pause completely and return to natural rhythm.
+For complete safety guidance, please review the full HŌM Safety Information.
+By continuing, you accept responsibility for practicing mindfully.`,
+  breathhold: `Before You Begin
+This session uses breath holds that create air hunger while optimizing oxygen delivery through natural CO₂ buildup.
+You may experience urges to breathe, tingling, or warmth as CO₂ rises — this is normal and how the practice works. Many people feel increased calm or lightness as oxygen delivery improves.
+You are the expert of your own experience. Never force the holds and always work within your comfort zone.
+Do not practice this session if you have: • Pregnancy • Epilepsy or seizure history • Heart conditions, high blood pressure, or pacemaker • Severe asthma or respiratory illness • Panic disorder or serious mental health conditions
+Practice seated or lying down in a safe space.
+If air hunger becomes uncomfortable, simply release the hold and breathe naturally.
+For complete safety guidance, please review the full HŌM Safety Information.
+By continuing, you accept responsibility for practicing mindfully.`,
+  co2_tolerance: `Before You Begin
+This session uses progressive CO₂ tolerance training that will create strong air hunger and systematically challenge your comfort with elevated CO₂ levels.
+You may experience intense urges to breathe, tingling, muscle tension, or a strong sense of urgency as CO₂ builds — this is your body's natural response and a part of building tolerance. The practice teaches you to stay calm and composed even as these sensations intensify.
+You are the expert of your own experience. This is challenging work that requires mental resilience, so it's crucial that you feel stable and grounded before beginning. Always work within your own window of capacity and respect your body's signals.
+Do not practice this session if you have:
+- Pregnancy
+- Epilepsy or seizure history
+- Heart conditions, high blood pressure, or pacemaker
+- Severe asthma or respiratory illness
+- Panic disorder or serious mental health conditions
+- Any other serious underlying physical health conditions
+Additionally, only practice if you:
+- Feel emotionally stable and focused today
+- Are prepared for systematic discomfort as part of the training
+Practice seated or lying down in a safe space.
+If sensations become too intense or you feel genuinely distressed, release the hold immediately and return to natural breathing.
+For complete safety guidance, please review the full HŌM Safety Information.
+By continuing, you accept responsibility for practicing mindfully.`,
+} as const;
+
+type SafetyTemplate = keyof typeof SAFETY_NOTE_TEMPLATES;
+
 const classFormSchema = z
   .object({
     title: z.string().min(1, "Title is required"),
@@ -85,6 +143,7 @@ const AdminClasses = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingClass, setEditingClass] = useState<Class | null>(null);
+  const [safetyTemplate, setSafetyTemplate] = useState<SafetyTemplate>("none");
   const { upload: uploadImage, uploading: uploadingImage } = useStorageUpload("class-images");
   const { upload: uploadAudio, uploading: uploadingAudio } = useStorageUpload("class-audio");
   const { upload: uploadVideo, uploading: uploadingVideo } = useStorageUpload("class-video");
@@ -409,6 +468,7 @@ const AdminClasses = () => {
       is_quick_reset: classItem.is_quick_reset || false,
       order_index: classItem.order_index?.toString() || "",
     });
+    setSafetyTemplate("none");
     setIsDialogOpen(true);
   };
 
@@ -514,6 +574,7 @@ const AdminClasses = () => {
     });
     setEditingClass(null);
     setIsDialogOpen(false);
+    setSafetyTemplate("none");
   };
 
   const filteredClasses = classes.filter((c) => {
@@ -532,7 +593,7 @@ const AdminClasses = () => {
       </DialogTrigger>
       <DialogContent
         onCloseAutoFocus={(e) => e.preventDefault()}
-        className="max-h-[90vh] max-w-2xl overflow-y-auto rounded-xl border border-white/20 bg-black/60 backdrop-blur-xl"
+        className="max-h-[90vh] max-w-3xl overflow-y-auto rounded-xl border border-white/20 bg-black/60 backdrop-blur-xl"
         hideClose
       >
         <DialogHeader>
@@ -842,21 +903,56 @@ const AdminClasses = () => {
             </p>
           </div>
 
-          <div className="space-y-4 border-t border-border pt-6">
+          <div className="space-y-6 border-t border-border pt-6">
             <h3 className="text-lg font-semibold">Safety Note</h3>
-            <div>
-              <Label htmlFor="safety_note">Custom Safety Note (Optional)</Label>
-              <Textarea
-                id="safety_note"
-                value={formData.safety_note}
-                onChange={(e) => setFormData({ ...formData, safety_note: e.target.value })}
-                rows={4}
-                placeholder="Add a custom safety note for this session (e.g., 'This session involves breath holds. Do not practice while driving or in water.')"
-                className="placeholder:text-gray-400"
-              />
-              <p className="mt-1 text-xs text-muted-foreground">
-                If set, a safety popup will appear when users start this session.
-              </p>
+            <div className="space-y-6">
+              <div>
+                <Label htmlFor="safety_note_template" className="text-white/80">
+                  Template
+                </Label>
+                <Select
+                  value={safetyTemplate}
+                  onValueChange={(val: SafetyTemplate) => {
+                    setSafetyTemplate(val);
+                    setFormData({ ...formData, safety_note: SAFETY_NOTE_TEMPLATES[val] });
+                  }}
+                >
+                  <SelectTrigger
+                    id="safety_note_template"
+                    className="mt-1 border-white/20 bg-white/5 text-white"
+                  >
+                    <SelectValue placeholder="None / Custom" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">None / Custom</SelectItem>
+                    <SelectItem value="intense">Intense / Active Breathwork</SelectItem>
+                    <SelectItem value="conscious_connected">Conscious Connected</SelectItem>
+                    <SelectItem value="breathhold">Breath Hold</SelectItem>
+                    <SelectItem value="co2_tolerance">CO₂ Tolerance</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="safety_note" className="text-white/80">
+                  Safety Note{safetyTemplate === "none" ? " (Optional)" : ""}
+                </Label>
+                <Textarea
+                  id="safety_note"
+                  value={formData.safety_note}
+                  onChange={(e) => setFormData({ ...formData, safety_note: e.target.value })}
+                  rows={10}
+                  disabled={safetyTemplate !== "none"}
+                  placeholder={
+                    safetyTemplate === "none" ? "Add a custom safety note for this session..." : ""
+                  }
+                  className="placeholder:text-gray-400 disabled:opacity-60"
+                />
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {safetyTemplate !== "none"
+                    ? "The phrase 'full HŌM Safety Information' will render as a hyperlink for users."
+                    : "If set, a safety popup will appear when users start this session."}
+                </p>
+              </div>
             </div>
           </div>
 

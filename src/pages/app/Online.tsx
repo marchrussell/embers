@@ -29,7 +29,7 @@ const Online = () => {
     <div className="min-h-screen bg-background">
       <NavBar />
 
-      <div className="lg:pt-88 px-6 pb-40 pt-44 md:px-10 md:pt-72 tablet:pt-88 lg:px-12">
+      <div className="lg:pt-88 tablet:pt-88 px-6 pb-40 pt-44 md:px-10 md:pt-72 lg:px-12">
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
           <TabsContent value="home" className="mt-0 pb-24">
             <HomeTab
