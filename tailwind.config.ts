@@ -14,6 +14,7 @@ export default {
     },
     extend: {
       screens: {
+        'tablet': '820px',
         '3xl': '1920px',
       },
       fontFamily: {
