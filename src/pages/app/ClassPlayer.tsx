@@ -200,25 +200,42 @@ const ClassPlayer = () => {
             <div className="space-y-6">
               {classData?.safety_note && (
                 <div className="rounded-lg bg-muted/50 p-4">
-                  <p className="whitespace-pre-wrap text-sm">
-                    {classData.safety_note
-                      .split(/(full HŌM Safety Information|Safety Disclosure)/g)
-                      .map((part, i) =>
-                        part === "full HŌM Safety Information" || part === "Safety Disclosure" ? (
-                          <Link
-                            key={i}
-                            to="/safety-disclosure"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="font-bold underline transition-colors hover:opacity-80"
-                          >
-                            {part}
-                          </Link>
-                        ) : (
-                          <span key={i}>{part}</span>
-                        )
-                      )}
-                  </p>
+                  {(() => {
+                    const LINK_PHRASES = ["full HŌM Safety Information", "Safety Disclosure"];
+                    const linkRegex = new RegExp(
+                      `(${LINK_PHRASES.map((p) =>
+                        p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+                      ).join("|")})`,
+                      "g",
+                    );
+                    return classData.safety_note!.split(/\n\n/).map((paragraph, pIdx) => (
+                      <p
+                        key={pIdx}
+                        className="text-sm leading-relaxed [&:not(:last-child)]:mb-3"
+                      >
+                        {paragraph.split(/\n/).map((line, lIdx, arr) => (
+                          <span key={lIdx}>
+                            {line.split(linkRegex).map((part, i) =>
+                              LINK_PHRASES.includes(part) ? (
+                                <Link
+                                  key={i}
+                                  to="/safety-disclosure"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="font-bold underline transition-colors hover:opacity-80"
+                                >
+                                  {part}
+                                </Link>
+                              ) : (
+                                <span key={i}>{part}</span>
+                              ),
+                            )}
+                            {lIdx < arr.length - 1 && <br />}
+                          </span>
+                        ))}
+                      </p>
+                    ));
+                  })()}
                 </div>
               )}
               <GlowButton onClick={handleStart}>I Understand, Begin Class</GlowButton>
