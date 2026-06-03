@@ -65,8 +65,11 @@ interface Class {
 const SAFETY_NOTE_TEMPLATES = {
   none: "",
   intense: `This session uses strong, active breathing patterns that can create powerful physical sensations and emotional responses.
+
 You may experience tingling, muscle tension, temperature changes, emotional release or temporary lightheadedness — this is normal.
+
 But it is important that you feel comfortable and don't push yourself into discomfort or beyond your means. You are the expert of your own experience. Always work within your own window of capacity and make sure it feels good for you.
+
 Do not practice this session if you have:
 - Pregnancy
 - Epilepsy or seizure history
@@ -74,34 +77,72 @@ Do not practice this session if you have:
 - Severe asthma, glaucoma, or recent surgery
 - Panic disorder or serious mental health conditions
 - Any other serious underlying physical health conditions
+
 Practice seated or lying down in a safe space.
+
 If sensations become overwhelming, simply slow down and return to natural breathing.
+
 For complete safety guidance, please review the full HŌM Safety Information.
+
 By continuing, you accept responsibility for practicing mindfully.`,
   conscious_connected: `Before You Begin
+
 This session uses conscious connected breathing that creates significant shifts in brain chemistry and consciousness.
+
 This practice deliberately reduces CO₂ and oxygen to certain brain areas, which can create profound altered states and emotional breakthroughs. You may experience intense tingling, emotional release (crying, laughter), visual changes, spiritual insights, or feelings of euphoria — this is normal and part of the process.
+
 This is deep, transformative work. You are the expert of your own experience. Always work within your own window of capacity and ensure you feel stable and resourced before beginning. And please know that there is the "Ground + Integrate" Session on the previous page if you would like it post session.
+
 Do not practice this session if you have:
-• Pregnancy • Epilepsy or seizure history • Heart conditions, high blood pressure, or pacemaker • Severe asthma or respiratory illness • Panic disorder or serious mental health conditions • Any other serious underlying physical health conditions
-Additionally, only practice if you: • Feel emotionally stable and grounded today • Are in a safe, private space where you won't be disturbed • Have time for integration after the session
+• Pregnancy
+• Epilepsy or seizure history
+• Heart conditions, high blood pressure, or pacemaker
+• Severe asthma or respiratory illness
+• Panic disorder or serious mental health conditions
+• Any other serious underlying physical health conditions
+
+Additionally, only practice if you:
+• Feel emotionally stable and grounded today
+• Are in a safe, private space where you won't be disturbed
+• Have time for integration after the session
+
 Practice lying down with support for your head and neck.
+
 If the experience becomes too intense, slow down your breathing or pause completely and return to natural rhythm.
+
 For complete safety guidance, please review the full HŌM Safety Information.
+
 By continuing, you accept responsibility for practicing mindfully.`,
   breathhold: `Before You Begin
+
 This session uses breath holds that create air hunger while optimizing oxygen delivery through natural CO₂ buildup.
+
 You may experience urges to breathe, tingling, or warmth as CO₂ rises — this is normal and how the practice works. Many people feel increased calm or lightness as oxygen delivery improves.
+
 You are the expert of your own experience. Never force the holds and always work within your comfort zone.
-Do not practice this session if you have: • Pregnancy • Epilepsy or seizure history • Heart conditions, high blood pressure, or pacemaker • Severe asthma or respiratory illness • Panic disorder or serious mental health conditions
+
+Do not practice this session if you have:
+• Pregnancy
+• Epilepsy or seizure history
+• Heart conditions, high blood pressure, or pacemaker
+• Severe asthma or respiratory illness
+• Panic disorder or serious mental health conditions
+
 Practice seated or lying down in a safe space.
+
 If air hunger becomes uncomfortable, simply release the hold and breathe naturally.
+
 For complete safety guidance, please review the full HŌM Safety Information.
+
 By continuing, you accept responsibility for practicing mindfully.`,
   co2_tolerance: `Before You Begin
+
 This session uses progressive CO₂ tolerance training that will create strong air hunger and systematically challenge your comfort with elevated CO₂ levels.
+
 You may experience intense urges to breathe, tingling, muscle tension, or a strong sense of urgency as CO₂ builds — this is your body's natural response and a part of building tolerance. The practice teaches you to stay calm and composed even as these sensations intensify.
+
 You are the expert of your own experience. This is challenging work that requires mental resilience, so it's crucial that you feel stable and grounded before beginning. Always work within your own window of capacity and respect your body's signals.
+
 Do not practice this session if you have:
 - Pregnancy
 - Epilepsy or seizure history
@@ -109,12 +150,17 @@ Do not practice this session if you have:
 - Severe asthma or respiratory illness
 - Panic disorder or serious mental health conditions
 - Any other serious underlying physical health conditions
+
 Additionally, only practice if you:
 - Feel emotionally stable and focused today
 - Are prepared for systematic discomfort as part of the training
+
 Practice seated or lying down in a safe space.
+
 If sensations become too intense or you feel genuinely distressed, release the hold immediately and return to natural breathing.
+
 For complete safety guidance, please review the full HŌM Safety Information.
+
 By continuing, you accept responsibility for practicing mindfully.`,
 } as const;
 
