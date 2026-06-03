@@ -359,7 +359,7 @@ const LiveSessionRoom = () => {
               <p className="text-lg text-white/70">Waiting for the session to begin...</p>
             </div>
 
-            <div className="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-8">
+            <div className="space-y-4 rounded-2xl bg-white/5 p-8">
               <p className="text-white/90">The host hasn't started the session yet.</p>
               <p className="text-sm text-white/60">
                 This page will automatically update when the session begins. Feel free to take a
@@ -412,7 +412,7 @@ const LiveSessionRoom = () => {
             </div>
 
             {/* Calm pre-join message */}
-            <div className="space-y- rounded-2xl border border-white/10 bg-white/5 p-10">
+            <div className="space-y- rounded-2xl bg-white/5 p-10">
               <p className="text-lg text-white/90">
                 {role === "host" ? "Ready to begin." : "Arrive, get settled."}
               </p>

@@ -74,7 +74,7 @@ export const MarchPrivacyModal = ({ open, onAccept, onReadFullPolicy }: MarchPri
               </ul>
             </div>
 
-            <div className="rounded-lg border border-white/10 bg-white/5 p-4">
+            <div className="rounded-lg bg-white/5 p-4">
               <p className="text-xs leading-relaxed text-white/70">
                 Your messages may be processed securely by trusted AI partners through our platform
                 provider, Lovable, to generate helpful responses.
