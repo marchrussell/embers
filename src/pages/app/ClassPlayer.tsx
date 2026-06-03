@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Pause, Play, SkipBack, SkipForward } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { OptimizedImage } from "@/components/OptimizedImage";
 import { SafetyDisclosureModal } from "@/components/SafetyDisclosureModal";
+import { SafetyNoteContent } from "@/components/SafetyNoteContent";
 import { ClassPlayerSkeleton } from "@/components/skeletons/ClassPlayerSkeleton";
 import { Button } from "@/components/ui/button";
 import {
@@ -199,43 +200,8 @@ const ClassPlayer = () => {
             </DialogHeader>
             <div className="space-y-6">
               {classData?.safety_note && (
-                <div className="rounded-lg bg-muted/50 p-4">
-                  {(() => {
-                    const LINK_PHRASES = ["full HŌM Safety Information", "Safety Disclosure"];
-                    const linkRegex = new RegExp(
-                      `(${LINK_PHRASES.map((p) =>
-                        p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
-                      ).join("|")})`,
-                      "g",
-                    );
-                    return classData.safety_note!.split(/\n\n/).map((paragraph, pIdx) => (
-                      <p
-                        key={pIdx}
-                        className="text-sm leading-relaxed [&:not(:last-child)]:mb-3"
-                      >
-                        {paragraph.split(/\n/).map((line, lIdx, arr) => (
-                          <span key={lIdx}>
-                            {line.split(linkRegex).map((part, i) =>
-                              LINK_PHRASES.includes(part) ? (
-                                <Link
-                                  key={i}
-                                  to="/safety-disclosure"
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="font-bold underline transition-colors hover:opacity-80"
-                                >
-                                  {part}
-                                </Link>
-                              ) : (
-                                <span key={i}>{part}</span>
-                              ),
-                            )}
-                            {lIdx < arr.length - 1 && <br />}
-                          </span>
-                        ))}
-                      </p>
-                    ));
-                  })()}
+                <div className="rounded-lg bg-muted/50 p-4 text-sm">
+                  <SafetyNoteContent text={classData.safety_note} />
                 </div>
               )}
               <GlowButton onClick={handleStart}>I Understand, Begin Class</GlowButton>

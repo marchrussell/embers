@@ -6,6 +6,7 @@ import { ArcCardsModal } from "@/components/ArcCardsModal";
 import { ClassPlayerModal } from "@/components/ClassPlayerModal";
 import { OptimizedImage } from "@/components/OptimizedImage";
 import { SafetyInformationModal } from "@/components/SafetyInformationModal";
+import { SafetyNoteContent } from "@/components/SafetyNoteContent";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -90,43 +91,6 @@ export default function SessionDetailModal({
 
   const { handleShare } = useShareSession();
 
-  // Function to render safety note with clickable Safety Disclosure link
-  const renderSafetyNote = (text: string) => {
-    const LINK_PHRASES = ["full HŌM Safety Information", "Safety Disclosure"];
-    const linkRegex = new RegExp(
-      `(${LINK_PHRASES.map((p) => p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`,
-      "g",
-    );
-
-    const renderLine = (line: string, lineKey: string) =>
-      line.split(linkRegex).map((part, i) =>
-        LINK_PHRASES.includes(part) ? (
-          <button
-            key={`${lineKey}-${i}`}
-            onClick={(e) => {
-              e.preventDefault();
-              setShowFullSafetyDisclosure(true);
-            }}
-            className="font-bold text-white underline transition-colors hover:text-white/80"
-          >
-            {part}
-          </button>
-        ) : (
-          <span key={`${lineKey}-${i}`}>{part}</span>
-        ),
-      );
-
-    return text.split(/\n\n/).map((paragraph, pIdx) => (
-      <p key={pIdx} className="text-base leading-relaxed text-[#E6DBC7]/90 [&:not(:last-child)]:mb-4">
-        {paragraph.split(/\n/).map((line, lIdx, arr) => (
-          <span key={lIdx}>
-            {renderLine(line, `${pIdx}-${lIdx}`)}
-            {lIdx < arr.length - 1 && <br />}
-          </span>
-        ))}
-      </p>
-    ));
-  };
   return (
     <>
       <Dialog
@@ -372,8 +336,11 @@ export default function SessionDetailModal({
             </DialogHeader>
             <div className="mt-6 flex flex-col gap-6 md:mt-8">
               {session?.safety_note && (
-                <div className="rounded-lg bg-white/5 p-5">
-                  {renderSafetyNote(session.safety_note)}
+                <div className="rounded-lg bg-white/5 p-5 text-base text-[#E6DBC7]/90">
+                  <SafetyNoteContent
+                    text={session.safety_note}
+                    onSafetyLinkClick={() => setShowFullSafetyDisclosure(true)}
+                  />
                 </div>
               )}
               <Button
