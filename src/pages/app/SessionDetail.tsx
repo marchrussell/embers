@@ -372,7 +372,7 @@ export default function SessionDetailModal({
             </DialogHeader>
             <div className="mt-6 flex flex-col gap-6 md:mt-8">
               {session?.safety_note && (
-                <div className="rounded-lg border border-white/10 bg-white/5 p-5">
+                <div className="rounded-lg bg-white/5 p-5">
                   {renderSafetyNote(session.safety_note)}
                 </div>
               )}
