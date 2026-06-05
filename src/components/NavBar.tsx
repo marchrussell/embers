@@ -100,10 +100,10 @@ export const NavBar = memo(({ standalone = false }: { standalone?: boolean }) =>
         <div
           className={`fixed left-0 right-0 top-[90px] z-[60] transition-transform duration-300 md:top-[108px] tablet:hidden ${pillsVisible ? "translate-y-0" : "-translate-y-[140px]"}`}
         >
-          <div className="flex gap-2 px-6 py-2">
+          <div className="flex gap-2 p-6">
             {[
               { id: "library", label: "Discover" },
-              { id: "courses", label: "Courses" },
+              // { id: "courses", label: "Courses" },
               { id: "live", label: "Live" },
               { id: "in-person", label: "In Person" },
             ].map((tab) => (
