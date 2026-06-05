@@ -92,16 +92,22 @@ const SAFETY_NOTE_TEMPLATES = {
     "This session uses strong, active breathing patterns that can create powerful physical sensations and emotional responses.",
     "You may experience tingling, muscle tension, temperature changes, emotional release or temporary lightheadedness — this is normal.",
     "But it is important that you feel comfortable and don't push yourself into discomfort or beyond your means. You are the expert of your own experience. Always work within your own window of capacity and make sure it feels good for you.",
-    contraindicationBlock(["Severe asthma, glaucoma, or recent surgery", "Any other serious underlying physical health conditions"], "-"),
+    contraindicationBlock(
+      [
+        "Severe asthma, glaucoma, or recent surgery",
+        "Any other serious underlying physical health conditions",
+      ],
+      "-"
+    ),
     "Practice seated or lying down in a safe space.",
-    "If sensations become overwhelming, simply slow down and return to natural breathing.",
+    "If sensations become overwhelming, simply slow down and return to natural breathing."
   ),
 
   conscious_connected: buildTemplate(
     "Before You Begin",
     "This session uses conscious connected breathing that creates significant shifts in brain chemistry and consciousness.",
     "This practice deliberately reduces CO₂ and oxygen to certain brain areas, which can create profound altered states and emotional breakthroughs. You may experience intense tingling, emotional release (crying, laughter), visual changes, spiritual insights, or feelings of euphoria — this is normal and part of the process.",
-    "This is deep, transformative work. You are the expert of your own experience. Always work within your own window of capacity and ensure you feel stable and resourced before beginning. And please know that there is the \"Ground + Integrate\" Session on the previous page if you would like it post session.",
+    'This is deep, transformative work. You are the expert of your own experience. Always work within your own window of capacity and ensure you feel stable and resourced before beginning. And please know that there is the "Ground + Integrate" Session on the previous page if you would like it post session.',
     contraindicationBlock(["Any other serious underlying physical health conditions"]),
     additionalConditionsBlock([
       "Feel emotionally stable and grounded today",
@@ -109,7 +115,7 @@ const SAFETY_NOTE_TEMPLATES = {
       "Have time for integration after the session",
     ]),
     "Practice lying down with support for your head and neck.",
-    "If the experience becomes too intense, slow down your breathing or pause completely and return to natural rhythm.",
+    "If the experience becomes too intense, slow down your breathing or pause completely and return to natural rhythm."
   ),
 
   breathhold: buildTemplate(
@@ -119,7 +125,7 @@ const SAFETY_NOTE_TEMPLATES = {
     "You are the expert of your own experience. Never force the holds and always work within your comfort zone.",
     contraindicationBlock(),
     "Practice seated or lying down in a safe space.",
-    "If air hunger becomes uncomfortable, simply release the hold and breathe naturally.",
+    "If air hunger becomes uncomfortable, simply release the hold and breathe naturally."
   ),
 
   co2_tolerance: buildTemplate(
@@ -129,11 +135,14 @@ const SAFETY_NOTE_TEMPLATES = {
     "You are the expert of your own experience. This is challenging work that requires mental resilience, so it's crucial that you feel stable and grounded before beginning. Always work within your own window of capacity and respect your body's signals.",
     contraindicationBlock(["Any other serious underlying physical health conditions"], "-"),
     additionalConditionsBlock(
-      ["Feel emotionally stable and focused today", "Are prepared for systematic discomfort as part of the training"],
-      "-",
+      [
+        "Feel emotionally stable and focused today",
+        "Are prepared for systematic discomfort as part of the training",
+      ],
+      "-"
     ),
     "Practice seated or lying down in a safe space.",
-    "If sensations become too intense or you feel genuinely distressed, release the hold immediately and return to natural breathing.",
+    "If sensations become too intense or you feel genuinely distressed, release the hold immediately and return to natural breathing."
   ),
 };
 

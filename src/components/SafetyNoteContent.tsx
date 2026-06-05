@@ -10,7 +10,7 @@ const SUBTITLE_LINES = [
 
 const linkRegex = new RegExp(
   `(${LINK_PHRASES.map((p) => p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`,
-  "g",
+  "g"
 );
 
 interface SafetyNoteContentProps {

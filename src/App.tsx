@@ -3,6 +3,7 @@ import { lazy, Suspense } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
 import { AdminRoute } from "@/components/AdminRoute";
+import { AuthErrorRedirect } from "@/components/AuthErrorRedirect";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { PageSkeleton } from "@/components/skeletons/PageSkeleton";
@@ -104,6 +105,7 @@ function AppContent() {
   return (
     <>
       <ScrollToTop />
+      <AuthErrorRedirect />
       <div className="duration-300 animate-in fade-in">
         <Suspense fallback={<PageSkeleton />}>
           <Routes>

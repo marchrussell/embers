@@ -109,7 +109,7 @@ const SessionsListLayout = memo(
       <div className="min-h-screen bg-background">
         {/* Hero Header */}
         <div
-          className={`relative z-10 h-[420px] ${
+          className={`relative z-10 h-fit ${
             isEmbedded ? "-mx-6 md:-mx-10 lg:-mx-12" : "mt-[340px] md:mt-[380px]"
           }`}
         >
