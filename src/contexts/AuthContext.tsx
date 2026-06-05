@@ -2,6 +2,7 @@
 import { Session, User } from "@supabase/supabase-js";
 import { useQueryClient } from "@tanstack/react-query";
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 import { useAuthOnboarding } from "@/hooks/auth/useAuthOnboarding";
@@ -31,6 +32,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [identityLoading, setIdentityLoading] = useState(true);
@@ -135,6 +137,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             created_at: session.user.created_at,
           });
         }
+        return;
+      }
+
+      // PASSWORD_RECOVERY: user clicked a valid password reset link. Preserve the
+      // recovery session (needed for updateUser to work) and navigate to the reset
+      // page. Without this explicit handler, PASSWORD_RECOVERY falls through to the
+      // SIGNED_OUT default and clears the session before the user can set a password.
+      if (event === "PASSWORD_RECOVERY") {
+        setSession(session);
+        setUser(session?.user ?? null);
+        navigate("/password-reset?type=recovery", { replace: true });
         return;
       }
 

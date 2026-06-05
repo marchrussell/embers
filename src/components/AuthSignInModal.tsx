@@ -114,7 +114,7 @@ export const AuthSignInModal = ({
             </div>
 
             {showForgotPasswordForm ? (
-              <form onSubmit={handleForgotPassword} className="space-y-5">
+              <form onSubmit={handleForgotPassword} className="space-y-9">
                 <div className="space-y-2">
                   <Label htmlFor="reset-email" className="text-[14px] font-light text-white/80">
                     Email Address
