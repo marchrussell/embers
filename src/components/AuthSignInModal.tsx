@@ -97,8 +97,8 @@ export const AuthSignInModal = ({
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogPortal>
-        <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md transition-opacity duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-        <DialogPrimitive.Content className="fixed inset-0 z-50 h-dvh w-full overflow-y-auto rounded-none border-0 bg-black/85 backdrop-blur-xl duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 md:inset-auto md:left-[50%] md:top-[50%] md:h-auto md:w-[92%] md:max-w-[440px] md:-translate-x-1/2 md:-translate-y-1/2 md:overflow-hidden md:rounded-[24px] md:border md:border-white/15 md:bg-black/65">
+        <DialogPrimitive.Overlay className="fixed inset-0 z-[80] bg-black/85 backdrop-blur-md transition-opacity duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+        <DialogPrimitive.Content className="fixed inset-0 z-[80] h-dvh w-full overflow-y-auto rounded-none border-0 bg-black/85 backdrop-blur-xl duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 md:inset-auto md:left-[50%] md:top-[50%] md:h-auto md:w-[92%] md:max-w-[440px] md:-translate-x-1/2 md:-translate-y-1/2 md:overflow-hidden md:rounded-[24px] md:border md:border-white/15 md:bg-black/65">
           <div className="sr-only" role="heading" aria-level={2}>
             Sign In to HŌM
           </div>
