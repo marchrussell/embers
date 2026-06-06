@@ -62,7 +62,7 @@ export const SessionCompletionModal = ({
         >
           <DialogHeader>
             <DialogTitle className="mb-10 text-center font-['PP_Editorial_Old'] text-2xl text-white md:text-3xl">
-              Nice one, {userName}
+              Nice one, {userName.charAt(0).toUpperCase() + userName.slice(1).toLowerCase()}
             </DialogTitle>
           </DialogHeader>
 

@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { BookOpen, Loader2, Pencil, Plus, Star, Trash2, Zap } from "lucide-react";
+import { BookOpen, Loader2, MessageSquare, Pencil, Plus, Star, Trash2, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
@@ -11,6 +11,7 @@ import {
   adminTableCellClass,
   adminTableRowClass,
 } from "@/components/admin";
+import { ClassFeedbackModal } from "@/components/admin/ClassFeedbackModal";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -171,6 +172,7 @@ const AdminClasses = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingClass, setEditingClass] = useState<Class | null>(null);
+  const [feedbackClass, setFeedbackClass] = useState<Class | null>(null);
   const [safetyTemplate, setSafetyTemplate] = useState<SafetyTemplate>("none");
   const { upload: uploadImage, uploading: uploadingImage } = useStorageUpload("class-images");
   const { upload: uploadAudio, uploading: uploadingAudio } = useStorageUpload("class-audio");
@@ -223,6 +225,20 @@ const AdminClasses = () => {
     queryFn: async () => {
       const { data } = await supabase.from("categories").select("id, name").order("name");
       return data || [];
+    },
+    enabled: !!isAdmin,
+  });
+
+  const { data: feedbackCounts = {} } = useQuery<Record<string, number>>({
+    queryKey: ["admin-class-feedback-counts"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("session_feedback").select("class_id");
+      if (error) throw error;
+      const counts: Record<string, number> = {};
+      for (const row of data ?? []) {
+        counts[row.class_id] = (counts[row.class_id] ?? 0) + 1;
+      }
+      return counts;
     },
     enabled: !!isAdmin,
   });
@@ -1144,6 +1160,22 @@ const AdminClasses = () => {
                 <Button
                   variant="ghost"
                   size="default"
+                  onClick={() =>
+                    feedbackCounts[classItem.id] ? setFeedbackClass(classItem) : undefined
+                  }
+                  title={
+                    feedbackCounts[classItem.id]
+                      ? `View feedback (${feedbackCounts[classItem.id]})`
+                      : "No feedback yet"
+                  }
+                  disabled={!feedbackCounts[classItem.id]}
+                  className="hover:bg-white/10 disabled:opacity-30"
+                >
+                  <MessageSquare className="h-5 w-5 text-blue-400" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="default"
                   onClick={() => toggleQuickReset(classItem)}
                   title="Toggle Quick Reset"
                   className="hover:bg-white/10"
@@ -1184,6 +1216,11 @@ const AdminClasses = () => {
           </TableRow>
         ))}
       </AdminTable>
+      <ClassFeedbackModal
+        classId={feedbackClass?.id ?? null}
+        classTitle={feedbackClass?.title ?? ""}
+        onClose={() => setFeedbackClass(null)}
+      />
     </AdminLayout>
   );
 };
