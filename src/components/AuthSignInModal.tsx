@@ -108,126 +108,129 @@ export const AuthSignInModal = ({
 
           <div className="flex min-h-dvh flex-col items-center justify-center p-8 md:min-h-[420px] md:items-stretch md:p-10">
             <div className="w-full max-w-[360px] md:max-w-none">
-            <div className="mb-8 text-center">
-              <h2 className="font-editorial text-[clamp(1.5rem,2vw,1.75rem)] font-light text-white">
-                {showForgotPasswordForm ? "Reset Password" : "Welcome back"}
-              </h2>
-            </div>
+              <div className="mb-8 text-center">
+                <h2 className="font-editorial text-[clamp(1.5rem,2vw,1.75rem)] font-light text-white">
+                  {showForgotPasswordForm ? "Reset Password" : "Welcome back"}
+                </h2>
+              </div>
 
-            {showForgotPasswordForm ? (
-              <form onSubmit={handleForgotPassword} className="space-y-5">
-                <div className="space-y-2">
-                  <Label htmlFor="reset-email" className="text-[14px] font-light text-white/80">
-                    Email Address
-                  </Label>
-                  <Input
-                    id="reset-email"
-                    type="email"
-                    {...resetForm.register("email")}
-                    placeholder="your@email.com"
-                    className="h-12 rounded-xl border-white/15 bg-white text-[15px] text-black placeholder:text-black/40 focus:border-white/30 focus:ring-0 focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
-                  />
-                  {resetForm.formState.errors.email && (
-                    <p className="text-[13px] text-red-400">
-                      {resetForm.formState.errors.email.message}
-                    </p>
-                  )}
-                </div>
-
-                <button
-                  type="submit"
-                  className="flex h-12 w-full items-center justify-center rounded-full bg-white text-[15px] font-medium tracking-wide text-black transition-all hover:bg-white/90 disabled:opacity-50"
-                  disabled={passwordReset.isPending}
-                >
-                  {passwordReset.isPending ? (
-                    <ButtonLoadingSpinner size="md" className="text-black" />
-                  ) : (
-                    "Send Reset Link"
-                  )}
-                </button>
-              </form>
-            ) : (
-              <form onSubmit={handleSignIn} className="space-y-5">
-                <div className="space-y-2">
-                  <Label htmlFor="signin-email" className="text-[14px] font-light text-white/80">
-                    Email
-                  </Label>
-                  <Input
-                    id="signin-email"
-                    type="email"
-                    {...signInForm.register("email")}
-                    className="h-12 rounded-xl border-white/15 bg-white text-[15px] text-black placeholder:text-black/40 focus:border-white/30 focus:ring-0 focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
-                  />
-                  {signInForm.formState.errors.email && (
-                    <p className="text-[13px] text-red-400">
-                      {signInForm.formState.errors.email.message}
-                    </p>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="signin-password" className="text-[14px] font-light text-white/80">
-                    Password
-                  </Label>
-                  <Input
-                    id="signin-password"
-                    type="password"
-                    {...signInForm.register("password")}
-                    className="h-12 rounded-xl border-white/15 bg-white text-[15px] text-black placeholder:text-black/40 focus:border-white/30 focus:ring-0 focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
-                  />
-                  {signInForm.formState.errors.password && (
-                    <p className="text-[13px] text-red-400">
-                      {signInForm.formState.errors.password.message}
-                    </p>
-                  )}
-                </div>
-
-                {showForgotPassword && (
-                  <div className="text-right">
-                    <button
-                      type="button"
-                      onClick={() => setShowForgotPasswordForm(true)}
-                      className="text-[13px] text-white/50 transition-colors hover:text-white"
-                    >
-                      Forgot password?
-                    </button>
-                  </div>
-                )}
-
-                <button
-                  type="submit"
-                  className="flex h-12 w-full items-center justify-center rounded-full bg-white text-[15px] font-medium tracking-wide text-black transition-all hover:bg-white/90 disabled:opacity-50"
-                  disabled={signIn.isPending}
-                >
-                  {signIn.isPending ? (
-                    <ButtonLoadingSpinner size="md" className="text-black" />
-                  ) : (
-                    "Sign In"
-                  )}
-                </button>
-              </form>
-            )}
-
-            <div className="mt-8 border-t border-white/10 pt-6 text-center">
               {showForgotPasswordForm ? (
-                <button
-                  type="button"
-                  onClick={() => setShowForgotPasswordForm(false)}
-                  className="text-[14px] font-light text-white/60 transition-colors hover:text-white"
-                >
-                  Back to Sign In
-                </button>
-              ) : (
-                <p className="text-[14px] font-light text-white/60">
-                  Don't have an account?{" "}
+                <form onSubmit={handleForgotPassword} className="space-y-5">
+                  <div className="space-y-2">
+                    <Label htmlFor="reset-email" className="text-[14px] font-light text-white/80">
+                      Email Address
+                    </Label>
+                    <Input
+                      id="reset-email"
+                      type="email"
+                      {...resetForm.register("email")}
+                      placeholder="your@email.com"
+                      className="h-12 rounded-xl border-white/15 bg-white text-[15px] text-black placeholder:text-black/40 focus:border-white/30 focus:ring-0 focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                    />
+                    {resetForm.formState.errors.email && (
+                      <p className="text-[13px] text-red-400">
+                        {resetForm.formState.errors.email.message}
+                      </p>
+                    )}
+                  </div>
+
                   <button
-                    onClick={handleSignUp}
-                    className="text-white underline hover:text-white/80"
+                    type="submit"
+                    className="flex h-12 w-full items-center justify-center rounded-full bg-white text-[15px] font-medium tracking-wide text-black transition-all hover:bg-white/90 disabled:opacity-50"
+                    disabled={passwordReset.isPending}
                   >
-                    Sign up now
+                    {passwordReset.isPending ? (
+                      <ButtonLoadingSpinner size="md" className="text-black" />
+                    ) : (
+                      "Send Reset Link"
+                    )}
                   </button>
-                </p>
+                </form>
+              ) : (
+                <form onSubmit={handleSignIn} className="space-y-5">
+                  <div className="space-y-2">
+                    <Label htmlFor="signin-email" className="text-[14px] font-light text-white/80">
+                      Email
+                    </Label>
+                    <Input
+                      id="signin-email"
+                      type="email"
+                      {...signInForm.register("email")}
+                      className="h-12 rounded-xl border-white/15 bg-white text-[15px] text-black placeholder:text-black/40 focus:border-white/30 focus:ring-0 focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                    />
+                    {signInForm.formState.errors.email && (
+                      <p className="text-[13px] text-red-400">
+                        {signInForm.formState.errors.email.message}
+                      </p>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="signin-password"
+                      className="text-[14px] font-light text-white/80"
+                    >
+                      Password
+                    </Label>
+                    <Input
+                      id="signin-password"
+                      type="password"
+                      {...signInForm.register("password")}
+                      className="h-12 rounded-xl border-white/15 bg-white text-[15px] text-black placeholder:text-black/40 focus:border-white/30 focus:ring-0 focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                    />
+                    {signInForm.formState.errors.password && (
+                      <p className="text-[13px] text-red-400">
+                        {signInForm.formState.errors.password.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {showForgotPassword && (
+                    <div className="text-right">
+                      <button
+                        type="button"
+                        onClick={() => setShowForgotPasswordForm(true)}
+                        className="text-[13px] text-white/50 transition-colors hover:text-white"
+                      >
+                        Forgot password?
+                      </button>
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    className="flex h-12 w-full items-center justify-center rounded-full bg-white text-[15px] font-medium tracking-wide text-black transition-all hover:bg-white/90 disabled:opacity-50"
+                    disabled={signIn.isPending}
+                  >
+                    {signIn.isPending ? (
+                      <ButtonLoadingSpinner size="md" className="text-black" />
+                    ) : (
+                      "Sign In"
+                    )}
+                  </button>
+                </form>
               )}
-            </div>
+
+              <div className="mt-8 border-t border-white/10 pt-6 text-center">
+                {showForgotPasswordForm ? (
+                  <button
+                    type="button"
+                    onClick={() => setShowForgotPasswordForm(false)}
+                    className="text-[14px] font-light text-white/60 transition-colors hover:text-white"
+                  >
+                    Back to Sign In
+                  </button>
+                ) : (
+                  <p className="text-[14px] font-light text-white/60">
+                    Don't have an account?{" "}
+                    <button
+                      onClick={handleSignUp}
+                      className="text-white underline hover:text-white/80"
+                    >
+                      Sign up now
+                    </button>
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </DialogPrimitive.Content>

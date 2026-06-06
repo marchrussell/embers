@@ -144,6 +144,10 @@ export async function safeSupabaseOperation<T>(
 /**
  * Batch multiple Supabase operations with individual error handling
  */
+export function isDuplicateKeyError(error: any): boolean {
+  return error?.code === "23505";
+}
+
 export async function batchOperations<T>(
   operations: Array<{
     fn: () => Promise<{ data: T | null; error: any }>;

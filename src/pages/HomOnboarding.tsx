@@ -3,10 +3,11 @@ import { Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Button } from "@/components/ui/button";
+import { AuthSignInModal } from "@/components/AuthSignInModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { isDuplicateKeyError } from "@/lib/supabase-utils";
 
 type OnboardingStep =
   | "welcome"
@@ -22,6 +23,7 @@ interface Message {
   isFromMarch: boolean;
   options?: { label: string; value: string; action?: () => void }[];
   multiSelect?: boolean;
+  showSignInLink?: boolean;
 }
 
 interface UserData {
@@ -32,7 +34,7 @@ interface UserData {
   hasAcceptedDataConsent: boolean;
 }
 
-export default function MarchOnboarding() {
+export default function HomOnboarding() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState<OnboardingStep>("welcome");
@@ -46,7 +48,7 @@ export default function MarchOnboarding() {
   });
   const [selectedGoals, setSelectedGoals] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [recommendedSessions, setRecommendedSessions] = useState<any[]>([]);
+  const [showSignIn, setShowSignIn] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -91,11 +93,11 @@ export default function MarchOnboarding() {
     text: string,
     isFromMarch: boolean,
     options?: any[],
-    multiSelect?: boolean
+    multiSelect?: boolean,
+    showSignInLink?: boolean
   ) => {
-    setMessages((prev) => [...prev, { text, isFromMarch, options, multiSelect }]);
+    setMessages((prev) => [...prev, { text, isFromMarch, options, multiSelect, showSignInLink }]);
 
-    // Save to database
     if (user) {
       saveMessage(text, isFromMarch);
     }
@@ -271,7 +273,6 @@ export default function MarchOnboarding() {
     setIsLoading(true);
 
     try {
-      // Fetch sessions based on goals and time
       const { data: sessions, error } = await supabase
         .from("classes")
         .select("*")
@@ -279,8 +280,6 @@ export default function MarchOnboarding() {
         .limit(2);
 
       if (error) throw error;
-
-      setRecommendedSessions(sessions || []);
 
       addMessage(
         "Beautiful 🌿 Based on what you've told me, I think these sessions might feel right for you:",
@@ -449,11 +448,9 @@ export default function MarchOnboarding() {
       );
     }, 1200);
 
-    // Save onboarding data
     if (!user) return;
 
     try {
-      // Save onboarding data
       const { error: onboardingError } = await supabase.from("user_onboarding").upsert({
         user_id: user.id,
         goals: userData.goals,
@@ -465,7 +462,6 @@ export default function MarchOnboarding() {
 
       if (onboardingError) throw onboardingError;
 
-      // Save consent status to profile
       const { error: profileError } = await supabase
         .from("profiles")
         .update({
@@ -483,17 +479,28 @@ export default function MarchOnboarding() {
       }, 3000);
     } catch (error) {
       console.error("Error saving onboarding:", error);
-      toast({
-        title: "Error saving your preferences",
-        description: "Please try again",
-        variant: "destructive",
-      });
+
+      if (isDuplicateKeyError(error)) {
+        addMessage(
+          "It looks like you already have an account set up 💛 Sign in to access your dashboard.",
+          true,
+          undefined,
+          undefined,
+          true
+        );
+      } else {
+        toast({
+          title: "Error saving your preferences",
+          description: "Please try again",
+          variant: "destructive",
+        });
+      }
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/20">
-      <div className="container mx-auto max-w-3xl px-4 py-8">
+    <div className="min-h-[100dvh] bg-black">
+      <div className="mx-auto max-w-2xl px-4 py-8">
         <div className="space-y-6">
           {/* Messages */}
           <div className="space-y-4">
@@ -505,23 +512,31 @@ export default function MarchOnboarding() {
                 <div
                   className={`max-w-[80%] rounded-2xl px-6 py-4 ${
                     message.isFromMarch
-                      ? "border border-border bg-card text-foreground"
-                      : "bg-primary text-primary-foreground"
+                      ? "border border-white/10 bg-white/5 text-[#E6DBC7]"
+                      : "border border-[#E6DBC7]/20 bg-[#E6DBC7]/15 text-[#E6DBC7]"
                   }`}
                 >
                   <p className="whitespace-pre-line text-base leading-relaxed">{message.text}</p>
 
+                  {message.showSignInLink && (
+                    <button
+                      onClick={() => setShowSignIn(true)}
+                      className="mt-3 text-sm font-medium text-[#E6DBC7] underline underline-offset-2 opacity-80 hover:opacity-100"
+                    >
+                      Sign in →
+                    </button>
+                  )}
+
                   {message.options && !message.multiSelect && (
                     <div className="mt-4 space-y-2">
                       {message.options.map((option, optIndex) => (
-                        <Button
+                        <button
                           key={optIndex}
                           onClick={option.action}
-                          variant="outline"
-                          className="h-auto w-full justify-start px-4 py-3 text-left"
+                          className="h-auto w-full rounded-xl border border-white/20 bg-white/5 px-4 py-3 text-left text-sm text-[#E6DBC7] transition-colors hover:bg-white/10"
                         >
                           {option.label}
-                        </Button>
+                        </button>
                       ))}
                     </div>
                   )}
@@ -529,22 +544,25 @@ export default function MarchOnboarding() {
                   {message.options && message.multiSelect && (
                     <div className="mt-4 space-y-3">
                       {message.options.map((option, optIndex) => (
-                        <Button
+                        <button
                           key={optIndex}
                           onClick={() => handleGoalSelection(option.value)}
-                          variant={selectedGoals.includes(option.value) ? "default" : "outline"}
-                          className="h-auto w-full justify-start px-4 py-3 text-left"
+                          className={`h-auto w-full rounded-xl border px-4 py-3 text-left text-sm text-[#E6DBC7] transition-colors ${
+                            selectedGoals.includes(option.value)
+                              ? "border-[#E6DBC7]/50 bg-[#E6DBC7]/15"
+                              : "border-white/20 bg-white/5 hover:bg-white/10"
+                          }`}
                         >
                           {option.label}
-                        </Button>
+                        </button>
                       ))}
-                      <Button
+                      <button
                         onClick={confirmGoals}
-                        className="mt-4 w-full"
                         disabled={selectedGoals.length === 0}
+                        className="mt-4 w-full rounded-xl bg-[#E6DBC7] px-4 py-3 text-sm font-medium text-black transition-opacity hover:opacity-90 disabled:opacity-40"
                       >
                         Continue
-                      </Button>
+                      </button>
                     </div>
                   )}
                 </div>
@@ -553,8 +571,8 @@ export default function MarchOnboarding() {
 
             {isLoading && (
               <div className="flex justify-start animate-in fade-in">
-                <div className="rounded-2xl border border-border bg-card px-6 py-4">
-                  <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                <div className="rounded-2xl border border-white/10 bg-white/5 px-6 py-4">
+                  <Loader2 className="h-5 w-5 animate-spin text-[#E6DBC7]/50" />
                 </div>
               </div>
             )}
@@ -563,6 +581,8 @@ export default function MarchOnboarding() {
           <div ref={messagesEndRef} />
         </div>
       </div>
+
+      <AuthSignInModal open={showSignIn} onClose={() => setShowSignIn(false)} />
     </div>
   );
 }

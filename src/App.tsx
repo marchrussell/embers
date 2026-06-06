@@ -53,7 +53,7 @@ const Onboarding = lazy(() => import("./pages/Onboarding"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 // March (lazy loaded)
-const MarchOnboarding = lazy(() => import("./pages/MarchOnboarding"));
+const HomOnboarding = lazy(() => import("./pages/HomOnboarding"));
 const MarchDashboard = lazy(() => import("./pages/app/MarchDashboard"));
 
 // Legal pages (lazy loaded)
@@ -138,7 +138,7 @@ function AppContent() {
               path="/onboarding/march"
               element={
                 <ProtectedRoute>
-                  <MarchOnboarding />
+                  <HomOnboarding />
                 </ProtectedRoute>
               }
             />
