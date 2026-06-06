@@ -87,7 +87,7 @@ export const SafetyDisclosureModal = ({ isOpen, onAccept, userId }: SafetyDisclo
     <Dialog open={isOpen} onOpenChange={() => {}}>
       <DialogContent
         hideClose
-        className="max-h-[90vh] w-[92vw] max-w-4xl overflow-y-auto rounded-xl border border-white/30 bg-black/75 p-0 backdrop-blur-xl"
+        className="max-h-[90vh] w-[92vw] max-w-4xl overflow-y-auto rounded-xl md:border md:border-white/30 bg-black/75 p-0 backdrop-blur-xl"
       >
         <DialogTitle className="sr-only">Safety Information</DialogTitle>
         <ModalCloseButton onClose={() => {}} size="md" className="pointer-events-none opacity-0" />

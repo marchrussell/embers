@@ -98,7 +98,7 @@ export const AuthSignInModal = ({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogPortal>
         <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md transition-opacity duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-        <DialogPrimitive.Content className="fixed left-[50%] top-[50%] z-50 w-[92%] max-w-[440px] translate-x-[-50%] translate-y-[-50%] overflow-hidden rounded-[24px] border border-white/15 bg-black/65 backdrop-blur-xl duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95">
+        <DialogPrimitive.Content className="fixed inset-0 z-50 h-dvh w-full overflow-y-auto rounded-none border-0 bg-black/85 backdrop-blur-xl duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 md:inset-auto md:left-[50%] md:top-[50%] md:h-auto md:w-[92%] md:max-w-[440px] md:-translate-x-1/2 md:-translate-y-1/2 md:overflow-hidden md:rounded-[24px] md:border md:border-white/15 md:bg-black/65">
           <div className="sr-only" role="heading" aria-level={2}>
             Sign In to HŌM
           </div>
@@ -106,7 +106,8 @@ export const AuthSignInModal = ({
 
           <ModalCloseButton onClose={handleClose} size="md" position="default" />
 
-          <div className="p-10">
+          <div className="flex min-h-dvh flex-col items-center justify-center p-8 md:min-h-[420px] md:items-stretch md:p-10">
+            <div className="w-full max-w-[360px] md:max-w-none">
             <div className="mb-8 text-center">
               <h2 className="font-editorial text-[clamp(1.5rem,2vw,1.75rem)] font-light text-white">
                 {showForgotPasswordForm ? "Reset Password" : "Welcome back"}
@@ -114,7 +115,7 @@ export const AuthSignInModal = ({
             </div>
 
             {showForgotPasswordForm ? (
-              <form onSubmit={handleForgotPassword} className="space-y-9">
+              <form onSubmit={handleForgotPassword} className="space-y-5">
                 <div className="space-y-2">
                   <Label htmlFor="reset-email" className="text-[14px] font-light text-white/80">
                     Email Address
@@ -135,7 +136,7 @@ export const AuthSignInModal = ({
 
                 <button
                   type="submit"
-                  className="mt-2 flex h-12 w-full items-center justify-center rounded-full bg-white text-[15px] font-medium tracking-wide text-black transition-all hover:bg-white/90 disabled:opacity-50"
+                  className="flex h-12 w-full items-center justify-center rounded-full bg-white text-[15px] font-medium tracking-wide text-black transition-all hover:bg-white/90 disabled:opacity-50"
                   disabled={passwordReset.isPending}
                 >
                   {passwordReset.isPending ? (
@@ -143,14 +144,6 @@ export const AuthSignInModal = ({
                   ) : (
                     "Send Reset Link"
                   )}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setShowForgotPasswordForm(false)}
-                  className="w-full pt-2 text-[14px] text-white/60 transition-colors hover:text-white"
-                >
-                  Back to Sign In
                 </button>
               </form>
             ) : (
@@ -214,8 +207,16 @@ export const AuthSignInModal = ({
               </form>
             )}
 
-            {!showForgotPasswordForm && (
-              <div className="mt-8 border-t border-white/10 pt-6 text-center">
+            <div className="mt-8 border-t border-white/10 pt-6 text-center">
+              {showForgotPasswordForm ? (
+                <button
+                  type="button"
+                  onClick={() => setShowForgotPasswordForm(false)}
+                  className="text-[14px] font-light text-white/60 transition-colors hover:text-white"
+                >
+                  Back to Sign In
+                </button>
+              ) : (
                 <p className="text-[14px] font-light text-white/60">
                   Don't have an account?{" "}
                   <button
@@ -225,8 +226,9 @@ export const AuthSignInModal = ({
                     Sign up now
                   </button>
                 </p>
-              </div>
-            )}
+              )}
+            </div>
+            </div>
           </div>
         </DialogPrimitive.Content>
       </DialogPortal>
