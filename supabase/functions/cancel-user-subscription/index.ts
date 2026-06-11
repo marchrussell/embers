@@ -74,23 +74,25 @@ serve(async (req) => {
 
     const customerId = customers.data[0].id;
 
-    // Get all active subscriptions for this customer
+    // Cancel every subscription that still grants or could grant access —
+    // trials and past_due subscriptions keep billing/granting access if only
+    // "active" ones are cancelled.
     const subscriptions = await stripe.subscriptions.list({
       customer: customerId,
-      status: "active",
+      status: "all",
     });
-
-    // Cancel all active subscriptions
-    const cancelPromises = subscriptions.data.map((sub: Stripe.Subscription) =>
-      stripe.subscriptions.cancel(sub.id)
+    const cancellable = subscriptions.data.filter((sub: Stripe.Subscription) =>
+      ["active", "trialing", "past_due", "unpaid", "incomplete"].includes(sub.status)
     );
-    
-    await Promise.all(cancelPromises);
+
+    await Promise.all(
+      cancellable.map((sub: Stripe.Subscription) => stripe.subscriptions.cancel(sub.id))
+    );
 
     return new Response(
-      JSON.stringify({ 
-        success: true, 
-        message: `Cancelled ${subscriptions.data.length} subscription(s)` 
+      JSON.stringify({
+        success: true,
+        message: `Cancelled ${cancellable.length} subscription(s)`
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 }
     );

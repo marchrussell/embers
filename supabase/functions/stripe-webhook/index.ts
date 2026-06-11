@@ -45,13 +45,9 @@ serve(async (req) => {
     if (!signature) throw new Error("No stripe-signature header");
 
     const body = await req.text();
-    let event: Str.Event;
+    let event: Stripe.Event;
 
-    logStep("Signature verification attempt", {
-      secretPrefix: webhookSecret?.substring(0, 12),
-      signaturePrefix: signature?.substring(0, 20),
-      bodyLength: body.length,
-    });
+    logStep("Signature verification attempt", { bodyLength: body.length });
 
     try {
       event = await stripe.webhooks.constructEventAsync(body, signature, webhookSecret);
@@ -60,8 +56,6 @@ serve(async (req) => {
       const errorMessage = err instanceof Error ? err.message : String(err);
       logStep("Webhook signature verification failed", {
         error: errorMessage,
-        secretPrefix: webhookSecret?.substring(0, 12),
-        signaturePrefix: signature?.substring(0, 20),
         bodyLength: body.length,
       });
       return new Response(JSON.stringify({ error: "Webhook signature verification failed", detail: errorMessage }), {
@@ -77,6 +71,11 @@ serve(async (req) => {
       { auth: { persistSession: false } }
     );
 
+    // Set when a subscription-status DB write fails. We return 500 in that case so
+    // Stripe redelivers the event — otherwise the local access state goes permanently
+    // stale (logged-but-swallowed errors are acknowledged with 200 and never retried).
+    let statusWriteFailed = false;
+
     // Handle different webhook events
     switch (event.type) {
       case "invoice.payment_failed": {
@@ -87,6 +86,15 @@ serve(async (req) => {
           attemptCount: invoice.attempt_count,
         });
 
+        // One-off invoices (event bookings) have no subscription — never touch
+        // subscription status for those.
+        const failedSubId =
+          typeof invoice.subscription === "string" ? invoice.subscription : invoice.subscription?.id;
+        if (!failedSubId) {
+          logStep("Invoice has no subscription, skipping status update");
+          break;
+        }
+
         // Update subscription status — Stripe dunning handles payment failure emails natively
         const { error: updateError } = await supabaseClient
           .from("user_subscriptions")
@@ -94,10 +102,11 @@ serve(async (req) => {
             status: "past_due",
             updated_at: new Date().toISOString(),
           })
-          .eq("stripe_customer_id", invoice.customer as string);
+          .eq("stripe_subscription_id", failedSubId);
 
         if (updateError) {
           logStep("Error updating subscription status", { error: updateError });
+          statusWriteFailed = true;
         }
         break;
       }
@@ -112,20 +121,23 @@ serve(async (req) => {
           customerId: subscription.customer,
         });
 
-        // Update subscription in database
+        // Redelivered/out-of-order events carry stale snapshots — fetch the
+        // subscription's current state from Stripe before writing.
+        const liveSub = await stripe.subscriptions.retrieve(subscription.id);
         const { error: updateError } = await supabaseClient
           .from("user_subscriptions")
           .update({
-            status: subscription.status,
-            current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
-            current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
-            cancel_at_period_end: subscription.cancel_at_period_end,
+            status: liveSub.status,
+            current_period_start: new Date(liveSub.current_period_start * 1000).toISOString(),
+            current_period_end: new Date(liveSub.current_period_end * 1000).toISOString(),
+            cancel_at_period_end: liveSub.cancel_at_period_end,
             updated_at: new Date().toISOString(),
           })
           .eq("stripe_subscription_id", subscription.id);
 
         if (updateError) {
           logStep("Error updating subscription", { error: updateError });
+          statusWriteFailed = true;
         }
 
         // Update Loops contact status when trial converts to active
@@ -157,6 +169,7 @@ serve(async (req) => {
 
         if (deleteError) {
           logStep("Error updating canceled subscription", { error: deleteError });
+          statusWriteFailed = true;
         }
 
         // Fire Loops subscriptionCanceled event (triggers cancellation + win-back sequence)
@@ -179,17 +192,37 @@ serve(async (req) => {
           invoiceId: invoice.id,
         });
 
-        // Update subscription status to active
+        // One-off invoices (event bookings) have no subscription — skip.
+        const paidSubId =
+          typeof invoice.subscription === "string" ? invoice.subscription : invoice.subscription?.id;
+        if (!paidSubId) {
+          logStep("Invoice has no subscription, skipping status update");
+          break;
+        }
+
+        // Stripe does not guarantee event ordering and retries deliveries: a
+        // payment_succeeded arriving after subscription.deleted must not resurrect
+        // a cancelled subscription. Write the subscription's *current* state from
+        // Stripe rather than hardcoding "active".
+        const paidSub = await stripe.subscriptions.retrieve(paidSubId);
         const { error: updateError } = await supabaseClient
           .from("user_subscriptions")
           .update({
-            status: "active",
+            status: paidSub.status,
+            cancel_at_period_end: paidSub.cancel_at_period_end,
+            ...(paidSub.current_period_start
+              ? { current_period_start: new Date(paidSub.current_period_start * 1000).toISOString() }
+              : {}),
+            ...(paidSub.current_period_end
+              ? { current_period_end: new Date(paidSub.current_period_end * 1000).toISOString() }
+              : {}),
             updated_at: new Date().toISOString(),
           })
-          .eq("stripe_customer_id", invoice.customer as string);
+          .eq("stripe_subscription_id", paidSubId);
 
         if (updateError) {
           logStep("Error updating subscription status", { error: updateError });
+          statusWriteFailed = true;
         }
         break;
       }
@@ -391,6 +424,15 @@ serve(async (req) => {
 
       default:
         logStep("Unhandled event type", { type: event.type });
+    }
+
+    if (statusWriteFailed) {
+      // Non-2xx makes Stripe redeliver the event. Status handlers are idempotent
+      // (they write current Stripe state), so a retry is safe.
+      return new Response(JSON.stringify({ error: "Subscription status write failed" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500,
+      });
     }
 
     return new Response(JSON.stringify({ received: true }), {

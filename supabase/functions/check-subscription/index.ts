@@ -150,14 +150,18 @@ serve(async (req) => {
       });
     }
 
+    // Cancelled trials keep access until trial end, matching the frontend
+    // gating rule in useAuthSubscription.
+    const isQualifyingTrial = (_sub: Stripe.Subscription) => true;
+
     // When duplicate Stripe customers exist for the same email, find the one with an active subscription.
     let customerId = customers.data[0].id;
     for (const customer of customers.data) {
       const [activeSubs, trialingSubs] = await Promise.all([
         stripe.subscriptions.list({ customer: customer.id, status: "active", limit: 1 }),
-        stripe.subscriptions.list({ customer: customer.id, status: "trialing", limit: 1 }),
+        stripe.subscriptions.list({ customer: customer.id, status: "trialing", limit: 3 }),
       ]);
-      if (activeSubs.data.length > 0 || trialingSubs.data.length > 0) {
+      if (activeSubs.data.length > 0 || trialingSubs.data.some(isQualifyingTrial)) {
         customerId = customer.id;
         break;
       }
@@ -174,9 +178,10 @@ serve(async (req) => {
     const trialingSubscriptions = await stripe.subscriptions.list({
       customer: customerId,
       status: "trialing",
-      limit: 1,
+      limit: 3,
     });
-    
+    const qualifyingTrial = trialingSubscriptions.data.find(isQualifyingTrial);
+
     // Also check for past_due subscriptions (grace period)
     const pastDueSubscriptions = await stripe.subscriptions.list({
       customer: customerId,
@@ -184,13 +189,13 @@ serve(async (req) => {
       limit: 1,
     });
 
-    const hasActiveSub = activeSubscriptions.data.length > 0 || 
-                         trialingSubscriptions.data.length > 0 ||
+    const hasActiveSub = activeSubscriptions.data.length > 0 ||
+                         !!qualifyingTrial ||
                          pastDueSubscriptions.data.length > 0;
-    
+
     // Get the subscription from whichever list has data
-    const subscription = activeSubscriptions.data[0] || 
-                        trialingSubscriptions.data[0] || 
+    const subscription = activeSubscriptions.data[0] ||
+                        qualifyingTrial ||
                         pastDueSubscriptions.data[0];
     
     let productId = null;

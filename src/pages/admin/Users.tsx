@@ -588,8 +588,9 @@ const AdminUsers = () => {
     try {
       console.log("🗑️ Starting user deletion for:", selectedUser.email);
 
-      // Step 1: Cancel any Stripe subscriptions first
-      if (selectedUser.subscription_status === "active") {
+      // Step 1: Cancel any Stripe subscriptions first — including trials and
+      // past_due, which would otherwise keep billing after the account is gone
+      if (["active", "trialing", "past_due"].includes(selectedUser.subscription_status ?? "")) {
         try {
           console.log("💳 Attempting to cancel Stripe subscription...");
           const { error: cancelError } = await supabase.functions.invoke(
